@@ -1,0 +1,1 @@
+ Con il programma docker-compose utilizzando il comando 'docker-compose up' è possibile far partire una istanza di docker con mysql:5.7 che eseguirà automaticamente i file sql_scripts/*.sql in automatico all'avvio

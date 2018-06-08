@@ -9,4 +9,25 @@
             30
         </session-timeout>
     </session-config>
+
+    <context-param>
+        <description>The url of the JDBC persistence system database position</description>
+        <param-name>dburl</param-name>
+        <param-value>jdbc:mysql://127.0.0.1:3306/mydb</param-value>
+    </context-param>
+    <context-param>
+        <description>The user of the JDBC persistence system database position</description>
+        <param-name>dbuser</param-name>
+        <param-value>root</param-value>
+    </context-param>
+    <context-param>
+        <description>The password of $dbuser</description>
+        <param-name>dbpwd</param-name>
+        <param-value>passworddacambiare</param-value>
+    </context-param>
+
+    <listener>
+        <description>ServletContextListener</description>
+        <listener-class>it.unitn.webprogramming18.dellmm.listeners.WebAppContextListener</listener-class>
+    </listener>
 </web-app>

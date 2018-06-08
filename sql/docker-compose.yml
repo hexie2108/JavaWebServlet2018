@@ -1,0 +1,13 @@
+version: "2"
+services:
+  mysql:
+    image: mysql:5.7
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=passworddacambiare
+    volumes:
+      - ./sql_scripts:/docker-entrypoint-initdb.d
+
+# vim: set expandtab ts=2 sw=2:
