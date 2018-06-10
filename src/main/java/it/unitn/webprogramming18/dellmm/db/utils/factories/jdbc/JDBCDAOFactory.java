@@ -4,12 +4,12 @@
  * Common - DAO
  * UniTN
  */
-package it.unitn.webprogramming18.dellmm.utils.db.factories.jdbc;
+package it.unitn.webprogramming18.dellmm.db.utils.factories.jdbc;
 
-import it.unitn.webprogramming18.dellmm.utils.db.exceptions.DAOFactoryException;
-import it.unitn.webprogramming18.dellmm.utils.db.factories.DAOFactory;
-import it.unitn.webprogramming18.dellmm.utils.db.DAO;
-import it.unitn.webprogramming18.dellmm.utils.db.jdbc.JDBCDAO;
+import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
+import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
+import it.unitn.webprogramming18.dellmm.db.utils.DAO;
+import it.unitn.webprogramming18.dellmm.db.utils.jdbc.JDBCDAO;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;

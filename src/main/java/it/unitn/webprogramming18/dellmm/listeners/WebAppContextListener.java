@@ -6,9 +6,9 @@
  */
 package it.unitn.webprogramming18.dellmm.listeners;
 
-import it.unitn.webprogramming18.dellmm.utils.db.exceptions.DAOFactoryException;
-import it.unitn.webprogramming18.dellmm.utils.db.factories.DAOFactory;
-import it.unitn.webprogramming18.dellmm.utils.db.factories.jdbc.JDBCDAOFactory;
+import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
+import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
+import it.unitn.webprogramming18.dellmm.db.utils.factories.jdbc.JDBCDAOFactory;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;

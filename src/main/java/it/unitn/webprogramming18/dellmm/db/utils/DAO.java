@@ -4,10 +4,10 @@
  * Common - DAO
  * UniTN
  */
-package it.unitn.webprogramming18.dellmm.utils.db;
+package it.unitn.webprogramming18.dellmm.db.utils;
 
-import it.unitn.webprogramming18.dellmm.utils.db.exceptions.DAOException;
-import it.unitn.webprogramming18.dellmm.utils.db.exceptions.DAOFactoryException;
+import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
+import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 
 import java.util.List;
 

@@ -4,10 +4,10 @@
  * Common - DAO
  * UniTN
  */
-package it.unitn.webprogramming18.dellmm.utils.db.jdbc;
+package it.unitn.webprogramming18.dellmm.db.utils.jdbc;
 
-import it.unitn.webprogramming18.dellmm.utils.db.exceptions.DAOFactoryException;
-import it.unitn.webprogramming18.dellmm.utils.db.DAO;
+import it.unitn.webprogramming18.dellmm.db.utils.DAO;
+import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 
 import java.sql.Connection;
 import java.util.HashMap;

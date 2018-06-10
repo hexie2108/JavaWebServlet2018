@@ -4,7 +4,7 @@
  * Common - DAO
  * UniTN
  */
-package it.unitn.webprogramming18.dellmm.utils.db.exceptions;
+package it.unitn.webprogramming18.dellmm.db.utils.exceptions;
 
 /**
  * The exception thrown when something goes wrong in db factoring.
