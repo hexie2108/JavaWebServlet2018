@@ -97,7 +97,6 @@ public class JDBCCategoryProductDAO extends JDBCDAO<CategoryProduct, Integer> im
 						"WHERE id = ?"
 		)) {
 
-			// TODO: Mancano get i permission
 			stm.setString(1,categoryProduct.getName());
 			stm.setString(2,categoryProduct.getDescription());
 			stm.setString(3,categoryProduct.getImg());

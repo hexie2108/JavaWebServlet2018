@@ -24,11 +24,10 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
 	private Notification getNotificationFromResultSet(ResultSet rs) throws SQLException{
 		Notification notification = new Notification();
 
-		//TODO: Sistamare nomi che non coincidono
 		notification.setId(rs.getInt("id"));
-		notification.setDate(rs.getTimestamp("data"));
+		notification.setDate(rs.getTimestamp("date"));
 		notification.setText(rs.getString("text"));
-		notification.setStatus(rs.getBoolean("stato"));
+		notification.setStatus(rs.getBoolean("status"));
 		notification.setUserId(rs.getInt("User_id"));
 
 		return notification;
@@ -36,7 +35,7 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
 
 	@Override
 	public Long getCount() throws DAOException {
-		try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM Notifica")) {
+		try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM Notification")) {
 			ResultSet counter = stmt.executeQuery();
 			if (counter.next()) {
 				return counter.getLong(1);
@@ -54,7 +53,7 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
 		if (primaryKey == null) {
 			throw new DAOException("primaryKey is null");
 		}
-		try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Notifica WHERE id = ?")) {
+		try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Notification WHERE id = ?")) {
 			stm.setInt(1, primaryKey);
 			try (ResultSet rs = stm.executeQuery()) {
 				if(rs.next()) {
@@ -72,7 +71,7 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
 	public List<Notification> getAll() throws DAOException {
 		List<Notification> notificationList = new ArrayList<>();
 
-		try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Notifica")) {
+		try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Notification")) {
 			try (ResultSet rs = stm.executeQuery()) {
 				while (rs.next()) {
 					notificationList.add(getNotificationFromResultSet(rs));
@@ -92,18 +91,19 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
 		}
 
 		try(PreparedStatement stm = CON.prepareStatement(
-				"UPDATE Notifica SET " +
-						"data = ?," +
+				"UPDATE Notification SET " +
+						"date = ?," +
 						"text = ?," +
+						"status = ?, " +
 						"User_id = ?" +
 						"WHERE id = ?"
 		)) {
 
-		    //TODO: Controllare getStatus mancante
 			stm.setTimestamp(1, notification.getDate());
 			stm.setString(2, notification.getText());
-			stm.setInt(3, notification.getUserId());
-			stm.setInt(4,notification.getId());
+			stm.setBoolean(3, notification.isStatus());
+			stm.setInt(4, notification.getUserId());
+			stm.setInt(5,notification.getId());
 			if (stm.executeUpdate() != 1) {
 				throw new DAOException("Impossible to update the notification");
 			}

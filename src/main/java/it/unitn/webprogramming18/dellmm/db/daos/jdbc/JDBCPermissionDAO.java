@@ -28,8 +28,9 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
 		permission.setListId(rs.getInt("List_id"));
 		permission.setUserId(rs.getInt("User_id"));
 		permission.setAddObject(rs.getBoolean("addObject"));
+		permission.setModifyList(rs.getBoolean("modifyList"));
 		permission.setDeleteList(rs.getBoolean("deleteObject"));
-		//TODO: Esiste anche un setModifyList
+		permission.setDeleteList(rs.getBoolean("deleteList"));
 
 		return permission;
 	}
@@ -93,15 +94,22 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
 
 		try(PreparedStatement stm = CON.prepareStatement(
 				"UPDATE Permission SET " +
+						"addObject = ?," +
+						"modifyList = ?," +
+						"deleteObject = ?," +
+						"deleteList = ?," +
 						"List_id=?," +
 						"User_id=?  "+
 						"WHERE id = ?"
 		)) {
 
-			// TODO: Mancano get i permission
-			stm.setInt(1,permission.getListId());
-			stm.setInt(2,permission.getUserId());
-			stm.setInt(3,permission.getId());
+			stm.setBoolean(1, permission.isAddObject());
+			stm.setBoolean(2, permission.isModifyList());
+			stm.setBoolean(3, permission.isDeleteObject());
+			stm.setBoolean(4, permission.isDeleteList());
+			stm.setInt(5, permission.getListId());
+			stm.setInt(6, permission.getUserId());
+			stm.setInt(7, permission.getId());
 
 			if (stm.executeUpdate() != 1) {
 				throw new DAOException("Impossible to update the permission");

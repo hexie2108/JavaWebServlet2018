@@ -102,8 +102,6 @@ public class JDBCLogDAO extends JDBCDAO<Log, Integer> implements LogDAO{
 						"last4 =? "+
 						"WHERE id = ?"
 		)) {
-
-			// TODO: Mancano get i permission
 			stm.setInt(1,log.getProductId());
 			stm.setInt(2,log.getUserId());
 			stm.setTimestamp(2,log.getLast1());

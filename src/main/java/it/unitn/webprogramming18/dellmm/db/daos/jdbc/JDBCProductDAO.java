@@ -100,8 +100,6 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
 						"CategoryProduct_id =? "+
 						"WHERE id = ?"
 		)) {
-
-			// TODO: Mancano get i permission
 			stm.setString(1,product.getName());
 			stm.setString(2,product.getDescription());
 			stm.setString(3,product.getImg());
