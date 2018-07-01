@@ -28,6 +28,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
 		user.setName(rs.getString("name"));
 		user.setSurname(rs.getString("surname"));
 		user.setEmail(rs.getString("email"));
+		user.setPassword(rs.getString("password"));
 		user.setImg(rs.getString("img"));
 		user.setIsAdmin(rs.getBoolean("isAdmin"));
 		user.setVerifyEmailLink(rs.getString("verifyEmailLink"));
@@ -52,10 +53,12 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
 
 	@Override
 	public User getByPrimaryKey(Integer primaryKey) throws DAOException {
-		User user= null;
+		User user = null;
+
 		if (primaryKey == null) {
 			throw new DAOException("primaryKey is null");
 		}
+
 		try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM User WHERE id = ?")) {
 			stm.setInt(1, primaryKey);
 			try (ResultSet rs = stm.executeQuery()) {
@@ -98,6 +101,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
 						"name = ?," +
 						"surname = ?," +
 						"email = ?," +
+						"password = ?," +
 						"img = ?," +
 						"isAdmin = ?," +
 						"verifyEmailLink = ?," +
@@ -108,16 +112,44 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
 			stm.setString(1, user.getName());
 			stm.setString(2, user.getSurname());
 			stm.setString(3, user.getEmail());
-			stm.setString(4, user.getImg());
-			stm.setBoolean(5, user.isIsAdmin());
-			stm.setString(6, user.getVerifyEmailLink());
-			stm.setString(7, user.getResendEmailLink());
-			stm.setInt(8, user.getId());
+			stm.setString(4, user.getPassword());
+			stm.setString(5, user.getImg());
+			stm.setBoolean(6, user.isIsAdmin());
+			stm.setString(7, user.getVerifyEmailLink());
+			stm.setString(8, user.getResendEmailLink());
+			stm.setInt(9, user.getId());
 			if (stm.executeUpdate() != 1) {
 				throw new DAOException("Impossible to update the user");
 			}
 		} catch (SQLException ex) {
 			throw new DAOException("Impossible to update the user", ex);
+		}
+
+		return user;
+	}
+
+	@Override
+	public User getByEmailAndPassword(String email, String password) throws DAOException {
+        User user = null;
+
+		if (email == null || password == null) {
+			throw new DAOException("parameter not valid", new IllegalArgumentException("The passed email or password is null"));
+		}
+
+		try(PreparedStatement stm = CON.prepareStatement(
+				"SELECT * FROM User " +
+				"WHERE email = ? AND password = ?"
+		)) {
+			stm.setString(1, email);
+			stm.setString(2, password);
+
+			try (ResultSet rs = stm.executeQuery()) {
+				if(rs.next()) {
+					user = getUserFromResultSet(rs);
+				}
+			}
+        } catch (SQLException e) {
+		    throw new DAOException("Impossible to find the user");
 		}
 
 		return user;

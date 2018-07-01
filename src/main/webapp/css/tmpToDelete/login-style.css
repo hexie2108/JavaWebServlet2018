@@ -1,0 +1,53 @@
+#div-inner{
+    width: 100%;
+    max-width: 340px;
+    margin:auto auto;
+    padding: 5px 15px 15px 15px;
+
+    border-left: solid 4px #2196F3;
+    box-shadow: 0 0 10px 4px #888888;
+    box-sizing: border-box;
+}
+
+#div-signin{
+    height: calc(100% - 50px - 1px );
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar{
+    margin-bottom: 0;
+}
+
+#id-accedi{
+    width: 62%;
+}
+
+#id-annulla{
+    width: 38%;
+}
+
+#id-UP-alert{
+    margin-top: 6px;
+}
+
+
+html{
+    height: 100%;
+}
+
+body{
+    height: 100%;
+}
+
+#register-btn{
+    width: 80%;
+    margin-top: 4px;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.checkbox, #pwdDimenticata {
+    margin-top: -10px;
+}
