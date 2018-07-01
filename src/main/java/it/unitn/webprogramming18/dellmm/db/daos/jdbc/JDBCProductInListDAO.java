@@ -25,8 +25,8 @@ public class JDBCProductInListDAO extends JDBCDAO<ProductInList, Integer> implem
 		ProductInList productInList = new ProductInList();
 
 		productInList.setId(rs.getInt("id"));
-		productInList.setProductId(rs.getInt("Product_id"));
-		productInList.setListId(rs.getInt("List_id"));
+		productInList.setProductId(rs.getInt("productId"));
+		productInList.setListId(rs.getInt("listId"));
 
 		return productInList;
 	}
@@ -90,8 +90,8 @@ public class JDBCProductInListDAO extends JDBCDAO<ProductInList, Integer> implem
 
 		try(PreparedStatement stm = CON.prepareStatement(
 				"UPDATE ProductInList SET " +
-						"Product_id = ?," +
-						"List_id = ? " +
+						"productId = ?," +
+						"listId = ? " +
 						"WHERE id = ?"
 		)) {
 

@@ -28,7 +28,7 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
 		notification.setDate(rs.getTimestamp("date"));
 		notification.setText(rs.getString("text"));
 		notification.setStatus(rs.getBoolean("status"));
-		notification.setUserId(rs.getInt("User_id"));
+		notification.setUserId(rs.getInt("userId"));
 
 		return notification;
 	}
@@ -95,7 +95,7 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
 						"date = ?," +
 						"text = ?," +
 						"status = ?, " +
-						"User_id = ?" +
+						"userId = ?" +
 						"WHERE id = ?"
 		)) {
 

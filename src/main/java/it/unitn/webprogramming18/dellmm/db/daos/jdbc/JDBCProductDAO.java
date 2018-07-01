@@ -29,7 +29,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
 		product.setDescription(rs.getString("description"));
 		product.setImg(rs.getString("img"));
 		product.setLogo(rs.getString("logo"));
-		product.setCategoryProductId(rs.getInt("CategoryProduct_id"));
+		product.setCategoryProductId(rs.getInt("categoryProductId"));
 
 		return product;
 	}
@@ -97,7 +97,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
 						"description =?,"+
 						"img =?,"+
 						"logo =?,"+
-						"CategoryProduct_id =? "+
+						"categoryProductId =? "+
 						"WHERE id = ?"
 		)) {
 			stm.setString(1,product.getName());

@@ -25,9 +25,9 @@ public class JDBCShopDAO extends JDBCDAO<Shop, Integer> implements ShopDAO {
 		Shop shop = new Shop();
 
 		shop.setId(rs.getInt("id"));
-		shop.setCategory(rs.getInt("Category"));
-		shop.setLat(rs.getDouble("Lat"));
-		shop.setLng(rs.getDouble("Lng"));
+		shop.setCategory(rs.getInt("category"));
+		shop.setLat(rs.getDouble("lat"));
+		shop.setLng(rs.getDouble("lng"));
 
 		return shop;
 	}
@@ -91,9 +91,9 @@ public class JDBCShopDAO extends JDBCDAO<Shop, Integer> implements ShopDAO {
 
 		try(PreparedStatement stm = CON.prepareStatement(
 				"UPDATE Shop SET " +
-						"Lat = ?," +
-						"Lng = ?," +
-						"Category = ? " +
+						"lat = ?," +
+						"lng = ?," +
+						"category = ? " +
 						"WHERE id = ?"
 		)) {
 

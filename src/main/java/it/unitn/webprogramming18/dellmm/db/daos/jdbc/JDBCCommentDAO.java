@@ -25,8 +25,8 @@ public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements Comment
 		Comment comment = new Comment();
 
 		comment.setId(rs.getInt("id"));
-		comment.setUserId(rs.getInt("User_id"));
-		comment.setListId(rs.getInt("List_id"));
+		comment.setUserId(rs.getInt("userId"));
+		comment.setListId(rs.getInt("listId"));
 		comment.setText(rs.getString("text"));
 
 		return comment;
@@ -91,8 +91,8 @@ public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements Comment
 
 		try(PreparedStatement stm = CON.prepareStatement(
 				"UPDATE Comment SET " +
-						"User_id = ?," +
-						"List_id = ?," +
+						"userId = ?," +
+						"listId = ?," +
 						"text = ? " +
 						"WHERE id = ?"
 		)) {

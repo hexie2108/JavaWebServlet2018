@@ -25,8 +25,8 @@ public class JDBCLogDAO extends JDBCDAO<Log, Integer> implements LogDAO{
 		Log log = new Log() ;
 
 		log.setId(rs.getInt("id"));
-		log.setProductId(rs.getInt("Product_id"));
-		log.setUserId(rs.getInt("User_id"));
+		log.setProductId(rs.getInt("productId"));
+		log.setUserId(rs.getInt("userId"));
 		log.setLast1(rs.getTimestamp("last1"));
 		log.setLast2(rs.getTimestamp("last2"));
 		log.setLast3(rs.getTimestamp("last3"));
@@ -94,8 +94,8 @@ public class JDBCLogDAO extends JDBCDAO<Log, Integer> implements LogDAO{
 
 		try(PreparedStatement stm = CON.prepareStatement(
 				"UPDATE Log SET " +
-						"Product_id =?,"+
-						"User_id =?,"+
+						"productId =?,"+
+						"userId =?,"+
 						"last1 =?,"+
 						"last2 =?,"+
 						"last3 =?,"+

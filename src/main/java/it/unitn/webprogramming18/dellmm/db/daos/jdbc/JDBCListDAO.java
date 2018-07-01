@@ -26,8 +26,8 @@ public class JDBCListDAO extends JDBCDAO<List, Integer> implements ListDAO {
 		
 		list.setId(rs.getInt("id"));
 		list.setName(rs.getString("name"));
-		list.setOwnerId(rs.getInt("OwnerId"));
-		list.setCategoryList(rs.getInt("CategoryList"));
+		list.setOwnerId(rs.getInt("ownerId"));
+		list.setCategoryList(rs.getInt("categoryList"));
 
 		return list;
 	}
@@ -92,8 +92,8 @@ public class JDBCListDAO extends JDBCDAO<List, Integer> implements ListDAO {
 		try(PreparedStatement stm = CON.prepareStatement(
 				"UPDATE List SET " +
 						"name = ?," +
-						"OwnerId = ?," +
-						"CategoryList = ?" +
+						"ownerId = ?," +
+						"categoryList = ?" +
 						"WHERE id = ?"
 		)) {
 

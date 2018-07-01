@@ -25,8 +25,8 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
 		Permission permission = new Permission() ;
 
 		permission.setId(rs.getInt("id"));
-		permission.setListId(rs.getInt("List_id"));
-		permission.setUserId(rs.getInt("User_id"));
+		permission.setListId(rs.getInt("listId"));
+		permission.setUserId(rs.getInt("userId"));
 		permission.setAddObject(rs.getBoolean("addObject"));
 		permission.setModifyList(rs.getBoolean("modifyList"));
 		permission.setDeleteList(rs.getBoolean("deleteObject"));
@@ -98,8 +98,8 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
 						"modifyList = ?," +
 						"deleteObject = ?," +
 						"deleteList = ?," +
-						"List_id=?," +
-						"User_id=?  "+
+						"listId=?," +
+						"userId=?  "+
 						"WHERE id = ?"
 		)) {
 
