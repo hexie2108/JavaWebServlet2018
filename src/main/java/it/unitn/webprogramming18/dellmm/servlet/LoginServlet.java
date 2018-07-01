@@ -34,14 +34,32 @@ public class LoginServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request,response);
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("user") == null) {
+            request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request,response);
+        } else {
+            String newPrevUrl = request.getParameter("prevUrl");
+            if(newPrevUrl == null) {
+                String contextPath = getServletContext().getContextPath();
+                if (!contextPath.endsWith("/")) {
+                    contextPath += "/";
+                }
+
+                newPrevUrl = contextPath + "index.jsp";
+            }
+
+            request.setAttribute("nextUrl", URLEncoder.encode(newPrevUrl,"UTF-8"));
+            request.setAttribute("prevUrl", newPrevUrl);
+
+            request.getRequestDispatcher("/WEB-INF/alreadyLoggedIn.jsp").forward(request,response);
+        }
+
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String contextPath = getServletContext().getContextPath();
-        if(!contextPath.endsWith("/"))
-        {
-            contextPath+="/";
+        if (!contextPath.endsWith("/")) {
+            contextPath += "/";
         }
 
         // Se non altrimenti specificata usa come url verso cui fare il redirect quella di default del sito
@@ -62,12 +80,12 @@ public class LoginServlet extends HttpServlet {
 
         if ((prevUrl == null) || (prevUrl.isEmpty()))
         {
-            prevUrl = "index.jsp";
+            prevUrl = contextPath + "index.jsp";
         }
 
         if ((nextUrl == null) || (nextUrl.isEmpty()))
         {
-            nextUrl = "index.jsp";
+            nextUrl = contextPath + "index.jsp";
         }
 
         User user = null;
