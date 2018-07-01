@@ -16,6 +16,7 @@ public class User implements Serializable{
     private int id;
     private String name;
     private String surname;
+    private String password;
     private String email;
     private String img;
     private boolean isAdmin;
@@ -66,6 +67,20 @@ public class User implements Serializable{
         this.surname = surname;
     }
 
+    /**
+     * @return the password
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * @param password the password to set
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    
     /**
      * @return the email
      */
