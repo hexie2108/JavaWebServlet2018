@@ -51,4 +51,13 @@ public interface NotificationDAO extends DAO<Notification, Integer> {
      */
     @Override
     public Notification update(Notification notification) throws DAOException;
+    
+    /**
+     * Get all the unread notifications for a specified user
+     * 
+     * @param userId
+     * @return the list of all the notifications the specified user has not already read
+     * @throws DAOException if an error occurred during the action.
+     */
+    public List<Notification> getUnreadNotificationByUserId(Integer userId) throws DAOException;
 }

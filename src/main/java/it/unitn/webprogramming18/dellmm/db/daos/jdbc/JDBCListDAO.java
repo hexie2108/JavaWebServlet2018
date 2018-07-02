@@ -110,4 +110,45 @@ public class JDBCListDAO extends JDBCDAO<List, Integer> implements ListDAO {
 
 		return list;
 	}
+        
+        
+        public java.util.List<List> getOwnedUserListsByUserId(Integer userId) throws DAOException {
+		java.util.List<List> lists = new ArrayList<>();
+                if (userId == null) {
+                    throw new DAOException("userId is null");
+                }
+		try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM List WHERE List.ownerId = ?")) {
+			stm.setInt(1, userId);
+                        try (ResultSet rs = stm.executeQuery()) {
+				while (rs.next()) {
+					lists.add(getListFromResultSet(rs));
+				}
+			}
+		} catch (SQLException ex) {
+			throw new DAOException("Impossible to get the list of user's List", ex);
+		}
+
+		return lists;    
+        }
+        
+        public java.util.List<List> getSharedWithUserListsByUserId(Integer userId) throws DAOException {
+		java.util.List<List> lists = new ArrayList<>();
+                if (userId == null) {
+                    throw new DAOException("userId is null");
+                }
+		try (PreparedStatement stm = CON.prepareStatement("SELECT List.* FROM Permission JOIN List ON Permission.listId = List.id WHERE Permission.userId = ?"
+                                                                  + "AND List.ownerId <> ?")) {
+			stm.setInt(1, userId);
+                        stm.setInt(2, userId);
+                        try (ResultSet rs = stm.executeQuery()) {
+				while (rs.next()) {
+					lists.add(getListFromResultSet(rs));
+				}
+			}
+		} catch (SQLException ex) {
+			throw new DAOException("Impossible to get the list of user's List", ex);
+		}
+
+		return lists;   
+        }
 }

@@ -51,4 +51,15 @@ public interface LogDAO extends DAO<Log, Integer> {
      */
     @Override
     public Log update(Log log) throws DAOException;
+    
+    /**
+     * Given user and product ids, returns the DB entry with relative times of purchase
+     * of defined product by defined user
+     * 
+     * @param userId
+     * @param productId
+     * @return The entry containing timestamps of last four purchases of a product by a user
+     * @throws DAOException if an error occurred during the action.
+     */
+    public Log getUserProductLogByIds(Integer userId, Integer productId) throws DAOException;
 }

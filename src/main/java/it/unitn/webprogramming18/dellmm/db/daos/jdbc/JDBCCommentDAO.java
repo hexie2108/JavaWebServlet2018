@@ -4,13 +4,16 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.jdbc.JDBCDAO;
 
 import it.unitn.webprogramming18.dellmm.db.daos.CommentDAO;
+import it.unitn.webprogramming18.dellmm.db.daos.UserDAO;
 import it.unitn.webprogramming18.dellmm.javaBeans.Comment;
+import it.unitn.webprogramming18.dellmm.javaBeans.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -110,4 +113,28 @@ public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements Comment
 
 		return comment;
 	}
+        
+        public HashMap<Integer, String> getCommentsOnListByListId(String listId) throws DAOException {
+                HashMap<Integer, String> comments = new HashMap<>();
+            
+                if (listId == null) {
+                        throw new DAOException("listId is null");
+                }
+		try (PreparedStatement stm = CON.prepareStatement("SELECT Comment.userId, Comment.text FROM Comment WHERE Comment.listId = ?")) {
+			stm.setString(1, listId);
+                        try (ResultSet rs = stm.executeQuery()) {
+				Integer userId = null;
+                                String text = null;
+                                while (rs.next()) {
+                                        userId = rs.getInt("userId");
+                                        text = rs.getString("comment");
+					comments.put(userId, text);
+				}
+			}
+		} catch (SQLException ex) {
+			throw new DAOException("Impossible to get the list of comment", ex);
+		}
+
+		return comments;
+        }
 }

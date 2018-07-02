@@ -51,4 +51,13 @@ public interface ProductDAO extends DAO<Product, Integer> {
      */
     @Override
     public Product update(Product product) throws DAOException;
+    
+    /**
+     * Get a list of all the products in a dellmm.list with specified listId
+     * 
+     * @param listId
+     * @return A list of the products in a dellmm.list
+     * @throws DAOException if an error occurred during the action. 
+     */
+    public List<Product> getProductsInListByListId(Integer listId) throws DAOException;
 }

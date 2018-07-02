@@ -28,6 +28,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
 		user.setName(rs.getString("name"));
 		user.setSurname(rs.getString("surname"));
 		user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("password"));
 		user.setImg(rs.getString("img"));
 		user.setIsAdmin(rs.getBoolean("isAdmin"));
 		user.setVerifyEmailLink(rs.getString("verifyEmailLink"));
@@ -35,7 +36,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
 
 		return user;
 	}
-
+          
 	@Override
 	public Long getCount() throws DAOException {
 		try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM User")) {
@@ -98,6 +99,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
 						"name = ?," +
 						"surname = ?," +
 						"email = ?," +
+                                                "password = ?," +
 						"img = ?," +
 						"isAdmin = ?," +
 						"verifyEmailLink = ?," +
@@ -108,11 +110,12 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
 			stm.setString(1, user.getName());
 			stm.setString(2, user.getSurname());
 			stm.setString(3, user.getEmail());
-			stm.setString(4, user.getImg());
-			stm.setBoolean(5, user.isIsAdmin());
-			stm.setString(6, user.getVerifyEmailLink());
-			stm.setString(7, user.getResendEmailLink());
-			stm.setInt(8, user.getId());
+                        stm.setString(4, user.getPassword());
+			stm.setString(5, user.getImg());
+			stm.setBoolean(6, user.isIsAdmin());
+			stm.setString(7, user.getVerifyEmailLink());
+			stm.setString(8, user.getResendEmailLink());
+			stm.setInt(9, user.getId());
 			if (stm.executeUpdate() != 1) {
 				throw new DAOException("Impossible to update the user");
 			}
@@ -122,4 +125,44 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
 
 		return user;
 	}
+        
+        public int checkUserRegisteredByEmail(String email) throws DAOException {
+                int res = -2;
+                if (email == null) {
+                        throw new DAOException("email is null");
+                }
+		try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM   User WHERE  EXISTS "
+                                                                    + "(SELECT * FROM   User WHERE  User.email = ?)")) {
+			stmt.setString(1, email);
+                        ResultSet rs = stmt.executeQuery();
+                        if (rs.next()) {
+                                res = rs.getInt(1);
+                                if (res > 1) {
+                                    return -1;
+                                }
+                        }
+		} catch (SQLException ex) {
+			throw new DAOException("Impossible to return result", ex);
+		}
+                return res;
+        }
+        
+        public User getByEmail(String email) throws DAOException {
+		User user= null;
+		if (email == null) {
+			throw new DAOException("email is null");
+		}
+		try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM User WHERE email = ?")) {
+			stm.setString(1, email);
+			try (ResultSet rs = stm.executeQuery()) {
+				if(rs.next()) {
+					user = getUserFromResultSet(rs);
+				}
+			}
+		} catch (SQLException ex) {
+			throw new DAOException("Impossible to get the user for the passed email", ex);
+		}
+
+		return user;      
+        }
 }

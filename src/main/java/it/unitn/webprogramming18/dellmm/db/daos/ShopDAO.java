@@ -51,4 +51,13 @@ public interface ShopDAO extends DAO<Shop, Integer> {
      */
     @Override
     public Shop update(Shop shop) throws DAOException;
+    
+    /**
+     * Returns all the shops of a specified category
+     * 
+     * @param category
+     * @return a List containing all shops of category specified in parameter
+     * @throws DAOException if an error occurred during the action.
+     */
+    public List<Shop> getShopsByCategory(String category) throws DAOException;
 }

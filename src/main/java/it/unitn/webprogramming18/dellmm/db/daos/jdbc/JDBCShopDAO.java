@@ -110,4 +110,24 @@ public class JDBCShopDAO extends JDBCDAO<Shop, Integer> implements ShopDAO {
 
 		return shop;
 	}
+
+        public List<Shop> getShopsByCategory(String category) throws DAOException {
+		List<Shop> shopList = new ArrayList<>();
+		
+                if (category == null) {
+			throw new DAOException("category is null");
+		}
+		try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Shop WHERE Shop.category = ?")) {
+			stm.setString(1, category);
+                        try (ResultSet rs = stm.executeQuery()) {
+				while (rs.next()) {
+					shopList.add(getShopFromResultSet(rs));
+				}
+			}
+		} catch (SQLException ex) {
+			throw new DAOException("Impossible to get the list of shop of specified category", ex);
+		}
+
+		return shopList;        
+        }
 }
