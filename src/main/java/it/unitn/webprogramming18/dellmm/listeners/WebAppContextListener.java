@@ -9,6 +9,8 @@ package it.unitn.webprogramming18.dellmm.listeners;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.jdbc.JDBCDAOFactory;
+import it.unitn.webprogramming18.dellmm.email.EmailFactory;
+import it.unitn.webprogramming18.dellmm.email.exceptions.EmailFactoryException;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -33,21 +35,38 @@ public class WebAppContextListener implements ServletContextListener {
      */
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        String dburl = sce.getServletContext().getInitParameter("dburl");
-        String dbuser = sce.getServletContext().getInitParameter("dbuser");
-        String dbpwd = sce.getServletContext().getInitParameter("dbpwd");
+        /* Init DB */
+        final String dburl = sce.getServletContext().getInitParameter("dburl");
+        final String dbuser = sce.getServletContext().getInitParameter("dbuser");
+        final String dbpwd = sce.getServletContext().getInitParameter("dbpwd");
 
         try {
             JDBCDAOFactory.configure(dburl, dbuser, dbpwd);
             DAOFactory daoFactory = JDBCDAOFactory.getInstance();
 
             sce.getServletContext().setAttribute("daoFactory", daoFactory);
-
         } catch (DAOFactoryException ex) {
             Logger.getLogger(getClass().getName()).severe(ex.toString());
 
             throw new RuntimeException(ex);
 
+        }
+
+        /* Init email */
+        final String smtpHostname = sce.getServletContext().getInitParameter("smtpHostname");
+        final String smtpPort = sce.getServletContext().getInitParameter("smtpPort");
+        final String smtpUsername = sce.getServletContext().getInitParameter("smtpUsername");
+        final String smtpPassword = sce.getServletContext().getInitParameter("smtpPassword");
+
+        try {
+            EmailFactory.configure(smtpHostname, smtpPort, smtpUsername, smtpPassword);
+            EmailFactory emailFactory = EmailFactory.getInstance();
+
+            sce.getServletContext().setAttribute("emailFactory", emailFactory);
+        } catch (EmailFactoryException ex) {
+            Logger.getLogger(getClass().getName()).severe(ex.toString());
+
+            throw new RuntimeException(ex);
         }
     }
 
@@ -65,6 +84,8 @@ public class WebAppContextListener implements ServletContextListener {
         if (daoFactory != null) {
             daoFactory.shutdown();
         }
+
         daoFactory = null;
+
     }
 }

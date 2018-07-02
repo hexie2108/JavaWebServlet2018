@@ -4,12 +4,15 @@
 	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
 	 version="3.1">
+
+    <!-- Session settings -->
     <session-config>
         <session-timeout>
             30
         </session-timeout>
     </session-config>
 
+    <!-- DB SETTINGS -->
     <context-param>
         <description>The url of the JDBC persistence system database position</description>
         <param-name>dburl</param-name>
@@ -26,11 +29,35 @@
         <param-value>passworddacambiare</param-value>
     </context-param>
 
+    <!-- SMTP SETTINGS -->
+    <context-param>
+        <description>Hostname of the SMTP server</description>
+        <param-name>smtpHostname</param-name>
+        <param-value>smtp.gmail.com</param-value>
+    </context-param>
+    <context-param>
+        <description>Port of the SMTP server</description>
+        <param-name>smtpPort</param-name>
+        <param-value>465</param-value>
+    </context-param>
+    <context-param>
+        <description>Username of the SMTP server</description>
+        <param-name>smtpUsername</param-name>
+        <param-value>registrazioneprogettowebprog@gmail.com</param-value>
+    </context-param>
+    <context-param>
+        <description>Password of the SMTP server</description>
+        <param-name>smtpPassword</param-name>
+        <param-value>xeecaoS5tood3bee</param-value>
+    </context-param>
+
+    <!-- LISTENERS -->
     <listener>
         <description>ServletContextListener</description>
         <listener-class>it.unitn.webprogramming18.dellmm.listeners.WebAppContextListener</listener-class>
     </listener>
 
+    <!-- SERVLETS -->
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlet.LoginServlet</servlet-class>

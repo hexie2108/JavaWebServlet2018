@@ -104,7 +104,7 @@ public class JDBCDAOFactory implements DAOFactory {
     @Override
     public void shutdown() {
         try {
-            DriverManager.getConnection("jdbc:derby:;shutdown=true");
+            DriverManager.getConnection("jdbc:derby:;shutdown=true"); //TODO: Indagare
         } catch (SQLException sqle) {
             Logger.getLogger(JDBCDAOFactory.class.getName()).info(sqle.getMessage());
         }
