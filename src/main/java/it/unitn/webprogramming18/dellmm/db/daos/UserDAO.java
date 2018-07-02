@@ -51,4 +51,13 @@ public interface UserDAO extends DAO<User, Integer> {
      */
     @Override
     public User update(User user) throws DAOException;
+
+    /**
+     * Return the user with the email and password specified
+     * @param email the email of the user to return
+     * @param password the password of the user to return
+     * @return The user requested
+     * @throws DAOException
+     */
+    public User getByEmailAndPassword(String email, String password) throws DAOException;
 }
