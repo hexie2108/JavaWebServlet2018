@@ -15,7 +15,12 @@ public class LogoutServlet extends HttpServlet {
         String nextUrl = request.getParameter("nextUrl");
 
         if (nextUrl == null) {
-            nextUrl = getServletContext().getContextPath() + "/index.jsp";
+            String contextPath = getServletContext().getContextPath();
+            if (!contextPath.endsWith("/")){
+                contextPath += "/";
+            }
+
+            nextUrl = contextPath + "index.jsp";
         }
 
         HttpSession session = request.getSession(false);

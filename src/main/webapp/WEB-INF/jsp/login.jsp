@@ -54,7 +54,7 @@
                 <div class="checkbox pull-left">
                     <label><input class="noMarginTop" name="remember" type="checkbox" value="">Remember me</label>
                 </div>
-                <a id="pwdDimenticata" class="pull-right" href="/forgotPassword">Password dimenticata</a>
+                <a id="pwdDimenticata" class="pull-right" href="${pageContext.request.contextPath}/forgotPassword">Password dimenticata</a>
 
                 <div class="btn-group btn-group-justified" role="group" aria-label="...">
                     <div class="btn-group" role="group" id="id-annulla">
@@ -68,7 +68,7 @@
             </div>
         </form>
         <div class="content-divider"><span class="content-divider-text">Non sei registrato?</span></div>
-        <a href="/register" class="btn btn-default" role="button" id="register-btn">Registrati</a>
+        <a href="${pageContext.request.contextPath}/register" class="btn btn-default" role="button" id="register-btn">Registrati</a>
     </div>
 </div>
 </body>

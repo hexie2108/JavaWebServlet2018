@@ -36,7 +36,7 @@ public class LoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
-            request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request,response);
+            request.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(request,response);
         } else {
             String newPrevUrl = request.getParameter("prevUrl");
             if(newPrevUrl == null) {
@@ -51,7 +51,7 @@ public class LoginServlet extends HttpServlet {
             request.setAttribute("nextUrl", URLEncoder.encode(newPrevUrl,"UTF-8"));
             request.setAttribute("prevUrl", newPrevUrl);
 
-            request.getRequestDispatcher("/WEB-INF/alreadyLoggedIn.jsp").forward(request,response);
+            request.getRequestDispatcher("/WEB-INF/jsp/alreadyLoggedIn.jsp").forward(request,response);
         }
 
     }
@@ -102,7 +102,7 @@ public class LoginServlet extends HttpServlet {
         }
 
         if(user == null) {
-            request.getRequestDispatcher("/WEB-INF/login.jsp?"+
+            request.getRequestDispatcher("/WEB-INF/jsp/login.jsp?"+
                     "prevUrl"+"="+ URLEncoder.encode(prevUrl,"utf-8")+
                     "&"+"nextUrl"+"="+ URLEncoder.encode(nextUrl,"utf-8")+
                     "&"+"email"+"="+ URLEncoder.encode(email,"utf-8")+
@@ -112,7 +112,7 @@ public class LoginServlet extends HttpServlet {
         }
         else if(user.getVerifyEmailLink() != null)
         {
-            request.getRequestDispatcher("/WEB-INF/login.jsp?"+
+            request.getRequestDispatcher("/WEB-INF/jsp/login.jsp?"+
                     "prevUrl"+"="+ URLEncoder.encode(prevUrl,"utf-8") +
                     "&"+"nextUrl"+"="+ URLEncoder.encode(nextUrl,"utf-8") +
                     "&"+"email"+"="+ URLEncoder.encode(email,"utf-8") +
