@@ -16,8 +16,8 @@ public class User implements Serializable{
     private int id;
     private String name;
     private String surname;
-    private String email;
     private String password;
+    private String email;
     private String img;
     private boolean isAdmin;
     private String verifyEmailLink;
@@ -67,6 +67,20 @@ public class User implements Serializable{
         this.surname = surname;
     }
 
+    /**
+     * @return the password
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * @param password the password to set
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    
     /**
      * @return the email
      */
@@ -135,20 +149,5 @@ public class User implements Serializable{
      */
     public void setResendEmailLink(String resendEmailLink) {
         this.resendEmailLink = resendEmailLink;
-    }
-
-
-    /**
-     * @return the password
-     */
-    public String getPassword() {
-        return password;
-    }
-
-    /**
-     * @param password the password to set
-     */
-    public void setPassword(String password) {
-        this.password = password;
     }
 }

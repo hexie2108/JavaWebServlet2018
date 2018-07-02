@@ -60,4 +60,19 @@ public interface UserDAO extends DAO<User, Integer> {
      * @throws DAOException
      */
     public User getByEmailAndPassword(String email, String password) throws DAOException;
+    
+    /**
+     * Given an email, the function checks if the user is registered in the DB,
+     * thus if it's registered on the application.
+     * 
+     * @param email
+     * @return 0 if user is not registered,
+     *         1 if user is registered,
+     *         -1 if >1 is returned by query,
+     *         -2 if function does not work
+     * @throws DAOException if an error occurred during the information
+     * retrieving.
+     */
+    public int checkUserRegisteredByEmail(String email) throws DAOException;
+
 }

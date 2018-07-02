@@ -113,4 +113,24 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
 
 		return notification;
 	}
+        
+        public List<Notification> getUnreadNotificationByUserId(Integer userId) throws DAOException {
+		List<Notification> notificationList = new ArrayList<>();
+                if (userId == null) {
+                        throw new DAOException("primaryKey is null");
+                }
+		try (PreparedStatement stm = CON.prepareStatement("SELECT Notification.* FROM Notification JOIN User ON  User.id = Notification.userId"
+                                                                  + " WHERE  User.id = ? AND  Notification.status = false")) {
+			stm.setInt(1, userId);
+                        try (ResultSet rs = stm.executeQuery()) {
+				while (rs.next()) {
+					notificationList.add(getNotificationFromResultSet(rs));
+				}
+			}
+		} catch (SQLException ex) {
+			throw new DAOException("Impossible to get the list of unread notification", ex);
+		}
+
+		return notificationList;    
+        }
 }

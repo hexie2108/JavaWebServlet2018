@@ -119,4 +119,24 @@ public class JDBCLogDAO extends JDBCDAO<Log, Integer> implements LogDAO{
 
 		return log;
 	}
+        
+        public Log getUserProductLogByIds(Integer userId, Integer productId) throws DAOException {
+		Log log = null;
+		if (userId == null || productId == null) {
+			throw new DAOException("One or both arguments (userId, productId) are null");
+		}
+		try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Log WHERE userId = ? AND productId = ?")) {
+			stm.setInt(1, userId);
+                        stm.setInt(2, productId);
+			try (ResultSet rs = stm.executeQuery()) {
+				if(rs.next()) {
+					log = getLogFromResultSet(rs);
+				}
+			}
+		} catch (SQLException ex) {
+			throw new DAOException("Impossible to get the log for the passed userId and productId", ex);
+		}
+
+		return log; 
+        }
 }

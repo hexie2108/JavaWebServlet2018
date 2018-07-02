@@ -49,4 +49,22 @@ public interface ListDAO extends DAO<List, Integer> {
      */
     @Override
     public List update(List list) throws DAOException;
+    
+    /**
+     * Gets all the lists that the specified user owns
+     * 
+     * @param userId
+     * @return the list of the owned lists of the user
+     * @throws DAOException if an error occurred during the action.
+     */
+    public java.util.List<List> getOwnedUserListsByUserId(Integer userId) throws DAOException;
+    
+    /**
+     * Gets all the lists shared with the specified user
+     * 
+     * @param userId
+     * @return the list of the lists shared with the specified user
+     * @throws DAOException if an error occurred during the action.
+     */
+    public java.util.List<List> getSharedWithUserListsByUserId(Integer userId) throws DAOException;
 }

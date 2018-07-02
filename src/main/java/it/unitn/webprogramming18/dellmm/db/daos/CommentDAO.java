@@ -3,6 +3,8 @@ package it.unitn.webprogramming18.dellmm.db.daos;
 import it.unitn.webprogramming18.dellmm.db.utils.DAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.javaBeans.Comment;
+import it.unitn.webprogramming18.dellmm.javaBeans.User;
+import java.util.HashMap;
 
 import java.util.List;
 
@@ -51,4 +53,13 @@ public interface CommentDAO extends DAO<Comment, Integer> {
      */
     @Override
     public Comment update(Comment comment) throws DAOException;
+    
+    /**
+     * Get all the comments on a list given listId
+     * 
+     * @param listId
+     * @return a "pair" of type HashMap<Integer, String> with Integer being the userId
+     * @throws DAOException 
+     */
+    public HashMap<Integer, String> getCommentsOnListByListId(String listId) throws DAOException;
 }

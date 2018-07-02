@@ -36,7 +36,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
 
 		return user;
 	}
-
+          
 	@Override
 	public Long getCount() throws DAOException {
 		try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM User")) {
@@ -101,7 +101,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
 						"name = ?," +
 						"surname = ?," +
 						"email = ?," +
-						"password = ?," +
+                                                "password = ?," +
 						"img = ?," +
 						"isAdmin = ?," +
 						"verifyEmailLink = ?," +
@@ -153,5 +153,28 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
 		}
 
 		return user;
-	}
+	}        
+
+        
+        public int checkUserRegisteredByEmail(String email) throws DAOException {
+                int res = -1;
+                if (email == null) {
+                        throw new DAOException("email is null");
+                }
+		try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM User WHERE  EXISTS "
+                                                                    + "(SELECT * FROM   User WHERE  User.email = ?)")) {
+			stmt.setString(1, email);
+                        ResultSet rs = stmt.executeQuery();
+                        if (rs.next()) {
+                                res = rs.getInt(1);
+                                if (res > 1) {
+                                    return -1;
+                                }
+                        }
+		} catch (SQLException ex) {
+			throw new DAOException("Impossible to return result", ex);
+		}
+                return res;
+        }
+
 }
