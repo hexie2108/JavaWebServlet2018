@@ -27,7 +27,7 @@ public class JDBCCategoryProductDAO extends JDBCDAO<CategoryProduct, Integer> im
 		categoryProduct.setId(rs.getInt("id"));
 		categoryProduct.setName(rs.getString("name"));
 		categoryProduct.setDescription(rs.getString("description"));
-		categoryProduct.setImg(rs.getString("image"));
+		categoryProduct.setImg(rs.getString("img"));
 
 		return categoryProduct;
 	}
@@ -93,7 +93,7 @@ public class JDBCCategoryProductDAO extends JDBCDAO<CategoryProduct, Integer> im
 				"UPDATE CategoryProduct SET " +
 						"name =?,"+
 						"description =?,"+
-						"image =?  "+
+						"img =?  "+
 						"WHERE id = ?"
 		)) {
 
