@@ -8,17 +8,16 @@ package it.unitn.webprogramming18.dellmm.javaBeans;
 import java.sql.Timestamp;
 
 /**
- *
  * @author luca_morgese
  */
 public class Notification {
-    
+
     private int id;
     private int userId;
     private Timestamp date;
     private String text;
     private boolean status;
-    
+
 
     /**
      * @return the id

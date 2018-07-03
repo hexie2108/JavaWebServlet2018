@@ -8,7 +8,6 @@ package it.unitn.webprogramming18.dellmm.javaBeans;
 import java.sql.Timestamp;
 
 /**
- *
  * @author luca_morgese
  */
 public class Log {
@@ -20,8 +19,8 @@ public class Log {
     private Timestamp last2;
     private Timestamp last3;
     private Timestamp last4;
-    
-    
+
+
     /**
      * @return the id
      */
@@ -119,6 +118,4 @@ public class Log {
     public void setLast4(Timestamp last4) {
         this.last4 = last4;
     }
-    
-    
 }

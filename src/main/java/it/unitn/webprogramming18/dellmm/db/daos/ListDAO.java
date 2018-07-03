@@ -11,7 +11,7 @@ public interface ListDAO extends DAO<List, Integer> {
      *
      * @return the number of records present into the storage system.
      * @throws DAOException if an error occurred during the information
-     * retrieving.
+     *                      retrieving.
      */
     @Override
     public Long getCount() throws DAOException;
@@ -25,7 +25,7 @@ public interface ListDAO extends DAO<List, Integer> {
      * parameter or {@code null} if no entities with that id is not present into
      * the storage system.
      * @throws DAOException if an error occurred during the information
-     * retrieving.
+     *                      retrieving.
      */
     @Override
     public List getByPrimaryKey(Integer primaryKey) throws DAOException;
@@ -36,32 +36,33 @@ public interface ListDAO extends DAO<List, Integer> {
      *
      * @return the list of all the valid {@code list}.
      * @throws DAOException if an error occurred during the information
-     * retrieving.
+     *                      retrieving.
      */
     @Override
     public java.util.List<List> getAll() throws DAOException;
 
     /**
      * Update the list passed as parameter and returns it.
+     *
      * @param list the list used to update the persistence system.
      * @return the updated list.
      * @throws DAOException if an error occurred during the action.
      */
     @Override
     public List update(List list) throws DAOException;
-    
+
     /**
      * Gets all the lists that the specified user owns
-     * 
+     *
      * @param userId
      * @return the list of the owned lists of the user
      * @throws DAOException if an error occurred during the action.
      */
     public java.util.List<List> getOwnedUserListsByUserId(Integer userId) throws DAOException;
-    
+
     /**
      * Gets all the lists shared with the specified user
-     * 
+     *
      * @param userId
      * @return the list of the lists shared with the specified user
      * @throws DAOException if an error occurred during the action.

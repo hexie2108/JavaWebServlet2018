@@ -8,10 +8,9 @@ package it.unitn.webprogramming18.dellmm.javaBeans;
 import java.io.Serializable;
 
 /**
- *
  * @author luca_morgese
  */
-public class User implements Serializable{
+public class User implements Serializable {
 
     private int id;
     private String name;
@@ -22,9 +21,8 @@ public class User implements Serializable{
     private boolean isAdmin;
     private String verifyEmailLink;
     private String resendEmailLink;
-    
-    
-    
+
+
     /**
      * @return the id
      */
@@ -80,7 +78,7 @@ public class User implements Serializable{
     public void setPassword(String password) {
         this.password = password;
     }
-    
+
     /**
      * @return the email
      */

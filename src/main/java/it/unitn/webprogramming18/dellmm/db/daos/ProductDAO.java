@@ -13,7 +13,7 @@ public interface ProductDAO extends DAO<Product, Integer> {
      *
      * @return the number of records present into the storage system.
      * @throws DAOException if an error occurred during the information
-     * retrieving.
+     *                      retrieving.
      */
     @Override
     public Long getCount() throws DAOException;
@@ -27,7 +27,7 @@ public interface ProductDAO extends DAO<Product, Integer> {
      * parameter or {@code null} if no entities with that id is not present into
      * the storage system.
      * @throws DAOException if an error occurred during the information
-     * retrieving.
+     *                      retrieving.
      */
     @Override
     public Product getByPrimaryKey(Integer primaryKey) throws DAOException;
@@ -38,26 +38,27 @@ public interface ProductDAO extends DAO<Product, Integer> {
      *
      * @return the list of all the valid {@code product}.
      * @throws DAOException if an error occurred during the information
-     * retrieving.
+     *                      retrieving.
      */
     @Override
     public List<Product> getAll() throws DAOException;
 
     /**
      * Update the product passed as parameter and returns it.
+     *
      * @param product the product used to update the persistence system.
      * @return the updated product.
      * @throws DAOException if an error occurred during the action.
      */
     @Override
     public Product update(Product product) throws DAOException;
-    
+
     /**
      * Get a list of all the products in a dellmm.list with specified listId
-     * 
+     *
      * @param listId
      * @return A list of the products in a dellmm.list
-     * @throws DAOException if an error occurred during the action. 
+     * @throws DAOException if an error occurred during the action.
      */
     public List<Product> getProductsInListByListId(Integer listId) throws DAOException;
 }

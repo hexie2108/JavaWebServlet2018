@@ -10,15 +10,29 @@ import java.util.Date;
 import java.util.Properties;
 
 public class EmailFactory {
+    private static EmailFactory instance = null;
     final private String smtpHost;
     final private String smtpPort;
     final private String username;
     final private String password;
 
-    private static EmailFactory instance = null;
+    private EmailFactory(
+            String smtpHost,
+            String smtpPort,
+            String username,
+            String password
+    ) {
+        // TODO: Aggiungere controllo null?
+
+        this.smtpHost = smtpHost;
+        this.smtpPort = smtpPort;
+        this.username = username;
+        this.password = password;
+    }
 
     /**
      * Function to configure EmailFactory. Call this before using the getInstance method
+     *
      * @param smtpHost smtp server hostname
      * @param smtpPort smtp server port
      * @param username account username
@@ -35,10 +49,11 @@ public class EmailFactory {
 
     /**
      * Returns the singleton instance
+     *
      * @return a EmailFactory singleton
      * @throws EmailFactoryException
      */
-    public static EmailFactory getInstance() throws EmailFactoryException{
+    public static EmailFactory getInstance() throws EmailFactoryException {
         if (instance == null) {
             throw new EmailFactoryException("EmailFactory not yet configured. Call EmailFactory.configure(String smtpHost, String smtpPort, String username, String password) before use the class");
         }
@@ -47,10 +62,11 @@ public class EmailFactory {
 
     /**
      * Send a mail with the specified paramenters(using the account specified during configure)
+     *
      * @param service_name Name to show(as contact)
-     * @param subject subject of the mail
-     * @param content the content of the mail
-     * @param email_to the mail recipient
+     * @param subject      subject of the mail
+     * @param content      the content of the mail
+     * @param email_to     the mail recipient
      * @throws MessagingException
      * @throws UnsupportedEncodingException
      */
@@ -78,26 +94,12 @@ public class EmailFactory {
         });
 
         Message msg = new MimeMessage(session);
-        msg.setFrom(new InternetAddress(username,service_name));
+        msg.setFrom(new InternetAddress(username, service_name));
         msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email_to));
         msg.setSubject(subject);
         msg.setSentDate(new Date());
         msg.setContent(content);
 
         Transport.send(msg);
-    }
-
-    private EmailFactory(
-            String smtpHost,
-            String smtpPort,
-            String username,
-            String password
-    ) {
-        // TODO: Aggiungere controllo null?
-
-        this.smtpHost = smtpHost;
-        this.smtpPort = smtpPort;
-        this.username = username;
-        this.password = password;
     }
 }

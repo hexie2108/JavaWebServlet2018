@@ -22,24 +22,24 @@ public class LoginServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
-        if(daoFactory == null){
+        if (daoFactory == null) {
             throw new ServletException("Impossible to get db factory for user storage system");
         }
 
-        try{
+        try {
             userDAO = daoFactory.getDAO(UserDAO.class);
-        } catch (DAOFactoryException ex){
-            throw new ServletException("Impossible to get db factory for user storage system",ex);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get db factory for user storage system", ex);
         }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
-            request.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(request,response);
+            request.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(request, response);
         } else {
             String newPrevUrl = request.getParameter("prevUrl");
-            if(newPrevUrl == null) {
+            if (newPrevUrl == null) {
                 String contextPath = getServletContext().getContextPath();
                 if (!contextPath.endsWith("/")) {
                     contextPath += "/";
@@ -48,10 +48,10 @@ public class LoginServlet extends HttpServlet {
                 newPrevUrl = contextPath + "index.jsp";
             }
 
-            request.setAttribute("nextUrl", URLEncoder.encode(newPrevUrl,"UTF-8"));
+            request.setAttribute("nextUrl", URLEncoder.encode(newPrevUrl, "UTF-8"));
             request.setAttribute("prevUrl", newPrevUrl);
 
-            request.getRequestDispatcher("/WEB-INF/jsp/alreadyLoggedIn.jsp").forward(request,response);
+            request.getRequestDispatcher("/WEB-INF/jsp/alreadyLoggedIn.jsp").forward(request, response);
         }
 
     }
@@ -70,29 +70,26 @@ public class LoginServlet extends HttpServlet {
         String prevUrl = request.getParameter("prevUrl");
         String nextUrl = request.getParameter("nextUrl");
 
-        if(email == null) {
+        if (email == null) {
             email = "";
         }
 
-        if(password == null) {
+        if (password == null) {
             password = "";
         }
 
-        if ((prevUrl == null) || (prevUrl.isEmpty()))
-        {
+        if ((prevUrl == null) || (prevUrl.isEmpty())) {
             prevUrl = contextPath + "index.jsp";
         }
 
-        if ((nextUrl == null) || (nextUrl.isEmpty()))
-        {
+        if ((nextUrl == null) || (nextUrl.isEmpty())) {
             nextUrl = contextPath + "index.jsp";
         }
 
         User user = null;
 
         if (!email.isEmpty() &&
-            !password.isEmpty())
-        {
+                !password.isEmpty()) {
             try {
                 user = userDAO.getByEmailAndPassword(email, password);
             } catch (DAOException e) {
@@ -101,31 +98,27 @@ public class LoginServlet extends HttpServlet {
             }
         }
 
-        if(user == null) {
-            request.getRequestDispatcher("/WEB-INF/jsp/login.jsp?"+
-                    "prevUrl"+"="+ URLEncoder.encode(prevUrl,"utf-8")+
-                    "&"+"nextUrl"+"="+ URLEncoder.encode(nextUrl,"utf-8")+
-                    "&"+"email"+"="+ URLEncoder.encode(email,"utf-8")+
-                    "&"+"password"+"="+ URLEncoder.encode(password,"utf-8") +
-                    "&"+"error_noUserOrPassword=true"
-            ).forward(request,response);
-        }
-        else if(user.getVerifyEmailLink() != null)
-        {
-            request.getRequestDispatcher("/WEB-INF/jsp/login.jsp?"+
-                    "prevUrl"+"="+ URLEncoder.encode(prevUrl,"utf-8") +
-                    "&"+"nextUrl"+"="+ URLEncoder.encode(nextUrl,"utf-8") +
-                    "&"+"email"+"="+ URLEncoder.encode(email,"utf-8") +
-                    "&"+"password"+"="+ URLEncoder.encode(password,"utf-8") +
-                    "&"+"error_noVerified=true"
-            ).forward(request,response);
-        }
-        else
-        {
-            session.setAttribute("user",user);
+        if (user == null) {
+            request.getRequestDispatcher("/WEB-INF/jsp/login.jsp?" +
+                    "prevUrl" + "=" + URLEncoder.encode(prevUrl, "utf-8") +
+                    "&" + "nextUrl" + "=" + URLEncoder.encode(nextUrl, "utf-8") +
+                    "&" + "email" + "=" + URLEncoder.encode(email, "utf-8") +
+                    "&" + "password" + "=" + URLEncoder.encode(password, "utf-8") +
+                    "&" + "error_noUserOrPassword=true"
+            ).forward(request, response);
+        } else if (user.getVerifyEmailLink() != null) {
+            request.getRequestDispatcher("/WEB-INF/jsp/login.jsp?" +
+                    "prevUrl" + "=" + URLEncoder.encode(prevUrl, "utf-8") +
+                    "&" + "nextUrl" + "=" + URLEncoder.encode(nextUrl, "utf-8") +
+                    "&" + "email" + "=" + URLEncoder.encode(email, "utf-8") +
+                    "&" + "password" + "=" + URLEncoder.encode(password, "utf-8") +
+                    "&" + "error_noVerified=true"
+            ).forward(request, response);
+        } else {
+            session.setAttribute("user", user);
 
             String remember = request.getParameter("remember");
-            if(remember != null && remember.equals("on"))
+            if (remember != null && remember.equals("on"))
                 session.setMaxInactiveInterval(-1);
 
             response.sendRedirect(response.encodeRedirectURL(nextUrl));

@@ -6,11 +6,10 @@
 package it.unitn.webprogramming18.dellmm.javaBeans;
 
 /**
- *
  * @author luca_morgese
  */
 public class Permission {
-    
+
     private int id;
     private int listId;
     private int userId;
@@ -18,7 +17,7 @@ public class Permission {
     private boolean deleteObject;
     private boolean modifyList;
     private boolean deleteList;
-    
+
 
     /**
      * @return the id
@@ -117,6 +116,4 @@ public class Permission {
     public void setDeleteList(boolean deleteList) {
         this.deleteList = deleteList;
     }
-
-    
 }

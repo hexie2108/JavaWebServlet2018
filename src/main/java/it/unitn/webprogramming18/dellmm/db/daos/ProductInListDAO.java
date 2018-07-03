@@ -13,7 +13,7 @@ public interface ProductInListDAO extends DAO<ProductInList, Integer> {
      *
      * @return the number of records present into the storage system.
      * @throws DAOException if an error occurred during the information
-     * retrieving.
+     *                      retrieving.
      */
     @Override
     public Long getCount() throws DAOException;
@@ -27,7 +27,7 @@ public interface ProductInListDAO extends DAO<ProductInList, Integer> {
      * parameter or {@code null} if no entities with that id is not present into
      * the storage system.
      * @throws DAOException if an error occurred during the information
-     * retrieving.
+     *                      retrieving.
      */
     @Override
     public ProductInList getByPrimaryKey(Integer primaryKey) throws DAOException;
@@ -38,13 +38,14 @@ public interface ProductInListDAO extends DAO<ProductInList, Integer> {
      *
      * @return the list of all the valid {@code productInList}.
      * @throws DAOException if an error occurred during the information
-     * retrieving.
+     *                      retrieving.
      */
     @Override
     public List<ProductInList> getAll() throws DAOException;
 
     /**
      * Update the productInList passed as parameter and returns it.
+     *
      * @param productInList the productInList used to update the persistence system.
      * @return the updated productInList.
      * @throws DAOException if an error occurred during the action.

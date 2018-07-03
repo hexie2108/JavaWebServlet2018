@@ -6,10 +6,11 @@
  */
 package it.unitn.webprogramming18.dellmm.db.utils.factories.jdbc;
 
+import it.unitn.webprogramming18.dellmm.db.utils.DAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
-import it.unitn.webprogramming18.dellmm.db.utils.DAO;
 import it.unitn.webprogramming18.dellmm.db.utils.jdbc.JDBCDAO;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
@@ -26,51 +27,17 @@ import java.util.logging.Logger;
  */
 public class JDBCDAOFactory implements DAOFactory {
 
+    private static JDBCDAOFactory instance;
     private final transient Connection CON;
     private final transient HashMap<Class, DAO> DAO_CACHE;
 
-    private static JDBCDAOFactory instance;
-    
-    /**
-     * Call this method before use the instance of this class.
-     * @param dbUrl the url to access to the database.
-     * @throws DAOFactoryException if an error occurred during db factory
-     * configuration.
-     * 
-     * @author Stefano Chirico
-     * @since 1.0.170417
-     */
-    public static void configure(String dbUrl, String dbUser, String dbPwd) throws DAOFactoryException {
-        if (instance == null) {
-            instance = new JDBCDAOFactory(dbUrl, dbUser, dbPwd);
-        } else {
-            throw new DAOFactoryException("DAOFactory already configured. You can call configure only one time");
-        }
-    }
-    
-    /**
-     * Returns the singleton instace of this {@link DAOFactory}.
-     * @return the singleton instance of this {@code DAOFactory}.
-     * @throws DAOFactoryException if an error occurred if this db factory is
-     * not yet configured.
-     * 
-     * @author Stefano Chirico
-     * @since 1.0.170417
-     */
-    public static JDBCDAOFactory getInstance() throws DAOFactoryException {
-        if (instance == null) {
-            throw new DAOFactoryException("DAOFactory not yet configured. Call DAOFactory.configure(String dbUrl) before use the class");
-        }
-        return instance;
-    }
-    
     /**
      * The private constructor used to creste the singleton instance of this
      * {@code DAOFactory}.
+     *
      * @param dbUrl the url to access the database.
      * @throws DAOFactoryException if an error occurred during {@code DAOFactory}
-     * creation.
-     * 
+     *                             creation.
      * @author Stefano Chirico
      * @since 1.0.170417
      */
@@ -86,18 +53,51 @@ public class JDBCDAOFactory implements DAOFactory {
         }
 
         try {
-            CON = DriverManager.getConnection(dbUrl,dbUser,dbPwd);
+            CON = DriverManager.getConnection(dbUrl, dbUser, dbPwd);
         } catch (SQLException sqle) {
             sqle.printStackTrace();
             throw new DAOFactoryException("Cannot create connection", sqle);
         }
-        
+
         DAO_CACHE = new HashMap<>();
     }
-    
+
+    /**
+     * Call this method before use the instance of this class.
+     *
+     * @param dbUrl the url to access to the database.
+     * @throws DAOFactoryException if an error occurred during db factory
+     *                             configuration.
+     * @author Stefano Chirico
+     * @since 1.0.170417
+     */
+    public static void configure(String dbUrl, String dbUser, String dbPwd) throws DAOFactoryException {
+        if (instance == null) {
+            instance = new JDBCDAOFactory(dbUrl, dbUser, dbPwd);
+        } else {
+            throw new DAOFactoryException("DAOFactory already configured. You can call configure only one time");
+        }
+    }
+
+    /**
+     * Returns the singleton instace of this {@link DAOFactory}.
+     *
+     * @return the singleton instance of this {@code DAOFactory}.
+     * @throws DAOFactoryException if an error occurred if this db factory is
+     *                             not yet configured.
+     * @author Stefano Chirico
+     * @since 1.0.170417
+     */
+    public static JDBCDAOFactory getInstance() throws DAOFactoryException {
+        if (instance == null) {
+            throw new DAOFactoryException("DAOFactory not yet configured. Call DAOFactory.configure(String dbUrl) before use the class");
+        }
+        return instance;
+    }
+
     /**
      * Shutdowns the access to the storage system.
-     * 
+     *
      * @author Stefano Chirico
      * @since 1.0.170417
      */
@@ -114,12 +114,11 @@ public class JDBCDAOFactory implements DAOFactory {
      * Returns the concrete {@link DAO db} which type is the class passed as
      * parameter.
      *
-     * @param <DAO_CLASS> the class name of the {@code db} to get.
+     * @param <DAO_CLASS>  the class name of the {@code db} to get.
      * @param daoInterface the class instance of the {@code db} to get.
      * @return the concrete {@code db} which type is the class passed as
      * parameter.
      * @throws DAOFactoryException if an error occurred during the operation.
-     *
      * @author Stefano Chirico
      * @since 1.0.170417
      */
@@ -129,13 +128,13 @@ public class JDBCDAOFactory implements DAOFactory {
         if (dao != null) {
             return (DAO_CLASS) dao;
         }
-        
+
         Package pkg = daoInterface.getPackage();
         String prefix = pkg.getName() + ".jdbc.JDBC";
-        
+
         try {
             Class daoClass = Class.forName(prefix + daoInterface.getSimpleName());
-            
+
             Constructor<DAO_CLASS> constructor = daoClass.getConstructor(Connection.class);
             DAO_CLASS daoInstance = constructor.newInstance(CON);
             if (!(daoInstance instanceof JDBCDAO)) {

@@ -13,7 +13,7 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 /**
  * This interface must be implemented by all the concrete {@code DAOFactor(y)}
  * ies.
- * 
+ *
  * @author Stefano Chirico &lt;stefano dot chirico at unitn dot it&gt;
  * @since 2017.04.17
  */
@@ -21,22 +21,21 @@ public interface DAOFactory {
 
     /**
      * Shutdowns the access to the storage system.
-     * 
+     *
      * @author Stefano Chirico
      * @since 1.0.170417
      */
     public void shutdown();
-    
+
     /**
      * Returns the concrete {@link DAO db} which type is the class passed as
      * parameter.
-     * 
-     * @param <DAO_CLASS> the class name of the {@code db} to get.
+     *
+     * @param <DAO_CLASS>  the class name of the {@code db} to get.
      * @param daoInterface the class instance of the {@code db} to get.
      * @return the concrete {@code db} which type is the class passed as
      * parameter.
      * @throws DAOFactoryException if an error occurred during the operation.
-     * 
      * @author Stefano Chirico
      * @since 1.0.170417
      */

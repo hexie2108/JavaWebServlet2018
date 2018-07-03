@@ -16,7 +16,7 @@ public class LogoutServlet extends HttpServlet {
 
         if (nextUrl == null) {
             String contextPath = getServletContext().getContextPath();
-            if (!contextPath.endsWith("/")){
+            if (!contextPath.endsWith("/")) {
                 contextPath += "/";
             }
 

@@ -8,10 +8,9 @@ package it.unitn.webprogramming18.dellmm.javaBeans;
 import java.io.Serializable;
 
 /**
- *
  * @author luca_morgese
  */
-public class Product implements Serializable{
+public class Product implements Serializable {
 
     private int id;
     private String name;
@@ -19,7 +18,7 @@ public class Product implements Serializable{
     private String img;
     private String logo;
     private int categoryProductId;
-    
+
     /**
      * @return the id
      */
@@ -103,5 +102,4 @@ public class Product implements Serializable{
     public void setCategoryProductId(int categoryProductId) {
         this.categoryProductId = categoryProductId;
     }
-    
 }

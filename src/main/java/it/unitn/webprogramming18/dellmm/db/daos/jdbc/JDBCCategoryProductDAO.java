@@ -1,9 +1,8 @@
 package it.unitn.webprogramming18.dellmm.db.daos.jdbc;
 
+import it.unitn.webprogramming18.dellmm.db.daos.CategoryProductDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.jdbc.JDBCDAO;
-
-import it.unitn.webprogramming18.dellmm.db.daos.CategoryProductDAO;
 import it.unitn.webprogramming18.dellmm.javaBeans.CategoryProduct;
 
 import java.sql.Connection;
@@ -16,99 +15,99 @@ import java.util.List;
 /**
  * The JDBC implementation of the {@link CategoryProductDAO} interface.
  */
-public class JDBCCategoryProductDAO extends JDBCDAO<CategoryProduct, Integer> implements CategoryProductDAO{
+public class JDBCCategoryProductDAO extends JDBCDAO<CategoryProduct, Integer> implements CategoryProductDAO {
     public JDBCCategoryProductDAO(Connection con) {
         super(con);
     }
 
-	private CategoryProduct getCategoryProductFromResultSet(ResultSet rs) throws SQLException{
-		CategoryProduct categoryProduct = new CategoryProduct() ;
+    private CategoryProduct getCategoryProductFromResultSet(ResultSet rs) throws SQLException {
+        CategoryProduct categoryProduct = new CategoryProduct();
 
-		categoryProduct.setId(rs.getInt("id"));
-		categoryProduct.setName(rs.getString("name"));
-		categoryProduct.setDescription(rs.getString("description"));
-		categoryProduct.setImg(rs.getString("img"));
+        categoryProduct.setId(rs.getInt("id"));
+        categoryProduct.setName(rs.getString("name"));
+        categoryProduct.setDescription(rs.getString("description"));
+        categoryProduct.setImg(rs.getString("img"));
 
-		return categoryProduct;
-	}
+        return categoryProduct;
+    }
 
-	@Override
-	public Long getCount() throws DAOException {
-		try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM CategoryProduct")) {
-			ResultSet counter = stmt.executeQuery();
-			if (counter.next()) {
-				return counter.getLong(1);
-			}
-		} catch (SQLException ex) {
-			throw new DAOException("Impossible to count categoryProduct", ex);
-		}
+    @Override
+    public Long getCount() throws DAOException {
+        try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM CategoryProduct")) {
+            ResultSet counter = stmt.executeQuery();
+            if (counter.next()) {
+                return counter.getLong(1);
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to count categoryProduct", ex);
+        }
 
-		return 0L;
-	}
+        return 0L;
+    }
 
-	@Override
-	public CategoryProduct getByPrimaryKey(Integer primaryKey) throws DAOException {
-		CategoryProduct categoryProduct = null;
-		if (primaryKey == null) {
-			throw new DAOException("primaryKey is null");
-		}
-		try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM CategoryProduct WHERE id = ?")) {
-			stm.setInt(1, primaryKey);
-			try (ResultSet rs = stm.executeQuery()) {
-				if(rs.next()) {
-					categoryProduct = getCategoryProductFromResultSet(rs);
-				}
-			}
-		} catch (SQLException ex) {
-			throw new DAOException("Impossible to get the categoryProduct for the passed primary key", ex);
-		}
+    @Override
+    public CategoryProduct getByPrimaryKey(Integer primaryKey) throws DAOException {
+        CategoryProduct categoryProduct = null;
+        if (primaryKey == null) {
+            throw new DAOException("primaryKey is null");
+        }
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM CategoryProduct WHERE id = ?")) {
+            stm.setInt(1, primaryKey);
+            try (ResultSet rs = stm.executeQuery()) {
+                if (rs.next()) {
+                    categoryProduct = getCategoryProductFromResultSet(rs);
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get the categoryProduct for the passed primary key", ex);
+        }
 
-		return categoryProduct;
-	}
+        return categoryProduct;
+    }
 
-	@Override
-	public List<CategoryProduct> getAll() throws DAOException {
-		List<CategoryProduct> categoryProductList = new ArrayList<>();
+    @Override
+    public List<CategoryProduct> getAll() throws DAOException {
+        List<CategoryProduct> categoryProductList = new ArrayList<>();
 
-		try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM CategoryProduct")) {
-			try (ResultSet rs = stm.executeQuery()) {
-				while (rs.next()) {
-					categoryProductList.add(getCategoryProductFromResultSet(rs));
-				}
-			}
-		} catch (SQLException ex) {
-			throw new DAOException("Impossible to get the list of categoryProduct", ex);
-		}
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM CategoryProduct")) {
+            try (ResultSet rs = stm.executeQuery()) {
+                while (rs.next()) {
+                    categoryProductList.add(getCategoryProductFromResultSet(rs));
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get the list of categoryProduct", ex);
+        }
 
-		return categoryProductList;
-	}
+        return categoryProductList;
+    }
 
-	@Override
-	public CategoryProduct update(CategoryProduct categoryProduct) throws DAOException {
-		if (categoryProduct == null) {
-			throw new DAOException("parameter not valid", new IllegalArgumentException("The passed categoryProduct is null"));
-		}
+    @Override
+    public CategoryProduct update(CategoryProduct categoryProduct) throws DAOException {
+        if (categoryProduct == null) {
+            throw new DAOException("parameter not valid", new IllegalArgumentException("The passed categoryProduct is null"));
+        }
 
-		try(PreparedStatement stm = CON.prepareStatement(
-				"UPDATE CategoryProduct SET " +
-						"name =?,"+
-						"description =?,"+
-						"img =?  "+
-						"WHERE id = ?"
-		)) {
+        try (PreparedStatement stm = CON.prepareStatement(
+                "UPDATE CategoryProduct SET " +
+                        "name =?," +
+                        "description =?," +
+                        "img =?  " +
+                        "WHERE id = ?"
+        )) {
 
-			stm.setString(1,categoryProduct.getName());
-			stm.setString(2,categoryProduct.getDescription());
-			stm.setString(3,categoryProduct.getImg());
-			stm.setInt(4,categoryProduct.getId());
+            stm.setString(1, categoryProduct.getName());
+            stm.setString(2, categoryProduct.getDescription());
+            stm.setString(3, categoryProduct.getImg());
+            stm.setInt(4, categoryProduct.getId());
 
-			if (stm.executeUpdate() != 1) {
-				throw new DAOException("Impossible to update the categoryProduct");
-			}
-		} catch (SQLException ex) {
-			throw new DAOException("Impossible to update the categoryProduct", ex);
-		}
+            if (stm.executeUpdate() != 1) {
+                throw new DAOException("Impossible to update the categoryProduct");
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to update the categoryProduct", ex);
+        }
 
-		return categoryProduct;
-	}
+        return categoryProduct;
+    }
 }

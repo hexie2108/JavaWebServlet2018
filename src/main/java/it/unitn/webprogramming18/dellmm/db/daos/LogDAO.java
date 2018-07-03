@@ -13,7 +13,7 @@ public interface LogDAO extends DAO<Log, Integer> {
      *
      * @return the number of records present into the storage system.
      * @throws DAOException if an error occurred during the information
-     * retrieving.
+     *                      retrieving.
      */
     @Override
     public Long getCount() throws DAOException;
@@ -27,7 +27,7 @@ public interface LogDAO extends DAO<Log, Integer> {
      * parameter or {@code null} if no entities with that id is not present into
      * the storage system.
      * @throws DAOException if an error occurred during the information
-     * retrieving.
+     *                      retrieving.
      */
     @Override
     public Log getByPrimaryKey(Integer primaryKey) throws DAOException;
@@ -38,24 +38,25 @@ public interface LogDAO extends DAO<Log, Integer> {
      *
      * @return the list of all the valid {@code log}.
      * @throws DAOException if an error occurred during the information
-     * retrieving.
+     *                      retrieving.
      */
     @Override
     public List<Log> getAll() throws DAOException;
 
     /**
      * Update the log passed as parameter and returns it.
+     *
      * @param log the log used to update the persistence system.
      * @return the updated log.
      * @throws DAOException if an error occurred during the action.
      */
     @Override
     public Log update(Log log) throws DAOException;
-    
+
     /**
      * Given user and product ids, returns the DB entry with relative times of purchase
      * of defined product by defined user
-     * 
+     *
      * @param userId
      * @param productId
      * @return The entry containing timestamps of last four purchases of a product by a user

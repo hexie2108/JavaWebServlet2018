@@ -13,7 +13,7 @@ public interface NotificationDAO extends DAO<Notification, Integer> {
      *
      * @return the number of records present into the storage system.
      * @throws DAOException if an error occurred during the information
-     * retrieving.
+     *                      retrieving.
      */
     @Override
     public Long getCount() throws DAOException;
@@ -27,7 +27,7 @@ public interface NotificationDAO extends DAO<Notification, Integer> {
      * parameter or {@code null} if no entities with that id is not present into
      * the storage system.
      * @throws DAOException if an error occurred during the information
-     * retrieving.
+     *                      retrieving.
      */
     @Override
     public Notification getByPrimaryKey(Integer primaryKey) throws DAOException;
@@ -38,23 +38,24 @@ public interface NotificationDAO extends DAO<Notification, Integer> {
      *
      * @return the list of all the valid {@code notification}.
      * @throws DAOException if an error occurred during the information
-     * retrieving.
+     *                      retrieving.
      */
     @Override
     public List<Notification> getAll() throws DAOException;
 
     /**
      * Update the notification passed as parameter and returns it.
+     *
      * @param notification the notification used to update the persistence system.
      * @return the updated notification.
      * @throws DAOException if an error occurred during the action.
      */
     @Override
     public Notification update(Notification notification) throws DAOException;
-    
+
     /**
      * Get all the unread notifications for a specified user
-     * 
+     *
      * @param userId
      * @return the list of all the notifications the specified user has not already read
      * @throws DAOException if an error occurred during the action.

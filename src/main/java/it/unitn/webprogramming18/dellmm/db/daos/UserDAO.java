@@ -13,7 +13,7 @@ public interface UserDAO extends DAO<User, Integer> {
      *
      * @return the number of records present into the storage system.
      * @throws DAOException if an error occurred during the information
-     * retrieving.
+     *                      retrieving.
      */
     @Override
     public Long getCount() throws DAOException;
@@ -27,7 +27,7 @@ public interface UserDAO extends DAO<User, Integer> {
      * parameter or {@code null} if no entities with that id is not present into
      * the storage system.
      * @throws DAOException if an error occurred during the information
-     * retrieving.
+     *                      retrieving.
      */
     @Override
     public User getByPrimaryKey(Integer primaryKey) throws DAOException;
@@ -38,13 +38,14 @@ public interface UserDAO extends DAO<User, Integer> {
      *
      * @return the list of all the valid {@code user}.
      * @throws DAOException if an error occurred during the information
-     * retrieving.
+     *                      retrieving.
      */
     @Override
     public List<User> getAll() throws DAOException;
 
     /**
      * Update the user passed as parameter and returns it.
+     *
      * @param user the categoryList used to update the persistence system.
      * @return the updated user.
      * @throws DAOException if an error occurred during the action.
@@ -54,25 +55,25 @@ public interface UserDAO extends DAO<User, Integer> {
 
     /**
      * Return the user with the email and password specified
-     * @param email the email of the user to return
+     *
+     * @param email    the email of the user to return
      * @param password the password of the user to return
      * @return The user requested
      * @throws DAOException
      */
     public User getByEmailAndPassword(String email, String password) throws DAOException;
-    
+
     /**
      * Given an email, the function checks if the user is registered in the DB,
      * thus if it's registered on the application.
-     * 
+     *
      * @param email
      * @return 0 if user is not registered,
-     *         1 if user is registered,
-     *         -1 if >1 is returned by query,
-     *         -2 if function does not work
+     * 1 if user is registered,
+     * -1 if >1 is returned by query,
+     * -2 if function does not work
      * @throws DAOException if an error occurred during the information
-     * retrieving.
+     *                      retrieving.
      */
     public int checkUserRegisteredByEmail(String email) throws DAOException;
-
 }

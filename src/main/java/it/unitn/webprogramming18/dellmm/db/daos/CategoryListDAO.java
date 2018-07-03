@@ -14,7 +14,7 @@ public interface CategoryListDAO extends DAO<CategoryList, Integer> {
      *
      * @return the number of records present into the storage system.
      * @throws DAOException if an error occurred during the information
-     * retrieving.
+     *                      retrieving.
      */
     @Override
     public Long getCount() throws DAOException;
@@ -28,7 +28,7 @@ public interface CategoryListDAO extends DAO<CategoryList, Integer> {
      * parameter or {@code null} if no entities with that id is not present into
      * the storage system.
      * @throws DAOException if an error occurred during the information
-     * retrieving.
+     *                      retrieving.
      */
     @Override
     public CategoryList getByPrimaryKey(Integer primaryKey) throws DAOException;
@@ -39,13 +39,14 @@ public interface CategoryListDAO extends DAO<CategoryList, Integer> {
      *
      * @return the list of all the valid {@code categoryList}.
      * @throws DAOException if an error occurred during the information
-     * retrieving.
+     *                      retrieving.
      */
     @Override
     public List<CategoryList> getAll() throws DAOException;
 
     /**
      * Update the categoryList passed as parameter and returns it.
+     *
      * @param categoryList the categoryList used to update the persistence system.
      * @return the updated categoryList.
      * @throws DAOException if an error occurred during the action.

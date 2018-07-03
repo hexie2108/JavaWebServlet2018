@@ -13,7 +13,7 @@ public interface ShopDAO extends DAO<Shop, Integer> {
      *
      * @return the number of records present into the storage system.
      * @throws DAOException if an error occurred during the information
-     * retrieving.
+     *                      retrieving.
      */
     @Override
     public Long getCount() throws DAOException;
@@ -27,7 +27,7 @@ public interface ShopDAO extends DAO<Shop, Integer> {
      * parameter or {@code null} if no entities with that id is not present into
      * the storage system.
      * @throws DAOException if an error occurred during the information
-     * retrieving.
+     *                      retrieving.
      */
     @Override
     public Shop getByPrimaryKey(Integer primaryKey) throws DAOException;
@@ -38,23 +38,24 @@ public interface ShopDAO extends DAO<Shop, Integer> {
      *
      * @return the list of all the valid {@code shop}.
      * @throws DAOException if an error occurred during the information
-     * retrieving.
+     *                      retrieving.
      */
     @Override
     public List<Shop> getAll() throws DAOException;
 
     /**
      * Update the shop passed as parameter and returns it.
+     *
      * @param shop the shop used to update the persistence system.
      * @return the updated shop.
      * @throws DAOException if an error occurred during the action.
      */
     @Override
     public Shop update(Shop shop) throws DAOException;
-    
+
     /**
      * Returns all the shops of a specified category
-     * 
+     *
      * @param category
      * @return a List containing all shops of category specified in parameter
      * @throws DAOException if an error occurred during the action.

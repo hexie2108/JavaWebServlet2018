@@ -6,7 +6,6 @@
 package it.unitn.webprogramming18.dellmm.javaBeans;
 
 /**
- *
  * @author luca_morgese
  */
 public class CategoryProduct {
@@ -15,8 +14,8 @@ public class CategoryProduct {
     private String name;
     private String description;
     private String img;
-    
-    
+
+
     /**
      * @return the id
      */
@@ -72,6 +71,4 @@ public class CategoryProduct {
     public void setImg(String img) {
         this.img = img;
     }
-    
-    
 }

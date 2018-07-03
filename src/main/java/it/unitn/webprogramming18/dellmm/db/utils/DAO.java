@@ -14,10 +14,10 @@ import java.util.List;
 /**
  * The basic DAO interface that all DAOs must implement.
  *
- * @author Stefano Chirico &lt;stefano dot chirico at unitn dot it&gt;
  * @param <ENTITY_CLASS> the class of the entity to handle.
- * @param <PRIMARY_KEY> the class of the primary key of the entity the DAO
- * handle.
+ * @param <PRIMARY_KEY>  the class of the primary key of the entity the DAO
+ *                       handle.
+ * @author Stefano Chirico &lt;stefano dot chirico at unitn dot it&gt;
  * @since 2017.04.17
  */
 public interface DAO<ENTITY_CLASS, PRIMARY_KEY> {
@@ -28,8 +28,7 @@ public interface DAO<ENTITY_CLASS, PRIMARY_KEY> {
      *
      * @return the number of records present into the storage system.
      * @throws DAOException if an error occurred during the information
-     * retrieving.
-     *
+     *                      retrieving.
      * @author Stefano Chirico
      * @since 1.0.170417
      */
@@ -45,8 +44,7 @@ public interface DAO<ENTITY_CLASS, PRIMARY_KEY> {
      * {@code null} if no entities with that primary key is present into the
      * storage system.
      * @throws DAOException if an error occurred during the information
-     * retrieving.
-     *
+     *                      retrieving.
      * @author Stefano Chirico
      * @since 1.0.170417
      */
@@ -58,19 +56,18 @@ public interface DAO<ENTITY_CLASS, PRIMARY_KEY> {
      *
      * @return the list of all the valid entities of type {@code ENTITY_CLASS}.
      * @throws DAOException if an error occurred during the information
-     * retrieving.
-     *
+     *                      retrieving.
      * @author Stefano Chirico
      * @since 1.0.170417
      */
     public List<ENTITY_CLASS> getAll() throws DAOException;
-    
+
     /**
      * Update the entity passed as parameter and returns it.
+     *
      * @param entity the entity used to update the persistence system.
      * @return the updated entity.
      * @throws DAOException if an error occurred during the action.
-     * 
      * @author Stefano Chirico
      * @since 1.0.170418
      */
@@ -81,12 +78,11 @@ public interface DAO<ENTITY_CLASS, PRIMARY_KEY> {
      * parameter.
      *
      * @param <DAO_CLASS> the class name of the DAO that can interact with this
-     * DAO.
-     * @param daoClass the class of the DAO that can interact with this DAO.
+     *                    DAO.
+     * @param daoClass    the class of the DAO that can interact with this DAO.
      * @return the instance of the DAO or null if no DAO of the type passed as
      * parameter can interact with this DAO.
      * @throws DAOFactoryException if an error occurred.
-     *
      * @author Stefano Chirico
      * @since 1.0.170417
      */

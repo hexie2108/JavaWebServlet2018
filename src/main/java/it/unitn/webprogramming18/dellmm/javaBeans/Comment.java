@@ -6,7 +6,6 @@
 package it.unitn.webprogramming18.dellmm.javaBeans;
 
 /**
- *
  * @author luca_morgese
  */
 public class Comment {
@@ -15,8 +14,8 @@ public class Comment {
     private int userId;
     private int listId;
     private String text;
-    
-    
+
+
     /**
      * @return the id
      */
@@ -72,5 +71,4 @@ public class Comment {
     public void setText(String text) {
         this.text = text;
     }
-    
 }

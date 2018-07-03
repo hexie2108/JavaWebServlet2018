@@ -6,16 +6,15 @@
 package it.unitn.webprogramming18.dellmm.javaBeans;
 
 /**
- *
  * @author luca_morgese
  */
 public class List {
-    
+
     private int id;
     private String name;
     private int ownerId;
     private int categoryList;
-    
+
 
     /**
      * @return the id
@@ -72,6 +71,4 @@ public class List {
     public void setCategoryList(int categoryList) {
         this.categoryList = categoryList;
     }
-    
-    
 }

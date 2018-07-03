@@ -6,7 +6,6 @@
 package it.unitn.webprogramming18.dellmm.javaBeans;
 
 /**
- *
  * @author luca_morgese
  */
 public class ProductInList {
@@ -14,8 +13,8 @@ public class ProductInList {
     private int id;
     private int productId;
     private int listId;
-    
-    
+
+
     /**
      * @return the id
      */
@@ -57,5 +56,4 @@ public class ProductInList {
     public void setListId(int listId) {
         this.listId = listId;
     }
-    
 }

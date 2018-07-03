@@ -6,7 +6,6 @@
 package it.unitn.webprogramming18.dellmm.javaBeans;
 
 /**
- *
  * @author luca_morgese
  */
 public class Shop {
@@ -15,8 +14,8 @@ public class Shop {
     private double lat;
     private double lng;
     private int category;
-    
-    
+
+
     /**
      * @return the id
      */
@@ -72,5 +71,4 @@ public class Shop {
     public void setCategory(int category) {
         this.category = category;
     }
-    
 }
