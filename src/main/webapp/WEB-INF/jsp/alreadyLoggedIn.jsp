@@ -6,7 +6,7 @@
 </head>
 <body>
 Sei già loggato cosa vuoi fare?
-<a href="${pageContext.request.contextPath}/logout?nextUrl=${requestScope.nextUrl}">Logout</a><br>
+<a href="${pageContext.servletContext.contextPath}/logout?nextUrl=${requestScope.nextUrl}">Logout</a><br>
 <a href="${requestScope.prevUrl}">Go back</a>
 </body>
 </html>

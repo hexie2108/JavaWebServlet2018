@@ -7,11 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SignIn</title>
 
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/libs/bootstrap/bootstrap.min.css" crossorigin="anonymous">
-    <script src="${pageContext.request.contextPath}/libs/bootstrap/bootstrap.min.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css">
+    <script src="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/js/bootstrap.min.js"></script>
 
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/tmpToDelete/login-style.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/tmpToDelete/common.css">
+    <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/css/tmpToDelete/login-style.css">
+    <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/css/tmpToDelete/common.css">
 </head>
 <body>
 <div class="container-fluid" id="div-signin">
@@ -54,7 +54,7 @@
                 <div class="checkbox pull-left">
                     <label><input class="noMarginTop" name="remember" type="checkbox" value="">Remember me</label>
                 </div>
-                <a id="pwdDimenticata" class="pull-right" href="${pageContext.request.contextPath}/forgotPassword">Password dimenticata</a>
+                <a id="pwdDimenticata" class="pull-right" href="${pageContext.servletContext.contextPath}/forgotPassword">Password dimenticata</a>
 
                 <div class="btn-group btn-group-justified" role="group" aria-label="...">
                     <div class="btn-group" role="group" id="id-annulla">
@@ -68,7 +68,7 @@
             </div>
         </form>
         <div class="content-divider"><span class="content-divider-text">Non sei registrato?</span></div>
-        <a href="${pageContext.request.contextPath}/register" class="btn btn-default" role="button" id="register-btn">Registrati</a>
+        <a href="${pageContext.servletContext.contextPath}/register" class="btn btn-default" role="button" id="register-btn">Registrati</a>
     </div>
 </div>
 </body>

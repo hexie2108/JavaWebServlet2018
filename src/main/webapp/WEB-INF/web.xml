@@ -60,7 +60,7 @@
     <!-- SERVLETS -->
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
-        <servlet-class>it.unitn.webprogramming18.dellmm.servlet.LoginServlet</servlet-class>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.LoginServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
@@ -69,10 +69,19 @@
 
     <servlet>
         <servlet-name>LogoutServlet</servlet-name>
-        <servlet-class>it.unitn.webprogramming18.dellmm.servlet.LogoutServlet</servlet-class>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.LogoutServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LogoutServlet</servlet-name>
         <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>RegisterServlet</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.RegisterServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RegisterServlet</servlet-name>
+        <url-pattern>/register</url-pattern>
     </servlet-mapping>
 </web-app>

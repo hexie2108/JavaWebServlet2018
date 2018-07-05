@@ -1,4 +1,4 @@
-package it.unitn.webprogramming18.dellmm.servlet;
+package it.unitn.webprogramming18.dellmm.servlets.userSystem;
 
 import it.unitn.webprogramming18.dellmm.db.daos.UserDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
