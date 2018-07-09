@@ -19,8 +19,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 @WebServlet(name = "RegisterServlet")
 public class RegisterServlet extends HttpServlet {
@@ -79,7 +79,6 @@ public class RegisterServlet extends HttpServlet {
                 HttpSession session = request.getSession();
                 session.setAttribute("user", user);
 
-
                 try {
                     emailFactory.sendMail(
                             "Registration",
@@ -89,7 +88,10 @@ public class RegisterServlet extends HttpServlet {
                     ); // Per ora le mandiamo a noi stessi per evitare casini
                 }
                 catch (MessagingException | UnsupportedEncodingException ex) {
-                    List errorList = (List<String>)session.getAttribute("errors");
+                    ArrayList errorList = (ArrayList<String>)session.getAttribute("errors");
+                    if(errorList == null){
+                        session.setAttribute("errors",new ArrayList<String>());
+                    }
                     errorList.add("Impossible to send the email. Please check the email in user's settings and click resend");
                 }
             } catch (DAOException e) {

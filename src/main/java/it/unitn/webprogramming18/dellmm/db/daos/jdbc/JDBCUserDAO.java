@@ -185,7 +185,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
         }
 
         int userId=0;
-        String verifyLink = null;
+        String verifyLink = UUID.randomUUID().toString();
 
         boolean successo=false;
         for(int tentativi=0; (tentativi<5)&&(!successo); tentativi++) {
@@ -195,23 +195,26 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
                 {
                     PreparedStatement std = CON.prepareStatement(
                             "INSERT INTO User (name, surname, email, password, img, isAdmin, verifyEmailLink, resendEmailLink)" +
-                            "VALUES (?,?,?,?,?,FALSE,UUID(),NULL)",
-                            new String[]{"id","verifyEmailLink"}
+                            "VALUES (?,?,?,?,?,FALSE,?,NULL)",
+                            Statement.RETURN_GENERATED_KEYS
                     );
                     std.setString(1, first_name);
                     std.setString(2, last_name);
                     std.setString(3, email);
                     std.setString(4, password);
                     std.setString(5, "come ci organizzamo per l'immagine?"); //TODO: Organizzazione per l'immagine
+                    std.setString(6,verifyLink);
 
                     if (std.executeUpdate() != 1) {
                         throw new DAOException("Impossible to insert the user");
                     }
 
                     try(ResultSet rs = std.getGeneratedKeys()){
+                        System.out.println(rs.getMetaData().getColumnCount());
+
+
                         if(rs.next()) {
-                            userId = rs.getInt(0);
-                            verifyLink = rs.getString(1);
+                            userId = rs.getInt(1);
                         }
                     }
                 } catch (SQLIntegrityConstraintViolationException integrity_ex) {

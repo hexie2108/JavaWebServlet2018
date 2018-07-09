@@ -73,14 +73,14 @@ public class RegistrationValidator {
         if ((first_name == null) ||
                 (first_name.isEmpty())) {
             messages.put("FirstName", "Complete il campo first name");
-        } else if (first_name.length() > 254) {
+        } else if (first_name.length() > 44) {
             messages.put("FirstName", "Nome troppo lungo");
         }
 
         if ((last_name == null) ||
                 (last_name.isEmpty())) {
             messages.put("LastName", "Completa il campo last name");
-        } else if (last_name.length() > 254) {
+        } else if (last_name.length() > 44) {
             messages.put("LastName", "Nome troppo lungo");
         }
 
@@ -98,7 +98,7 @@ public class RegistrationValidator {
                 (password.isEmpty()) ||
                 (password2.isEmpty())) {
             messages.put("Password2", "Completa tutti e due i campi password");
-        } else if (password.length() > 254) {
+        } else if (password.length() > 44) {
             messages.put("Password2", "Password troppo lunga");
         } else if (!password.equals(password2)) { // Controlla che le due password coincidano
             messages.put("Password2", "Le due password non corrispondono");
@@ -109,7 +109,7 @@ public class RegistrationValidator {
             messages.put("Email", "Completa il campo email");
         } else if (!validateMail(email)) { // Controllo che la mail abbia un formato valido
             messages.put("Email", "Indirizzo mail non valido");
-        } else if (email.length() > 253) {
+        } else if (email.length() > 44) {
             messages.put("Email", "Indirizzo mail troppo lungo");
         } else {
             try {
