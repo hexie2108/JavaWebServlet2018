@@ -119,4 +119,22 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
 
         return permission;
     }
+
+    @Override
+    public List<Permission> getPermissionsOnListByListId(Integer listId) throws DAOException {
+        List<Permission> permissionList = new ArrayList<>();        
+        
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Permission WHERE Permission.listId = ?")) {
+            stm.setInt(1, listId);
+            try (ResultSet rs = stm.executeQuery()) {
+                while (rs.next()) {
+                    permissionList.add(getPermissionFromResultSet(rs));
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get the list of permission for specified list", ex);
+        }
+
+        return permissionList;
+    }
 }

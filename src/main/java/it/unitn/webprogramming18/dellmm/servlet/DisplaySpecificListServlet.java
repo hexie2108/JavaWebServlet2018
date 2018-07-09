@@ -5,16 +5,19 @@
  */
 package it.unitn.webprogramming18.dellmm.servlet;
 
+import it.unitn.webprogramming18.dellmm.db.daos.CategoryListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ListDAO;
+import it.unitn.webprogramming18.dellmm.db.daos.PermissionDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ProductDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
-import it.unitn.webprogramming18.dellmm.javaBeans.User;
+import it.unitn.webprogramming18.dellmm.javaBeans.CategoryList;
+import it.unitn.webprogramming18.dellmm.javaBeans.Permission;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
-
+import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -25,10 +28,12 @@ import javax.servlet.http.HttpSession;
  *
  * @author luca_morgese
  */
-public class DisplayListsServlet extends HttpServlet {
-    
+public class DisplaySpecificListServlet extends HttpServlet {
+
     private ListDAO listDAO;
     private ProductDAO productDAO;
+    private PermissionDAO permissionDAO;
+    private CategoryListDAO categoryListDAO;
     
     @Override
     public void init() throws ServletException {
@@ -40,12 +45,15 @@ public class DisplayListsServlet extends HttpServlet {
         try {
             listDAO = daoFactory.getDAO(ListDAO.class);
             productDAO = daoFactory.getDAO(ProductDAO.class);
+            permissionDAO = daoFactory.getDAO(PermissionDAO.class);
+            categoryListDAO = daoFactory.getDAO(CategoryListDAO.class);
         } catch (DAOFactoryException ex) {
             throw new ServletException("Impossible to get db factory for user storage system", ex);
         }
     }
 
-    
+
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -62,57 +70,51 @@ public class DisplayListsServlet extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(request, response);
         } else {
             
-            int userId = user.getId();
-            java.util.List<it.unitn.webprogramming18.dellmm.javaBeans.List> ownedLists;
-            java.util.List<it.unitn.webprogramming18.dellmm.javaBeans.List> sharedLists;
+            //Obtains listId from parameter on URL
+            int listId = Integer.parseInt(request.getParameter("listId"));
             
-            //Gets all lists
+            //Obtains ListBean with listId
+            it.unitn.webprogramming18.dellmm.javaBeans.List list;
             try {
-                ownedLists = listDAO.getOwnedUserListsByUserId(userId);
-                sharedLists = listDAO.getSharedWithUserListsByUserId(userId);
+                list = listDAO.getByPrimaryKey(listId);
             } catch (DAOException ex) {
                 ex.printStackTrace();
-                throw new ServletException("Impossible to get the user's lists");
+                throw new ServletException("Impossible to get the list with specified ID");
             }
             
-            //For each owned list, gets its products and puts both in a vector <List, Product>
-            //Structure: HashMap<listBean, List<productBean>>
-            HashMap<it.unitn.webprogramming18.dellmm.javaBeans.List, java.util.List<Product>> completeOwnedLists 
-                    = (HashMap<it.unitn.webprogramming18.dellmm.javaBeans.List, java.util.List<Product>>) new HashMap();
-            
-            for (it.unitn.webprogramming18.dellmm.javaBeans.List l:ownedLists) {
-                java.util.List<Product> products = null;
-                try {
-                    products = productDAO.getProductsInListByListId(l.getId());
-                } catch (DAOException ex) {
-                    ex.printStackTrace();
-                    throw new ServletException("Impossible to get products in list " + l.getId());
-                }
-                completeOwnedLists.put(l, products);
+            //Gets all products on list
+            List<Product> products;
+            try {
+                products = productDAO.getProductsInListByListId(listId);
+            } catch (DAOException ex) {
+                ex.printStackTrace();
+                throw new ServletException("Impossible to get list products");
             }
             
-            
-            //Does the exact same thing with shared with user lists
-            //Structure: HashMap<listBean, List<productBean>>
-            HashMap<it.unitn.webprogramming18.dellmm.javaBeans.List, java.util.List<Product>> completeSharedLists 
-                    = (HashMap<it.unitn.webprogramming18.dellmm.javaBeans.List, java.util.List<Product>>) new HashMap();
-            
-            for (it.unitn.webprogramming18.dellmm.javaBeans.List l:sharedLists) {
-                java.util.List<Product> products = null;
-                try {
-                    products = productDAO.getProductsInListByListId(l.getId());
-                } catch (DAOException ex) {
-                    ex.printStackTrace();
-                    throw new ServletException("Impossible to get products in list " + l.getId());
-                }
-                completeSharedLists.put(l, products);
+            //Gets set of permissions associated to the list
+            List<Permission> permissions;
+            try {
+                permissions = permissionDAO.getPermissionsOnListByListId(listId);
+            } catch (DAOException ex) {
+                ex.printStackTrace();
+                throw new ServletException("Impossible to get permissions set of list");
             }
             
-            request.setAttribute("ownedLists", completeOwnedLists);
-            request.setAttribute("sharedLists", completeOwnedLists);
+            //Gets the category object of the list
+            CategoryList categoryList;
+            try {
+                categoryList = categoryListDAO.getByPrimaryKey(listId);
+            } catch (DAOException ex) {
+                ex.printStackTrace();
+                throw new ServletException("Impossible to get list category");
+            }
             
-            request.getRequestDispatcher("/WEB-INF/jsp/yourHome.jsp").forward(request, response);
+            request.setAttribute("list", list);
+            request.setAttribute("products", products);
+            request.setAttribute("permissions", permissions);
+            request.setAttribute("categoryList", categoryList);
             
+            request.getRequestDispatcher("/WEB-INF/jsp/yourList").forward(request, response);
         }
     }
 
@@ -136,7 +138,7 @@ public class DisplayListsServlet extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Servlet for displaying user specific lists";
+        return "Displays comprehensive info about a list";
     }// </editor-fold>
 
 }

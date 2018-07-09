@@ -3,6 +3,7 @@ package it.unitn.webprogramming18.dellmm.db.daos.jdbc;
 import it.unitn.webprogramming18.dellmm.db.daos.ListDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.jdbc.JDBCDAO;
+import it.unitn.webprogramming18.dellmm.javaBeans.CategoryList;
 import it.unitn.webprogramming18.dellmm.javaBeans.List;
 
 import java.sql.Connection;
@@ -150,4 +151,25 @@ public class JDBCListDAO extends JDBCDAO<List, Integer> implements ListDAO {
 
         return lists;
     }
+
+    @Override
+    public Integer getNumberOfProductsInListByListId(Integer listId) throws DAOException {
+        Integer res = null;
+        if(listId == null) {
+            throw new DAOException("listId is null");
+        }
+        try (PreparedStatement stm = CON.prepareStatement("SELECT COUNT(*) FROM List JOIN ProductInList"
+                                                        + "ON List.id = ProductInList.listId"
+                                                        + "WHERE List.id = ?")) {
+            stm.setInt(1, listId);
+            ResultSet counter = stm.executeQuery();
+            if (counter.next()) {
+                res = counter.getInt(1);
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to count list", ex);
+        }
+        return res;
+    }
+
 }
