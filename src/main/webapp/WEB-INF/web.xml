@@ -93,4 +93,14 @@
         <servlet-name>ResendEmailServlet</servlet-name>
         <url-pattern>/resendEmail</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>ValidateRegistrationServlet</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.ValidateRegistrationServlet</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>ValidateRegistrationServlet</servlet-name>
+        <url-pattern>/validateRegistration</url-pattern>
+    </servlet-mapping>
 </web-app>

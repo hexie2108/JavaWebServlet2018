@@ -7,9 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Registrazione</title>
 
-    <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css">
+    <script src="${pageContext.servletContext.contextPath}/libs/jquery/jquery-3.3.1.min.js"></script>
     <script src="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/js/bootstrap.js"></script>
-    <script src="${pageContext.servletContext.contextPath}/libs/jquery/jquery-3.3.1.slim.min.js"></script>
+    <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css">
 </head>
 <body>
 <nav class="navbar navbar-default navbar-static-top">
@@ -139,7 +139,8 @@
             var form=$('#form-register');
 
             var request = $.ajax({
-                url : "/validateRegistration",
+                dataType: "json",
+                url : "${pageContext.servletContext.contextPath}/validateRegistration",
                 type: "post",
                 data: form.serialize()
             });
@@ -151,7 +152,8 @@
             var form=$('#form-register');
 
             var request = $.ajax({
-                url : "/validateRegistration",
+                dataType: "json",
+                url : "${pageContext.servletContext.contextPath}/validateRegistration",
                 type: "post",
                 async : false,
                 data: form.serialize()
