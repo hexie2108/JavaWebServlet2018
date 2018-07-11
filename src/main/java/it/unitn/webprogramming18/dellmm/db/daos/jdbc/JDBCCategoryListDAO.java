@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +32,30 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
         return categoryList;
     }
 
+    
+    public Integer insert(CategoryList categoryList) throws DAOException {
+        if (categoryList == null) {
+            throw new DAOException("categoryList bean is null");
+        }
+        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO CategoryList (name, description, img) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
+
+            stm.setString(1, categoryList.getName());
+            stm.setString(2, categoryList.getDescription());
+            stm.setString(3, categoryList.getImg());
+
+            stm.executeUpdate();
+            
+            ResultSet rs = stm.getGeneratedKeys();
+            if (rs.next()) {
+                categoryList.setId(rs.getInt(1));
+            }
+            
+            return categoryList.getId();
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to insert the new categoryList", ex);
+        }
+    }
+    
     @Override
     public Long getCount() throws DAOException {
         try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM CategoryList")) {

@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +47,34 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
         }
 
         return 0L;
+    }
+    
+    public Integer insert(Permission permission) throws DAOException {
+        if (permission == null) {
+            throw new DAOException("permission bean is null");
+        }
+        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO Permission (addObject, deleteObject, modifyList, deleteList, listId, userId) VALUES (?,?,?,?,?,?)", 
+                                                                Statement.RETURN_GENERATED_KEYS)) {
+
+            stm.setBoolean(1, permission.isAddObject());
+            stm.setBoolean(2, permission.isDeleteList());
+            stm.setBoolean(3, permission.isModifyList());
+            stm.setBoolean(4, permission.isDeleteList());
+            stm.setInt(5, permission.getListId());
+            stm.setInt(6, permission.getUserId());
+            
+
+            stm.executeUpdate();
+            
+            ResultSet rs = stm.getGeneratedKeys();
+            if (rs.next()) {
+                permission.setId(rs.getInt(1));
+            }
+            
+            return permission.getId();
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to insert the new permission", ex);
+        }
     }
 
     @Override

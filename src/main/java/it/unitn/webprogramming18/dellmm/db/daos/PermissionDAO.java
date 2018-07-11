@@ -11,12 +11,22 @@ public interface PermissionDAO extends DAO<Permission, Integer> {
      * Returns the number of {@link Permission permissino} stored on the persistence system
      * of the application.
      *
-     * @return the number of records present into the storage system.
+     * @return the number of records that are into the storage system.
      * @throws DAOException if an error occurred during the information
      *                      retrieving.
      */
     @Override
     public Long getCount() throws DAOException;
+    
+    /**
+     * Persists the new permission passed as parameter
+     * to the storage system.
+     * 
+     * @param permission the new permission to insert as entry
+     * @return the id of the new persisted record.
+     * @throws DAOException if an error occurred during the persist action.
+     */
+    public Integer insert(Permission permission) throws DAOException;
 
     /**
      * Returns the {@link Permission permission} with the primary key equals to the one

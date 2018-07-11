@@ -17,6 +17,16 @@ public interface LogDAO extends DAO<Log, Integer> {
      */
     @Override
     public Long getCount() throws DAOException;
+    
+    /**
+     * Persists the new log passed as parameter
+     * to the storage system.
+     * 
+     * @param log the new log to insert as entry
+     * @return the id of the new persisted record.
+     * @throws DAOException if an error occurred during the persist action.
+     */
+    public Integer insert(Log log) throws DAOException;
 
     /**
      * Returns the {@link Log log} with the primary key equals to the one

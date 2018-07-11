@@ -20,7 +20,7 @@ public class User implements Serializable {
     private String img;
     private boolean isAdmin;
     private String verifyEmailLink;
-    private String resendEmailLink;
+    private String resetPwdEmailLink;
 
 
     /**
@@ -134,18 +134,18 @@ public class User implements Serializable {
     public void setVerifyEmailLink(String verifyEmailLink) {
         this.verifyEmailLink = verifyEmailLink;
     }
-
+    
     /**
-     * @return the resendMailLink
+     * @return the resetPwdEmailLink
      */
-    public String getResendEmailLink() {
-        return resendEmailLink;
+    public String getResetPwdEmailLink() {
+        return resetPwdEmailLink;
     }
 
     /**
-     * @param resendEmailLink the resendMailLink to set
+     * @param resetPwdEmailLink the resetPwdEmailLink to set
      */
-    public void setResendEmailLink(String resendEmailLink) {
-        this.resendEmailLink = resendEmailLink;
+    public void setResetPwdEmailLink(String resetPwdEmailLink) {
+        this.resetPwdEmailLink = resetPwdEmailLink;
     }
 }

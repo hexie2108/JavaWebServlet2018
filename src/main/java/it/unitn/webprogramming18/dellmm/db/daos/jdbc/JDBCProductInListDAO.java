@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +45,29 @@ public class JDBCProductInListDAO extends JDBCDAO<ProductInList, Integer> implem
         return 0L;
     }
 
+    public Integer insert(ProductInList productInList) throws DAOException {
+        if (productInList == null) {
+            throw new DAOException("productInList bean is null");
+        }
+        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO ProductInList (productId, listId) VALUES (?,?)", 
+                                                                Statement.RETURN_GENERATED_KEYS)) {
+
+            stm.setInt(1, productInList.getProductId());
+            stm.setInt(2, productInList.getListId());
+            
+            stm.executeUpdate();
+            
+            ResultSet rs = stm.getGeneratedKeys();
+            if (rs.next()) {
+                productInList.setId(rs.getInt(1));
+            }
+            
+            return productInList.getId();
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to insert the new productInList entry", ex);
+        }
+    }
+    
     @Override
     public ProductInList getByPrimaryKey(Integer primaryKey) throws DAOException {
         ProductInList productInList = null;

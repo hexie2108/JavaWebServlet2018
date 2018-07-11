@@ -17,6 +17,16 @@ public interface ShopDAO extends DAO<Shop, Integer> {
      */
     @Override
     public Long getCount() throws DAOException;
+    
+    /**
+     * Persists the new shop passed as parameter
+     * to the storage system.
+     * 
+     * @param shop the new shop to insert as entry
+     * @return the id of the new persisted record.
+     * @throws DAOException if an error occurred during the persist action.
+     */
+    public Integer insert(Shop shop) throws DAOException;
 
     /**
      * Returns the {@link Shop shop} with the primary key equals to the one

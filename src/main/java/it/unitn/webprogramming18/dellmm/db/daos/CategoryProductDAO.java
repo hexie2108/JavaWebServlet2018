@@ -19,6 +19,17 @@ public interface CategoryProductDAO extends DAO<CategoryProduct, Integer> {
     public Long getCount() throws DAOException;
 
     /**
+     * Persists the new categoryProduct passed as parameter
+     * to the storage system.
+     * 
+     * @param categoryProduct the new categoryProduct to insert as entry
+     * @return the id of the new persisted record.
+     * @throws DAOException if an error occurred during the persist action.
+     */
+    public Integer insert(CategoryProduct categoryProduct) throws DAOException;
+
+
+    /**
      * Returns the {@link CategoryProduct categoryProduct} with the primary key equals to the one
      * passed as parameter.
      *

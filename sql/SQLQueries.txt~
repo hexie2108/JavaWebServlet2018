@@ -1,0 +1,112 @@
+
+
+
+
+ADD DISTINCT QUERIES FOR OWNED LISTS AND SHARED LISTS RETURNED GIVEN USERID
+
+
+
+DONE
+Obtain userId given user's email
+
+SELECT id
+FROM   User
+WHERE  User.email = ?
+
+
+DONE
+"Count" to see if a user is registered given its email
+If 0 is returned, user is not registered.
+
+SELECT COUNT(*)
+FROM   User
+WHERE  EXISTS (SELECT *
+               FROM   User
+               WHERE  User.email = ?)
+               
+SELECT COUNT(*) FROM   User WHERE  EXISTS (SELECT * FROM   User WHERE  User.email = ?)
+
+
+DONE
+Obtain user given userId
+
+SELECT *
+FROM   User
+WHERE  User.id = ?
+
+
+DONE
+Obtain all user's notifications to be read given userId
+
+SELECT Notification.*
+FROM   Notification JOIN User
+ON     User.id = Notification.userId
+WHERE  User.id = ?
+  AND  Notification.status = false
+
+SELECT Notification.* FROM   Notification JOIN User ON     User.id = Notification.userId WHERE  User.id = ? AND  Notification.status = false
+
+
+DONE
+Obtain all lists given a User's username
+
+(SELECT List.*
+FROM   Permissions JOIN Lists
+ON     Permissions.List_id = List.id
+WHERE  Permissions.User_id = ?)
+UNION
+(SELECT *
+FROM   List
+WHERE  List.ownerId = ?)
+
+(SELECT List.* FROM   Permissions JOIN Lists ON Permissions.listId = List.id WHERE  Permissions.userId = ?) UNION (SELECT * FROM   List WHERE  List.ownerId = ?)
+
+
+
+
+DONE
+Obtain purhcase log for pair User - Product
+
+SELECT *
+FROM   Log
+WHERE  Log.userId = ?
+  AND  Log.productId = ?
+
+
+
+DONE
+Obtain all products in a list given List.id
+
+SELECT Product.*
+FROM   Product JOIN ProductInList
+ON     Product.id = ProductInList.productId
+WHERE  ProductInList.listId = ?
+
+SELECT Product.* FROM Product JOIN ProductInList ON Product.id = ProductInList.productId WHERE  ProductInList.listId = ?
+
+
+
+Obtain all comments (pair: User, text) linked to list given listId.
+In DAO function, the user will be returned using getUserByPrimaryKey
+
+SELECT Comment.userId, Comment.text
+FROM   Comment
+WHERE  Comment.listId = ?
+
+
+DONE
+Obtain all shops for a specified category
+
+SELECT *
+FROM   Shop
+WHERE  Shop.category = ?
+
+
+
+
+
+
+
+
+
+

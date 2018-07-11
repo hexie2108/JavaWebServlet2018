@@ -32,6 +32,16 @@ public interface ListDAO extends DAO<List, Integer> {
     public List getByPrimaryKey(Integer primaryKey) throws DAOException;
 
     /**
+     * Persists the new list passed as parameter
+     * to the storage system.
+     * 
+     * @param list the new comment to insert as entry
+     * @return the id of the new persisted record.
+     * @throws DAOException if an error occurred during the persist action.
+     */
+    public Integer insert(List list) throws DAOException;
+    
+    /**
      * Returns the list of all the valid {@link List list} stored by the
      * storage system.
      *

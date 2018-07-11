@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 
@@ -44,6 +45,29 @@ public class JDBCListDAO extends JDBCDAO<List, Integer> implements ListDAO {
         }
 
         return 0L;
+    }
+    
+    public Integer insert(List list) throws DAOException {
+        if (list == null) {
+            throw new DAOException("list bean is null");
+        }
+        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO List (name, ownerId, categoryList) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
+
+            stm.setString(1, list.getName());
+            stm.setInt(2, list.getOwnerId());
+            stm.setInt(3, list.getCategoryList());
+
+            stm.executeUpdate();
+            
+            ResultSet rs = stm.getGeneratedKeys();
+            if (rs.next()) {
+                list.setId(rs.getInt(1));
+            }
+            
+            return list.getId();
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to insert the new list", ex);
+        }
     }
 
     @Override

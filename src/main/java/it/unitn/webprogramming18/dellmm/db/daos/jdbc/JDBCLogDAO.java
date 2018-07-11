@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +49,33 @@ public class JDBCLogDAO extends JDBCDAO<Log, Integer> implements LogDAO {
         return 0L;
     }
 
+    public Integer insert(Log log) throws DAOException {
+        if (log == null) {
+            throw new DAOException("log bean is null");
+        }
+        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO Log (productId, userId, last1, last2, last3, last4) VALUES (?,?,?,?,?,?)", 
+                                                                Statement.RETURN_GENERATED_KEYS)) {
+
+            stm.setInt(1, log.getProductId());
+            stm.setInt(2, log.getUserId());
+            stm.setTimestamp(3, log.getLast1());
+            stm.setTimestamp(4, log.getLast2());
+            stm.setTimestamp(5, log.getLast3());
+            stm.setTimestamp(6, log.getLast4());
+
+            stm.executeUpdate();
+            
+            ResultSet rs = stm.getGeneratedKeys();
+            if (rs.next()) {
+                log.setId(rs.getInt(1));
+            }
+            
+            return log.getId();
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to insert the new log", ex);
+        }
+    }
+    
     @Override
     public Log getByPrimaryKey(Integer primaryKey) throws DAOException {
         Log log = null;

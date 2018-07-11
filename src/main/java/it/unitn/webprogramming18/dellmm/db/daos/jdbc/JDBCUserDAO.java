@@ -5,12 +5,10 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.jdbc.JDBCDAO;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * The JDBC implementation of the {@link UserDAO} interface.
@@ -31,7 +29,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
         user.setImg(rs.getString("img"));
         user.setIsAdmin(rs.getBoolean("isAdmin"));
         user.setVerifyEmailLink(rs.getString("verifyEmailLink"));
-        user.setResendEmailLink(rs.getString("resendEmailLink"));
+        user.setResetPwdEmailLink(rs.getString("resetPwdLink"));
 
         return user;
     }
@@ -104,7 +102,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
                         "img = ?," +
                         "isAdmin = ?," +
                         "verifyEmailLink = ?," +
-                        "resendEmailLink = ? " +
+                        "resetPwdEmailLink = ? " +
                         "WHERE id = ?"
         )) {
 
@@ -115,7 +113,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
             stm.setString(5, user.getImg());
             stm.setBoolean(6, user.isIsAdmin());
             stm.setString(7, user.getVerifyEmailLink());
-            stm.setString(8, user.getResendEmailLink());
+            stm.setString(8, user.getResetPwdEmailLink());
             stm.setInt(9, user.getId());
             if (stm.executeUpdate() != 1) {
                 throw new DAOException("Impossible to update the user");
@@ -174,5 +172,79 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
             throw new DAOException("Impossible to return result", ex);
         }
         return res;
+    }
+
+    public User generateUser(String first_name, String last_name, String email, String password) throws DAOException {
+        if(first_name == null || last_name == null || email == null || password == null) {
+            throw new DAOException(
+                "parameter not valid",
+                new IllegalArgumentException(
+                    "The passed email, password, last name or first name is null"
+                )
+            );
+        }
+
+        int userId=0;
+        String verifyLink = UUID.randomUUID().toString();
+
+        boolean successo=false;
+        for(int tentativi=0; (tentativi<5)&&(!successo); tentativi++) {
+            successo = true;
+            try{
+                try
+                {
+                    PreparedStatement std = CON.prepareStatement(
+                            "INSERT INTO User (name, surname, email, password, img, isAdmin, verifyEmailLink, resetPwdEmailLink)" +
+                            "VALUES (?,?,?,?,?,FALSE,?,NULL)",
+                            Statement.RETURN_GENERATED_KEYS
+                    );
+                    std.setString(1, first_name);
+                    std.setString(2, last_name);
+                    std.setString(3, email);
+                    std.setString(4, password);
+                    std.setString(5, "come ci organizzamo per l'immagine?"); //TODO: Organizzazione per l'immagine
+                    std.setString(6,verifyLink);
+
+                    if (std.executeUpdate() != 1) {
+                        throw new DAOException("Impossible to insert the user");
+                    }
+
+                    try(ResultSet rs = std.getGeneratedKeys()){
+                        System.out.println(rs.getMetaData().getColumnCount());
+
+
+                        if(rs.next()) {
+                            userId = rs.getInt(1);
+                        }
+                    }
+                } catch (SQLIntegrityConstraintViolationException integrity_ex) {
+                    if (integrity_ex.getMessage().matches("Duplicate entry '.*?' for key 'UUID_[A-Z]*?_UNIQUE'")) {
+                        successo = false;
+                    } else {
+                        throw new DAOException("Impossible to create the user", integrity_ex);
+                    }
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                throw new DAOException("Impossible to create the user", ex);
+            }
+        }
+
+        // Avendo fallito per 5 volte a generare uuid unici mandiamo un errore
+        // in quanto in condizioni normali è estremamente improbabile
+        if(!successo) {
+            throw new DAOException("Impossible to create the user");
+        }
+
+        User user=new User();
+        user.setId(userId);
+        user.setName(first_name);
+        user.setSurname(last_name);
+        user.setEmail(email);
+        user.setPassword(password);
+        user.setVerifyEmailLink(verifyLink);
+        user.setResetPwdEmailLink(null); //TODO: Convertire resendEmailLink in resetPassword?
+
+        return user;
     }
 }

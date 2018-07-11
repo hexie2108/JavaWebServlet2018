@@ -91,7 +91,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `Product` WRITE;
 /*!40000 ALTER TABLE `Product` DISABLE KEYS */;
-INSERT INTO `Product` VALUES (1,'prod1','desc1','img1','logo1',1),(2,'prod2','desc2','img2','logo2',1),(3,'prod3','desc3','img3','logo3',2),(4,'prod4','desc4','img4','logo4',2),(5,'prod5','desc5','img5','logo5',3),(6,'prod6','desc6','img6','logo6',3),(7,'prod7','desc7','img7','logo7',4),(8,'prod8','desc8','img8','logo8',4),(9,'prod9','desc9','img9','logo9',5),(10,'prod10','desc10','img10','logo10',5);
+INSERT INTO `Product` VALUES (1,'prod1','desc1','img1','logo1',1, NULL),(2,'prod2','desc2','img2','logo2',1, NULL),(3,'prod3','desc3','img3','logo3',2, NULL),(4,'prod4','desc4','img4','logo4',2, NULL),(5,'prod5','desc5','img5','logo5',3, NULL),(6,'prod6','desc6','img6','logo6',3, NULL),(7,'prod7','desc7','img7','logo7',4, NULL),(8,'prod8','desc8','img8','logo8',4, NULL),(9,'prod9','desc9','img9','logo9',5, NULL),(10,'prod10','desc10','img10','logo10',5, NULL);
 /*!40000 ALTER TABLE `Product` ENABLE KEYS */;
 UNLOCK TABLES;
 
