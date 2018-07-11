@@ -59,7 +59,7 @@ public class DisplayListsServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute("user");
         if (session == null || user == null) {
-            request.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(request, response);
+            //request.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(request, response);
         } else {
             
             int userId = user.getId();
@@ -136,7 +136,7 @@ public class DisplayListsServlet extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Servlet for displaying user specific lists";
+        return "Servlet for displaying user specific lists in format List -> products in it";
     }// </editor-fold>
 
 }

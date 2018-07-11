@@ -5,6 +5,10 @@
         <servlet-name>DisplaySpecificListServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlet.DisplaySpecificListServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>PrepareAddUpdateListPageServlet</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlet.PrepareAddUpdateListPageServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>DisplayListsServlet</servlet-name>
         <url-pattern>/DisplayListsServlet</url-pattern>
@@ -12,6 +16,10 @@
     <servlet-mapping>
         <servlet-name>DisplaySpecificListServlet</servlet-name>
         <url-pattern>/DisplaySpecificListServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PrepareAddUpdateListPageServlet</servlet-name>
+        <url-pattern>/PrepareAddUpdateListPageServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
