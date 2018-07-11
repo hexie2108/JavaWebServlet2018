@@ -3,7 +3,6 @@ package it.unitn.webprogramming18.dellmm.db.daos.jdbc;
 import it.unitn.webprogramming18.dellmm.db.daos.ListDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.jdbc.JDBCDAO;
-import it.unitn.webprogramming18.dellmm.javaBeans.CategoryList;
 import it.unitn.webprogramming18.dellmm.javaBeans.List;
 
 import java.sql.Connection;
@@ -27,6 +26,8 @@ public class JDBCListDAO extends JDBCDAO<List, Integer> implements ListDAO {
 
         list.setId(rs.getInt("id"));
         list.setName(rs.getString("name"));
+        list.setDescription(rs.getString("description"));
+        list.setImg(rs.getString("img"));
         list.setOwnerId(rs.getInt("ownerId"));
         list.setCategoryList(rs.getInt("categoryList"));
 
@@ -51,11 +52,13 @@ public class JDBCListDAO extends JDBCDAO<List, Integer> implements ListDAO {
         if (list == null) {
             throw new DAOException("list bean is null");
         }
-        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO List (name, ownerId, categoryList) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO List (name, description, img, ownerId, categoryList) VALUES (?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
 
             stm.setString(1, list.getName());
-            stm.setInt(2, list.getOwnerId());
-            stm.setInt(3, list.getCategoryList());
+            stm.setString(2, list.getDescription());
+            stm.setString(3, list.getImg());
+            stm.setInt(4, list.getOwnerId());
+            stm.setInt(5, list.getCategoryList());
 
             stm.executeUpdate();
             
@@ -116,15 +119,19 @@ public class JDBCListDAO extends JDBCDAO<List, Integer> implements ListDAO {
         try (PreparedStatement stm = CON.prepareStatement(
                 "UPDATE List SET " +
                         "name = ?," +
+                        "description = ?," +
+                        "img = ?" +
                         "ownerId = ?," +
                         "categoryList = ?" +
                         "WHERE id = ?"
         )) {
 
-            stm.setString(1, list.getName());
-            stm.setInt(2, list.getOwnerId());
-            stm.setInt(3, list.getCategoryList());
-            stm.setInt(4, list.getId());
+            stm.setString(1, list.getName());            
+            stm.setString(2, list.getDescription());
+            stm.setString(3, list.getImg());
+            stm.setInt(4, list.getCategoryList());
+            stm.setInt(5, list.getOwnerId());
+            stm.setInt(6, list.getId());
             if (stm.executeUpdate() != 1) {
                 throw new DAOException("Impossible to update the list");
             }
