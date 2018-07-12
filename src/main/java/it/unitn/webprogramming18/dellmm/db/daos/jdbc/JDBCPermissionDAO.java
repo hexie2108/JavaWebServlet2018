@@ -166,4 +166,25 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
 
         return permissionList;
     }
+    
+    public Permission getUserPermissionOnListByIds(Integer userId, Integer listId) throws DAOException {
+        Permission permission = null;
+        if (userId == null || listId == null) {
+            throw new DAOException("One or both parameters (userId, listId) are null");
+        }
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Permission WHERE userId = ? AND listId == ?")) {
+            stm.setInt(1, userId);
+            stm.setInt(2, listId);
+            
+            try (ResultSet rs = stm.executeQuery()) {
+                if (rs.next()) {
+                    permission = getPermissionFromResultSet(rs);
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get the permission for the passed userId and listId", ex);
+        }
+
+        return permission;
+    }
 }

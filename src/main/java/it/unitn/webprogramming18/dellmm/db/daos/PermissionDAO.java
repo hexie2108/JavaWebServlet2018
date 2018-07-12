@@ -71,4 +71,17 @@ public interface PermissionDAO extends DAO<Permission, Integer> {
      * @throws DAOException if an error occurred during the action
      */
     public List<Permission> getPermissionsOnListByListId(Integer listId) throws DAOException;
+    
+    /**
+     * ATTENTION: This function must be called on known (non-owner list_alpha user, list_alpha) pairs, as for how our DB is designed
+     * we have to add separate check on ownerId's List field.
+     * Gets a Permission bean containing specified user's permission on specified list
+     * 
+     * @param userId user's id
+     * @param listId list's id
+     * @return a Permission bean containing user's permission on list, NULL if user cannot access list
+     *         NULL IS RETURNED ALSO IF A PAIR (owner list_alpha user, list_alpha) IS PASSED AS PARAMETER
+     * @throws DAOException if an error occurred during the action
+     */
+    public Permission getUserPermissionOnListByIds(Integer userId, Integer listId) throws DAOException;
 }
