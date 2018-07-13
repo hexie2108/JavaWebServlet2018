@@ -91,7 +91,7 @@ public class PrepareAddUpdateProductPageServlet extends HttpServlet {
             }
             
             request.setAttribute("productCategories", productCategories);
-            request.getRequestDispatcher("/WEB-INF/jsp/addUpdateProduct").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/jsp/addUpdateProduct.jsp").forward(request, response);
         }
     }
 

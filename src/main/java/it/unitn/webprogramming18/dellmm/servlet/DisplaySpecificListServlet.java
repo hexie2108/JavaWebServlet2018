@@ -73,7 +73,7 @@ public class DisplaySpecificListServlet extends HttpServlet {
             int listId = Integer.parseInt(request.getParameter("listId"));
             
             //Obtains ListBean with listId
-            it.unitn.webprogramming18.dellmm.javaBeans.List list;
+            it.unitn.webprogramming18.dellmm.javaBeans.List list = new it.unitn.webprogramming18.dellmm.javaBeans.List();
             try {
                 list = listDAO.getByPrimaryKey(listId);
             } catch (DAOException ex) {
@@ -82,7 +82,7 @@ public class DisplaySpecificListServlet extends HttpServlet {
             }
             
             //Gets all products on list
-            List<Product> products;
+            List<Product> products = null;
             try {
                 products = productDAO.getProductsInListByListId(listId);
             } catch (DAOException ex) {
@@ -90,10 +90,18 @@ public class DisplaySpecificListServlet extends HttpServlet {
                 throw new ServletException("Impossible to get list products");
             }
             
-            //Gets set of permissions associated to the list
-            List<Permission> permissions;
+            //Gets set of permissions associated to the list,
+            //and user's permissions on list if user is not owner
+            List<Permission> generalPermissionsOnList;
+            Permission userPermissionsOnList = null;
             try {
-                permissions = permissionDAO.getPermissionsOnListByListId(listId);
+                generalPermissionsOnList = permissionDAO.getPermissionsOnListByListId(listId);
+                
+                //If user is not owner of the list being visualized, its permissions are set as attribute
+                //In order to filter actions on list
+                if (list.getOwnerId() != user.getId()) {
+                    userPermissionsOnList = permissionDAO.getUserPermissionOnListByIds(user.getId(), listId);
+                }
             } catch (DAOException ex) {
                 ex.printStackTrace();
                 throw new ServletException("Impossible to get permissions set of list");
@@ -110,7 +118,8 @@ public class DisplaySpecificListServlet extends HttpServlet {
             
             request.setAttribute("list", list);
             request.setAttribute("products", products);
-            request.setAttribute("permissions", permissions);
+            request.setAttribute("generalPermissionsOnList", generalPermissionsOnList);
+            request.setAttribute("userPermissionsOnList", userPermissionsOnList);
             request.setAttribute("categoryList", categoryList);
             
             request.getRequestDispatcher("/WEB-INF/jsp/yourList").forward(request, response);

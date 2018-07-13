@@ -17,6 +17,10 @@
         <servlet-name>PrepareAddUpdateProductServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlet.PrepareAddUpdateProductPageServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AddUpdateProductServlet</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlet.AddUpdateProductServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>DisplayListsServlet</servlet-name>
         <url-pattern>/DisplayListsServlet</url-pattern>
@@ -36,6 +40,10 @@
     <servlet-mapping>
         <servlet-name>PrepareAddUpdateProductServlet</servlet-name>
         <url-pattern>/PrepareAddUpdateProductServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddUpdateProductServlet</servlet-name>
+        <url-pattern>/AddUpdateProductServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

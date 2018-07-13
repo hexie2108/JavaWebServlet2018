@@ -90,6 +90,7 @@ public class AddUpdateListServlet extends HttpServlet {
                 throw new ServletException("Impossible to update or create new list");
             }
             
+            response.sendRedirect("/WEB-INF/jsp/yourHome.jsp");
         }
     }
 
