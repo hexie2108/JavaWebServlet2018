@@ -36,10 +36,10 @@ public class RegisterServlet extends HttpServlet {
             throw new ServletException("Impossible to get db factory for user storage system");
         }
 
-        try{
+        try {
             userDAO = daoFactory.getDAO(UserDAO.class);
-        } catch (DAOFactoryException ex){
-            throw new ServletException("Impossible to get db factory for user storage system",ex);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get db factory for user storage system", ex);
         }
 
         emailFactory = (EmailFactory) super.getServletContext().getAttribute("emailFactory");
@@ -50,7 +50,7 @@ public class RegisterServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher(JSP_PAGE_PATH).forward(request,response);
+        request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -63,29 +63,29 @@ public class RegisterServlet extends HttpServlet {
         String infPrivacy = request.getParameter(RegistrationValidator.INF_PRIVACY_KEY);
 
         // Usa il validator per verifiacare la conformità
-        HashMap<String,String> messages = RegistrationValidator.createValidationMessages(
-            userDAO,
-            firstName,
-            lastName,
-            email,
-            firstPassword,
-            secondPassword,
-            infPrivacy);
+        HashMap<String, String> messages = RegistrationValidator.createValidationMessages(
+                userDAO,
+                firstName,
+                lastName,
+                email,
+                firstPassword,
+                secondPassword,
+                infPrivacy);
 
         // In caso i campi non siano validi ricarica la pagina con gli errori indicati
         if (!messages.isEmpty()) {
-            request.setAttribute("messages",messages);
-            request.getRequestDispatcher(JSP_PAGE_PATH).forward(request,response);
+            request.setAttribute("messages", messages);
+            request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
             return;
         }
 
         // Genera l'utente, manda la mail di verifica e in caso visualizza gli errori
         try {
             User user = userDAO.generateUser(
-                firstName,
-                lastName,
-                email,
-                firstPassword );
+                    firstName,
+                    lastName,
+                    email,
+                    firstPassword);
 
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
@@ -97,12 +97,11 @@ public class RegisterServlet extends HttpServlet {
                         VerifyLinkMail.createMessage(user),
                         "registrazioneprogettowebprog@gmail.com"
                 ); // Per ora le mandiamo a noi stessi per evitare casini
-            }
-            catch (MessagingException | UnsupportedEncodingException ex) {
+            } catch (MessagingException | UnsupportedEncodingException ex) {
                 // TODO : Cambiare in notification?
-                ArrayList errorList = (ArrayList<String>)session.getAttribute("errors");
-                if (errorList == null){
-                    session.setAttribute("errors",new ArrayList<String>());
+                ArrayList errorList = (ArrayList<String>) session.getAttribute("errors");
+                if (errorList == null) {
+                    session.setAttribute("errors", new ArrayList<String>());
                 }
                 errorList.add("Impossible to send the email. Please check the email in user's settings and click resend");
             }
@@ -116,11 +115,11 @@ public class RegisterServlet extends HttpServlet {
 
             response.sendRedirect(response.encodeRedirectURL(contextPath));
         } catch (DAOException e) {
-            if(e.getCause() instanceof SQLIntegrityConstraintViolationException) {
-                messages.put("Email","Email già utilizzata");
-                request.setAttribute("messages",messages);
+            if (e.getCause() instanceof SQLIntegrityConstraintViolationException) {
+                messages.put(RegistrationValidator.EMAIL_KEY, "Email già utilizzata");
+                request.setAttribute("messages", messages);
 
-                request.getRequestDispatcher(JSP_PAGE_PATH).forward(request,response);
+                request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
                 return;
             }
 

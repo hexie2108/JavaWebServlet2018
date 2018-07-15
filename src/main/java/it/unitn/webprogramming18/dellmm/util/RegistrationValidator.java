@@ -7,24 +7,22 @@ import javax.mail.internet.InternetAddress;
 import java.util.HashMap;
 
 public class RegistrationValidator {
+    public static final String FIRST_NAME_KEY = "FirstName",
+            LAST_NAME_KEY = "LastName",
+            INF_PRIVACY_KEY = "InfPrivacy",
+            FIRST_PWD_KEY = "Password",
+            SECOND_PWD_KEY = "Password2",
+            EMAIL_KEY = "Email";
     // --- Configurazioni per la validazione dei campi
     private static final int FIRST_NAME_MAX_LEN = 44,
-                             LAST_NAME_MAX_LEN  = 44,
-                             PWD_MAX_LEN        = 44,
-                             EMAIL_MAX_LEN      = 44;
-
-    private static final int PWD_MIN_LEN        =  8,
-                             PWD_MIN_UPPER      =  1,
-                             PWD_MIN_LOWER      =  1,
-                             PWD_MIN_NUMBER     =  1,
-                             PWD_MIN_SYMBOL     =  1;
-
-    public static final String FIRST_NAME_KEY   = "FirstName",
-                               LAST_NAME_KEY    = "LastName",
-                               INF_PRIVACY_KEY  = "InfPrivacy",
-                               FIRST_PWD_KEY    = "Password",
-                               SECOND_PWD_KEY   = "Password2",
-                               EMAIL_KEY        = "Email";
+            LAST_NAME_MAX_LEN = 44,
+            PWD_MAX_LEN = 44,
+            EMAIL_MAX_LEN = 44;
+    private static final int PWD_MIN_LEN = 8,
+            PWD_MIN_UPPER = 1,
+            PWD_MIN_LOWER = 1,
+            PWD_MIN_NUMBER = 1,
+            PWD_MIN_SYMBOL = 1;
 
     // --- Funzioni di validazione
 
@@ -42,7 +40,7 @@ public class RegistrationValidator {
 
     public static String validateFirstName(String firstName) {
         if ((firstName == null) ||
-            (firstName.isEmpty())) {
+                (firstName.isEmpty())) {
             return "Complete il campo first name";
         }
 
@@ -55,7 +53,7 @@ public class RegistrationValidator {
 
     public static String validateLastName(String lastName) {
         if ((lastName == null) ||
-            (lastName.isEmpty())) {
+                (lastName.isEmpty())) {
             return "Completa il campo last name";
         }
 
@@ -94,16 +92,16 @@ public class RegistrationValidator {
         }
 
         if ((password.length() < PWD_MIN_LEN) ||
-            (upper  < PWD_MIN_UPPER)  ||
-            (lower  < PWD_MIN_LOWER)  ||
-            (number < PWD_MIN_NUMBER) ||
-            (symbol < PWD_MIN_SYMBOL)) {
+                (upper < PWD_MIN_UPPER) ||
+                (lower < PWD_MIN_LOWER) ||
+                (number < PWD_MIN_NUMBER) ||
+                (symbol < PWD_MIN_SYMBOL)) {
             return "La password deve essere:<br>" +
-                   "  1. Lunga almeno 8 caratteri<br>" +
-                   "  2. Avere almeno una lettera minuscola<br>" +
-                   "  3. Avere almeno una lettera maiuscola<br>" +
-                   "  4. Avere almeno un numero<br>" +
-                   "  5. Avere almeno un simbolo<br>";
+                    "  1. Lunga almeno 8 caratteri<br>" +
+                    "  2. Avere almeno una lettera minuscola<br>" +
+                    "  3. Avere almeno una lettera maiuscola<br>" +
+                    "  4. Avere almeno un numero<br>" +
+                    "  5. Avere almeno un simbolo<br>";
         }
 
         return null;
@@ -111,9 +109,9 @@ public class RegistrationValidator {
 
     public static String validateSecondPassword(String firstPassword, String secondPassword) {
         if ((firstPassword == null) ||
-            (secondPassword == null) ||
-            (firstPassword.isEmpty()) ||
-            (secondPassword.isEmpty())) {
+                (secondPassword == null) ||
+                (firstPassword.isEmpty()) ||
+                (secondPassword.isEmpty())) {
             return "Completa tutti e due i campi password";
         }
 
@@ -130,7 +128,7 @@ public class RegistrationValidator {
 
     public static String validateEmail(String email, UserDAO userDAO) {
         if ((email == null) ||
-            (email.isEmpty())) {
+                (email.isEmpty())) {
             return "Completa il campo email";
         }
 

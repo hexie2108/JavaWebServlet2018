@@ -21,11 +21,11 @@ import java.util.UUID;
 
 @WebServlet(name = "ForgotPasswordServlet")
 public class ForgotPasswordServlet extends HttpServlet {
-    public static final String EMAIL_KEY           = "email",
-                               PREV_URL_KEY        = "prevUrl",
-                               ERR_NOEMAIL_KEY     = "error_noEmail",
-                               ERR_NOVERIFIED_KEY  = "error_noVerified",
-                               ERR_EMPTY_FIELD_KEY = "error_emptyField";
+    public static final String EMAIL_KEY = "email",
+            PREV_URL_KEY = "prevUrl",
+            ERR_NOEMAIL_KEY = "error_noEmail",
+            ERR_NOVERIFIED_KEY = "error_noVerified",
+            ERR_EMPTY_FIELD_KEY = "error_emptyField";
 
     private UserDAO userDAO;
     private EmailFactory emailFactory;
@@ -33,14 +33,14 @@ public class ForgotPasswordServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
-        if(daoFactory == null){
+        if (daoFactory == null) {
             throw new ServletException("Impossible to get db factory for user storage system");
         }
 
-        try{
+        try {
             userDAO = daoFactory.getDAO(UserDAO.class);
-        } catch (DAOFactoryException ex){
-            throw new ServletException("Impossible to get db factory for user storage system",ex);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get db factory for user storage system", ex);
         }
 
         emailFactory = (EmailFactory) super.getServletContext().getAttribute("emailFactory");
@@ -50,7 +50,7 @@ public class ForgotPasswordServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher(PagePathsConstants.FORGOT_PASSWORD_JSP).forward(request,response);
+        request.getRequestDispatcher(PagePathsConstants.FORGOT_PASSWORD_JSP).forward(request, response);
     }
 
 
@@ -58,10 +58,10 @@ public class ForgotPasswordServlet extends HttpServlet {
         String email = request.getParameter(EMAIL_KEY);
 
         if (email == null ||
-            email.isEmpty()) {
-            request.getRequestDispatcher(PagePathsConstants.FORGOT_PASSWORD_JSP +"?"+
-                    ERR_EMPTY_FIELD_KEY+"=true"
-            ).forward(request,response);
+                email.isEmpty()) {
+            request.getRequestDispatcher(PagePathsConstants.FORGOT_PASSWORD_JSP + "?" +
+                    ERR_EMPTY_FIELD_KEY + "=true"
+            ).forward(request, response);
             return;
         }
 
@@ -87,20 +87,20 @@ public class ForgotPasswordServlet extends HttpServlet {
         }
 
         if (user == null) {
-            request.getRequestDispatcher(PagePathsConstants.FORGOT_PASSWORD_JSP +"?"+
-                    ERR_NOEMAIL_KEY+"=true"+
-                    "&"+PREV_URL_KEY+"="+prevUrl+
-                    "&"+ EMAIL_KEY +"="+email
-            ).forward(request,response);
+            request.getRequestDispatcher(PagePathsConstants.FORGOT_PASSWORD_JSP + "?" +
+                    ERR_NOEMAIL_KEY + "=true" +
+                    "&" + PREV_URL_KEY + "=" + prevUrl +
+                    "&" + EMAIL_KEY + "=" + email
+            ).forward(request, response);
             return;
         }
 
-        if(user.getVerifyEmailLink() != null) {
-            request.getRequestDispatcher(PagePathsConstants.FORGOT_PASSWORD_JSP +"?"+
-                    ERR_NOVERIFIED_KEY+"=true"+
-                    "&"+PREV_URL_KEY+"="+prevUrl+
-                    "&"+EMAIL_KEY+"="+email
-            ).forward(request,response);
+        if (user.getVerifyEmailLink() != null) {
+            request.getRequestDispatcher(PagePathsConstants.FORGOT_PASSWORD_JSP + "?" +
+                    ERR_NOVERIFIED_KEY + "=true" +
+                    "&" + PREV_URL_KEY + "=" + prevUrl +
+                    "&" + EMAIL_KEY + "=" + email
+            ).forward(request, response);
             return;
         }
 
@@ -117,13 +117,13 @@ public class ForgotPasswordServlet extends HttpServlet {
                 );
                 // Per permetterci nel mentre di non creare account mail false per verificare gli account
                 // TODO: Da cambiare
-            } catch(MessagingException | UnsupportedEncodingException ex) {
+            } catch (MessagingException | UnsupportedEncodingException ex) {
                 // TODO: Rimettere uuid_pw_rst a null?
-                response.sendError(500,"Impossible to send the email");
+                response.sendError(500, "Impossible to send the email");
                 return;
             }
-        } catch (DAOException  ex) {
-            response.sendError(500,"Impossible to create reset password link");
+        } catch (DAOException ex) {
+            response.sendError(500, "Impossible to create reset password link");
             return;
         }
     }

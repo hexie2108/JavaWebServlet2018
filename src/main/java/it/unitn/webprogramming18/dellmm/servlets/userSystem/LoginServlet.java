@@ -19,13 +19,13 @@ import java.net.URLEncoder;
 @WebServlet(name = "LoginServlet")
 public class LoginServlet extends HttpServlet {
     public static final String PREV_URL_KEY = "prevUrl",
-                               NEXT_URL_KEY = "nextUrl",
-                               EMAIL_KEY    = "email",
-                               PWD_KEY      = "password",
-                               REMEMBER_KEY = "remember";
+            NEXT_URL_KEY = "nextUrl",
+            EMAIL_KEY = "email",
+            PWD_KEY = "password",
+            REMEMBER_KEY = "remember";
 
     public static String ERR_NOUSER_PWD_KEY = "error_noUserOrPassword",
-                         ERR_NO_VER_KEY     = "error_noVerified";
+            ERR_NO_VER_KEY = "error_noVerified";
 
     private UserDAO userDAO;
 
@@ -61,7 +61,7 @@ public class LoginServlet extends HttpServlet {
         request.setAttribute(NEXT_URL_KEY, URLEncoder.encode(newPrevUrl, "UTF-8"));
         request.setAttribute(PREV_URL_KEY, newPrevUrl);
 
-        request.getRequestDispatcher(PagePathsConstants.ALREDY_LOGGED_IN_JSP).forward(request, response);
+        request.getRequestDispatcher(PagePathsConstants.ALREADY_LOGGED_IN_JSP).forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -98,7 +98,7 @@ public class LoginServlet extends HttpServlet {
         User user = null;
 
         if (!email.isEmpty() &&
-            !password.isEmpty()) {
+                !password.isEmpty()) {
             try {
                 user = userDAO.getByEmailAndPassword(email, password);
             } catch (DAOException e) {

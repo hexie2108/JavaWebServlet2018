@@ -22,14 +22,14 @@ public class ValidateRegistrationServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
-        if(daoFactory == null){
+        if (daoFactory == null) {
             throw new ServletException("Impossible to get db factory for user storage system");
         }
 
-        try{
+        try {
             userDAO = daoFactory.getDAO(UserDAO.class);
-        } catch (DAOFactoryException ex){
-            throw new ServletException("Impossible to get db factory for user storage system",ex);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get db factory for user storage system", ex);
         }
     }
 
@@ -48,7 +48,7 @@ public class ValidateRegistrationServlet extends HttpServlet {
         String infPrivacy = request.getParameter(RegistrationValidator.INF_PRIVACY_KEY);
 
         // Usa il validator per verifiacare la conformità
-        HashMap<String,String> messages = RegistrationValidator.createValidationMessages(
+        HashMap<String, String> messages = RegistrationValidator.createValidationMessages(
                 userDAO,
                 firstName,
                 lastName,

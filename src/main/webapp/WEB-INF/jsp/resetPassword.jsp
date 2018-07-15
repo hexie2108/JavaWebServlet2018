@@ -1,5 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="it.unitn.webprogramming18.dellmm.servlets.userSystem.ResetPasswordServlet" %>
+
+
 <html>
 <head>
     <meta charset="utf-8">
@@ -31,12 +34,15 @@
                     <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                         <label for="inputPassword" class="sr-only">Email address</label>
-                        <input id="inputPassword" class="form-control" placeholder="Password" required="" autofocus="" type="password" name="password" value="${param.password}">
+                        <input id="inputPassword" class="form-control" placeholder="Password" required="" autofocus=""
+                               type="password" name="${ResetPasswordServlet.PWD_KEY}"
+                               value="${param[ResetPasswordServlet.PWD_KEY]}">
                     </div>
                 </div>
 
                 <div class="btn-group btn-group-justified" role="group" aria-label="...">
                     <div class="btn-group" role="group" id="id-annulla">
+                        <%-- TODO: Gestione prevUrl --%>
                         <a href="${param.prevUrl}" class="btn btn-default" role="button">Annulla</a>
                     </div>
                     <div class="btn-group" role="group" id="id-accedi">
@@ -44,13 +50,13 @@
                     </div>
                 </div>
 
-                <c:if test="${not empty param.message}">
+                <c:if test="${not empty param[ResetPasswordServlet.MSG_KEY]}">
                     <div class="alert alert-danger" id="id-UP-alert">
-                        ${param.message}
+                        ${param[ResetPasswordServlet.MSG_KEY]}
                     </div>
                 </c:if>
 
-                <input type="hidden" name="id" id="inputId" value="${param.id}">
+                <input type="hidden" name="id" id="inputId" value="${param[ResetPasswordServlet.ID_KEY]}">
             </div>
         </form>
     </div>
