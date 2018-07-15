@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -165,5 +166,62 @@ public class JDBCLogDAO extends JDBCDAO<Log, Integer> implements LogDAO {
         }
 
         return log;
+    }
+    
+    public Log updateUserProductLogTableByIds(Integer userId, Integer productId) throws DAOException {
+        Log log;
+        if (userId == null || productId == null) {
+            throw new DAOException("One or both arguments (userId, productId) are null");
+        }
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Log WHERE userId = ? AND productId = ?")) {
+            stm.setInt(1, userId);
+            stm.setInt(2, productId);
+            try (ResultSet rs = stm.executeQuery()) {
+                
+                //Entry exists
+                if (rs.next()) {
+                    log = getLogFromResultSet(rs);
+                    
+                    //last1 surely not null
+                    if (log.getLast2() == null) {
+                        log.setLast2(timestamp);
+                        log = update(log);
+                        return log;
+                    } else if(log.getLast3() == null) {
+                        log.setLast3(timestamp);
+                        log = update(log);
+                        return log;
+                    } else if(log.getLast4() == null) {
+                        log.setLast4(timestamp);
+                        log = update(log);
+                        return log;
+                    } else {
+                        //All fields are full. Shift values and insert last
+                        log.setLast1(log.getLast2());
+                        log.setLast2(log.getLast3());
+                        log.setLast3(log.getLast4());
+                        log.setLast4(timestamp);
+                        log = update(log);
+                        return log;
+                    }
+                    
+                //Entry does not exist
+                } else {
+                    log = new Log();
+                    Timestamp nullts = null;
+                    log.setProductId(productId);
+                    log.setUserId(userId);
+                    log.setLast1(timestamp);
+                    log.setLast2(nullts);
+                    log.setLast3(nullts);
+                    log.setLast4(nullts);
+                    insert(log);
+                    return log;
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get the log for the passed userId and productId", ex);
+        }
     }
 }

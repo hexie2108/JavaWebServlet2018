@@ -5,6 +5,7 @@
  */
 package it.unitn.webprogramming18.dellmm.servlet;
 
+import it.unitn.webprogramming18.dellmm.db.daos.LogDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ProductInListDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
@@ -61,7 +62,7 @@ public class AddUpdateProductServlet extends HttpServlet {
             productDAO = daoFactory.getDAO(ProductDAO.class);
             productInListDAO = daoFactory.getDAO(ProductInListDAO.class);
         } catch (DAOFactoryException ex) {
-            throw new ServletException("Impossible to get categoryProductDAO for user storage system", ex);
+            throw new ServletException("Impossible to get DAOs for user storage system", ex);
         }
     }
     
@@ -85,10 +86,11 @@ public class AddUpdateProductServlet extends HttpServlet {
             Integer listId = Integer.valueOf(request.getParameter("listId"));
             Integer productId = Integer.valueOf(request.getParameter("productId"));
             
-            //Non admin user. A "private" product must be created
+            //Non admin user. A "private" product must be created.
+            //Non update action => productId attribute is existing and not null
             if (user.isIsAdmin() == false) {
                 
-                //Additional check
+                //Additional check on must-exist variables
                 if (productId != null || listId == null) {
                     //ERROR abort action to implement
                 }
@@ -119,7 +121,7 @@ public class AddUpdateProductServlet extends HttpServlet {
                     
                     productInList.setListId(listId);
                     productInList.setProductId(productId);
-                    
+
                     productInListDAO.insert(productInList);
                     
                     //LINK TO BE DEFINED
@@ -160,7 +162,7 @@ public class AddUpdateProductServlet extends HttpServlet {
                     
                     //new product is being created by admin
                     if (productId == null) {
-                        productDAO.insert(product);
+                        productId = productDAO.insert(product);
                         //It is being created from "add to list" action, inserts it in admin-user's list as well
                         if (listId != null) {
                             ProductInList productInList = new ProductInList();
