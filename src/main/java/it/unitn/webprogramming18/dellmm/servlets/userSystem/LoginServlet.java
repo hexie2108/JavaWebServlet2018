@@ -46,7 +46,7 @@ public class LoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
-            request.getRequestDispatcher(PagePathsConstants.LOGIN).forward(request, response);
+            request.getRequestDispatcher(PagePathsConstants.LOGIN_JSP).forward(request, response);
             return;
         }
 
@@ -61,7 +61,7 @@ public class LoginServlet extends HttpServlet {
         request.setAttribute(NEXT_URL_KEY, URLEncoder.encode(newPrevUrl, "UTF-8"));
         request.setAttribute(PREV_URL_KEY, newPrevUrl);
 
-        request.getRequestDispatcher(PagePathsConstants.ALREDY_LOGGED_ID).forward(request, response);
+        request.getRequestDispatcher(PagePathsConstants.ALREDY_LOGGED_IN_JSP).forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -108,7 +108,7 @@ public class LoginServlet extends HttpServlet {
         }
 
         if (user == null) {
-            request.getRequestDispatcher(PagePathsConstants.LOGIN + "?" +
+            request.getRequestDispatcher(PagePathsConstants.LOGIN_JSP + "?" +
                     PREV_URL_KEY + "=" + URLEncoder.encode(prevUrl, "utf-8") +
                     "&" + NEXT_URL_KEY + "=" + URLEncoder.encode(nextUrl, "utf-8") +
                     "&" + EMAIL_KEY + "=" + URLEncoder.encode(email, "utf-8") +
@@ -119,7 +119,7 @@ public class LoginServlet extends HttpServlet {
         }
 
         if (user.getVerifyEmailLink() != null) {
-            request.getRequestDispatcher(PagePathsConstants.LOGIN + "?" +
+            request.getRequestDispatcher(PagePathsConstants.LOGIN_JSP + "?" +
                     PREV_URL_KEY + "=" + URLEncoder.encode(prevUrl, "utf-8") +
                     "&" + NEXT_URL_KEY + "=" + URLEncoder.encode(nextUrl, "utf-8") +
                     "&" + EMAIL_KEY + "=" + URLEncoder.encode(email, "utf-8") +

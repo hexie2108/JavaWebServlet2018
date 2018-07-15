@@ -50,7 +50,7 @@ public class ForgotPasswordServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher(PagePathsConstants.FORGOT_PASSWORD).forward(request,response);
+        request.getRequestDispatcher(PagePathsConstants.FORGOT_PASSWORD_JSP).forward(request,response);
     }
 
 
@@ -59,7 +59,7 @@ public class ForgotPasswordServlet extends HttpServlet {
 
         if (email == null ||
             email.isEmpty()) {
-            request.getRequestDispatcher(PagePathsConstants.FORGOT_PASSWORD+"?"+
+            request.getRequestDispatcher(PagePathsConstants.FORGOT_PASSWORD_JSP +"?"+
                     ERR_EMPTY_FIELD_KEY+"=true"
             ).forward(request,response);
             return;
@@ -87,7 +87,7 @@ public class ForgotPasswordServlet extends HttpServlet {
         }
 
         if (user == null) {
-            request.getRequestDispatcher(PagePathsConstants.FORGOT_PASSWORD+"?"+
+            request.getRequestDispatcher(PagePathsConstants.FORGOT_PASSWORD_JSP +"?"+
                     ERR_NOEMAIL_KEY+"=true"+
                     "&"+PREV_URL_KEY+"="+prevUrl+
                     "&"+ EMAIL_KEY +"="+email
@@ -96,7 +96,7 @@ public class ForgotPasswordServlet extends HttpServlet {
         }
 
         if(user.getVerifyEmailLink() != null) {
-            request.getRequestDispatcher(PagePathsConstants.FORGOT_PASSWORD+"?"+
+            request.getRequestDispatcher(PagePathsConstants.FORGOT_PASSWORD_JSP +"?"+
                     ERR_NOVERIFIED_KEY+"=true"+
                     "&"+PREV_URL_KEY+"="+prevUrl+
                     "&"+EMAIL_KEY+"="+email

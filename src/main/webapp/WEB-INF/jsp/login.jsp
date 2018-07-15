@@ -64,7 +64,7 @@
                     <label><input class="noMarginTop" name="remember" type="checkbox" value="">Remember me</label>
                 </div>
                 <a id="pwdDimenticata" class="pull-right"
-                   href="${pageContext.servletContext.contextPath}/${PagePathsConstants.FORGOT_PASSWORD}">Password dimenticata</a>
+                   href="${pageContext.servletContext.contextPath}/${PagePathsConstants.FORGOT_PASSWORD_JSP}">Password dimenticata</a>
 
                 <div class="btn-group btn-group-justified" role="group" aria-label="...">
                     <div class="btn-group" role="group" id="id-annulla">

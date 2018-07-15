@@ -10,9 +10,11 @@ import java.io.IOException;
 
 @WebServlet(name = "LogoutServlet")
 public class LogoutServlet extends HttpServlet {
+    public static final String NEXT_URL_KEY = "nextUrl";
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String nextUrl = request.getParameter("nextUrl");
+        String nextUrl = request.getParameter(NEXT_URL_KEY);
 
         if (nextUrl == null) {
             String contextPath = getServletContext().getContextPath();
@@ -20,7 +22,7 @@ public class LogoutServlet extends HttpServlet {
                 contextPath += "/";
             }
 
-            nextUrl = contextPath + "index.jsp";
+            nextUrl = contextPath;
         }
 
         HttpSession session = request.getSession(false);
