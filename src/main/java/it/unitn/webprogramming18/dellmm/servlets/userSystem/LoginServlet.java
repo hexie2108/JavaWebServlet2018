@@ -5,6 +5,7 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
+import it.unitn.webprogramming18.dellmm.util.PagePathsConstants;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,6 +18,15 @@ import java.net.URLEncoder;
 
 @WebServlet(name = "LoginServlet")
 public class LoginServlet extends HttpServlet {
+    public static final String PREV_URL_KEY = "prevUrl",
+                               NEXT_URL_KEY = "nextUrl",
+                               EMAIL_KEY    = "email",
+                               PWD_KEY      = "password",
+                               REMEMBER_KEY = "remember";
+
+    public static String ERR_NOUSER_PWD_KEY = "error_noUserOrPassword",
+                         ERR_NO_VER_KEY     = "error_noVerified";
+
     private UserDAO userDAO;
 
     @Override
@@ -36,24 +46,22 @@ public class LoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
-            request.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(request, response);
-        } else {
-            String newPrevUrl = request.getParameter("prevUrl");
-            if (newPrevUrl == null) {
-                String contextPath = getServletContext().getContextPath();
-                if (!contextPath.endsWith("/")) {
-                    contextPath += "/";
-                }
-
-                newPrevUrl = contextPath + "index.jsp";
-            }
-
-            request.setAttribute("nextUrl", URLEncoder.encode(newPrevUrl, "UTF-8"));
-            request.setAttribute("prevUrl", newPrevUrl);
-
-            request.getRequestDispatcher("/WEB-INF/jsp/alreadyLoggedIn.jsp").forward(request, response);
+            request.getRequestDispatcher(PagePathsConstants.LOGIN).forward(request, response);
+            return;
         }
 
+        String newPrevUrl = request.getParameter(PREV_URL_KEY);
+        if (newPrevUrl == null) {
+            newPrevUrl = getServletContext().getContextPath();
+            if (!newPrevUrl.endsWith("/")) {
+                newPrevUrl += "/";
+            }
+        }
+
+        request.setAttribute(NEXT_URL_KEY, URLEncoder.encode(newPrevUrl, "UTF-8"));
+        request.setAttribute(PREV_URL_KEY, newPrevUrl);
+
+        request.getRequestDispatcher(PagePathsConstants.ALREDY_LOGGED_ID).forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -62,13 +70,12 @@ public class LoginServlet extends HttpServlet {
             contextPath += "/";
         }
 
-        // Se non altrimenti specificata usa come url verso cui fare il redirect quella di default del sito
         HttpSession session = request.getSession();
 
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        String prevUrl = request.getParameter("prevUrl");
-        String nextUrl = request.getParameter("nextUrl");
+        String email = request.getParameter(EMAIL_KEY);
+        String password = request.getParameter(PWD_KEY);
+        String prevUrl = request.getParameter(PREV_URL_KEY);
+        String nextUrl = request.getParameter(NEXT_URL_KEY);
 
         if (email == null) {
             email = "";
@@ -78,18 +85,20 @@ public class LoginServlet extends HttpServlet {
             password = "";
         }
 
+        // Se prevUrl altrimenti non specificato usa pagina di default(index)
         if ((prevUrl == null) || (prevUrl.isEmpty())) {
-            prevUrl = contextPath + "index.jsp";
+            prevUrl = contextPath;
         }
 
+        // Se nextUrl altrimenti non specificato usa pagina di default(index)
         if ((nextUrl == null) || (nextUrl.isEmpty())) {
-            nextUrl = contextPath + "index.jsp";
+            nextUrl = contextPath;
         }
 
         User user = null;
 
         if (!email.isEmpty() &&
-                !password.isEmpty()) {
+            !password.isEmpty()) {
             try {
                 user = userDAO.getByEmailAndPassword(email, password);
             } catch (DAOException e) {
@@ -99,29 +108,33 @@ public class LoginServlet extends HttpServlet {
         }
 
         if (user == null) {
-            request.getRequestDispatcher("/WEB-INF/jsp/login.jsp?" +
-                    "prevUrl" + "=" + URLEncoder.encode(prevUrl, "utf-8") +
-                    "&" + "nextUrl" + "=" + URLEncoder.encode(nextUrl, "utf-8") +
-                    "&" + "email" + "=" + URLEncoder.encode(email, "utf-8") +
-                    "&" + "password" + "=" + URLEncoder.encode(password, "utf-8") +
-                    "&" + "error_noUserOrPassword=true"
+            request.getRequestDispatcher(PagePathsConstants.LOGIN + "?" +
+                    PREV_URL_KEY + "=" + URLEncoder.encode(prevUrl, "utf-8") +
+                    "&" + NEXT_URL_KEY + "=" + URLEncoder.encode(nextUrl, "utf-8") +
+                    "&" + EMAIL_KEY + "=" + URLEncoder.encode(email, "utf-8") +
+                    "&" + PWD_KEY + "=" + URLEncoder.encode(password, "utf-8") +
+                    "&" + ERR_NOUSER_PWD_KEY + "=true"
             ).forward(request, response);
-        } else if (user.getVerifyEmailLink() != null) {
-            request.getRequestDispatcher("/WEB-INF/jsp/login.jsp?" +
-                    "prevUrl" + "=" + URLEncoder.encode(prevUrl, "utf-8") +
-                    "&" + "nextUrl" + "=" + URLEncoder.encode(nextUrl, "utf-8") +
-                    "&" + "email" + "=" + URLEncoder.encode(email, "utf-8") +
-                    "&" + "password" + "=" + URLEncoder.encode(password, "utf-8") +
-                    "&" + "error_noVerified=true"
-            ).forward(request, response);
-        } else {
-            session.setAttribute("user", user);
-
-            String remember = request.getParameter("remember");
-            if (remember != null && remember.equals("on"))
-                session.setMaxInactiveInterval(-1);
-
-            response.sendRedirect(response.encodeRedirectURL(nextUrl));
+            return;
         }
+
+        if (user.getVerifyEmailLink() != null) {
+            request.getRequestDispatcher(PagePathsConstants.LOGIN + "?" +
+                    PREV_URL_KEY + "=" + URLEncoder.encode(prevUrl, "utf-8") +
+                    "&" + NEXT_URL_KEY + "=" + URLEncoder.encode(nextUrl, "utf-8") +
+                    "&" + EMAIL_KEY + "=" + URLEncoder.encode(email, "utf-8") +
+                    "&" + PWD_KEY + "=" + URLEncoder.encode(password, "utf-8") +
+                    "&" + ERR_NO_VER_KEY + "=true"
+            ).forward(request, response);
+            return;
+        }
+
+        session.setAttribute("user", user);
+
+        String remember = request.getParameter(REMEMBER_KEY);
+        if (remember != null && remember.equals("on"))
+            session.setMaxInactiveInterval(-1);
+
+        response.sendRedirect(response.encodeRedirectURL(nextUrl));
     }
 }

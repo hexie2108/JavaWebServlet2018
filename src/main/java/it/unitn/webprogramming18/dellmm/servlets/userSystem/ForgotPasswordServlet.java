@@ -68,8 +68,13 @@ public class ForgotPasswordServlet extends HttpServlet {
         String prevUrl = request.getParameter(PREV_URL_KEY);
 
         // Se prevUrl è vuoto allora usa la pagina di default(index)
-        if (prevUrl == null) {
-            prevUrl = "";
+        if ((prevUrl == null) || (prevUrl.isEmpty())) {
+            String contextPath = getServletContext().getContextPath();
+            if (!contextPath.endsWith("/")) {
+                contextPath += "/";
+            }
+
+            prevUrl = contextPath;
         }
 
         User user;
