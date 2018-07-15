@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="it.unitn.webprogramming18.dellmm.servlets.userSystem.ForgotPasswordServlet" %>
+
 <html>
 <head>
     <meta charset="utf-8">
@@ -31,26 +33,34 @@
                     <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                         <label for="inputEmail" class="sr-only">Email address</label>
-                        <input id="inputEmail" class="form-control" placeholder="Email" required="" autofocus="" type="text" name="email" value="${param.email}">
+                        <input id="inputEmail" class="form-control" placeholder="Email" required="" autofocus=""
+                               type="text" name="${ForgotPasswordServlet.EMAIL_KEY}"
+                               value="${param[ForgotPasswordServlet.EMAIL_KEY]}">
                     </div>
                 </div>
 
                 <div class="btn-group btn-group-justified" role="group" aria-label="...">
                     <div class="btn-group" role="group" id="id-annulla">
-                        <a href="${param.prevUrl}" class="btn btn-default" role="button">Annulla</a>
+                        <a href="${param[ForgotPasswordServlet.PREV_URL_KEY]}" class="btn btn-default" role="button">Annulla</a>
                     </div>
                     <div class="btn-group" role="group" id="id-accedi">
                         <button class="btn btn-primary" type="submit">Reset password</button>
                     </div>
                 </div>
 
-                <c:if test="${not empty param.error_noEmail}">
+                <c:if test="${not empty param[ForgotPasswordServlet.ERR_EMPTY_FIELD_KEY]}">
+                    <div class="alert alert-danger" id="id-UP-alert">
+                        Il campo mail deve essere presente
+                    </div>
+                </c:if>
+
+                <c:if test="${not empty param[ForgotPasswordServlet.ERR_NOEMAIL_KEY]}">
                     <div class="alert alert-danger" id="id-UP-alert">
                         La mail indicata non è registrata
                     </div>
                 </c:if>
 
-                <c:if test="${not empty param.error_noVerified}">
+                <c:if test="${not empty param[ForgotPasswordServlet.ERR_NOVERIFIED_KEY]}">
                     <div class="alert alert-danger" id="id-UP-alert">
                         Devi prima verificare la tua mail attraverso il link mandato alla mail per la registrazione
                     </div>

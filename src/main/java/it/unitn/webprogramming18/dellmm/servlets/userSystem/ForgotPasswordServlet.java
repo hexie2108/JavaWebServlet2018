@@ -7,6 +7,7 @@ import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.email.EmailFactory;
 import it.unitn.webprogramming18.dellmm.email.messageFactories.ResetPasswordMail;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
+import it.unitn.webprogramming18.dellmm.util.PagePathsConstants;
 
 import javax.mail.MessagingException;
 import javax.servlet.ServletException;
@@ -16,11 +17,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.UUID;
 
 @WebServlet(name = "ForgotPasswordServlet")
 public class ForgotPasswordServlet extends HttpServlet {
+    public static final String EMAIL_KEY           = "email",
+                               PREV_URL_KEY        = "prevUrl",
+                               ERR_NOEMAIL_KEY     = "error_noEmail",
+                               ERR_NOVERIFIED_KEY  = "error_noVerified",
+                               ERR_EMPTY_FIELD_KEY = "error_emptyField";
+
     private UserDAO userDAO;
     private EmailFactory emailFactory;
 
@@ -44,89 +50,76 @@ public class ForgotPasswordServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("/WEB-INF/jsp/forgotPassword.jsp").forward(request,response);
+        request.getRequestDispatcher(PagePathsConstants.FORGOT_PASSWORD).forward(request,response);
     }
 
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String contextPath = getServletContext().getContextPath();
-        if(!contextPath.endsWith("/")) {
-            contextPath+="/";
-        }
-
-        String email = request.getParameter("email");
+        String email = request.getParameter(EMAIL_KEY);
 
         if (email == null ||
             email.isEmpty()) {
-            response.sendRedirect(response.encodeRedirectURL(contextPath+"index.jsp"));
+            request.getRequestDispatcher(PagePathsConstants.FORGOT_PASSWORD+"?"+
+                    ERR_EMPTY_FIELD_KEY+"=true"
+            ).forward(request,response);
+            return;
         }
-        else
-        {
-            String prevUrl = request.getParameter("prevUrl");
 
-            if ((prevUrl == null) || (prevUrl.isEmpty())) {
-                prevUrl = "index.jsp";
-            }
+        String prevUrl = request.getParameter(PREV_URL_KEY);
 
-            User user;
+        // Se prevUrl è vuoto allora usa la pagina di default(index)
+        if (prevUrl == null) {
+            prevUrl = "";
+        }
+
+        User user;
+
+        try {
+            user = userDAO.getByEmail(email);
+        } catch (DAOException e) {
+            e.printStackTrace();
+            throw new ServletException("Impossible trovare l'utente");
+        }
+
+        if (user == null) {
+            request.getRequestDispatcher(PagePathsConstants.FORGOT_PASSWORD+"?"+
+                    ERR_NOEMAIL_KEY+"=true"+
+                    "&"+PREV_URL_KEY+"="+prevUrl+
+                    "&"+ EMAIL_KEY +"="+email
+            ).forward(request,response);
+            return;
+        }
+
+        if(user.getVerifyEmailLink() != null) {
+            request.getRequestDispatcher(PagePathsConstants.FORGOT_PASSWORD+"?"+
+                    ERR_NOVERIFIED_KEY+"=true"+
+                    "&"+PREV_URL_KEY+"="+prevUrl+
+                    "&"+EMAIL_KEY+"="+email
+            ).forward(request,response);
+            return;
+        }
+
+        try {
+            user.setResetPwdEmailLink(UUID.randomUUID().toString());
+            userDAO.update(user);
 
             try {
-                user = userDAO.getByEmail(email);
-            } catch (DAOException e) {
-                e.printStackTrace();
-                throw new ServletException("Impossible trovare l'utente");
+                emailFactory.sendMail(
+                        "Reset Password",
+                        "Reset Password",
+                        ResetPasswordMail.createMessage(user),
+                        "registrazioneprogettowebprog@gmail.com"
+                );
+                // Per permetterci nel mentre di non creare account mail false per verificare gli account
+                // TODO: Da cambiare
+            } catch(MessagingException | UnsupportedEncodingException ex) {
+                // TODO: Rimettere uuid_pw_rst a null?
+                response.sendError(500,"Impossible to send the email");
+                return;
             }
-
-            if (user == null) {
-                request.getRequestDispatcher("/WEB-INF/jsp/forgotPassword.jsp?"+
-                        "error_noEmail=true"+
-                        "&"+"prevUrl"+"="+prevUrl+
-                        "&"+"email"+"="+email
-                ).forward(request,response);
-            } else if(user.getVerifyEmailLink() != null) {
-                request.getRequestDispatcher("/WEB-INF/jsp/forgotPassword.jsp?"+
-                        "error_noVerified=true"+
-                        "&"+"prevUrl"+"="+prevUrl+
-                        "&"+"email"+"="+email
-                ).forward(request,response);
-            } else {
-                boolean successo=false;
-                for(int tentativi=0;(tentativi<5)&&(!successo);tentativi++) {
-                    successo = true;
-                    try
-                    {
-                        user.setResetPwdEmailLink(UUID.randomUUID().toString());
-                        userDAO.update(user);
-
-                        try {
-                            emailFactory.sendMail(
-                                    "Reset Password",
-                                    "Reset Password",
-                                    ResetPasswordMail.createMessage(user),
-                                    "registrazioneprogettowebprog@gmail.com"
-                            );
-                            // Per permetterci nel mentre di non creare account mail false per verificare gli account
-                            // TODO: Da cambiare
-                        } catch(MessagingException | UnsupportedEncodingException ex) {
-                            // TODO: Rimettere uuid_pw_rst a null?
-                            response.sendError(500,"Impossible to send the email");
-                            return;
-                        }
-                    } catch (DAOException  ex) {
-                        if(ex.getCause() instanceof SQLIntegrityConstraintViolationException){
-                            if (ex.getCause().getMessage().matches("Duplicate entry '.*?' for key 'UUID_[A-Z]*?_UNIQUE'")) {
-                                successo = false;
-                            }
-                        }
-                    }
-                }
-
-                // Avendo fallito per 5 volte a generare uuid unici mandiamo un errore
-                // in quanto in condizioni normali è estremamente improbabile
-                if(!successo) {
-                    response.sendError(500,"Impossible to create reset password link");
-                }
-            }
+        } catch (DAOException  ex) {
+            response.sendError(500,"Impossible to create reset password link");
+            return;
         }
     }
 }
