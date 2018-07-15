@@ -24,6 +24,8 @@ import java.util.HashMap;
 
 @WebServlet(name = "RegisterServlet")
 public class RegisterServlet extends HttpServlet {
+    private static final String JSP_PAGE_PATH = "/WEB-INF/jsp/register.jsp";
+
     private UserDAO userDAO;
     private EmailFactory emailFactory;
 
@@ -48,75 +50,81 @@ public class RegisterServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("/WEB-INF/jsp/register.jsp").forward(request,response);
+        request.getRequestDispatcher(JSP_PAGE_PATH).forward(request,response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String first_name = request.getParameter("FirstName");
-        String last_name = request.getParameter("LastName");
-        String email = request.getParameter("Email");
-        String password = request.getParameter("Password");
-        String password2 = request.getParameter("Password2");
-        String infPrivacy = request.getParameter("InfPrivacy");
+        // Ottieni tutti i parametri
+        String firstName = request.getParameter(RegistrationValidator.FIRST_NAME_KEY);
+        String lastName = request.getParameter(RegistrationValidator.LAST_NAME_KEY);
+        String email = request.getParameter(RegistrationValidator.EMAIL_KEY);
+        String firstPassword = request.getParameter(RegistrationValidator.FIRST_PWD_KEY);
+        String secondPassword = request.getParameter(RegistrationValidator.SECOND_PWD_KEY);
+        String infPrivacy = request.getParameter(RegistrationValidator.INF_PRIVACY_KEY);
 
+        // Usa il validator per verifiacare la conformità
         HashMap<String,String> messages = RegistrationValidator.createValidationMessages(
             userDAO,
-            first_name,
-            last_name,
+            firstName,
+            lastName,
             email,
-            password,
-            password2,
+            firstPassword,
+            secondPassword,
             infPrivacy);
 
-        if (messages.isEmpty()) {
-            try {
-                User user = userDAO.generateUser(
-                    first_name,
-                    last_name,
-                    email,
-                    password);
-
-                HttpSession session = request.getSession();
-                session.setAttribute("user", user);
-
-                try {
-                    emailFactory.sendMail(
-                            "Registration",
-                            "Registration",
-                            VerifyLinkMail.createMessage(user),
-                            "registrazioneprogettowebprog@gmail.com"
-                    ); // Per ora le mandiamo a noi stessi per evitare casini
-                }
-                catch (MessagingException | UnsupportedEncodingException ex) {
-                    // TODO : Cambiare in notification?
-                    ArrayList errorList = (ArrayList<String>)session.getAttribute("errors");
-                    if (errorList == null){
-                        session.setAttribute("errors",new ArrayList<String>());
-                    }
-                    errorList.add("Impossible to send the email. Please check the email in user's settings and click resend");
-                }
-
-
-                String contextPath = getServletContext().getContextPath();
-                if (!contextPath.endsWith("/")) {
-                    contextPath += "/";
-                }
-
-                 // Se la registrazione ha abuto successo vai alla pagina base/default (index)
-                response.sendRedirect(response.encodeRedirectURL(contextPath));
-            } catch (DAOException e) {
-                if(e.getCause() instanceof SQLIntegrityConstraintViolationException) {
-                    messages.put("Email","Email già utilizzata");
-                    request.setAttribute("messages",messages);
-
-                    request.getRequestDispatcher("/WEB-INF/jsp/register.jsp").forward(request,response);
-                } else {
-                    response.sendError(500, "Impossible register the user. The server returned: " + e.getMessage());
-                }
-            }
-        } else {
+        // In caso i campi non siano validi ricarica la pagina con gli errori indicati
+        if (!messages.isEmpty()) {
             request.setAttribute("messages",messages);
-            request.getRequestDispatcher("/WEB-INF/jsp/register.jsp").forward(request,response);
+            request.getRequestDispatcher(JSP_PAGE_PATH).forward(request,response);
+            return;
+        }
+
+        // Genera l'utente, manda la mail di verifica e in caso visualizza gli errori
+        try {
+            User user = userDAO.generateUser(
+                firstName,
+                lastName,
+                email,
+                firstPassword );
+
+            HttpSession session = request.getSession();
+            session.setAttribute("user", user);
+
+            try {
+                emailFactory.sendMail(
+                        "Registration",
+                        "Registration",
+                        VerifyLinkMail.createMessage(user),
+                        "registrazioneprogettowebprog@gmail.com"
+                ); // Per ora le mandiamo a noi stessi per evitare casini
+            }
+            catch (MessagingException | UnsupportedEncodingException ex) {
+                // TODO : Cambiare in notification?
+                ArrayList errorList = (ArrayList<String>)session.getAttribute("errors");
+                if (errorList == null){
+                    session.setAttribute("errors",new ArrayList<String>());
+                }
+                errorList.add("Impossible to send the email. Please check the email in user's settings and click resend");
+            }
+
+
+            // Se la registrazione ha abuto successo vai alla pagina base/default (index)
+            String contextPath = getServletContext().getContextPath();
+            if (!contextPath.endsWith("/")) {
+                contextPath += "/";
+            }
+
+            response.sendRedirect(response.encodeRedirectURL(contextPath));
+        } catch (DAOException e) {
+            if(e.getCause() instanceof SQLIntegrityConstraintViolationException) {
+                messages.put("Email","Email già utilizzata");
+                request.setAttribute("messages",messages);
+
+                request.getRequestDispatcher(JSP_PAGE_PATH).forward(request,response);
+                return;
+            }
+
+            response.sendError(500, "Impossible register the user. The server returned: " + e.getMessage());
         }
     }
 }

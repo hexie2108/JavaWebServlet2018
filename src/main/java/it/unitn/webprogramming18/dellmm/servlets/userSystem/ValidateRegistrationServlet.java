@@ -39,23 +39,25 @@ public class ValidateRegistrationServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
 
-        String first_name = request.getParameter("FirstName");
-        String last_name = request.getParameter("LastName");
-        String email = request.getParameter("Email");
-        String password = request.getParameter("Password");
-        String password2 = request.getParameter("Password2");
-        String infPrivacy = request.getParameter("InfPrivacy");
+        // Ottieni tutti i parametri
+        String firstName = request.getParameter(RegistrationValidator.FIRST_NAME_KEY);
+        String lastName = request.getParameter(RegistrationValidator.LAST_NAME_KEY);
+        String email = request.getParameter(RegistrationValidator.EMAIL_KEY);
+        String firstPassword = request.getParameter(RegistrationValidator.FIRST_PWD_KEY);
+        String secondPassword = request.getParameter(RegistrationValidator.SECOND_PWD_KEY);
+        String infPrivacy = request.getParameter(RegistrationValidator.INF_PRIVACY_KEY);
 
+        // Usa il validator per verifiacare la conformità
         HashMap<String,String> messages = RegistrationValidator.createValidationMessages(
                 userDAO,
-                first_name,
-                last_name,
+                firstName,
+                lastName,
                 email,
-                password,
-                password2,
+                firstPassword,
+                secondPassword,
                 infPrivacy);
 
-        PrintWriter out=response.getWriter();
+        PrintWriter out = response.getWriter();
         Gson gson = new Gson();
         out.print(gson.toJson(messages));
     }

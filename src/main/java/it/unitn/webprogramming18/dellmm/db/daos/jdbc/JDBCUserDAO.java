@@ -254,9 +254,6 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
                     }
 
                     try(ResultSet rs = std.getGeneratedKeys()){
-                        System.out.println(rs.getMetaData().getColumnCount());
-
-
                         if(rs.next()) {
                             userId = rs.getInt(1);
                         }

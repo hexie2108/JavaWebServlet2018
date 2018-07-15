@@ -1,5 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="it.unitn.webprogramming18.dellmm.util.RegistrationValidator" %>
+<%@ page import="it.unitn.webprogramming18.dellmm.util.PagePathsConstants" %>
+
 <html>
 <head>
     <meta charset="utf-8">
@@ -23,63 +26,73 @@
     <form id="form-register" method="post">
         <h2 class="form-signin-heading">Registrazione</h2>
         <div class="form-group row">
-            <div id="divFirstName" class="col-sm-6  <c:if test='${not empty requestScope.messages.get("FirstName")}'>has-error</c:if>">
+            <div id="divFirstName" class="col-sm-6  <c:if test='${not empty requestScope.messages.get(RegistrationValidator.FIRST_NAME_KEY)}'>has-error</c:if>">
                 <div class="input-group ">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                     <label for="inputFirstName" class="sr-only">Nome</label>
-                    <input id="inputFirstName" class="form-control" placeholder="Nome" required="" autofocus="" type="text" name="FirstName" value="${param.FirstName}">
+                    <input id="inputFirstName" class="form-control" placeholder="Nome" required="" autofocus=""
+                           type="text" name="${RegistrationValidator.FIRST_NAME_KEY}"
+                           value="${param[RegistrationValidator.FIRST_NAME_KEY]}">
                 </div>
                 <span id="spanFirstName" class="help-block">
-                    ${requestScope.messages.get("FirstName")}
+                    ${requestScope.messages.get(RegistrationValidator.FIRST_NAME_KEY)}
                 </span>
             </div>
 
-            <div id="divLastName" class="col-sm-6 <c:if test='${not empty requestScope.messages.get("LastName")}'>has-error</c:if>">
+            <div id="divLastName" class="col-sm-6 <c:if test='${not empty requestScope.messages.get(RegistrationValidator.LAST_NAME_KEY)}'>has-error</c:if>">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                     <label for="inputLastName" class="sr-only">Cognome</label>
-                    <input id="inputLastName" class="form-control" placeholder="Cognome" required="" autofocus="" type="text" name="LastName" value="${param.LastName}">
+                    <input id="inputLastName" class="form-control" placeholder="Cognome" required="" autofocus=""
+                           type="text" name="${RegistrationValidator.LAST_NAME_KEY}"
+                           value="${param[RegistrationValidator.LAST_NAME_KEY]}">
                 </div>
                 <span id="spanLastName" class="help-block">
-                    ${requestScope.messages.get("LastName")}
+                    ${requestScope.messages.get(RegistrationValidator.LAST_NAME_KEY)}
                 </span>
             </div>
         </div>
 
 
         <div class="form-group row">
-            <div id="divEmail" class="col-sm-6 <c:if test='${not empty requestScope.messages.get("Email")}'>has-error</c:if>">
+            <div id="divEmail" class="col-sm-6 <c:if test='${not empty requestScope.messages.get(RegistrationValidator.EMAIL_KEY)}'>has-error</c:if>">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
                     <label for="inputEmail" class="sr-only">Email address</label>
-                    <input id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="" type="email" name="Email" value="${param.Email}">
+                    <input id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus=""
+                           type="email" name="${RegistrationValidator.EMAIL_KEY}"
+                           value="${param[RegistrationValidator.EMAIL_KEY]}">
                 </div>
                 <span id="spanEmail" class="help-block">
-                    ${requestScope.messages.get("Email")}
+                    ${requestScope.messages.get(RegistrationValidator.EMAIL_KEY)}
                 </span>
             </div>
         </div>
 
         <div class="form-group row">
-            <div id="divPassword" class="col-sm-6 <c:if test='${not empty requestScope.messages.get("Password")}'>has-error</c:if>">
+            <div id="divPassword" class="col-sm-6 <c:if test='${not empty requestScope.messages.get(RegistrationValidator.FIRST_PWD_KEY)}'>has-error</c:if>">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                     <label for="inputPassword" class="sr-only">Password</label>
-                    <input id="inputPassword" class="form-control" placeholder="Password" required="" type="password" name="Password" value="${param.Password}">
+                    <input id="inputPassword" class="form-control" placeholder="Password" required=""
+                           type="password" name="${RegistrationValidator.FIRST_PWD_KEY}"
+                           value="${param[RegistrationValidator.FIRST_PWD_KEY]}">
                     <span id="strongPassword" class="input-group-addon">Score: x/x</span>
                 </div>
                 <span id="spanPassword" class="help-block">
-                    ${requestScope.messages.get("Password")}
+                    ${requestScope.messages.get(RegistrationValidator.FIRST_PWD_KEY)}
                 </span>
             </div>
-            <div id="divPassword2" class="col-sm-6 <c:if test='${not empty requestScope.messages.get("Password2")}'>has-error</c:if>">
+            <div id="divPassword2" class="col-sm-6 <c:if test='${not empty requestScope.messages.get(RegistrationValidator.SECOND_PWD_KEY)}'>has-error</c:if>">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                     <label for="inputPassword2" class="sr-only">Repeat password</label>
-                    <input id="inputPassword2" class="form-control" placeholder="Repeat password" required="" type="password" name="Password2" value="${param.Password2}">
+                    <input id="inputPassword2" class="form-control" placeholder="Repeat password" required=""
+                           type="password" name="${RegistrationValidator.SECOND_PWD_KEY}"
+                           value="${param[RegistrationValidator.SECOND_PWD_KEY]}">
                 </div>
                 <span id="spanPassword2" class="help-block">
-                    ${requestScope.messages.get("Password2")}
+                    ${requestScope.messages.get(RegistrationValidator.SECOND_PWD_KEY)}
                 </span>
             </div>
         </div>
@@ -94,12 +107,14 @@
         </div>
 
         <div class="form-group row-fluid">
-            <div id="divPrivacy" class="col-sm-12 <c:if test='${not empty requestScope.messages.get("InfPrivacy")}'>has-error</c:if>">
+            <div id="divPrivacy" class="col-sm-12 <c:if test='${not empty requestScope.messages.get(RegistrationValidator.INF_PRIVACY_KEY)}'>has-error</c:if>">
                 <div class="input-group">
-                    <input id="inputInfPrivacy" required="" type="checkbox" name="InfPrivacy" value="${param.InfPrivacy}">Accetta l'informativa sulla privacy
+                    <input id="inputInfPrivacy" required=""
+                           type="checkbox" name="${RegistrationValidator.INF_PRIVACY_KEY}"
+                           value="${param[RegistrationValidator.INF_PRIVACY_KEY]}">Accetta l'informativa sulla privacy
                     <label for="inputInfPrivacy" ></label>
                     <span id="spanInfPrivacy" class="help-block">
-                        ${requestScope.messages.get("InfPrivacy")}
+                        ${requestScope.messages.get(RegistrationValidator.INF_PRIVACY_KEY)}
                     </span>
                 </div>
             </div>
@@ -108,39 +123,45 @@
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
     </form>
 </div>
-
 <script src="${pageContext.servletContext.contextPath}/libs/zxcvbn/zxcvbn.js"></script>
 <script>
     function updateVerifyMessages(data) {
-        var no_errors = true;
-        // Prendi tutti gli <input> che ci sono nella pagina, prendine il nome, e per ognuno esegui la funzione sotto("function(key)")
-        $('input').map(function(){return this.name;}).get().forEach(
-            function (key) {
+        let no_errors = true;
+        // Prendi tutti gli <input> che ci sono nella pagina e per ognuno prendine il nome
+        const inputs = $('input').map(function(){return this.name;}).get();
+        // Per ogni input scrivi l'eventuale errore nello span dedicato e restituisci false se ha errori, true altrimenti
+        const validityInputs = inputs.map(
+            (key) => {
                 if (data.hasOwnProperty(key)) {
                     $("#div" + key).addClass("has-error");
-                    document.getElementById("span" + key).innerHTML = data[key];
-                    no_errors = false;
-                } else {
-                    $("#div" + key).removeClass("has-error");
-                    document.getElementById("span" + key).innerHTML = "";
+                    $("#span" + key).html(String(data[key]));
+                    return false;
                 }
+
+                $("#div" + key).removeClass("has-error");
+                $("#span" + key).html("");
+                return true
             }
         );
 
-        return no_errors;
+        // Se degli input sono false(hanno errori) allora restituisci false, altrimenti true
+        // Se false l'invio del form verrà bloccato altrimenti no
+        return validityInputs.every( v => v );
     }
 
     $(document).ready(function() {
-        $('#inputPassword').on("keyup",function() {
-            $('#strongPassword').text("Score: "+zxcvbn(this.value).score+"/4");
+        const url = '${pageContext.servletContext.contextPath}/${PagePathsConstants.VALIDATE_PATH}';
+
+        $('#inputPassword').on("keyup", function(){
+            $('#strongPassword').text("Score: " + zxcvbn(this.value).score + "/4");
         });
 
-        $('input').on("blur",function(){
-            var form=$('#form-register');
+        $('input').on("blur", () => {
+            const form=$('#form-register');
 
-            var request = $.ajax({
+            const request = $.ajax({
                 dataType: "json",
-                url : "${pageContext.servletContext.contextPath}/validateRegistration",
+                url : url,
                 type: "post",
                 data: form.serialize()
             });
@@ -149,17 +170,17 @@
         });
 
         $('#form-register').on("submit",function(){
-            var form=$('#form-register');
+            const form=$('#form-register');
 
-            var request = $.ajax({
+            const request = $.ajax({
                 dataType: "json",
-                url : "${pageContext.servletContext.contextPath}/validateRegistration",
+                url : url,
                 type: "post",
                 async : false,
                 data: form.serialize()
             });
 
-            var data;
+            let data;
             request.done(function(data2){data=data2});
 
             return updateVerifyMessages(data);
