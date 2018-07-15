@@ -98,9 +98,26 @@
         <servlet-name>ValidateRegistrationServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.ValidateRegistrationServlet</servlet-class>
     </servlet>
-    
     <servlet-mapping>
         <servlet-name>ValidateRegistrationServlet</servlet-name>
         <url-pattern>/validateRegistration</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ForgotPasswordServlet</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.ForgotPasswordServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ForgotPasswordServlet</servlet-name>
+        <url-pattern>/forgotPassword</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ResetPasswordServlet</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.ResetPasswordServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ResetPasswordServlet</servlet-name>
+        <url-pattern>/resetPassword</url-pattern>
     </servlet-mapping>
 </web-app>

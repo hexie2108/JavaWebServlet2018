@@ -29,7 +29,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
         user.setImg(rs.getString("img"));
         user.setIsAdmin(rs.getBoolean("isAdmin"));
         user.setVerifyEmailLink(rs.getString("verifyEmailLink"));
-        user.setResendEmailLink(rs.getString("resendEmailLink"));
+        user.setResetPwdEmailLink(rs.getString("resetPwdEmailLink"));
 
         return user;
     }
@@ -102,7 +102,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
                         "img = ?," +
                         "isAdmin = ?," +
                         "verifyEmailLink = ?," +
-                        "resendEmailLink = ? " +
+                        "resetPwdEmailLink = ? " +
                         "WHERE id = ?"
         )) {
 
@@ -113,7 +113,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
             stm.setString(5, user.getImg());
             stm.setBoolean(6, user.isIsAdmin());
             stm.setString(7, user.getVerifyEmailLink());
-            stm.setString(8, user.getResendEmailLink());
+            stm.setString(8, user.getResetPwdEmailLink());
             stm.setInt(9, user.getId());
             if (stm.executeUpdate() != 1) {
                 throw new DAOException("Impossible to update the user");
@@ -124,6 +124,34 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
 
         return user;
     }
+
+    @Override
+    public User getByEmail(String email) throws DAOException {
+        User user = null;
+
+        if (email == null) {
+            throw new DAOException("parameter not valid", new IllegalArgumentException("The passed email is null"));
+        }
+
+        try (PreparedStatement stm = CON.prepareStatement(
+                "SELECT * FROM User " +
+                        "WHERE email = ?"
+        )) {
+            stm.setString(1, email);
+
+            try (ResultSet rs = stm.executeQuery()) {
+                if (rs.next()) {
+                    user = getUserFromResultSet(rs);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DAOException("Impossible to find the user");
+        }
+
+        return user;
+    }
+
 
     @Override
     public User getByEmailAndPassword(String email, String password) throws DAOException {
@@ -150,6 +178,22 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
         }
 
         return user;
+    }
+
+    public void changePassword(String resetLink, String newPassword) throws DAOException {
+        try(PreparedStatement stm = CON.prepareStatement(
+                "UPDATE User SET resetPwdEmailLink=NULL, password=?" +
+                        " WHERE resetPwdEmailLink= ?"
+        )){
+            stm.setString(1, newPassword );
+            stm.setString(2, resetLink);
+
+            if (stm.executeUpdate() != 1) {
+                throw new DAOException("Impossible update the password");
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Impossible to update the password");
+        }
     }
 
 
@@ -194,7 +238,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
                 try
                 {
                     PreparedStatement std = CON.prepareStatement(
-                            "INSERT INTO User (name, surname, email, password, img, isAdmin, verifyEmailLink, resendEmailLink)" +
+                            "INSERT INTO User (name, surname, email, password, img, isAdmin, verifyEmailLink, resetPwdEmailLink)" +
                             "VALUES (?,?,?,?,?,FALSE,?,NULL)",
                             Statement.RETURN_GENERATED_KEYS
                     );
@@ -243,7 +287,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
         user.setEmail(email);
         user.setPassword(password);
         user.setVerifyEmailLink(verifyLink);
-        user.setResendEmailLink(null); //TODO: Convertire resendEmailLink in resetPassword?
+        user.setResetPwdEmailLink(null); //TODO: Convertire resendEmailLink in resetPassword?
 
         return user;
     }

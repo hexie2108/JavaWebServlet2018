@@ -88,12 +88,22 @@ public class RegisterServlet extends HttpServlet {
                     ); // Per ora le mandiamo a noi stessi per evitare casini
                 }
                 catch (MessagingException | UnsupportedEncodingException ex) {
+                    // TODO : Cambiare in notification?
                     ArrayList errorList = (ArrayList<String>)session.getAttribute("errors");
-                    if(errorList == null){
+                    if (errorList == null){
                         session.setAttribute("errors",new ArrayList<String>());
                     }
                     errorList.add("Impossible to send the email. Please check the email in user's settings and click resend");
                 }
+
+
+                String contextPath = getServletContext().getContextPath();
+                if (!contextPath.endsWith("/")) {
+                    contextPath += "/";
+                }
+
+                 // Se la registrazione ha abuto successo vai alla pagina base/default (index)
+                response.sendRedirect(response.encodeRedirectURL(contextPath));
             } catch (DAOException e) {
                 if(e.getCause() instanceof SQLIntegrityConstraintViolationException) {
                     messages.put("Email","Email già utilizzata");

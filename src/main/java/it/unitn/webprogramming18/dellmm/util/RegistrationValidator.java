@@ -19,7 +19,7 @@ public class RegistrationValidator {
         return ris;
     }
 
-    private static String validatePassword(String password) {
+    public static String validatePassword(String password) {
         if ((password == null) ||
                 (password.isEmpty())) {
             return "Completa questo campo";
@@ -108,13 +108,13 @@ public class RegistrationValidator {
                 (email.isEmpty())) {
             messages.put("Email", "Completa il campo email");
         } else if (!validateMail(email)) { // Controllo che la mail abbia un formato valido
-            messages.put("Email", "Indirizzo mail non valido");
+            messages.put("Email", "Indirizzo email non valido");
         } else if (email.length() > 44) {
-            messages.put("Email", "Indirizzo mail troppo lungo");
+            messages.put("Email", "Indirizzo email troppo lungo");
         } else {
             try {
                 if (userDAO.checkUserRegisteredByEmail(email) != 0) {
-                    messages.put("Email", "Indirizzo mail già usato");
+                    messages.put("Email", "Indirizzo email già usato");
                 }
             } catch (DAOException ignored) {
                 // If the check doesn't work postpone to real registration
