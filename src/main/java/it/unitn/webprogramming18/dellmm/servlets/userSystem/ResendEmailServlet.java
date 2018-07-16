@@ -43,11 +43,12 @@ public class ResendEmailServlet extends HttpServlet {
                 ); // Per ora le mandiamo a noi stessi per evitare casini
             } catch (MessagingException e) {
                 // TODO: Cambiare a notification ?
-                ArrayList errorList = (ArrayList<String>) session.getAttribute("errors");
+                ArrayList<String> errorList = (ArrayList<String>) session.getAttribute("errors");
                 if (errorList == null) {
-                    session.setAttribute("errors", new ArrayList<String>());
+                    errorList = new ArrayList<>();
                 }
                 errorList.add("Impossible to send the email. Please check the email in user's settings and click resend");
+                session.setAttribute("errors", errorList);
             }
         }
 

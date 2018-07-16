@@ -1,6 +1,5 @@
 package it.unitn.webprogramming18.dellmm.email.messageFactories;
 
-import it.unitn.webprogramming18.dellmm.email.EmailFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 
 import javax.mail.BodyPart;

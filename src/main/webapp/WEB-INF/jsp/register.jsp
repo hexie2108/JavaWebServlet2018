@@ -126,7 +126,6 @@
 <script src="${pageContext.servletContext.contextPath}/libs/zxcvbn/zxcvbn.js"></script>
 <script>
     function updateVerifyMessages(data) {
-        let no_errors = true;
         // Prendi tutti gli <input> che ci sono nella pagina e per ognuno prendine il nome
         const inputs = $('input').map(function(){return this.name;}).get();
         // Per ogni input scrivi l'eventuale errore nello span dedicato e restituisci false se ha errori, true altrimenti
@@ -140,7 +139,7 @@
 
                 $("#div" + key).removeClass("has-error");
                 $("#span" + key).html("");
-                return true
+                return true;
             }
         );
 

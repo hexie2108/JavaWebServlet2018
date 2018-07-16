@@ -24,7 +24,7 @@ public class LoginServlet extends HttpServlet {
             PWD_KEY = "password",
             REMEMBER_KEY = "remember";
 
-    public static String ERR_NOUSER_PWD_KEY = "error_noUserOrPassword",
+    public static final String ERR_NOUSER_PWD_KEY = "error_noUserOrPassword",
             ERR_NO_VER_KEY = "error_noVerified";
 
     private UserDAO userDAO;
