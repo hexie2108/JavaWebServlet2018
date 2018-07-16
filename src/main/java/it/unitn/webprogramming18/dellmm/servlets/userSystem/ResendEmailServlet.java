@@ -31,26 +31,26 @@ public class ResendEmailServlet extends HttpServlet {
 
         if (session == null) {
             response.sendError(400, "This page can be used only by logged users");
-        } else {
-            User user = (User) session.getAttribute("user");
-
-            try {
-                emailFactory.sendMail(
-                        "Registration",
-                        "Registration",
-                        VerifyLinkMail.createMessage(user),
-                        "registrazioneprogettowebprog@gmail.com"
-                ); // Per ora le mandiamo a noi stessi per evitare casini
-            } catch (MessagingException e) {
-                // TODO: Cambiare a notification ?
-                ArrayList<String> errorList = (ArrayList<String>) session.getAttribute("errors");
-                if (errorList == null) {
-                    errorList = new ArrayList<>();
-                }
-                errorList.add("Impossible to send the email. Please check the email in user's settings and click resend");
-                session.setAttribute("errors", errorList);
-            }
+            return;
         }
 
+        User user = (User) session.getAttribute("user");
+
+        try {
+            emailFactory.sendMail(
+                    "Registration",
+                    "Registration",
+                    VerifyLinkMail.createMessage(user),
+                    "registrazioneprogettowebprog@gmail.com"
+            ); // Per ora le mandiamo a noi stessi per evitare casini
+        } catch (MessagingException e) {
+            // TODO: Cambiare a notification ?
+            ArrayList<String> errorList = (ArrayList<String>) session.getAttribute("errors");
+            if (errorList == null) {
+                errorList = new ArrayList<>();
+            }
+            errorList.add("Impossible to send the email. Please check the email in user's settings and click resend");
+            session.setAttribute("errors", errorList);
+        }
     }
 }

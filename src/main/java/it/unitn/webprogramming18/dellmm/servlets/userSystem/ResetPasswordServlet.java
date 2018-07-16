@@ -47,26 +47,30 @@ public class ResetPasswordServlet extends HttpServlet {
 
         if (pw_rst_id == null) {
             response.sendError(400,"Paramentro id mancante");
-        } else {
-            String message = RegistrationValidator.validatePassword(password);
-            if (message != null) {
-                request.getRequestDispatcher(response.encodeRedirectURL(PagePathsConstants.RESET_PASSWORD_JSP + "?" + MSG_KEY + "=" + message)).forward(request, response);
-            } else {
-                try {
-                    userDAO.changePassword(pw_rst_id, password);
+            return;
+        }
 
-                    String contextPath = getServletContext().getContextPath();
-                    if (!contextPath.endsWith("/")) {
-                        contextPath += "/";
-                    }
+        String message = RegistrationValidator.validatePassword(password);
+        if (message != null) {
+            request.getRequestDispatcher(response.encodeRedirectURL(PagePathsConstants.RESET_PASSWORD_JSP + "?" + MSG_KEY + "=" + message)).forward(request, response);
+            return;
+        }
 
-                    response.sendRedirect(contextPath);
-                } catch (IllegalArgumentException ex) {
-                    response.sendError(400,"ID non valido");
-                } catch (DAOException e) {
-                    response.sendError(500, "Impossibile ricercare l'id richiesto");
-                }
+        try {
+            userDAO.changePassword(pw_rst_id, password);
+
+            String contextPath = getServletContext().getContextPath();
+            if (!contextPath.endsWith("/")) {
+                contextPath += "/";
             }
+
+            response.sendRedirect(contextPath);
+        } catch (IllegalArgumentException ex) {
+            response.sendError(400,"ID non valido");
+            return;
+        } catch (DAOException e) {
+            response.sendError(500, "Impossibile ricercare l'id richiesto");
+            return;
         }
     }
 }
