@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 @WebServlet(name = "ResetPasswordServlet")
 public class ResetPasswordServlet extends HttpServlet {
@@ -43,12 +42,11 @@ public class ResetPasswordServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        PrintWriter out = response.getWriter();
         String pw_rst_id = request.getParameter(ID_KEY);
         String password = request.getParameter(PWD_KEY);
 
         if (pw_rst_id == null) {
-            out.println("Paramentro id mancante");
+            response.sendError(400,"Paramentro id mancante");
         } else {
             String message = RegistrationValidator.validatePassword(password);
             if (message != null) {
@@ -64,9 +62,9 @@ public class ResetPasswordServlet extends HttpServlet {
 
                     response.sendRedirect(contextPath);
                 } catch (IllegalArgumentException ex) {
-                    out.println("ID non valido");
+                    response.sendError(400,"ID non valido");
                 } catch (DAOException e) {
-                    out.println("ERRORE: Verifica se l'ID è corretto!");
+                    response.sendError(500, "Impossibile ricercare l'id richiesto");
                 }
             }
         }
