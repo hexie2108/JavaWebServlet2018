@@ -2,6 +2,7 @@ package it.unitn.webprogramming18.dellmm.util;
 
 import it.unitn.webprogramming18.dellmm.db.daos.UserDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
+import it.unitn.webprogramming18.dellmm.javaBeans.User;
 
 import javax.mail.internet.InternetAddress;
 import java.util.HashMap;
@@ -13,6 +14,7 @@ public class RegistrationValidator {
             FIRST_PWD_KEY = "Password",
             SECOND_PWD_KEY = "Password2",
             EMAIL_KEY = "Email";
+
     // --- Configurazioni per la validazione dei campi
     private static final int FIRST_NAME_MAX_LEN = 44,
             LAST_NAME_MAX_LEN = 44,
@@ -25,7 +27,6 @@ public class RegistrationValidator {
             PWD_MIN_SYMBOL = 1;
 
     // --- Funzioni di validazione
-
     private static boolean validateEmailFormat(String email) {
         boolean ris = false;
         try {
@@ -159,6 +160,70 @@ public class RegistrationValidator {
         return null;
     }
 
+    public static HashMap<String, String> partialValidate(
+            UserDAO userDAO,
+            HashMap<String, String> kv
+    ) {
+        HashMap<String, String> messages = new HashMap<>();
+
+        if (kv.containsKey(FIRST_NAME_KEY)) {
+            String firstName = kv.get(FIRST_NAME_KEY);
+
+            String messageFirstName = validateFirstName(firstName);
+            if (messageFirstName != null) {
+                messages.put(FIRST_NAME_KEY, messageFirstName);
+            }
+        }
+
+        if (kv.containsKey(LAST_NAME_KEY)) {
+            String lastName = kv.get(LAST_NAME_KEY);
+
+            String messageLastName = validateLastName(lastName);
+            if (messageLastName != null) {
+                messages.put(LAST_NAME_KEY, messageLastName);
+            }
+        }
+
+        if (kv.containsKey(INF_PRIVACY_KEY)) {
+            String infPrivacy = kv.get(INF_PRIVACY_KEY);
+
+            String messageInfPrivacy = validateInfPrivacy(infPrivacy);
+            if (messageInfPrivacy != null) {
+                messages.put(INF_PRIVACY_KEY, messageInfPrivacy);
+            }
+        }
+
+        if (kv.containsKey(FIRST_PWD_KEY)) {
+            String firstPassword = kv.get(FIRST_PWD_KEY);
+
+            String messagePwd = validatePassword(firstPassword);
+            if (messagePwd != null) {
+                messages.put(FIRST_PWD_KEY, messagePwd);
+            }
+        }
+
+        if (kv.containsKey(FIRST_PWD_KEY) && kv.containsKey(SECOND_PWD_KEY)) {
+            String firstPassword = kv.get(FIRST_PWD_KEY);
+            String secondPassword = kv.get(SECOND_PWD_KEY);
+
+            String messageSecondPassword = validateSecondPassword(firstPassword, secondPassword);
+            if (messageSecondPassword != null) {
+                messages.put(SECOND_PWD_KEY, messageSecondPassword);
+            }
+        }
+
+        if (kv.containsKey(EMAIL_KEY) && userDAO != null) {
+            String email = kv.get(EMAIL_KEY);
+
+            String messageValidateEmail = validateEmail(email, userDAO);
+            if (messageValidateEmail != null) {
+                messages.put(EMAIL_KEY, messageValidateEmail);
+            }
+        }
+
+        return messages;
+    }
+
     public static HashMap<String, String> createValidationMessages(
             UserDAO userDAO,
             String firstName,
@@ -167,38 +232,14 @@ public class RegistrationValidator {
             String firstPassword,
             String secondPassword,
             String infPrivacy) {
-        HashMap<String, String> messages = new HashMap<>();
+        HashMap<String, String> kv = new HashMap<>();
+        kv.put(FIRST_NAME_KEY, firstName);
+        kv.put(LAST_NAME_KEY, lastName);
+        kv.put(EMAIL_KEY, email);
+        kv.put(FIRST_PWD_KEY, firstPassword);
+        kv.put(SECOND_PWD_KEY, secondPassword);
+        kv.put(INF_PRIVACY_KEY, infPrivacy);
 
-        String messageFirstName = validateFirstName(firstName);
-        if (messageFirstName != null) {
-            messages.put(FIRST_NAME_KEY, messageFirstName);
-        }
-
-        String messageLastName = validateLastName(lastName);
-        if (messageLastName != null) {
-            messages.put(LAST_NAME_KEY, messageLastName);
-        }
-
-        String messageInfPrivacy = validateInfPrivacy(infPrivacy);
-        if (messageInfPrivacy != null) {
-            messages.put(INF_PRIVACY_KEY, messageInfPrivacy);
-        }
-
-        String messagePwd = validatePassword(firstPassword);
-        if (messagePwd != null) {
-            messages.put(FIRST_PWD_KEY, messagePwd);
-        }
-
-        String messageSecondPassword = validateSecondPassword(firstPassword, secondPassword);
-        if (messageSecondPassword != null) {
-            messages.put(SECOND_PWD_KEY, messageSecondPassword);
-        }
-
-        String messageValidateEmail = validateEmail(email, userDAO);
-        if (messageValidateEmail != null) {
-            messages.put(EMAIL_KEY, messageValidateEmail);
-        }
-
-        return messages;
+        return partialValidate(userDAO, kv);
     }
 }

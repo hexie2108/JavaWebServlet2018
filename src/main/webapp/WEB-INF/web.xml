@@ -95,12 +95,12 @@
     </servlet-mapping>
     
     <servlet>
-        <servlet-name>ValidateRegistrationServlet</servlet-name>
-        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.ValidateRegistrationServlet</servlet-class>
+        <servlet-name>ValidateUserServlet</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.ValidateUserServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>ValidateRegistrationServlet</servlet-name>
-        <url-pattern>/validateRegistration</url-pattern>
+        <servlet-name>ValidateUserServlet</servlet-name>
+        <url-pattern>/validateUser</url-pattern>
     </servlet-mapping>
 
     <servlet>

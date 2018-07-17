@@ -149,7 +149,7 @@
     }
 
     $(document).ready(function() {
-        const url = '${pageContext.servletContext.contextPath}/${PagePathsConstants.VALIDATE_REGISTRATION}';
+        const url = '${pageContext.servletContext.contextPath}/${PagePathsConstants.VALIDATE_REGISTRATION}?strict=';
 
         $('#inputPassword').on("keyup", function(){
             $('#strongPassword').text("Score: " + zxcvbn(this.value).score + "/4");

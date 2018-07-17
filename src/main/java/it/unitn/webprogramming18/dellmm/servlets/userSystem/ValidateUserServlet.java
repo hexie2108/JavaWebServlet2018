@@ -15,8 +15,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 
-@WebServlet(name = "ValidateRegistrationServlet")
-public class ValidateRegistrationServlet extends HttpServlet {
+@WebServlet(name = "ValidateUserServlet")
+public class ValidateUserServlet extends HttpServlet {
     private UserDAO userDAO;
 
     @Override
@@ -47,15 +47,44 @@ public class ValidateRegistrationServlet extends HttpServlet {
         String secondPassword = request.getParameter(RegistrationValidator.SECOND_PWD_KEY);
         String infPrivacy = request.getParameter(RegistrationValidator.INF_PRIVACY_KEY);
 
-        // Usa il validator per verifiacare la conformità
-        HashMap<String, String> messages = RegistrationValidator.createValidationMessages(
-                userDAO,
-                firstName,
-                lastName,
-                email,
-                firstPassword,
-                secondPassword,
-                infPrivacy);
+        HashMap<String, String> messages;
+
+        // Usa il validator per verificare la conformità(in caso di strict controllo anche campi non inviati altrimenti no
+        if(request.getParameter("strict") != null) {
+            messages = RegistrationValidator.createValidationMessages(
+                    userDAO,
+                    firstName,
+                    lastName,
+                    email,
+                    firstPassword,
+                    secondPassword,
+                    infPrivacy
+            );
+        } else {
+            HashMap<String, String> kv = new HashMap<>();
+
+            if ((firstName != null) && (!firstName.isEmpty())) {
+                kv.put(RegistrationValidator.FIRST_NAME_KEY, firstName);
+            }
+
+            if ((lastName != null) && (!lastName.isEmpty())) {
+                kv.put(RegistrationValidator.LAST_NAME_KEY, lastName);
+            }
+
+            if ((email != null) && (!email.isEmpty())) {
+                kv.put(RegistrationValidator.EMAIL_KEY, email);
+            }
+
+            if ((firstPassword != null) && (!firstPassword.isEmpty())) {
+                kv.put(RegistrationValidator.FIRST_PWD_KEY, firstPassword);
+            }
+
+            if ((secondPassword != null) && (!secondPassword.isEmpty())) {
+                kv.put(RegistrationValidator.SECOND_PWD_KEY, secondPassword);
+            }
+
+            messages = RegistrationValidator.partialValidate(userDAO, kv);
+        }
 
         PrintWriter out = response.getWriter();
         Gson gson = new Gson();

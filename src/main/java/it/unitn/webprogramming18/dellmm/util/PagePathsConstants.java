@@ -1,7 +1,7 @@
 package it.unitn.webprogramming18.dellmm.util;
 
 public class PagePathsConstants {
-    public static final String VALIDATE_REGISTRATION = "validateRegistration";
+    public static final String VALIDATE_REGISTRATION = "validateUser";
     public static final String REGISTER = "register";
     public static final String LOGOUT = "logout";
 
