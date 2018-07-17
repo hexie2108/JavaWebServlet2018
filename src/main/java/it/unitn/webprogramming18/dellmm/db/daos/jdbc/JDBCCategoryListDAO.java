@@ -27,7 +27,9 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
         categoryList.setId(rs.getInt("id"));
         categoryList.setName(rs.getString("name"));
         categoryList.setDescription(rs.getString("description"));
-        categoryList.setImg(rs.getString("image"));
+        categoryList.setImg1(rs.getString("img1"));
+        categoryList.setImg2(rs.getString("img2"));
+        categoryList.setImg3(rs.getString("img3"));
 
         return categoryList;
     }
@@ -37,11 +39,14 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
         if (categoryList == null) {
             throw new DAOException("categoryList bean is null");
         }
-        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO CategoryList (name, description, img) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO CategoryList (name, description, img1, img2, img3) VALUES (?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
 
             stm.setString(1, categoryList.getName());
             stm.setString(2, categoryList.getDescription());
-            stm.setString(3, categoryList.getImg());
+            stm.setString(3, categoryList.getImg1());
+            stm.setString(4, categoryList.getImg2());
+            stm.setString(5, categoryList.getImg3());
+            
 
             stm.executeUpdate();
             
@@ -117,14 +122,19 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
                 "UPDATE CategoryList SET " +
                         "name = ?," +
                         "description = ?," +
-                        "image = ? " +
+                        "img1 = ? " +
+                        "img2 = ? " +
+                        "img3 = ? " +
                         "WHERE id = ?"
         )) {
 
             stm.setString(1, categoryList.getName());
             stm.setString(2, categoryList.getDescription());
-            stm.setString(3, categoryList.getImg());
-            stm.setInt(4, categoryList.getId());
+            stm.setString(3, categoryList.getImg1());
+            stm.setString(4, categoryList.getImg2());
+            stm.setString(5, categoryList.getImg3());
+            stm.setInt(6, categoryList.getId());
+            
             if (stm.executeUpdate() != 1) {
                 throw new DAOException("Impossible to update the categoryList");
             }

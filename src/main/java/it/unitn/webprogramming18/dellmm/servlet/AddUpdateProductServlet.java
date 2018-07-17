@@ -121,6 +121,7 @@ public class AddUpdateProductServlet extends HttpServlet {
                     
                     productInList.setListId(listId);
                     productInList.setProductId(productId);
+                    productInList.setStatus(false);
 
                     productInListDAO.insert(productInList);
                     
@@ -142,7 +143,6 @@ public class AddUpdateProductServlet extends HttpServlet {
                 String img = request.getParameter("img");
                 String logo = request.getParameter("logo");
                 Integer categoryProductId = Integer.valueOf(request.getParameter("name"));
-                Integer privateListId = Integer.valueOf(request.getParameter("lsitId"));
          
                 try {
                     
@@ -168,6 +168,7 @@ public class AddUpdateProductServlet extends HttpServlet {
                             ProductInList productInList = new ProductInList();
                             productInList.setListId(listId);
                             productInList.setProductId(productId);
+                            productInList.setStatus(false);
 
                             productInListDAO.insert(productInList);
                             

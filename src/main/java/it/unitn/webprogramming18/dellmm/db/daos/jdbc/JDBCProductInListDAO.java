@@ -26,6 +26,7 @@ public class JDBCProductInListDAO extends JDBCDAO<ProductInList, Integer> implem
 
         productInList.setId(rs.getInt("id"));
         productInList.setProductId(rs.getInt("productId"));
+        productInList.setStatus(rs.getBoolean("status"));
         productInList.setListId(rs.getInt("listId"));
 
         return productInList;
@@ -49,11 +50,12 @@ public class JDBCProductInListDAO extends JDBCDAO<ProductInList, Integer> implem
         if (productInList == null) {
             throw new DAOException("productInList bean is null");
         }
-        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO ProductInList (productId, listId) VALUES (?,?)", 
+        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO ProductInList (productId, listId, status) VALUES (?,?,?)", 
                                                                 Statement.RETURN_GENERATED_KEYS)) {
 
             stm.setInt(1, productInList.getProductId());
             stm.setInt(2, productInList.getListId());
+            stm.setBoolean(3, productInList.isStatus());
             
             stm.executeUpdate();
             
@@ -115,12 +117,15 @@ public class JDBCProductInListDAO extends JDBCDAO<ProductInList, Integer> implem
                 "UPDATE ProductInList SET " +
                         "productId = ?," +
                         "listId = ? " +
+                        "status = ? " +
                         "WHERE id = ?"
         )) {
 
             stm.setInt(1, productInList.getProductId());
             stm.setInt(2, productInList.getListId());
-            stm.setInt(3, productInList.getId());
+            stm.setBoolean(3, productInList.isStatus());
+            stm.setInt(4, productInList.getId());
+            
             if (stm.executeUpdate() != 1) {
                 throw new DAOException("Impossible to update the productInList");
             }

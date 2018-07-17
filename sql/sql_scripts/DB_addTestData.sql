@@ -101,7 +101,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `ProductInList` WRITE;
 /*!40000 ALTER TABLE `ProductInList` DISABLE KEYS */;
-INSERT INTO `ProductInList` VALUES (1,1,1),(2,1,2),(3,1,3),(4,1,4),(1,2,5),(8,2,6),(3,3,7),(5,3,8),(4,4,9),(4,5,10),(4,6,11),(4,7,12),(6,8,13),(7,8,14);
+INSERT INTO `ProductInList` VALUES (1,1,0,1),(2,1,0,2),(3,1,0,3),(4,1,0,4),(1,2,0,5),(8,2,0,6),(3,3,0,7),(5,3,0,8),(4,4,0,9),(4,5,0,10),(4,6,0,11),(4,7,0,12),(6,8,0,13),(7,8,0,14);
 /*!40000 ALTER TABLE `ProductInList` ENABLE KEYS */;
 UNLOCK TABLES;
 
