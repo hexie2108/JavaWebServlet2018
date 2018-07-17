@@ -30,7 +30,7 @@
                 <div class="input-group ">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                     <label for="inputFirstName" class="sr-only">Nome</label>
-                    <input id="inputFirstName" class="form-control" placeholder="Nome" required="" autofocus=""
+                    <input id="inputFirstName" class="form-control" placeholder="Nome" autofocus=""
                            type="text" name="${RegistrationValidator.FIRST_NAME_KEY}"
                            value="${param[RegistrationValidator.FIRST_NAME_KEY]}">
                 </div>
@@ -43,7 +43,7 @@
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                     <label for="inputLastName" class="sr-only">Cognome</label>
-                    <input id="inputLastName" class="form-control" placeholder="Cognome" required="" autofocus=""
+                    <input id="inputLastName" class="form-control" placeholder="Cognome" autofocus=""
                            type="text" name="${RegistrationValidator.LAST_NAME_KEY}"
                            value="${param[RegistrationValidator.LAST_NAME_KEY]}">
                 </div>
@@ -59,40 +59,12 @@
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
                     <label for="inputEmail" class="sr-only">Email address</label>
-                    <input id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus=""
+                    <input id="inputEmail" class="form-control" placeholder="Email address" autofocus=""
                            type="email" name="${RegistrationValidator.EMAIL_KEY}"
                            value="${param[RegistrationValidator.EMAIL_KEY]}">
                 </div>
                 <span id="spanEmail" class="help-block">
                     ${requestScope.messages.get(RegistrationValidator.EMAIL_KEY)}
-                </span>
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <div id="divPassword" class="col-sm-6 <c:if test='${not empty requestScope.messages.get(RegistrationValidator.FIRST_PWD_KEY)}'>has-error</c:if>">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                    <label for="inputPassword" class="sr-only">Password</label>
-                    <input id="inputPassword" class="form-control" placeholder="Password" required=""
-                           type="password" name="${RegistrationValidator.FIRST_PWD_KEY}"
-                           value="">
-                    <span id="strongPassword" class="input-group-addon">Score: x/x</span>
-                </div>
-                <span id="spanPassword" class="help-block">
-                    ${requestScope.messages.get(RegistrationValidator.FIRST_PWD_KEY)}
-                </span>
-            </div>
-            <div id="divPassword2" class="col-sm-6 <c:if test='${not empty requestScope.messages.get(RegistrationValidator.SECOND_PWD_KEY)}'>has-error</c:if>">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                    <label for="inputPassword2" class="sr-only">Repeat password</label>
-                    <input id="inputPassword2" class="form-control" placeholder="Repeat password" required=""
-                           type="password" name="${RegistrationValidator.SECOND_PWD_KEY}"
-                           value="">
-                </div>
-                <span id="spanPassword2" class="help-block">
-                    ${requestScope.messages.get(RegistrationValidator.SECOND_PWD_KEY)}
                 </span>
             </div>
         </div>
@@ -106,24 +78,9 @@
             </div>
         </div>
 
-        <div class="form-group row-fluid">
-            <div id="divPrivacy" class="col-sm-12 <c:if test='${not empty requestScope.messages.get(RegistrationValidator.INF_PRIVACY_KEY)}'>has-error</c:if>">
-                <div class="input-group">
-                    <input id="inputInfPrivacy" required=""
-                           type="checkbox" name="${RegistrationValidator.INF_PRIVACY_KEY}"
-                           value="${param[RegistrationValidator.INF_PRIVACY_KEY]}">Accetta l'informativa sulla privacy
-                    <label for="inputInfPrivacy" ></label>
-                    <span id="spanInfPrivacy" class="help-block">
-                        ${requestScope.messages.get(RegistrationValidator.INF_PRIVACY_KEY)}
-                    </span>
-                </div>
-            </div>
-        </div>
-
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Apply</button>
     </form>
 </div>
-<script src="${pageContext.servletContext.contextPath}/libs/zxcvbn/zxcvbn.js"></script>
 <script>
     function updateVerifyMessages(data) {
         // Prendi tutti gli <input> che ci sono nella pagina e per ognuno prendine il nome
@@ -149,7 +106,7 @@
     }
 
     $(document).ready(function() {
-        const url = '${pageContext.servletContext.contextPath}/${PagePathsConstants.VALIDATE_REGISTRATION}?strict=';
+        const url = '${pageContext.servletContext.contextPath}/${PagePathsConstants.VALIDATE_REGISTRATION}';
 
         $('#inputPassword').on("keyup", function(){
             $('#strongPassword').text("Score: " + zxcvbn(this.value).score + "/4");

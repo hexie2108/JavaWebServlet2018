@@ -112,7 +112,6 @@ public class LoginServlet extends HttpServlet {
                     PREV_URL_KEY + "=" + URLEncoder.encode(prevUrl, "utf-8") +
                     "&" + NEXT_URL_KEY + "=" + URLEncoder.encode(nextUrl, "utf-8") +
                     "&" + EMAIL_KEY + "=" + URLEncoder.encode(email, "utf-8") +
-                    "&" + PWD_KEY + "=" + URLEncoder.encode(password, "utf-8") +
                     "&" + ERR_NOUSER_PWD_KEY + "=true"
             ).forward(request, response);
             return;
@@ -123,7 +122,6 @@ public class LoginServlet extends HttpServlet {
                     PREV_URL_KEY + "=" + URLEncoder.encode(prevUrl, "utf-8") +
                     "&" + NEXT_URL_KEY + "=" + URLEncoder.encode(nextUrl, "utf-8") +
                     "&" + EMAIL_KEY + "=" + URLEncoder.encode(email, "utf-8") +
-                    "&" + PWD_KEY + "=" + URLEncoder.encode(password, "utf-8") +
                     "&" + ERR_NO_VER_KEY + "=true"
             ).forward(request, response);
             return;

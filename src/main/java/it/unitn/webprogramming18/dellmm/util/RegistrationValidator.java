@@ -141,7 +141,7 @@ public class RegistrationValidator {
             return "Indirizzo email non valido";
         } else {
             try {
-                if (userDAO.checkUserRegisteredByEmail(email) != 0) {
+                if (userDAO != null && userDAO.checkUserRegisteredByEmail(email) != 0) {
                     return "Indirizzo email già usato";
                 }
             } catch (DAOException ignored) {
@@ -212,7 +212,7 @@ public class RegistrationValidator {
             }
         }
 
-        if (kv.containsKey(EMAIL_KEY) && userDAO != null) {
+        if (kv.containsKey(EMAIL_KEY)) {
             String email = kv.get(EMAIL_KEY);
 
             String messageValidateEmail = validateEmail(email, userDAO);

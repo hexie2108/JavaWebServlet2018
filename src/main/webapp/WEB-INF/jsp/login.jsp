@@ -38,7 +38,7 @@
                         <label for="inputPassword" class="sr-only">Password</label>
                         <input id="inputPassword" class="form-control" placeholder="Password" required=""
                                type="password" name="${LoginServlet.PWD_KEY}"
-                               value="${param[LoginServlet.PWD_KEY]}">
+                               value="">
                     </div>
                 </div>
 
