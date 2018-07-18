@@ -55,19 +55,19 @@ public class ModifyUserServlet extends HttpServlet {
 
         HashMap<String, String> kv = new HashMap<>();
 
-        if ((firstName != null) && (!firstName.isEmpty())) {
+        if (firstName != null && !firstName.isEmpty()) {
             kv.put(RegistrationValidator.FIRST_NAME_KEY, firstName);
         } else {
             firstName = "";
         }
 
-        if ((lastName != null) && (!lastName.isEmpty())) {
+        if (lastName != null && !lastName.isEmpty()) {
             kv.put(RegistrationValidator.LAST_NAME_KEY, lastName);
         } else {
             lastName = "";
         }
 
-        if ((email != null) && (!email.isEmpty())) {
+        if (email != null && !email.isEmpty()) {
             kv.put(RegistrationValidator.EMAIL_KEY, email);
         } else {
             email = "";

@@ -63,23 +63,23 @@ public class ValidateUserServlet extends HttpServlet {
         } else {
             HashMap<String, String> kv = new HashMap<>();
 
-            if ((firstName != null) && (!firstName.isEmpty())) {
+            if (firstName != null && !firstName.isEmpty()) {
                 kv.put(RegistrationValidator.FIRST_NAME_KEY, firstName);
             }
 
-            if ((lastName != null) && (!lastName.isEmpty())) {
+            if (lastName != null && !lastName.isEmpty()) {
                 kv.put(RegistrationValidator.LAST_NAME_KEY, lastName);
             }
 
-            if ((email != null) && (!email.isEmpty())) {
+            if (email != null && !email.isEmpty()) {
                 kv.put(RegistrationValidator.EMAIL_KEY, email);
             }
 
-            if ((firstPassword != null) && (!firstPassword.isEmpty())) {
+            if (firstPassword != null && !firstPassword.isEmpty()) {
                 kv.put(RegistrationValidator.FIRST_PWD_KEY, firstPassword);
             }
 
-            if ((secondPassword != null) && (!secondPassword.isEmpty())) {
+            if (secondPassword != null && !secondPassword.isEmpty()) {
                 kv.put(RegistrationValidator.SECOND_PWD_KEY, secondPassword);
             }
 

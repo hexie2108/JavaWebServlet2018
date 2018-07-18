@@ -16,7 +16,7 @@ public class LogoutServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String nextUrl = request.getParameter(NEXT_URL_KEY);
 
-        if (nextUrl == null) {
+        if (nextUrl == null || nextUrl.isEmpty()) {
             String contextPath = getServletContext().getContextPath();
             if (!contextPath.endsWith("/")) {
                 contextPath += "/";

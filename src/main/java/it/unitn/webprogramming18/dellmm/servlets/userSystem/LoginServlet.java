@@ -70,19 +70,18 @@ public class LoginServlet extends HttpServlet {
         }
 
         // Se prevUrl altrimenti non specificato usa pagina di default(index)
-        if ((prevUrl == null) || (prevUrl.isEmpty())) {
+        if (prevUrl == null || prevUrl.isEmpty()) {
             prevUrl = contextPath;
         }
 
         // Se nextUrl altrimenti non specificato usa pagina di default(index)
-        if ((nextUrl == null) || (nextUrl.isEmpty())) {
+        if (nextUrl == null || nextUrl.isEmpty()) {
             nextUrl = contextPath;
         }
 
         User user = null;
 
-        if (!email.isEmpty() &&
-                !password.isEmpty()) {
+        if (!email.isEmpty() && !password.isEmpty()) {
             try {
                 user = userDAO.getByEmailAndPassword(email, password);
             } catch (DAOException e) {

@@ -39,8 +39,7 @@ public class RegistrationValidator {
     }
 
     public static String validateFirstName(String firstName) {
-        if ((firstName == null) ||
-                (firstName.isEmpty())) {
+        if (firstName == null || firstName.isEmpty()) {
             return "Complete il campo first name";
         }
 
@@ -52,8 +51,7 @@ public class RegistrationValidator {
     }
 
     public static String validateLastName(String lastName) {
-        if ((lastName == null) ||
-                (lastName.isEmpty())) {
+        if (lastName == null || lastName.isEmpty()) {
             return "Completa il campo last name";
         }
 
@@ -65,8 +63,7 @@ public class RegistrationValidator {
     }
 
     public static String validatePassword(String password) {
-        if ((password == null) ||
-                (password.isEmpty())) {
+        if (password == null || password.isEmpty()) {
             return "Completa questo campo";
         }
 
@@ -108,10 +105,10 @@ public class RegistrationValidator {
     }
 
     public static String validateSecondPassword(String firstPassword, String secondPassword) {
-        if ((firstPassword == null) ||
-                (secondPassword == null) ||
-                (firstPassword.isEmpty()) ||
-                (secondPassword.isEmpty())) {
+        if (firstPassword == null ||
+                secondPassword == null ||
+                firstPassword.isEmpty() ||
+                secondPassword.isEmpty()) {
             return "Completa tutti e due i campi password";
         }
 
@@ -127,8 +124,7 @@ public class RegistrationValidator {
     }
 
     public static String validateEmail(String email, UserDAO userDAO) {
-        if ((email == null) ||
-                (email.isEmpty())) {
+        if (email == null || email.isEmpty()) {
             return "Completa il campo email";
         }
 
