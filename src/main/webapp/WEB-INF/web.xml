@@ -129,4 +129,13 @@
         <servlet-name>ModifyUserServlet</servlet-name>
         <url-pattern>/modifyUser</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>LoggedResetPasswordServlet</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.LoggedResetPasswordServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LoggedResetPasswordServlet</servlet-name>
+        <url-pattern>/loggedResetPassword</url-pattern>
+    </servlet-mapping>
 </web-app>

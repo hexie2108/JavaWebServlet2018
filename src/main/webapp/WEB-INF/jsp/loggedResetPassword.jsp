@@ -8,7 +8,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Registrazione</title>
+    <title>Cambio password</title>
 
     <script src="${pageContext.servletContext.contextPath}/libs/jquery/jquery-3.3.1.min.js"></script>
     <script src="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/js/bootstrap.js"></script>
@@ -24,47 +24,35 @@
 </nav>
 <div class="container-fluid">
     <form id="form-register" method="post">
-        <h2 class="form-signin-heading">Registrazione</h2>
-        <div class="form-group row">
-            <div id="divFirstName" class="col-sm-6  <c:if test='${not empty requestScope.messages.get(RegistrationValidator.FIRST_NAME_KEY)}'>has-error</c:if>">
-                <div class="input-group ">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                    <label for="inputFirstName" class="sr-only">Nome</label>
-                    <input id="inputFirstName" class="form-control" placeholder="Nome" autofocus=""
-                           type="text" name="${RegistrationValidator.FIRST_NAME_KEY}"
-                           value="${param[RegistrationValidator.FIRST_NAME_KEY]}">
-                </div>
-                <span id="spanFirstName" class="help-block">
-                    ${requestScope.messages.get(RegistrationValidator.FIRST_NAME_KEY)}
-                </span>
-            </div>
+        <h2 class="form-signin-heading">Cambio password</h2>
 
-            <div id="divLastName" class="col-sm-6 <c:if test='${not empty requestScope.messages.get(RegistrationValidator.LAST_NAME_KEY)}'>has-error</c:if>">
+        <div class="form-group row">
+            <div id="divPassword" class="col-sm-6 <c:if test='${not empty requestScope.messages.get(RegistrationValidator.FIRST_PWD_KEY)}'>has-error</c:if>">
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                    <label for="inputLastName" class="sr-only">Cognome</label>
-                    <input id="inputLastName" class="form-control" placeholder="Cognome" autofocus=""
-                           type="text" name="${RegistrationValidator.LAST_NAME_KEY}"
-                           value="${param[RegistrationValidator.LAST_NAME_KEY]}">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                    <label for="inputPassword" class="sr-only">Password</label>
+                    <input id="inputPassword" class="form-control" placeholder="Password" required=""
+                           type="password" name="${RegistrationValidator.FIRST_PWD_KEY}"
+                           value="">
+                    <span id="strongPassword" class="input-group-addon">Score: x/x</span>
                 </div>
-                <span id="spanLastName" class="help-block">
-                    ${requestScope.messages.get(RegistrationValidator.LAST_NAME_KEY)}
+                <span id="spanPassword" class="help-block">
+                    ${requestScope.messages.get(RegistrationValidator.FIRST_PWD_KEY)}
                 </span>
             </div>
         </div>
 
-
         <div class="form-group row">
-            <div id="divEmail" class="col-sm-6 <c:if test='${not empty requestScope.messages.get(RegistrationValidator.EMAIL_KEY)}'>has-error</c:if>">
+            <div id="divPassword2" class="col-sm-6 <c:if test='${not empty requestScope.messages.get(RegistrationValidator.SECOND_PWD_KEY)}'>has-error</c:if>">
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-                    <label for="inputEmail" class="sr-only">Email address</label>
-                    <input id="inputEmail" class="form-control" placeholder="Email address" autofocus=""
-                           type="email" name="${RegistrationValidator.EMAIL_KEY}"
-                           value="${param[RegistrationValidator.EMAIL_KEY]}">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                    <label for="inputPassword2" class="sr-only">Repeat password</label>
+                    <input id="inputPassword2" class="form-control" placeholder="Repeat password" required=""
+                           type="password" name="${RegistrationValidator.SECOND_PWD_KEY}"
+                           value="">
                 </div>
-                <span id="spanEmail" class="help-block">
-                    ${requestScope.messages.get(RegistrationValidator.EMAIL_KEY)}
+                <span id="spanPassword2" class="help-block">
+                    ${requestScope.messages.get(RegistrationValidator.SECOND_PWD_KEY)}
                 </span>
             </div>
         </div>
@@ -136,3 +124,4 @@
 </script>
 </body>
 </html>
+
