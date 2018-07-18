@@ -57,6 +57,31 @@
         <listener-class>it.unitn.webprogramming18.dellmm.listeners.WebAppContextListener</listener-class>
     </listener>
 
+    <!-- FILTERS -->
+    <filter>
+        <filter-name>LoggedUserOnlyFilter</filter-name>
+        <filter-class>it.unitn.webprogramming18.dellmm.filters.LoggedUserOnlyFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>LoggedUserOnlyFilter</filter-name>
+        <url-pattern>/loggedResetPassword</url-pattern>
+        <url-pattern>/modifyUser</url-pattern>
+        <url-pattern>/resendEmail</url-pattern>
+        <url-pattern>/alreadyLoggedIn</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>UnloggedUserOnlyFilter</filter-name>
+        <filter-class>it.unitn.webprogramming18.dellmm.filters.UnloggedUserOnlyFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>UnloggedUserOnlyFilter</filter-name>
+        <url-pattern>/login</url-pattern>
+        <url-pattern>/register</url-pattern>
+        <url-pattern>/forgotPassword</url-pattern>
+        <url-pattern>/resetPassword</url-pattern>
+    </filter-mapping>
+
     <!-- SERVLETS -->
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
@@ -138,4 +163,14 @@
         <servlet-name>LoggedResetPasswordServlet</servlet-name>
         <url-pattern>/loggedResetPassword</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AlreadyLoggedInServlet</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.AlreadyLoggedInServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AlreadyLoggedInServlet</servlet-name>
+        <url-pattern>/alreadyLoggedIn</url-pattern>
+    </servlet-mapping>
+
 </web-app>

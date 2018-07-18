@@ -44,24 +44,7 @@ public class LoginServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("user") == null) {
-            request.getRequestDispatcher(PagePathsConstants.LOGIN_JSP).forward(request, response);
-            return;
-        }
-
-        String newPrevUrl = request.getParameter(PREV_URL_KEY);
-        if (newPrevUrl == null) {
-            newPrevUrl = getServletContext().getContextPath();
-            if (!newPrevUrl.endsWith("/")) {
-                newPrevUrl += "/";
-            }
-        }
-
-        request.setAttribute(NEXT_URL_KEY, URLEncoder.encode(newPrevUrl, "UTF-8"));
-        request.setAttribute(PREV_URL_KEY, newPrevUrl);
-
-        request.getRequestDispatcher(PagePathsConstants.ALREADY_LOGGED_IN_JSP).forward(request, response);
+        request.getRequestDispatcher(PagePathsConstants.LOGIN_JSP).forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

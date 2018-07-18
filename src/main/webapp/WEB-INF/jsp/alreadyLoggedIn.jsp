@@ -8,7 +8,7 @@
 </head>
 <body>
 Sei già loggato cosa vuoi fare?
-<a href="${pageContext.servletContext.contextPath}/${PagePathsConstants.LOGOUT}?${LogoutServlet.NEXT_URL_KEY}=${requestScope.nextUrl}">Logout</a><br>
+<a href="${pageContext.servletContext.contextPath}/${PagePathsConstants.LOGOUT}?${LogoutServlet.NEXT_URL_KEY}=${param.nextUrl}">Logout</a><br>
 <a href="${requestScope.prevUrl}">Go back</a>
 </body>
 </html>

@@ -40,34 +40,19 @@ public class ModifyUserServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession(false);
-        if (session == null || session.getAttribute("user") == null) {
-            resp.sendRedirect(
-                    PagePathsConstants.LOGIN + "?" +
-                            LoginServlet.NEXT_URL_KEY + "=" + URLEncoder.encode(req.getRequestURI(), "UTF-8")
-            );
-            return;
-        }
-
-        User user = (User)session.getAttribute("user");
-
         req.getRequestDispatcher(PagePathsConstants.MODIFY_USER_JSP).forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("user") == null) {
-            response.sendError(400,"L'utente deve essere loggato");
-            return;
-        }
-
         // Ottieni tutti i parametri
         String firstName = request.getParameter(RegistrationValidator.FIRST_NAME_KEY);
         String lastName = request.getParameter(RegistrationValidator.LAST_NAME_KEY);
         String email = request.getParameter(RegistrationValidator.EMAIL_KEY);
 
+        HttpSession session = request.getSession(false);
         User user = (User)session.getAttribute("user");
+
         HashMap<String, String> kv = new HashMap<>();
 
         if ((firstName != null) && (!firstName.isEmpty())) {

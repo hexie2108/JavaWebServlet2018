@@ -5,6 +5,7 @@ public class PagePathsConstants {
     public static final String REGISTER = "register";
     public static final String LOGOUT = "logout";
     public static final String LOGIN = "login";
+    public static final String ALREADY_LOGGED_IN = "alreadyLoggedIn";
 
     public static final String FORGOT_PASSWORD_JSP = "/WEB-INF/jsp/forgotPassword.jsp";
     public static final String LOGIN_JSP = "/WEB-INF/jsp/login.jsp";

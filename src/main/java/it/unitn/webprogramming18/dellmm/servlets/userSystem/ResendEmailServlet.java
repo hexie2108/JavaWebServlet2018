@@ -28,12 +28,6 @@ public class ResendEmailServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-
-        if (session == null) {
-            response.sendError(400, "This page can be used only by logged users");
-            return;
-        }
-
         User user = (User) session.getAttribute("user");
 
         try {
