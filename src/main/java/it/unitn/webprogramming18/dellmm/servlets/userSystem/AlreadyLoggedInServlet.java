@@ -1,7 +1,5 @@
 package it.unitn.webprogramming18.dellmm.servlets.userSystem;
 
-import it.unitn.webprogramming18.dellmm.util.PagePathsConstants;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,7 +9,9 @@ import java.io.IOException;
 
 @WebServlet(name = "AlreadyLoggedInServlet")
 public class AlreadyLoggedInServlet extends HttpServlet {
+    private static final String ALREADY_LOGGED_IN_JSP = "/WEB-INF/jsp/alreadyLoggedIn.jsp";
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher(PagePathsConstants.ALREADY_LOGGED_IN_JSP).forward(request, response);
+        request.getRequestDispatcher(ALREADY_LOGGED_IN_JSP).forward(request, response);
     }
 }

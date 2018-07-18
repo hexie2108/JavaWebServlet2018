@@ -7,7 +7,6 @@ import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.email.EmailFactory;
 import it.unitn.webprogramming18.dellmm.email.messageFactories.ResetPasswordMail;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
-import it.unitn.webprogramming18.dellmm.util.PagePathsConstants;
 
 import javax.mail.MessagingException;
 import javax.servlet.ServletException;
@@ -26,6 +25,8 @@ public class ForgotPasswordServlet extends HttpServlet {
             ERR_NOEMAIL_KEY = "error_noEmail",
             ERR_NOVERIFIED_KEY = "error_noVerified",
             ERR_EMPTY_FIELD_KEY = "error_emptyField";
+
+    private static final String FORGOT_PASSWORD_JSP = "/WEB-INF/jsp/forgotPassword.jsp";
 
     private UserDAO userDAO;
     private EmailFactory emailFactory;
@@ -50,7 +51,7 @@ public class ForgotPasswordServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher(PagePathsConstants.FORGOT_PASSWORD_JSP).forward(request, response);
+        request.getRequestDispatcher(FORGOT_PASSWORD_JSP).forward(request, response);
     }
 
 
@@ -59,7 +60,7 @@ public class ForgotPasswordServlet extends HttpServlet {
 
         if (email == null ||
                 email.isEmpty()) {
-            request.getRequestDispatcher(PagePathsConstants.FORGOT_PASSWORD_JSP + "?" +
+            request.getRequestDispatcher(FORGOT_PASSWORD_JSP + "?" +
                     ERR_EMPTY_FIELD_KEY + "=true"
             ).forward(request, response);
             return;
@@ -87,7 +88,7 @@ public class ForgotPasswordServlet extends HttpServlet {
         }
 
         if (user == null) {
-            request.getRequestDispatcher(PagePathsConstants.FORGOT_PASSWORD_JSP + "?" +
+            request.getRequestDispatcher(FORGOT_PASSWORD_JSP + "?" +
                     ERR_NOEMAIL_KEY + "=true" +
                     "&" + PREV_URL_KEY + "=" + prevUrl +
                     "&" + EMAIL_KEY + "=" + email
@@ -96,7 +97,7 @@ public class ForgotPasswordServlet extends HttpServlet {
         }
 
         if (user.getVerifyEmailLink() != null) {
-            request.getRequestDispatcher(PagePathsConstants.FORGOT_PASSWORD_JSP + "?" +
+            request.getRequestDispatcher(FORGOT_PASSWORD_JSP + "?" +
                     ERR_NOVERIFIED_KEY + "=true" +
                     "&" + PREV_URL_KEY + "=" + prevUrl +
                     "&" + EMAIL_KEY + "=" + email

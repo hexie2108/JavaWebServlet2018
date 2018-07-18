@@ -5,7 +5,6 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
-import it.unitn.webprogramming18.dellmm.util.PagePathsConstants;
 import it.unitn.webprogramming18.dellmm.util.RegistrationValidator;
 
 import javax.servlet.ServletException;
@@ -19,6 +18,8 @@ import java.util.HashMap;
 
 @WebServlet(name = "LoggedResetPasswordServlet")
 public class LoggedResetPasswordServlet extends HttpServlet {
+    private static final String LOGGED_RESET_PASSWORD = "/WEB-INF/jsp/loggedResetPassword.jsp";
+
     private UserDAO userDAO = null;
 
     @Override
@@ -37,7 +38,7 @@ public class LoggedResetPasswordServlet extends HttpServlet {
 
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher(PagePathsConstants.LOGGED_RESET_PASSWORD).forward(request, response);
+        request.getRequestDispatcher(LOGGED_RESET_PASSWORD).forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -52,7 +53,7 @@ public class LoggedResetPasswordServlet extends HttpServlet {
 
         if (!messages.isEmpty()) {
             request.setAttribute("messages", messages);
-            request.getRequestDispatcher(PagePathsConstants.LOGGED_RESET_PASSWORD).forward(request, response);
+            request.getRequestDispatcher(LOGGED_RESET_PASSWORD).forward(request, response);
             return;
         }
 

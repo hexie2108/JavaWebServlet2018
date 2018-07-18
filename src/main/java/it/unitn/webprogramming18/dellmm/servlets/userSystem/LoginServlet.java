@@ -5,7 +5,6 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
-import it.unitn.webprogramming18.dellmm.util.PagePathsConstants;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -27,6 +26,8 @@ public class LoginServlet extends HttpServlet {
     public static final String ERR_NOUSER_PWD_KEY = "error_noUserOrPassword",
             ERR_NO_VER_KEY = "error_noVerified";
 
+    private static final String LOGIN_JSP = "/WEB-INF/jsp/login.jsp";
+
     private UserDAO userDAO;
 
     @Override
@@ -44,7 +45,7 @@ public class LoginServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher(PagePathsConstants.LOGIN_JSP).forward(request, response);
+        request.getRequestDispatcher(LOGIN_JSP).forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -91,7 +92,7 @@ public class LoginServlet extends HttpServlet {
         }
 
         if (user == null) {
-            request.getRequestDispatcher(PagePathsConstants.LOGIN_JSP + "?" +
+            request.getRequestDispatcher(LOGIN_JSP + "?" +
                     PREV_URL_KEY + "=" + URLEncoder.encode(prevUrl, "utf-8") +
                     "&" + NEXT_URL_KEY + "=" + URLEncoder.encode(nextUrl, "utf-8") +
                     "&" + EMAIL_KEY + "=" + URLEncoder.encode(email, "utf-8") +
@@ -101,7 +102,7 @@ public class LoginServlet extends HttpServlet {
         }
 
         if (user.getVerifyEmailLink() != null) {
-            request.getRequestDispatcher(PagePathsConstants.LOGIN_JSP + "?" +
+            request.getRequestDispatcher(LOGIN_JSP + "?" +
                     PREV_URL_KEY + "=" + URLEncoder.encode(prevUrl, "utf-8") +
                     "&" + NEXT_URL_KEY + "=" + URLEncoder.encode(nextUrl, "utf-8") +
                     "&" + EMAIL_KEY + "=" + URLEncoder.encode(email, "utf-8") +

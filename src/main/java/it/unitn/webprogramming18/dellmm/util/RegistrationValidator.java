@@ -2,7 +2,6 @@ package it.unitn.webprogramming18.dellmm.util;
 
 import it.unitn.webprogramming18.dellmm.db.daos.UserDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
-import it.unitn.webprogramming18.dellmm.javaBeans.User;
 
 import javax.mail.internet.InternetAddress;
 import java.util.HashMap;

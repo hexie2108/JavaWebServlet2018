@@ -4,7 +4,6 @@ import it.unitn.webprogramming18.dellmm.db.daos.UserDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
-import it.unitn.webprogramming18.dellmm.util.PagePathsConstants;
 import it.unitn.webprogramming18.dellmm.util.RegistrationValidator;
 
 import javax.servlet.ServletException;
@@ -20,6 +19,8 @@ public class ResetPasswordServlet extends HttpServlet {
             PWD_KEY = "password";
 
     public static final String MSG_KEY = "message";
+
+    private static final String RESET_PASSWORD_JSP = "/WEB-INF/jsp/resetPassword.jsp";
 
     private UserDAO userDAO;
 
@@ -38,7 +39,7 @@ public class ResetPasswordServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher(PagePathsConstants.RESET_PASSWORD_JSP).forward(request, response);
+        request.getRequestDispatcher(RESET_PASSWORD_JSP).forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -52,7 +53,11 @@ public class ResetPasswordServlet extends HttpServlet {
 
         String message = RegistrationValidator.validatePassword(password);
         if (message != null) {
-            request.getRequestDispatcher(response.encodeRedirectURL(PagePathsConstants.RESET_PASSWORD_JSP + "?" + MSG_KEY + "=" + message)).forward(request, response);
+            request.getRequestDispatcher(
+                    response.encodeRedirectURL(
+                            RESET_PASSWORD_JSP + "?" + MSG_KEY + "=" + message
+                    )
+            ).forward(request, response);
             return;
         }
 

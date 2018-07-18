@@ -20,7 +20,7 @@ import java.util.HashMap;
 
 @WebServlet(name = "ModifyUserServlet")
 public class ModifyUserServlet extends HttpServlet {
-    private static final String THIS_PATH = "modifyUser";
+    private static final String MODIFY_USER_JSP = "/WEB-INF/jsp/modifyUser.jsp";
 
     private UserDAO userDAO;
 
@@ -40,7 +40,7 @@ public class ModifyUserServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher(PagePathsConstants.MODIFY_USER_JSP).forward(req, resp);
+        req.getRequestDispatcher(MODIFY_USER_JSP).forward(req, resp);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class ModifyUserServlet extends HttpServlet {
         if (!messages.isEmpty()) {
             request.setAttribute("messages", messages);
             request.getRequestDispatcher(
-                    PagePathsConstants.MODIFY_USER_JSP + "?"+
+                    MODIFY_USER_JSP + "?"+
                             RegistrationValidator.FIRST_NAME_KEY + "=" + URLEncoder.encode(firstName,"UTF-8") +
                             "&" + RegistrationValidator.LAST_NAME_KEY + "=" +  URLEncoder.encode(lastName,"UTF-8") +
                             "&" + RegistrationValidator.EMAIL_KEY + "=" + URLEncoder.encode(email,"UTF-8")
@@ -107,7 +107,7 @@ public class ModifyUserServlet extends HttpServlet {
                 contextPath += "/";
             }
 
-            response.sendRedirect(contextPath + THIS_PATH);
+            response.sendRedirect(contextPath + PagePathsConstants.MODIFY_USER);
         } catch (DAOException e) {
             response.sendError(500, "Impossibile aggiornare l'utente");
             return;
