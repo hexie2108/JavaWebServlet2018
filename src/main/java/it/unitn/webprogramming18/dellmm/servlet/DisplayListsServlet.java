@@ -5,6 +5,7 @@
  */
 package it.unitn.webprogramming18.dellmm.servlet;
 
+import it.unitn.webprogramming18.dellmm.db.daos.CategoryListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ProductDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
@@ -29,6 +30,7 @@ public class DisplayListsServlet extends HttpServlet {
     
     private ListDAO listDAO;
     private ProductDAO productDAO;
+    private CategoryListDAO categoryListDAO;
     
     @Override
     public void init() throws ServletException {
@@ -40,6 +42,7 @@ public class DisplayListsServlet extends HttpServlet {
         try {
             listDAO = daoFactory.getDAO(ListDAO.class);
             productDAO = daoFactory.getDAO(ProductDAO.class);
+            categoryListDAO = daoFactory.getDAO(CategoryListDAO.class);
         } catch (DAOFactoryException ex) {
             throw new ServletException("Impossible to get db factory for user storage system", ex);
         }
@@ -107,6 +110,9 @@ public class DisplayListsServlet extends HttpServlet {
                 }
                 completeSharedLists.put(l, products);
             }
+            
+            //Utility attribute to possibly display category name for each category
+            request.setAttribute("categoryListDAO", categoryListDAO);
             
             request.setAttribute("ownedLists", completeOwnedLists);
             request.setAttribute("sharedLists", completeOwnedLists);
