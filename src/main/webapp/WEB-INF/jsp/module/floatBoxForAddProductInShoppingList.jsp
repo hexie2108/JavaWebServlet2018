@@ -10,12 +10,12 @@
 
 
 <!-- 按钮：用于打开模态框 -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+<button type="button" class="btn btn-primary" >
   打开模态框
 </button>
  
 <!-- 模态框 -->
-<div class="modal fade" id="myModal">
+<div class="modal fade" id="boxAddItem">
   <div class="modal-dialog">
     <div class="modal-content">
  
