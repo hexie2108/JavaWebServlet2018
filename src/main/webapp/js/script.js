@@ -6,7 +6,7 @@
 
 function setProductIdForAddInList(productId) {
         
-       var inputProductId = document.getElementById().value ;
-       inputProductId = productId;
+       var inputProductId = document.getElementById("productIdToAdd") ;
+       inputProductId.value = productId;
         
 }

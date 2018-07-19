@@ -9,6 +9,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 
+
 <!-- finestrina -->
 <div class="modal fade" id="boxAddItem">
         <div class="modal-dialog">

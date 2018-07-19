@@ -32,7 +32,7 @@
                                         ${product.logo}
                                 </div>
                                 <div class="list-item-add  d-inline-block col">
-                                        <button class="btn btn-info" data-toggle="modal" data-target="#boxAddItem">Aggiunge</button>
+                                        <button class="btn btn-info" data-toggle="modal" data-target="#boxAddItem" onclick="setProductIdForAddInList(${product.id})">Aggiunge</button>
                                 </div>
                         </div>
                         <div class="list-item-description card-text">
