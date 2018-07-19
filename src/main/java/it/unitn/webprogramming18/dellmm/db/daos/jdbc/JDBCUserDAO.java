@@ -151,7 +151,27 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
 
         return user;
     }
+    
+    public User getByEmail(String email) throws DAOException {
+        User user = null;
 
+        if (email == null) {
+            throw new DAOException("primaryKey is null");
+        }
+
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM User WHERE email = ?")) {
+            stm.setString(1, email);
+            try (ResultSet rs = stm.executeQuery()) {
+                if (rs.next()) {
+                    user = getUserFromResultSet(rs);
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get the user with specified email", ex);
+        }
+
+        return user;
+    }
 
     public int checkUserRegisteredByEmail(String email) throws DAOException {
         int res = -1;
