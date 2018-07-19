@@ -25,8 +25,8 @@
                                         <!-- utente anonimo-->
                                         <form action="#">
                                                 <label  for="select-list" class="d-block">Seleziona la lista:</label>
-                                                <select id="select-list" class="form-control custom-select w-50">
-                                                        <option>Default list</option>
+                                                <select id="select-list" class="form-control custom-select w-50" name="listId">
+                                                        <option value="default">Default list</option>
                                                 </select>
                                                 <div class="d-inline-block w-25">
                                                         <input class="btn btn-info disabled" type="submit" value="cambia"/>

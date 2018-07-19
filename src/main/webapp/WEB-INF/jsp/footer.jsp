@@ -13,7 +13,7 @@
             </section>
             
             <jsp:include page="/WEB-INF/jsp/module/floatBoxForShoppingList.jsp"></jsp:include>
-            <jsp:include page="/WEB-INF/jsp/module/floatBoxForShoppingList.jsp.jsp"></jsp:include>
+            <jsp:include page="/WEB-INF/jsp/module/floatBoxForAddProductInShoppingList.jsp"></jsp:include>
             
             <footer class="footer bg-secondary mt-5">
                 <div class="author-info">

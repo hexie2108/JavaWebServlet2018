@@ -54,7 +54,7 @@ public class UpdateItemInListService extends HttpServlet
                 if (listId.equals("default"))
                 {
 
-                        Cookie cookOfList=null;
+                        Cookie cookOfList = null;
                         Cookie[] cookies = request.getCookies();
                         //se utente ha una cookie della lista locale
                         if (cookies != null && cookies.length > 0)
@@ -63,13 +63,20 @@ public class UpdateItemInListService extends HttpServlet
                                 {
                                         if (cookie.getName().equals("localShoppingList"))
                                         {
-                                              cookOfList = cookie;
+                                                cookOfList = cookie;
                                         }
                                 }
                         }
                         //se la lista locale non esiste oppure è vuoto
-                        if(cookOfList == null || cookOfList.equals(""))
-                        
+                        if (cookOfList == null || cookOfList.equals(""))
+                        {
+
+                        }
+                        //esiste già una lista locale non vuota
+                        else
+                        {
+
+                        }
 
                 }
 

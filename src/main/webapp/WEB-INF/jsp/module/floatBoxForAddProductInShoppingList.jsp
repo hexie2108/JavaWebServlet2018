@@ -23,10 +23,10 @@
                         <!-- box-body -->
                         <div class="modal-body">
                                 <!-- utente anonimo-->
-                                <form action="#">
+                                <form action="#" method="POST">
                                         <label  for="select-list" class="d-block">Seleziona la lista:</label>
-                                        <select id="select-list" class="form-control custom-select w-50">
-                                                <option>Default list</option>
+                                        <select id="select-list" class="form-control custom-select w-50" name="listId">
+                                                <option value="deafult">Default list</option>
                                         </select>
                                         <div class="d-inline-block w-25">
                                                 <input class="btn btn-info disabled" type="submit" value="aggiunge"/>

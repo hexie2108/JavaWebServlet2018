@@ -1,123 +1,127 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
-    <!-- Session settings -->
-    <servlet-mapping>
-        <servlet-name>search</servlet-name>
-        <url-pattern>/search</url-pattern>
-    </servlet-mapping>
-    <session-config>
-        <session-timeout>
-            30
-        </session-timeout>
-    </session-config>
-    <!-- DB SETTINGS -->
-    <context-param>
-        <description>The url of the JDBC persistence system database position</description>
-        <param-name>dburl</param-name>
-        <param-value>jdbc:mysql://127.0.0.1:3306/mydb</param-value>
-    </context-param>
-    <context-param>
-        <description>The user of the JDBC persistence system database position</description>
-        <param-name>dbuser</param-name>
-        <param-value>root</param-value>
-    </context-param>
-    <context-param>
-        <description>The password of $dbuser</description>
-        <param-name>dbpwd</param-name>
-        <param-value>123456</param-value>
-    </context-param>
-    <!-- SMTP SETTINGS -->
-    <context-param>
-        <description>Hostname of the SMTP server</description>
-        <param-name>smtpHostname</param-name>
-        <param-value>smtp.gmail.com</param-value>
-    </context-param>
-    <context-param>
-        <description>Port of the SMTP server</description>
-        <param-name>smtpPort</param-name>
-        <param-value>465</param-value>
-    </context-param>
-    <context-param>
-        <description>Username of the SMTP server</description>
-        <param-name>smtpUsername</param-name>
-        <param-value>registrazioneprogettowebprog@gmail.com</param-value>
-    </context-param>
-    <context-param>
-        <description>Password of the SMTP server</description>
-        <param-name>smtpPassword</param-name>
-        <param-value>xeecaoS5tood3bee</param-value>
-    </context-param>
-    
-    <!-- quantià di item nelle varie pagine-->
-    <context-param>
-         <description>quantià categoria per slider</description>
-        <param-name>quantityCatForSlider</param-name>
-        <param-value>4</param-value>
-    </context-param>
-    <context-param>
-         <description>quantià di item per home</description>
-        <param-name>quantityItemForHome</param-name>
-        <param-value>9</param-value>
-    </context-param>
-    <context-param>
-         <description>quantià di item per categoria</description>
-        <param-name>quantityItemForCategory</param-name>
-        <param-value>25</param-value>
-    </context-param>
-    <context-param>
-         <description>quantià di item per la ricerca</description>
-        <param-name>quantityItemForSearch</param-name>
-        <param-value>25</param-value>
-    </context-param>
-    
-    
-    
-    
-    <!-- pagina di index -->
-    <welcome-file-list>
-        <welcome-file>home</welcome-file>
-    </welcome-file-list>
-    <!-- pagina di errore 
-    <error-page>
-        <error-code>404</error-code>
-        <location>/WEB-INF/jsp/error/404.jsp</location>
-    </error-page>
-    -->
-    <!-- LISTENERS -->
-    <listener>
-        <description>ServletContextListener</description>
-        <listener-class>it.unitn.webprogramming18.dellmm.listeners.WebAppContextListener</listener-class>
-    </listener>
-    <!-- SERVLETS-->
-    <servlet>
-        <servlet-name>LoginServlet</servlet-name>
-        <servlet-class>it.unitn.webprogramming18.dellmm.servlet.LoginServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>LoginServlet</servlet-name>
-        <url-pattern>/login</url-pattern>
-    </servlet-mapping>
 
-       <servlet>
-           <servlet-name>LogoutServlet</servlet-name>
-           <servlet-class>it.unitn.webprogramming18.dellmm.servlet.LogoutServlet</servlet-class>
-       </servlet>
-       <servlet-mapping>
-           <servlet-name>LogoutServlet</servlet-name>
-           <url-pattern>/logout</url-pattern>
-       </servlet-mapping>
-      
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    
+        
+        <!-- Session settings -->
+        <session-config>
+                <session-timeout>
+                        30
+                </session-timeout>
+        </session-config>
+    
+        <!-- DB SETTINGS -->
+        <context-param>
+                <description>The url of the JDBC persistence system database position</description>
+                <param-name>dburl</param-name>
+                <param-value>jdbc:mysql://127.0.0.1:3306/mydb</param-value>
+        </context-param>
+        <context-param>
+                <description>The user of the JDBC persistence system database position</description>
+                <param-name>dbuser</param-name>
+                <param-value>root</param-value>
+        </context-param>
+        <context-param>
+                <description>The password of $dbuser</description>
+                <param-name>dbpwd</param-name>
+                <param-value>123456</param-value>
+        </context-param>
+        <!-- SMTP SETTINGS -->
+        <context-param>
+                <description>Hostname of the SMTP server</description>
+                <param-name>smtpHostname</param-name>
+                <param-value>smtp.gmail.com</param-value>
+        </context-param>
+        <context-param>
+                <description>Port of the SMTP server</description>
+                <param-name>smtpPort</param-name>
+                <param-value>465</param-value>
+        </context-param>
+        <context-param>
+                <description>Username of the SMTP server</description>
+                <param-name>smtpUsername</param-name>
+                <param-value>registrazioneprogettowebprog@gmail.com</param-value>
+        </context-param>
+        <context-param>
+                <description>Password of the SMTP server</description>
+                <param-name>smtpPassword</param-name>
+                <param-value>xeecaoS5tood3bee</param-value>
+        </context-param>
+    
+        <!-- quantià di item nelle varie pagine-->
+        <context-param>
+                <description>quantià categoria per slider</description>
+                <param-name>quantityCatForSlider</param-name>
+                <param-value>4</param-value>
+        </context-param>
+        <context-param>
+                <description>quantià di item per home</description>
+                <param-name>quantityItemForHome</param-name>
+                <param-value>9</param-value>
+        </context-param>
+        <context-param>
+                <description>quantià di item per categoria</description>
+                <param-name>quantityItemForCategory</param-name>
+                <param-value>25</param-value>
+        </context-param>
+        <context-param>
+                <description>quantià di item per la ricerca</description>
+                <param-name>quantityItemForSearch</param-name>
+                <param-value>25</param-value>
+        </context-param>
+    
+        <!-- pagina di index -->
+        <welcome-file-list>
+                <welcome-file>home</welcome-file>
+        </welcome-file-list>
+    
+    
+        <!-- pagina di errore 
+        <error-page>
+            <error-code>404</error-code>
+            <location>/WEB-INF/jsp/error/404.jsp</location>
+        </error-page>
+        -->
+        <!-- LISTENERS -->
+        <listener>
+                <description>ServletContextListener</description>
+                <listener-class>it.unitn.webprogramming18.dellmm.listeners.WebAppContextListener</listener-class>
+        </listener>
+    
+        <!-- SERVLETS-->
+        <servlet>
+                <servlet-name>LoginServlet</servlet-name>
+                <servlet-class>it.unitn.webprogramming18.dellmm.servlet.LoginServlet</servlet-class>
+        </servlet>
+        <servlet-mapping>
+                <servlet-name>LoginServlet</servlet-name>
+                <url-pattern>/login</url-pattern>
+        </servlet-mapping>
+        <servlet>
+                <servlet-name>LogoutServlet</servlet-name>
+                <servlet-class>it.unitn.webprogramming18.dellmm.servlet.LogoutServlet</servlet-class>
+        </servlet>
+        <servlet-mapping>
+                <servlet-name>LogoutServlet</servlet-name>
+                <url-pattern>/logout</url-pattern>
+        </servlet-mapping>
+    
         <servlet>
                 <servlet-name>HomeServlet</servlet-name>
                 <servlet-class>it.unitn.webprogramming18.dellmm.servlet.HomeServlet</servlet-class>
         </servlet>
-        <servlet>
+    
+        <servlet-mapping>
+                <servlet-name>HomeServlet</servlet-name>
+                <url-pattern>/home</url-pattern>
+        </servlet-mapping>
+        <servlet> 
                 <servlet-name>search</servlet-name>
                 <servlet-class>it.unitn.webprogramming18.dellmm.servlet.SearchServlet</servlet-class>
         </servlet>
         <servlet-mapping>
-                <servlet-name>HomeServlet</servlet-name>
-                <url-pattern>/home</url-pattern>
+                <servlet-name>search</servlet-name>
+                <url-pattern>/search</url-pattern>
         </servlet-mapping>
         <servlet>
                 <servlet-name>CategoryServlet</servlet-name>
@@ -126,5 +130,13 @@
         <servlet-mapping>
                 <servlet-name>CategoryServlet</servlet-name>
                 <url-pattern>/category</url-pattern>
+        </servlet-mapping>
+        <servlet>
+                <servlet-name>UpdateItemInListService</servlet-name>
+                <servlet-class>it.unitn.webprogramming18.dellmm.servlet.service.UpdateItemInListService</servlet-class>
+        </servlet>
+        <servlet-mapping>
+                <servlet-name>UpdateItemInListService</servlet-name>
+                <url-pattern>/service/UpdateItemInListService</url-pattern>
         </servlet-mapping>
 </web-app>
