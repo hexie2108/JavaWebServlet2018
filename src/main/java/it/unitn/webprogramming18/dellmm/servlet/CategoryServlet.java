@@ -94,7 +94,7 @@ public class CategoryServlet extends HttpServlet
                         throw new ServletException(ex.getMessage(), ex);
                 }
                 //inoltra a jsp
-                request.getRequestDispatcher("/WEB-INF/jsp/category.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/jsp/Category.jsp").forward(request, response);
 
         }
 }

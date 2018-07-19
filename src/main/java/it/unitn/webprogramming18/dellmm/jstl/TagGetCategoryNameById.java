@@ -24,7 +24,7 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 public class TagGetCategoryNameById extends SimpleTagSupport
 {
         private Integer categoryId;
-        private StringWriter sw = new StringWriter();
+       // private StringWriter sw = new StringWriter();
 
         /**
          * @param categoryId the categoryId to set

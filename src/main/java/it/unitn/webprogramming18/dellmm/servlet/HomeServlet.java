@@ -64,7 +64,7 @@ public class HomeServlet extends HttpServlet
                         throw new ServletException(ex.getMessage(), ex);
                 }
                 //inoltra a jsp
-                request.getRequestDispatcher("/WEB-INF/jsp/home.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/jsp/Home.jsp").forward(request, response);
         }
 
 }

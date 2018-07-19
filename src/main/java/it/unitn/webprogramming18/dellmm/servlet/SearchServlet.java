@@ -93,7 +93,7 @@ public class SearchServlet extends HttpServlet
                 }
                 
                 //inoltra jsp
-                request.getRequestDispatcher("/WEB-INF/jsp/search.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/jsp/Search.jsp").forward(request, response);
         }
 
 }

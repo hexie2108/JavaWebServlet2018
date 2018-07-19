@@ -1,0 +1,92 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package it.unitn.webprogramming18.dellmm.jstl;
+
+import it.unitn.webprogramming18.dellmm.db.daos.ProductDAO;
+import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCProductDAO;
+import it.unitn.webprogramming18.dellmm.db.utils.DAO;
+import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
+import it.unitn.webprogramming18.dellmm.javaBeans.Product;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
+import javax.servlet.jsp.tagext.SimpleTagSupport;
+
+/**
+ *
+ * @author mikuc
+ */
+public class TagGetElementsOfShoppingListByCookie extends SimpleTagSupport
+{
+       private final String basePath = ((PageContext)getJspContext()).getServletContext().getContextPath();
+       private final PageContext pageContext = (PageContext) getJspContext();
+
+        @Override
+        public void doTag() throws JspException, IOException
+        {
+                
+                Cookie cookies[] = ((HttpServletRequest) pageContext.getRequest()).getCookies();
+                String localtListProduct = null;
+                String[] productsId = null;
+
+                //se utente ha una cookie della lista locale
+                if (cookies != null && cookies.length > 0)
+                {
+                        for (Cookie cookie : cookies)
+                        {
+                                if (cookie.getName().equals("localShoppingList"))
+                                {
+                                        localtListProduct = cookie.getValue();
+                                }
+                        }
+                }
+                //se è stato aggiunto l'elemento nella lista locale, lo trasforma in array di stringa
+                if (localtListProduct != null)
+                {
+                        productsId = localtListProduct.split(",");
+                }
+
+                ProductDAO productDAO = new JDBCProductDAO();
+                Product product = null; 
+
+               JspWriter out = getJspContext().getOut();
+                
+                try
+                {
+                        
+                        for (int i = 0; i < productsId.length; i++)
+                        {
+                                product = productDAO.getByPrimaryKey(Integer.parseInt(productsId[i]));
+                                out.println("<tr>");
+                                out.println("<td class=\"td-img\">"
+                                            + "<img src=\""+basePath+"/"+product.getImg()+" alt=\""+product.getName()+"\" />"
+                                            + "</td>");
+                                out.println("<td class=\"td-name\">"
+                                            + "<span>"+product.getName()+"</span>"
+                                            + "</td>");
+                                out.println("<td class=\"td-buttons\">"
+                                            + "<a href=\"#\" title=\"comprato\"><i class=\"fas fa-check-circle\"></i></a>"
+                                            +"<a href=\"#\" title=\"elimina\"><i class=\"fas fa-ban\"></i></a>"
+                                            + "</td>");
+                                out.println("</tr>");
+                        }
+                        
+                }
+                catch (DAOException ex)
+                {
+                        throw new JspException("errore durante ottenimento del nome di categoria");
+                }
+              
+        }
+}
+
+

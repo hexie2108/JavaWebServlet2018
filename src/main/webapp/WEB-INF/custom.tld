@@ -18,4 +18,9 @@
                 <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagPrintAllCategoryProduct</tag-class>
                 <body-content>scriptless</body-content>
         </tag>
+        <tag>
+                <name>getElementsOfShppingListByCookie</name>
+                <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagGetElementsOfShppingListByCookie</tag-class>
+                <body-content>scriptless</body-content>
+        </tag>
 </taglib>
