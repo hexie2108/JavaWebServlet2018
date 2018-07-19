@@ -66,7 +66,7 @@
                                         </tr>
                                 </thead>
                                 <tbody>
-                                        <tr>
+                                        <tr> 
                                                 <custom:getElementsOfShppingListByCookie></custom:getElementsOfShppingListByCookie>
                                         </tr>
                                 </tbody>
