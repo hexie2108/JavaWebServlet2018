@@ -20,6 +20,7 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
     public JDBCListDAO(Connection con) {
         super(con);
     }
+    
 
     private ShoppingList getListFromResultSet(ResultSet rs) throws SQLException {
         ShoppingList list = new ShoppingList();

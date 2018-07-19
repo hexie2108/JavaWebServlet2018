@@ -1,4 +1,4 @@
-package it.unitn.webprogramming18.dellmm.servlet.service;
+package it.unitn.webprogramming18.dellmm.servlet.another;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
