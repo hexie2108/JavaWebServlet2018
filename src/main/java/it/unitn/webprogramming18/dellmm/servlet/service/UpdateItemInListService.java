@@ -44,10 +44,12 @@ public class UpdateItemInListService extends HttpServlet
         {
                 String listId = null;
                 listId = request.getParameter("listId");
+                String productId = null;
+                productId = request.getParameter("productId");
 
-                if (listId == null)
+                if (listId == null || productId == null)
                 {
-                        throw new ServletException("manca il parametro id della lista");
+                        throw new ServletException("manca il parametro id della lista o id del prodotto");
                 }
 
                 //in caso di utente anonimo
@@ -70,7 +72,7 @@ public class UpdateItemInListService extends HttpServlet
                         //se la lista locale non esiste oppure è vuoto
                         if (cookOfList == null || cookOfList.equals(""))
                         {
-
+                                cookOfList = new Cookie("localShoppingList",productId);
                         }
                         //esiste già una lista locale non vuota
                         else

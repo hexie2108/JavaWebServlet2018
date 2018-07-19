@@ -29,6 +29,7 @@
                                                 <option value="deafult">Default list</option>
                                         </select>
                                         <div class="d-inline-block w-25">
+                                                <input id="productIdToAdd" type="hidden" name="productId" value="1"/>
                                                 <input class="btn btn-info disabled" type="submit" value="aggiunge"/>
                                         </div>
                                 </form>
