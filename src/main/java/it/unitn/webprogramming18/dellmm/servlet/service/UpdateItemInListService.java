@@ -52,9 +52,11 @@ public class UpdateItemInListService extends HttpServlet
                         throw new ServletException("manca il parametro id della lista o id del prodotto");
                 }
 
+                
                 //in caso di utente anonimo
                 if (listId.equals("default"))
                 {
+                       
                         
                         Cookie cookOfList = null;
                         Cookie[] cookies = request.getCookies();
@@ -69,6 +71,8 @@ public class UpdateItemInListService extends HttpServlet
                                         }
                                 }
                         }
+                        
+                        
                         //se la lista locale non esiste oppure è vuoto
                         if (cookOfList == null || cookOfList.equals(""))
                         {
@@ -87,7 +91,7 @@ public class UpdateItemInListService extends HttpServlet
                                                 
                                                 //in caso esiste
                                                 //da gestire, in modo lanciare un messaggio sul schermo dell'utente
-                                                
+                                                throw new ServletException("elemento è già presente nella lista!");
                                                 
                                                 
                                         }
@@ -99,8 +103,8 @@ public class UpdateItemInListService extends HttpServlet
                         response.addCookie(cookOfList);
                 }
                 
-                response.encodeRedirectURL(request.getHeader("Referer"));
-                
+                //ritorna alla pagina di provenienza
+                response.sendRedirect(response.encodeRedirectURL(request.getHeader("Referer")));
                 
                 
         }

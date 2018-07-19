@@ -27,6 +27,9 @@
                 <script type="text/javascript" src="${pageContext.request.contextPath}/libs/jquery/jquery-3.3.1.slim.min.js"></script>
                 <!--js di bootstrap-->
                 <script type="text/javascript" src="${pageContext.request.contextPath}/libs/bootstrap/bootstrap.min.js"></script>
+                <!--js personale di sito-->
+                <script type="text/javascript" src="${pageContext.request.contextPath}/js/script.js"></script>
+                
                 <!--css di bootstrap-->
                 <link rel="stylesheet" href="${pageContext.request.contextPath}/libs/bootstrap/bootstrap.min.css" type="text/css" media="all">
                 <!--css di fontawesome-->

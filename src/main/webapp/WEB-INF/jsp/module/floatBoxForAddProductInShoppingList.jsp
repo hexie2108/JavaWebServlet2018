@@ -23,10 +23,10 @@
                         <!-- box-body -->
                         <div class="modal-body">
                                 <!-- utente anonimo-->
-                                <form action="#" method="POST">
+                                <form action="${pageContext.request.contextPath}/service/UpdateItemInListService" method="POST">
                                         <label  for="select-list" class="d-block">Seleziona la lista:</label>
                                         <select id="select-list" class="form-control custom-select w-50" name="listId">
-                                                <option value="deafult">Default list</option>
+                                                <option value="default">Default list</option>
                                         </select>
                                         <div class="d-inline-block w-25">
                                                 <input id="productIdToAdd" type="hidden" name="productId" value="1"/>
