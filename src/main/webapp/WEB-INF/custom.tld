@@ -20,7 +20,7 @@
         </tag>
         <tag>
                 <name>getElementsOfShppingListByCookie</name>
-                <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagGetElementsOfShppingListByCookie</tag-class>
+                <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagGetElementsOfShoppingListByCookie</tag-class>
                 <body-content>scriptless</body-content>
         </tag>
 </taglib>
