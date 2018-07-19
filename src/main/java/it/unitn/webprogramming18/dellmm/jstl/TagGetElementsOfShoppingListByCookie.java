@@ -27,13 +27,12 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
  */
 public class TagGetElementsOfShoppingListByCookie extends SimpleTagSupport
 {
-       private final String basePath = ((PageContext)getJspContext()).getServletContext().getContextPath();
-       private final PageContext pageContext = (PageContext) getJspContext();
 
         @Override
         public void doTag() throws JspException, IOException
         {
-                
+                String basePath = ((PageContext) getJspContext()).getServletContext().getContextPath();
+                PageContext pageContext = (PageContext) getJspContext();
                 Cookie cookies[] = ((HttpServletRequest) pageContext.getRequest()).getCookies();
                 String localtListProduct = null;
                 String[] productsId = null;
@@ -53,40 +52,38 @@ public class TagGetElementsOfShoppingListByCookie extends SimpleTagSupport
                 if (localtListProduct != null)
                 {
                         productsId = localtListProduct.split(",");
-                }
 
-                ProductDAO productDAO = new JDBCProductDAO();
-                Product product = null; 
+                        ProductDAO productDAO = new JDBCProductDAO();
+                        Product product = null;
 
-               JspWriter out = getJspContext().getOut();
-                
-                try
-                {
-                        
-                        for (int i = 0; i < productsId.length; i++)
+                        JspWriter jspWriter = getJspContext().getOut();
+
+                        try
                         {
-                                product = productDAO.getByPrimaryKey(Integer.parseInt(productsId[i]));
-                                out.println("<tr>");
-                                out.println("<td class=\"td-img\">"
-                                            + "<img src=\""+basePath+"/"+product.getImg()+" alt=\""+product.getName()+"\" />"
-                                            + "</td>");
-                                out.println("<td class=\"td-name\">"
-                                            + "<span>"+product.getName()+"</span>"
-                                            + "</td>");
-                                out.println("<td class=\"td-buttons\">"
-                                            + "<a href=\"#\" title=\"comprato\"><i class=\"fas fa-check-circle\"></i></a>"
-                                            +"<a href=\"#\" title=\"elimina\"><i class=\"fas fa-ban\"></i></a>"
-                                            + "</td>");
-                                out.println("</tr>");
+
+                                for (int i = 0; i < productsId.length; i++)
+                                {
+                                        product = productDAO.getByPrimaryKey(Integer.parseInt(productsId[i]));
+                                        jspWriter.println("<tr>");
+                                        jspWriter.println("<td class=\"td-img\">"
+                                                    + "<img src=\"" + basePath + "/" + product.getImg() + " alt=\"" + product.getName() + "\" />"
+                                                    + "</td>");
+                                        jspWriter.println("<td class=\"td-name\">"
+                                                    + "<span>" + product.getName() + "</span>"
+                                                    + "</td>");
+                                        jspWriter.println("<td class=\"td-buttons\">"
+                                                    + "<a href=\"#\" title=\"comprato\"><i class=\"fas fa-check-circle\"></i></a>"
+                                                    + "<a href=\"#\" title=\"elimina\"><i class=\"fas fa-ban\"></i></a>"
+                                                    + "</td>");
+                                        jspWriter.println("</tr>");
+                                }
+
                         }
-                        
+                        catch (DAOException ex)
+                        {
+                                throw new JspException("errore durante ottenimento del nome di categoria");
+                        }
+
                 }
-                catch (DAOException ex)
-                {
-                        throw new JspException("errore durante ottenimento del nome di categoria");
-                }
-              
         }
 }
-
-

@@ -54,7 +54,7 @@
                         </form>
                 </div>
                 <div class="list-manage">
-                        <a class="btn btn-info w-100" href="#">gestisce</a>
+                        <a class="btn btn-info w-100" href="#">salvare lista</a>
                 </div>
                 <div class="list-content table-responsive">
                         <table class="table">
