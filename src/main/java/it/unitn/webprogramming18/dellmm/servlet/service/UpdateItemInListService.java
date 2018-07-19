@@ -23,16 +23,16 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class UpdateItemInListService extends HttpServlet
 {
-        
+
         @Override
         public void init() throws ServletException
         {
-                
+
         }
 
         /**
-         * aggiungere un elemento in lista eliminare /comprare un elemento in
-         * lista modalità per utente anonimo e utente registrato
+         * aggiungere un elemento in lista
+         * modalità per utente anonimo e utente registrato
          *
          * @param req
          * @param resp
@@ -46,18 +46,16 @@ public class UpdateItemInListService extends HttpServlet
                 listId = request.getParameter("listId");
                 String productId = null;
                 productId = request.getParameter("productId");
-                
+
                 if (listId == null || productId == null)
                 {
                         throw new ServletException("manca il parametro id della lista o id del prodotto");
                 }
 
-                
                 //in caso di utente anonimo
                 if (listId.equals("default"))
                 {
-                       
-                        
+
                         Cookie cookOfList = null;
                         Cookie[] cookies = request.getCookies();
                         //se utente ha una cookie della lista locale
@@ -71,13 +69,12 @@ public class UpdateItemInListService extends HttpServlet
                                         }
                                 }
                         }
-                        
-                        
+
                         //se la lista locale non esiste oppure è vuoto
                         if (cookOfList == null || cookOfList.equals(""))
                         {
                                 cookOfList = new Cookie("localShoppingList", productId);
-                                
+
                         }
                         //esiste già una lista locale non vuota
                         else
@@ -86,29 +83,42 @@ public class UpdateItemInListService extends HttpServlet
                                 String[] productIdList = cookOfList.getValue().split(",");
                                 for (String string : productIdList)
                                 {
-                                        if(productId.equals(string)){
-                                                
-                                                
-                                                
+                                        if (productId.equals(string))
+                                        {
+
                                                 //in caso esiste
                                                 //da gestire, in modo lanciare un messaggio sul schermo dell'utente
                                                 throw new ServletException("elemento è già presente nella lista!");
-                                                
-                                                
+
                                         }
                                 }
                                 //altrimenti aggiungere elemento
-                                cookOfList.setValue(cookOfList.getValue()+","+productId);
+                                cookOfList.setValue(cookOfList.getValue() + "," + productId);
                         }
-                        
+
                         cookOfList.setPath(getServletContext().getContextPath());
                         response.addCookie(cookOfList);
                 }
-                
+
                 //ritorna alla pagina di provenienza
                 response.sendRedirect(response.encodeRedirectURL(request.getHeader("Referer")));
+
+        }
+
+        
+        /**
+         * eliminare o comprato un elemento in
+         * lista 
+         * 
+         */
+        @Override
+        protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+        {
                 
                 
         }
         
+        
+        
+
 }

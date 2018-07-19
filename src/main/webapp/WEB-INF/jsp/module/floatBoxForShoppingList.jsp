@@ -60,7 +60,7 @@
                         <table class="table">
                                 <thead>
                                         <tr>
-                                                <th>immagini</th>
+                                                <th>img</th>
                                                 <th>nome</th>
                                                 <th>operazione</th>
                                         </tr>
