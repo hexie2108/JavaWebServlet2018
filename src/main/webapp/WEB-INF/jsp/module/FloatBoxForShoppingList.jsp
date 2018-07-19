@@ -7,7 +7,6 @@
 
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@taglib prefix="custom" uri="/WEB-INF/custom.tld"%>
 
 <div class="list-button-float-box">
         <button type="button" class="btn btn-info" data-toggle="collapse"  data-target="#list-float-box"><i class="fas fa-shopping-cart"></i><br><span>Mia</span><br><span>Lista</span></button>
@@ -66,7 +65,8 @@
                                         </tr>
                                 </thead>
                                 <tbody>
-                                        <custom:getElementsOfShppingListByCookie></custom:getElementsOfShppingListByCookie>
+                                        <tr>
+                                        </tr>
                                 </tbody>
                         </table>
                 </div>
