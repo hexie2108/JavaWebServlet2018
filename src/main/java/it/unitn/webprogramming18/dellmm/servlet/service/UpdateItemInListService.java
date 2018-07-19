@@ -23,11 +23,11 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class UpdateItemInListService extends HttpServlet
 {
-
+        
         @Override
         public void init() throws ServletException
         {
-
+                
         }
 
         /**
@@ -46,7 +46,7 @@ public class UpdateItemInListService extends HttpServlet
                 listId = request.getParameter("listId");
                 String productId = null;
                 productId = request.getParameter("productId");
-
+                
                 if (listId == null || productId == null)
                 {
                         throw new ServletException("manca il parametro id della lista o id del prodotto");
@@ -55,7 +55,7 @@ public class UpdateItemInListService extends HttpServlet
                 //in caso di utente anonimo
                 if (listId.equals("default"))
                 {
-
+                        
                         Cookie cookOfList = null;
                         Cookie[] cookies = request.getCookies();
                         //se utente ha una cookie della lista locale
@@ -72,16 +72,37 @@ public class UpdateItemInListService extends HttpServlet
                         //se la lista locale non esiste oppure è vuoto
                         if (cookOfList == null || cookOfList.equals(""))
                         {
-                                cookOfList = new Cookie("localShoppingList",productId);
+                                cookOfList = new Cookie("localShoppingList", productId);
                         }
                         //esiste già una lista locale non vuota
                         else
                         {
-
+                                //controlla se esiste già tale prodotto in lista
+                                String[] productIdList = cookOfList.getValue().split(",");
+                                for (String string : productIdList)
+                                {
+                                        if(productId.equals(string)){
+                                                
+                                                
+                                                
+                                                //in caso esiste
+                                                //da gestire, in modo lanciare un messaggio sul schermo dell'utente
+                                                
+                                                
+                                                
+                                        }
+                                }
+                                //altrimenti aggiungere elemento
+                                cookOfList.setValue(cookOfList.getValue()+","+productId);
                         }
-
+                        
+                        response.addCookie(cookOfList);
                 }
-
+                
+                response.encodeRedirectURL(request.getHeader("Referer"));
+                
+                
+                
         }
-
+        
 }
