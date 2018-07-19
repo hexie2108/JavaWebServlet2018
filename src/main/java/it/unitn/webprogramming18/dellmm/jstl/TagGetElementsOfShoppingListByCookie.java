@@ -66,7 +66,7 @@ public class TagGetElementsOfShoppingListByCookie extends SimpleTagSupport
                                         product = productDAO.getByPrimaryKey(Integer.parseInt(productsId[i]));
                                         jspWriter.println("<tr>");
                                         jspWriter.println("<td class=\"td-img\">"
-                                                    + "<img src=\"" + basePath + "/" + product.getImg() + " alt=\"" + product.getName() + "\" />"
+                                                    + "<img src=\"" + basePath + "/" + product.getImg() + "\" alt=\"" + product.getName() + "\" />"
                                                     + "</td>");
                                         jspWriter.println("<td class=\"td-name\">"
                                                     + "<span>" + product.getName() + "</span>"

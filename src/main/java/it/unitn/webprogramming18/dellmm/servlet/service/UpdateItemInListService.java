@@ -77,6 +77,7 @@ public class UpdateItemInListService extends HttpServlet
                         if (cookOfList == null || cookOfList.equals(""))
                         {
                                 cookOfList = new Cookie("localShoppingList", productId);
+                                
                         }
                         //esiste già una lista locale non vuota
                         else
@@ -100,6 +101,7 @@ public class UpdateItemInListService extends HttpServlet
                                 cookOfList.setValue(cookOfList.getValue()+","+productId);
                         }
                         
+                        cookOfList.setPath(getServletContext().getContextPath());
                         response.addCookie(cookOfList);
                 }
                 

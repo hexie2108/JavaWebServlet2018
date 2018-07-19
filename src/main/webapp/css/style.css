@@ -40,7 +40,7 @@
 }
 
 .front-page .main-container{
-        
+
 }
 
 
@@ -92,34 +92,7 @@
 }
 
 
-/*listButton.jsp------------------------------------------------------------*/
-.front-page .list-button-float-box{
-        position: fixed;
-        right: 5%;
-        top: 0;
-        margin-top: 250px;
-        z-index: 1020;
-}
 
-.front-page #list-float-box{
-
-
-        position: fixed;
-        right: 0;
-        top: 0;
-        z-index: 1025;
-        height: 100%;
-        width: 20%;
-        background-color: white;
-        box-shadow: 5px -10px 10px 1px #17a2b8;
-}
-
-.front-page #list-float-box .list-body{
-
-        margin-top: 100px;
-        padding: 20px
-
-}
 
 /*category.jsp-----------------------------------------------------------*/
 
@@ -168,3 +141,50 @@
 
 
 
+
+/*floatBoxForShoppingList.jsp------------------------------------------------------------*/
+.front-page .list-button-float-box{
+        position: fixed;
+        right: 5%;
+        top: 0;
+        margin-top: 250px;
+        z-index: 1020;
+}
+
+.front-page #list-float-box{
+
+
+        position: fixed;
+        right: 0;
+        top: 0;
+        z-index: 1025;
+        height: 100%;
+        width: 20%;
+        background-color: white;
+        box-shadow: 5px -10px 10px 1px #17a2b8;
+}
+
+
+
+.front-page #list-float-box .list-body{
+
+        margin-top: 100px;
+        padding: 20px
+
+}
+.front-page #list-float-box .list-body .list-content table tbody td{
+        text-align: center;
+        line-height: 50px;
+}
+
+
+.front-page #list-float-box .list-body .list-content table  tbody  td.td-img img{
+        width: 50px;
+}
+
+.front-page #list-float-box .list-body .list-content table  tbody  td.td-buttons a{
+        
+                width: 50%;
+                display: inline-block;
+        
+}
