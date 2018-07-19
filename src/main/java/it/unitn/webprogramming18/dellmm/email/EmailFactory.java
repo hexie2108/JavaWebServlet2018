@@ -9,7 +9,9 @@ import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Properties;
 
-public class EmailFactory {
+public class EmailFactory
+{
+
     private static EmailFactory instance = null;
     final private String smtpHost;
     final private String smtpPort;
@@ -17,11 +19,12 @@ public class EmailFactory {
     final private String password;
 
     private EmailFactory(
-            String smtpHost,
-            String smtpPort,
-            String username,
-            String password
-    ) {
+                String smtpHost,
+                String smtpPort,
+                String username,
+                String password
+    )
+    {
         // TODO: Aggiungere controllo null?
 
         this.smtpHost = smtpHost;
@@ -31,7 +34,8 @@ public class EmailFactory {
     }
 
     /**
-     * Function to configure EmailFactory. Call this before using the getInstance method
+     * Function to configure EmailFactory. Call this before using the
+     * getInstance method
      *
      * @param smtpHost smtp server hostname
      * @param smtpPort smtp server port
@@ -39,10 +43,14 @@ public class EmailFactory {
      * @param password account password
      * @throws EmailFactoryException
      */
-    public static void configure(String smtpHost, String smtpPort, String username, String password) throws EmailFactoryException {
-        if (instance == null) {
+    public static void configure(String smtpHost, String smtpPort, String username, String password) throws EmailFactoryException
+    {
+        if (instance == null)
+        {
             instance = new EmailFactory(smtpHost, smtpPort, username, password);
-        } else {
+        }
+        else
+        {
             throw new EmailFactoryException("EmailFactory already configured. You can call configure only one time");
         }
     }
@@ -53,29 +61,33 @@ public class EmailFactory {
      * @return a EmailFactory singleton
      * @throws EmailFactoryException
      */
-    public static EmailFactory getInstance() throws EmailFactoryException {
-        if (instance == null) {
+    public static EmailFactory getInstance() throws EmailFactoryException
+    {
+        if (instance == null)
+        {
             throw new EmailFactoryException("EmailFactory not yet configured. Call EmailFactory.configure(String smtpHost, String smtpPort, String username, String password) before use the class");
         }
         return instance;
     }
 
     /**
-     * Send a mail with the specified paramenters(using the account specified during configure)
+     * Send a mail with the specified paramenters(using the account specified
+     * during configure)
      *
      * @param service_name Name to show(as contact)
-     * @param subject      subject of the mail
-     * @param content      the content of the mail
-     * @param email_to     the mail recipient
+     * @param subject subject of the mail
+     * @param content the content of the mail
+     * @param email_to the mail recipient
      * @throws MessagingException
      * @throws UnsupportedEncodingException
      */
     public void sendMail(
-            String service_name,
-            String subject,
-            Multipart content,
-            String email_to
-    ) throws MessagingException, UnsupportedEncodingException {
+                String service_name,
+                String subject,
+                Multipart content,
+                String email_to
+    ) throws MessagingException, UnsupportedEncodingException
+    {
         Properties props = System.getProperties();
 
         props.setProperty("mail.smtp.host", smtpHost);
@@ -86,9 +98,11 @@ public class EmailFactory {
         props.setProperty("mail.smtp.starttls.enable", "true");
         props.setProperty("mail.debug", "true"); //TODO: Da togliere
 
-        Session session = Session.getInstance(props, new Authenticator() {
+        Session session = Session.getInstance(props, new Authenticator()
+        {
             @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
+            protected PasswordAuthentication getPasswordAuthentication()
+            {
                 return new PasswordAuthentication(username, password);
             }
         });

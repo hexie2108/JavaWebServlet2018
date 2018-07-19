@@ -2,11 +2,12 @@ package it.unitn.webprogramming18.dellmm.db.daos;
 
 import it.unitn.webprogramming18.dellmm.db.utils.DAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
-import it.unitn.webprogramming18.dellmm.javaBeans.List;
+import it.unitn.webprogramming18.dellmm.javaBeans.CategoryList;
+import it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList;
 
-public interface ListDAO extends DAO<List, Integer> {
+public interface ListDAO extends DAO<ShoppingList, Integer> {
     /**
-     * Returns the number of {@link List list} stored on the persistence system
+     * Returns the number of {@link ShoppingList list} stored on the persistence system
      * of the application.
      *
      * @return the number of records present into the storage system.
@@ -17,7 +18,7 @@ public interface ListDAO extends DAO<List, Integer> {
     public Long getCount() throws DAOException;
 
     /**
-     * Returns the {@link List list} with the primary key equals to the one
+     * Returns the {@link ShoppingList list} with the primary key equals to the one
      * passed as parameter.
      *
      * @param primaryKey the {@code id} of the {@code list} to get.
@@ -28,10 +29,20 @@ public interface ListDAO extends DAO<List, Integer> {
      *                      retrieving.
      */
     @Override
-    public List getByPrimaryKey(Integer primaryKey) throws DAOException;
+    public ShoppingList getByPrimaryKey(Integer primaryKey) throws DAOException;
 
     /**
-     * Returns the list of all the valid {@link List list} stored by the
+     * Persists the new list passed as parameter
+     * to the storage system.
+     * 
+     * @param list the new comment to insert as entry
+     * @return the id of the new persisted record.
+     * @throws DAOException if an error occurred during the persist action.
+     */
+    public Integer insert(ShoppingList list) throws DAOException;
+    
+    /**
+     * Returns the list of all the valid {@link ShoppingList list} stored by the
      * storage system.
      *
      * @return the list of all the valid {@code list}.
@@ -39,7 +50,7 @@ public interface ListDAO extends DAO<List, Integer> {
      *                      retrieving.
      */
     @Override
-    public java.util.List<List> getAll() throws DAOException;
+    public java.util.List<ShoppingList> getAll() throws DAOException;
 
     /**
      * Update the list passed as parameter and returns it.
@@ -49,7 +60,7 @@ public interface ListDAO extends DAO<List, Integer> {
      * @throws DAOException if an error occurred during the action.
      */
     @Override
-    public List update(List list) throws DAOException;
+    public ShoppingList update(ShoppingList list) throws DAOException;
 
     /**
      * Gets all the lists that the specified user owns
@@ -58,7 +69,7 @@ public interface ListDAO extends DAO<List, Integer> {
      * @return the list of the owned lists of the user
      * @throws DAOException if an error occurred during the action.
      */
-    public java.util.List<List> getOwnedUserListsByUserId(Integer userId) throws DAOException;
+    public java.util.List<ShoppingList> getOwnedUserListsByUserId(Integer userId) throws DAOException;
 
     /**
      * Gets all the lists shared with the specified user
@@ -67,5 +78,14 @@ public interface ListDAO extends DAO<List, Integer> {
      * @return the list of the lists shared with the specified user
      * @throws DAOException if an error occurred during the action.
      */
-    public java.util.List<List> getSharedWithUserListsByUserId(Integer userId) throws DAOException;
+    public java.util.List<ShoppingList> getSharedWithUserListsByUserId(Integer userId) throws DAOException;
+    
+    /**
+     * Gets the count of products in a list specified via listId, passed as parameter
+     * 
+     * @param listId
+     * @return Number of products in specified list
+     * @throws DAOException if an error occurred during the action.
+     */
+    public Integer getNumberOfProductsInListByListId(Integer listId) throws DAOException;
 }

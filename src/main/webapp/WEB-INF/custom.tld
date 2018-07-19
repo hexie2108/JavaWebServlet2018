@@ -1,0 +1,21 @@
+<taglib>
+        <tlib-version>1.0</tlib-version>
+        <jsp-version>2.0</jsp-version>
+        <short-name>tag customizzata</short-name>
+        <tag>
+                <name>getCategoryNameById</name>
+                <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagGetCategoryNameById</tag-class>
+                <body-content>scriptless</body-content>
+                <attribute>
+                        <name>categoryId</name>
+                        <required>true</required>
+                        <type>java.lang.Integer</type>
+                        <rtexprvalue>true</rtexprvalue>
+                </attribute>
+        </tag>
+        <tag>
+                <name>printAllCategoryProduct</name>
+                <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagPrintAllCategoryProduct</tag-class>
+                <body-content>scriptless</body-content>
+        </tag>
+</taglib>

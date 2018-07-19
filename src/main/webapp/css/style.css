@@ -1,0 +1,170 @@
+
+
+
+/*header.jsp----------------------------------------------------------------------------*/
+
+.front-page header .top-windows{
+
+        margin-top: 55px;
+        position: relative;
+        height: 250px;
+        background-image: url(../image/base/top-bg.jpg);
+        background-size: 100% auto;
+        background-position: bottom center;
+        background-repeat: no-repeat;
+}
+
+.front-page header .top-windows .search-section{
+        position: absolute;
+        bottom:0;
+
+}
+
+.front-page header .site-logo-section{
+        margin-left: 5%;
+        vertical-align: middle;
+}
+
+.front-page header .site-logo-section span.vertical{
+        height: 100%;
+        display: inline-block;
+        vertical-align: middle;
+}
+
+.front-page header .site-logo-section .logo{
+        width: 55px;
+}
+.front-page header .site-name-section h2{
+        line-height: 50px;
+        margin: 0;
+}
+
+.front-page .main-container{
+        
+}
+
+
+
+
+/*home.jsp----------------------------------------------------------------------------*/
+
+
+/*slider.jps----------------------------------------------------------------------------*/
+.front-page #slider {
+
+        height: 400px;
+}
+
+.front-page #slider .carousel-inner{
+        height: 400px;
+
+}
+.front-page #slider .carousel-inner .carousel-item{
+
+        text-align: center;
+}
+
+.front-page #slider .carousel-inner .carousel-item img{
+        height: 400px;
+}
+
+.front-page #slider .carousel-inner .carousel-item .carousel-caption{
+        bottom: 0px;
+        padding-top: 10px;
+        padding-bottom: 25px;
+        background-color: rgba(0, 0, 0, 0.43);
+        right: 0;
+        left: 0;
+}
+
+.front-page #slider .carousel-inner .carousel-item .carousel-caption span{
+        text-decoration: none;
+        font-size: 20px;
+        color: white;
+        font-weight: bold;
+
+}
+
+.front-page #slider .carousel-indicators{
+
+        bottom: -5px;
+
+}
+
+
+/*listButton.jsp------------------------------------------------------------*/
+.front-page .list-button-float-box{
+        position: fixed;
+        right: 5%;
+        top: 0;
+        margin-top: 250px;
+        z-index: 1020;
+}
+
+.front-page #list-float-box{
+
+
+        position: fixed;
+        right: 0;
+        top: 0;
+        z-index: 1025;
+        height: 100%;
+        width: 20%;
+        background-color: white;
+        box-shadow: 5px -10px 10px 1px #17a2b8;
+}
+
+.front-page #list-float-box .list-body{
+
+        margin-top: 100px;
+        padding: 20px
+
+}
+
+/*category.jsp-----------------------------------------------------------*/
+
+.front-page .category-main-section{
+
+
+
+}
+.front-page .category-main-section .category-logo{
+
+        width:100px;
+
+}
+
+
+/* productList.jsp -------------------------------------------------------*/
+
+
+
+.front-page  .product-list  .list-item .list-item-cat{
+        position: absolute;
+        right: 0;
+        top: 0;
+        background-color: rgb(23, 162, 184);
+        border-radius: 0 .25rem 0 .25rem;
+        font-size: 0.9rem;
+
+        padding: 2px;
+}
+.front-page  .product-list  .list-item .list-item-cat a{
+        color: white;
+        text-decoration: none;
+        transition: .15s;
+}
+.front-page  .product-list  .list-item .list-item-cat a:hover{
+        background-color: #138496;
+}
+
+.front-page .main-section .product-list  .list-item{
+        width: 32%;
+}
+
+.front-page .category-main-section .product-list  .list-item, .front-page .search-main-section .product-list  .list-item{
+        width: 32.25%;
+}
+
+
+

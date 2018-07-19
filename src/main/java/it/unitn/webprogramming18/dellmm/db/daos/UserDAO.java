@@ -76,4 +76,15 @@ public interface UserDAO extends DAO<User, Integer> {
      *                      retrieving.
      */
     public int checkUserRegisteredByEmail(String email) throws DAOException;
+
+
+    /**
+     * Insert a user in the database and return a User with all the fields(specified and automatically generated)
+     * @param first_name user's first name
+     * @param last_name user's surname
+     * @param email the email address of the user
+     * @param password password of the user
+     * @return generated user
+     */
+    public User generateUser( String first_name, String last_name, String email, String password) throws DAOException;
 }

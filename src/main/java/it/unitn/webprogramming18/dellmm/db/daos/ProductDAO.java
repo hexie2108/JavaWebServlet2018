@@ -17,6 +17,16 @@ public interface ProductDAO extends DAO<Product, Integer> {
      */
     @Override
     public Long getCount() throws DAOException;
+    
+    /**
+     * Persists the new product passed as parameter
+     * to the storage system.
+     * 
+     * @param product the new product to insert as entry
+     * @return the id of the new persisted record.
+     * @throws DAOException if an error occurred during the persist action.
+     */
+    public Integer insert(Product product) throws DAOException;
 
     /**
      * Returns the {@link Product product} with the primary key equals to the one
@@ -43,6 +53,38 @@ public interface ProductDAO extends DAO<Product, Integer> {
     @Override
     public List<Product> getAll() throws DAOException;
 
+    
+    /**
+     * recupera una lista di prodotto in base a id decrescente
+     * @param index  l'indice in cui inizia a prendere
+     * @param number numero di prodotti
+     * @return la lista di prodotto
+     * @throws DAOException 
+     */
+    public List<Product> getProductList(Integer index, Integer number) throws DAOException;
+    
+    /**
+     * recupera una lista di prodotto di una determina categoria in base a id decrescente
+     * @param catid id della categoria
+     * @param index  l'indice in cui inizia a prendere
+     * @param number numero di prodotti
+     * @return la lista di prodotto di una determinata categoria
+     * @throws DAOException 
+     */
+    public List<Product> getProductListByCatId(Integer catid, Integer index, Integer number) throws DAOException;
+    
+    /**
+     * dato un nome (anche incompleto), trovare i prodotti corrispondenti
+     * @param name nome da ricercare
+     * @param order indicare ordinamento, può essere "categoryName" o "productName"
+     * @param index  l'indice in cui inizia a prendere
+     * @param number numero di prodotti
+     * @return la lista di prodtto corrispondente
+     * @throws DAOException 
+     */
+    public List<Product> getProductListByNameSearch(String name, String order, Integer index, Integer number) throws DAOException;
+
+    
     /**
      * Update the product passed as parameter and returns it.
      *

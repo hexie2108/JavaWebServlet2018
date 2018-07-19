@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +45,31 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
         }
 
         return 0L;
+    }
+    
+    public Integer insert(Notification notification) throws DAOException {
+        if (notification == null) {
+            throw new DAOException("notification bean is null");
+        }
+        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO Notification (date, text, status, userId) VALUES (?,?,?,?)", 
+                                                                Statement.RETURN_GENERATED_KEYS)) {
+
+            stm.setTimestamp(1, notification.getDate());
+            stm.setString(2, notification.getText());
+            stm.setBoolean(3, notification.isStatus());
+            stm.setInt(4, notification.getUserId());
+
+            stm.executeUpdate();
+            
+            ResultSet rs = stm.getGeneratedKeys();
+            if (rs.next()) {
+                notification.setId(rs.getInt(1));
+            }
+            
+            return notification.getId();
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to insert the new notification", ex);
+        }
     }
 
     @Override

@@ -18,6 +18,16 @@ public interface CategoryListDAO extends DAO<CategoryList, Integer> {
      */
     @Override
     public Long getCount() throws DAOException;
+    
+    /**
+     * Persists the new categoryList passed as parameter
+     * to the storage system.
+     * 
+     * @param categoryList the new categoryList to insert as entry
+     * @return the id of the new persisted record.
+     * @throws DAOException if an error occurred during the persist action.
+     */
+    public Integer insert(CategoryList categoryList) throws DAOException;
 
     /**
      * Returns the {@link CategoryList categoryList} with the primary key equals to the one
