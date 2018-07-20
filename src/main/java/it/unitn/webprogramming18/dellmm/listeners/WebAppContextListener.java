@@ -46,7 +46,7 @@ public class WebAppContextListener implements ServletContextListener
         /*inizializza c3p0*/
          C3p0Util.initDBPool(dburl, dbuser, dbpwd);
          
-         /*
+         
         try
         {
              
@@ -60,7 +60,7 @@ public class WebAppContextListener implements ServletContextListener
             throw new RuntimeException(ex);
 
         }
-        */
+        
         /* Init email */
         final String smtpHostname = sce.getServletContext().getInitParameter("smtpHostname");
         final String smtpPort = sce.getServletContext().getInitParameter("smtpPort");

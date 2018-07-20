@@ -54,6 +54,15 @@ public interface UserDAO extends DAO<User, Integer> {
     public User update(User user) throws DAOException;
 
     /**
+     * Return the user with the email specified
+     *
+     * @param email    the email of the user to return
+     * @return The user requested
+     * @throws DAOException
+     */
+    public User getByEmail(String email) throws DAOException;
+
+    /**
      * Return the user with the email and password specified
      *
      * @param email    the email of the user to return
@@ -62,6 +71,14 @@ public interface UserDAO extends DAO<User, Integer> {
      * @throws DAOException
      */
     public User getByEmailAndPassword(String email, String password) throws DAOException;
+
+    /**
+     *
+     * @param resetLink   the resetLink used(that is linked with the user)
+     * @param newPassword the new password to set
+     * @throws DAOException
+     */
+    public void changePassword(String resetLink, String newPassword) throws DAOException;
 
     /**
      * Given an email, the function checks if the user is registered in the DB,

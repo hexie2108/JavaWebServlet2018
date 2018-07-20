@@ -106,7 +106,7 @@
                                                 <ul class="navbar-nav nav-justified justify-content-center w-100">
                                                         <li class="nav-item active">
                                                                 <a class="nav-link " href="${pageContext.request.contextPath}" title="home">
-                                                                         HOME
+                                                                        HOME
                                                                 </a>
                                                         </li>
                                                         <li class="nav-item">
