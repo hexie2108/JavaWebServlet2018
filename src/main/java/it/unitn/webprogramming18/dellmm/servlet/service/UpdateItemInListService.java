@@ -31,8 +31,8 @@ public class UpdateItemInListService extends HttpServlet
         }
 
         /**
-         * aggiungere un elemento in lista
-         * modalità per utente anonimo e utente registrato
+         * aggiungere un elemento in lista modalità per utente anonimo e utente
+         * registrato
          *
          * @param req
          * @param resp
@@ -51,6 +51,9 @@ public class UpdateItemInListService extends HttpServlet
                 {
                         throw new ServletException("manca il parametro id della lista o id del prodotto");
                 }
+
+                boolean repeatItem = false;
+                String resultOfAddItem = null;
 
                 //in caso di utente anonimo
                 if (listId.equals("default"))
@@ -74,6 +77,9 @@ public class UpdateItemInListService extends HttpServlet
                         if (cookOfList == null || cookOfList.equals(""))
                         {
                                 cookOfList = new Cookie("localShoppingList", productId);
+                                cookOfList.setPath(getServletContext().getContextPath());
+                                response.addCookie(cookOfList);
+                                resultOfAddItem = "ok";
 
                         }
                         //esiste già una lista locale non vuota
@@ -87,38 +93,40 @@ public class UpdateItemInListService extends HttpServlet
                                         {
 
                                                 //in caso esiste
-                                                //da gestire, in modo lanciare un messaggio sul schermo dell'utente
-                                                throw new ServletException("elemento è già presente nella lista!");
-
+                                                //lanciare un messaggio sul schermo dell'utente
+                                                //throw new ServletException("elemento è già presente nella lista!");
+                                                repeatItem = true;
+                                                resultOfAddItem = "error";
                                         }
                                 }
-                                //altrimenti aggiungere elemento
-                                cookOfList.setValue(cookOfList.getValue() + "," + productId);
+                                if (!repeatItem)
+                                {
+                                        //altrimenti aggiungere elemento
+                                        cookOfList.setValue(cookOfList.getValue() + "," + productId);
+                                        cookOfList.setPath(getServletContext().getContextPath());
+                                        response.addCookie(cookOfList);
+                                        resultOfAddItem = "ok";
+                                }
                         }
 
-                        cookOfList.setPath(getServletContext().getContextPath());
-                        response.addCookie(cookOfList);
                 }
 
                 //ritorna alla pagina di provenienza
-                response.sendRedirect(response.encodeRedirectURL(request.getHeader("Referer")));
+                String prevUrl = request.getHeader("Referer");
+                //passare lo risultato  di inserimento
+               request.getSession().setAttribute("resultOfAddItem", resultOfAddItem);
+                response.sendRedirect(response.encodeRedirectURL(prevUrl));
 
         }
 
-        
         /**
-         * eliminare o comprato un elemento in
-         * lista 
-         * 
+         * eliminare o comprato un elemento in lista
+         *
          */
         @Override
         protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
         {
-                
-                
+
         }
-        
-        
-        
 
 }

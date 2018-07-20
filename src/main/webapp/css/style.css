@@ -159,7 +159,7 @@
         top: 0;
         z-index: 1025;
         height: 100%;
-        width: 20%;
+        width: 300px;
         background-color: white;
         box-shadow: 5px -10px 10px 1px #17a2b8;
 }
@@ -172,6 +172,11 @@
         padding: 20px
 
 }
+.front-page #list-float-box .list-body .list-content{
+        
+        overflow-x: hidden;
+}
+
 .front-page #list-float-box .list-body .list-content table tbody td{
         text-align: center;
         line-height: 50px;

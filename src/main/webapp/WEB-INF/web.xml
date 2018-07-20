@@ -57,7 +57,7 @@
         <context-param>
                 <description>quantià di item per home</description>
                 <param-name>quantityItemForHome</param-name>
-                <param-value>9</param-value>
+                <param-value>12</param-value>
         </context-param>
         <context-param>
                 <description>quantià di item per categoria</description>

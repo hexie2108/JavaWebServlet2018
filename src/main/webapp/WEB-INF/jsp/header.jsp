@@ -29,6 +29,8 @@
                 <script type="text/javascript" src="${pageContext.request.contextPath}/libs/bootstrap/bootstrap.min.js"></script>
                 <!--js personale di sito-->
                 <script type="text/javascript" src="${pageContext.request.contextPath}/js/script.js"></script>
+                <!--jQuery personale di sito-->
+                <script type="text/javascript" src="${pageContext.request.contextPath}/js/jqscript.js"></script>
                 
                 <!--css di bootstrap-->
                 <link rel="stylesheet" href="${pageContext.request.contextPath}/libs/bootstrap/bootstrap.min.css" type="text/css" media="all">
