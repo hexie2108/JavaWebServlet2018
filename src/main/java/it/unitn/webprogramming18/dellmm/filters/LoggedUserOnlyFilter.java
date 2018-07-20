@@ -21,19 +21,19 @@ public class LoggedUserOnlyFilter implements Filter
 
                 HttpSession session = request.getSession(false);
 
-                // Se l'utente non ии autenticato
+                // Se l'utente non ├и autenticato
                 if (session == null || session.getAttribute("user") == null)
                 {
 
                         if (!request.getMethod().equalsIgnoreCase("GET"))
                         {
-                                //  Se la richiesta non ии un get la rigettiamo immediatamente
+                                //  Se la richiesta non ├и un get la rigettiamo immediatamente
 
                                 response.sendError(401, "Authentication required");
                         }
                         else
                         {
-                                // Se la richiesta ии un get facciamo un redirect alla pagina di login cercando di mantenere l'url
+                                // Se la richiesta ├и un get facciamo un redirect alla pagina di login cercando di mantenere l'url
                                 // in nextUrl in modo da reindirizzare l'utente automaticamente a login avvenuto con successo
 
                                 String contextPath = request.getServletContext().getContextPath();
@@ -59,7 +59,7 @@ public class LoggedUserOnlyFilter implements Filter
                         return;
                 }
 
-                // Se l'utente ии autenticato facciamo continuare
+                // Se l'utente ├и autenticato facciamo continuare
                 chain.doFilter(req, resp);
         }
 

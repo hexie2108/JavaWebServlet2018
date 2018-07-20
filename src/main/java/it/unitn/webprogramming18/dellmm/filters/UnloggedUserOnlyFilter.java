@@ -21,19 +21,19 @@ public class UnloggedUserOnlyFilter implements Filter
 
                 HttpSession session = request.getSession(false);
 
-                // Se l'utente �� autenticato
+                // Se l'utente è autenticato
                 if (session != null && session.getAttribute("user") != null)
                 {
 
                         if (!request.getMethod().equalsIgnoreCase("GET"))
                         {
-                                //  Se la richiesta non �� un get la rigettiamo immediatamente
+                                //  Se la richiesta non è un get la rigettiamo immediatamente
 
                                 response.sendError(401, "Authentication required");
                         }
                         else
                         {
-                                // Se la richiesta �� un get facciamo un redirect alla pagina che chiede all'utente se fare logout
+                                // Se la richiesta è un get facciamo un redirect alla pagina che chiede all'utente se fare logout
                                 // cercando di mantenere l'url  in nextUrl in modo da reindirizzare l'utente automaticamente a
                                 // login avvenuto con successo
 
@@ -60,7 +60,7 @@ public class UnloggedUserOnlyFilter implements Filter
                         return;
                 }
 
-                // Se l'utente non �� autenticato facciamo continuare
+                // Se l'utente non è autenticato facciamo continuare
                 chain.doFilter(req, resp);
         }
 

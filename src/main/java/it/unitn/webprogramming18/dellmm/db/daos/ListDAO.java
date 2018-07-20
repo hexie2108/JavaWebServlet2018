@@ -4,6 +4,7 @@ import it.unitn.webprogramming18.dellmm.db.utils.DAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.javaBeans.CategoryList;
 import it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList;
+import java.util.List;
 
 public interface ListDAO extends DAO<ShoppingList, Integer> {
     /**
@@ -50,7 +51,7 @@ public interface ListDAO extends DAO<ShoppingList, Integer> {
      *                      retrieving.
      */
     @Override
-    public java.util.List<ShoppingList> getAll() throws DAOException;
+    public List<ShoppingList> getAll() throws DAOException;
 
     /**
      * Update the list passed as parameter and returns it.
@@ -69,7 +70,7 @@ public interface ListDAO extends DAO<ShoppingList, Integer> {
      * @return the list of the owned lists of the user
      * @throws DAOException if an error occurred during the action.
      */
-    public java.util.List<ShoppingList> getOwnedUserListsByUserId(Integer userId) throws DAOException;
+    public List<ShoppingList> getOwnedUserListsByUserId(Integer userId) throws DAOException;
 
     /**
      * Gets all the lists shared with the specified user
@@ -78,7 +79,7 @@ public interface ListDAO extends DAO<ShoppingList, Integer> {
      * @return the list of the lists shared with the specified user
      * @throws DAOException if an error occurred during the action.
      */
-    public java.util.List<ShoppingList> getSharedWithUserListsByUserId(Integer userId) throws DAOException;
+    public List<ShoppingList> getSharedWithUserListsByUserId(Integer userId) throws DAOException;
     
     /**
      * Gets the count of products in a list specified via listId, passed as parameter
