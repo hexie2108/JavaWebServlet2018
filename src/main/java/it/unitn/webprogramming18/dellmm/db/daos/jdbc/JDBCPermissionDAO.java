@@ -29,7 +29,7 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
                 permission.setUserId(rs.getInt("userId"));
                 permission.setAddObject(rs.getBoolean("addObject"));
                 permission.setModifyList(rs.getBoolean("modifyList"));
-                permission.setDeleteList(rs.getBoolean("deleteObject"));
+                permission.setDeleteObject(rs.getBoolean("deleteObject"));
                 permission.setDeleteList(rs.getBoolean("deleteList"));
 
                 return permission;
@@ -237,7 +237,7 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
                 }
 
                 CON = C3p0Util.getConnection();
-                try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Permission WHERE userId = ? AND listId == ?"))
+                try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Permission WHERE userId = ? AND listId = ?"))
                 {
                         stm.setInt(1, userId);
                         stm.setInt(2, listId);

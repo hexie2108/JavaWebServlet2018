@@ -34,7 +34,7 @@
                                                         <c:if test="${not empty sessionScope.allMyList}">
                                                                 <c:forEach var="i" begin="0" end="${sessionScope.allMyList.size()}">
                                                                         <c:if test="${sessionScope.allMyListPermission[i].addObject == true}">
-                                                                                <option value="${sessionScope.allMyList[i].id}" ${sessionScope.allMyList[i].id == sessionScope.myListId?"selected=\"selected\"":""}>${sessionScope.allMyList[i].name}</option>
+                                                                                <option value="${sessionScope.allMyList[i].id}" ${sessionScope.allMyList[i].id == sessionScope.myList.id?"selected=\"selected\"":""}>${sessionScope.allMyList[i].name}</option>
                                                                                 <c:set var="hasAtLestOneList" value="1"></c:set>
                                                                         </c:if>
                                                                 </c:forEach>

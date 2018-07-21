@@ -23,13 +23,12 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 public class TagPrintAllCategoryProduct extends SimpleTagSupport
 {
 
-        CategoryProductDAO categoryProductDAO;
-                    
+        CategoryProductDAO categoryProductDAO = new JDBCCategoryProductDAO();
+
         @Override
         public void doTag() throws JspException, IOException
         {
-
-                categoryProductDAO = new JDBCCategoryProductDAO();
+                
                 List<CategoryProduct> categoryList;
                 try
                 {

@@ -145,7 +145,7 @@ public class LoginServlet extends HttpServlet
 
                 /*--------------------------------------------------------------------------------------------------------------------*/
                 //non ha ottenuto ancora selzionato una lista
-                if (session.getAttribute("myListId") == null)
+                if (session.getAttribute("myList") == null)
                 {
                         List<ShoppingList> allMyList = new ArrayList();
                         List<Permission> allMyListPermission = new ArrayList();
@@ -156,7 +156,7 @@ public class LoginServlet extends HttpServlet
                                 //ottiene tutte liste dell'utente
                                 allMyList = listDAO.getAllListByUserId(user.getId());
                                 //se possiede qualche liste
-                                if (allMyList != null || allMyList.size() > 0)
+                                if (allMyList != null && allMyList.size() > 0)
                                 {
                                         
                                         Permission permission = null;
@@ -169,14 +169,10 @@ public class LoginServlet extends HttpServlet
                                         
                                         productsOfMyList = productDAO.getProductsInListByListId(allMyList.get(0).getId());
                                         
-                                        //se la lista corrente non è vuota, memorizza la lista di prodotto presente
-                                        if(productsOfMyList!=null && productsOfMyList.size()>0){
-                                                session.setAttribute("productsOfMyList", productsOfMyList);
-                                        }
+                                       
                                         //memorizza id della prima come la liste corrente
-                                        session.setAttribute("myListId", allMyList.get(0).getId());
-                                         //memoria relativi permessi della lista corrente
-                                        session.setAttribute("myListPermission", allMyListPermission.get(0));
+                                        session.setAttribute("myList", allMyList.get(0));
+                                       
                                         //memoriazza tutte le liste che manipolabile
                                         session.setAttribute("allMyList", allMyList);
                                          //memorizza relativi permessi su tutte le liste

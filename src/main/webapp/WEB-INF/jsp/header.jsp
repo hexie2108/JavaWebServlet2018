@@ -18,9 +18,9 @@
                 <!--titolo della pagina-->
                 <title>
                         <c:out value="${head_title}" default="non hai ancora un titolo"></c:out>
-                </title>
-                <!--icone del sito-->
-                 <link rel="icon" href="${pageContext.request.contextPath}/favicon.ico" type="image/vnd.microsoft.icon"> 
+                        </title>
+                        <!--icone del sito-->
+                        <link rel="icon" href="${pageContext.request.contextPath}/favicon.ico" type="image/vnd.microsoft.icon"> 
                 <link rel="shortcut icon" href="${pageContext.request.contextPath}/favicon.ico" type="image/vnd.microsoft.icon"> 
 
                 <!--jquery-->
@@ -31,7 +31,7 @@
                 <script type="text/javascript" src="${pageContext.request.contextPath}/js/script.js"></script>
                 <!--jQuery personale di sito-->
                 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jqscript.js"></script>
-                
+
                 <!--css di bootstrap-->
                 <link rel="stylesheet" href="${pageContext.request.contextPath}/libs/bootstrap/bootstrap.min.css" type="text/css" media="all">
                 <!--css di fontawesome-->
@@ -40,67 +40,82 @@
                 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css" type="text/css" media="all">
 
         </head>
-        
+
         <body class="front-page">
                 <div class="container">
                         <!-- la sezione di header-->
                         <header class="header">
-                                
+
                                 <!-- barra menu top-->
-                                <div class="top-bar  fixed-top row bg-dark ">
-                                        
-                                        <div class="site-logo-section col-1">
-                                                <span class="vertical"></span>
-                                                        <img class="logo" src="${pageContext.request.contextPath}/image/base/logo.png" alt="logo"/>
-                                                        
+                                <div class="top-bar  fixed-top bg-dark ">
+
+                                        <div class="site-logo-section">
+                                                
+                                                <img class="logo d-inline" src="${pageContext.request.contextPath}/image/base/logo.png" alt="logo"/>
+                                                <h2 class="text-white d-inline">Il nome del sito</h2>
                                         </div> 
-                                                        
-                                        <div class="site-name-section  col-6">
-                                                <h2 class="text-white">Il nome del sito</h2>
-                                         </div>
-                                        <nav class="navbar navbar-expand-sm navbar-dark col-4" >
-                                                <ul class="navbar-nav ">
-                                                        <li class="nav-item">
-                                                                <a class="nav-link" href="#">
-                                                                        <i class="fas fa-list"></i> MIA LISTA
-                                                                </a>
-                                                        </li>
-                                                        <li class="nav-item">
-                                                                <a class="nav-link" href="#">
-                                                                        <i class="fa fa-envelope"></i> NOTIFICA
-                                                                </a>
-                                                        </li>
-                                                        <li class="nav-item">
-                                                                <a class="nav-link" href="#">
-                                                                        <i class="fas fa-user-plus"></i> ISCRIVERSI
-                                                                </a>
-                                                        </li>
-                                                        <li class="nav-item">
-                                                                <a class="nav-link" href="#">
-                                                                        <i class="fas fa-lock"></i>   LOGIN
-                                                                </a>
-                                                        </li>
-                                                </ul>      
-                                        </nav>
-                                </div>
-                                                        
-                                 <!-- finestra di image top-->                       
-                                <div class="top-windows ">
+
                                         
+                                        <div class="site-top-menu float-right">
+                                                <nav class="navbar navbar-expand-sm navbar-dark" >
+                                                        <ul class="navbar-nav ">
+                                                                <c:if test="${empty sessionScope.user}">
+
+                                                                        <li class="nav-item">
+                                                                                <a class="nav-link" href="#">
+                                                                                        <i class="fas fa-user-plus"></i> ISCRIVERSI
+                                                                                </a>
+                                                                        </li>
+                                                                        <li class="nav-item">
+                                                                                <a class="nav-link" href="${pageContext.request.contextPath}/login">
+                                                                                        <i class="fas fa-sign-in-alt"></i>   LOGIN
+                                                                                </a>
+                                                                        </li>
+                                                                </c:if>
+                                                                <c:if test="${not empty sessionScope.user}">
+                                                                        <li class="nav-item">
+                                                                                <a class="nav-link" href="#">
+                                                                                        <i class="fas fa-list"></i> MIA LISTA
+                                                                                </a>
+                                                                        </li>
+                                                                        <li class="nav-item">
+                                                                                <a class="nav-link" href="#">
+                                                                                        <i class="fa fa-envelope"></i> NOTIFICA
+                                                                                </a>
+                                                                        </li>
+                                                                        <li class="nav-item">
+                                                                                <a class="nav-link" href="#">
+                                                                                        <i class="fas fa-user"></i></i> PROFILO
+                                                                                </a>
+                                                                        </li>
+                                                                        <li class="nav-item">
+                                                                                <a class="nav-link" href="${pageContext.request.contextPath}/logout">
+                                                                                        <i class="fas fa-sign-out-alt"></i> LOGOUT
+                                                                                </a>
+                                                                        </li>
+                                                                </c:if>        
+                                                        </ul>      
+                                                </nav>
+                                        </div>
+                                </div>
+
+                                <!-- finestra di image top-->                       
+                                <div class="top-windows ">
+
                                         <div class="search-section col">
                                                 <form class="mt-5" action="${pageContext.request.contextPath}/search">
                                                         <div class="input-group mb-3">
                                                                 <input type="search" class="form-control" name="searchWords" placeholder="cerchi qualcosa?" required="required">
                                                                 <div class="input-group-append">
                                                                         <input class="btn btn-info" type="submit" value="CERCA"/>
-                                                                        
+
                                                                 </div>
                                                         </div> 
                                                 </form>
                                         </div>
                                 </div>
-                                                        
-                               <!--menu principale-->                                                
+
+                                <!--menu principale-->                                                
                                 <div class="menu-nav">
                                         <nav class="navbar navbar-expand-sm bg-info navbar-dark" >
                                                 <ul class="navbar-nav nav-justified justify-content-center w-100">
@@ -129,15 +144,15 @@
                                                                         link4
                                                                 </a>
                                                         </li>
-                                                       
+
                                                 </ul>    
                                         </nav>
                                 </div>
 
                         </header>
-                                                                         
-                                                                         
-                         <!-- la sezione body principale-->                                                 
+
+
+                        <!-- la sezione body principale-->                                                 
                         <section class="main-container row mb-2 mt-2 pb-1 pt-1">
 
 

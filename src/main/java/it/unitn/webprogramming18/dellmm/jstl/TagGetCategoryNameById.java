@@ -7,14 +7,9 @@ package it.unitn.webprogramming18.dellmm.jstl;
 
 import it.unitn.webprogramming18.dellmm.db.daos.CategoryProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCCategoryProductDAO;
-import it.unitn.webprogramming18.dellmm.db.utils.DAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import java.io.IOException;
-import java.io.StringWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 /**
@@ -23,7 +18,7 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
  */
 public class TagGetCategoryNameById extends SimpleTagSupport
 {
-        CategoryProductDAO categoryProductDAO;
+        CategoryProductDAO categoryProductDAO= new JDBCCategoryProductDAO();
         
         private Integer categoryId;
        // private StringWriter sw = new StringWriter();
@@ -40,7 +35,7 @@ public class TagGetCategoryNameById extends SimpleTagSupport
         public void doTag() throws JspException, IOException
         {
                 if(this.categoryId != null){
-                        categoryProductDAO = new JDBCCategoryProductDAO();
+                        
                         String categoryName;
                         try {
                                 categoryName = categoryProductDAO.getByPrimaryKey(categoryId).getName();

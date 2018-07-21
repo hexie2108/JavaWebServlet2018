@@ -21,23 +21,22 @@
 }
 
 .front-page header .site-logo-section{
-        margin-left: 5%;
-        vertical-align: middle;
-}
-
-.front-page header .site-logo-section span.vertical{
-        height: 100%;
-        display: inline-block;
-        vertical-align: middle;
+    float: left;
+    margin-left: 1%;
 }
 
 .front-page header .site-logo-section .logo{
         width: 55px;
+        vertical-align: bottom;
 }
-.front-page header .site-name-section h2{
-        line-height: 50px;
-        margin: 0;
+.front-page header .site-logo-section h2{
+        line-height: 55px;
 }
+
+.front-page header .site-top-menu{
+        margin-right: 1%;
+}
+
 
 .front-page .main-container{
 
@@ -195,9 +194,13 @@
         width: 50px;
 }
 
+.front-page #list-float-box .list-body .list-content table  tbody  td.td-buttons{
+        width:70px;
+}
+
 .front-page #list-float-box .list-body .list-content table  tbody  td.td-buttons a{
 
-        width: 50%;
+        width: 40%;
         display: inline-block;
 
 }

@@ -69,7 +69,7 @@
                                 <!-- per memorizzare quale lista è stato scelto si usa un attributo sessione che memorizza list id -->
 
                                 <!-- se utente non ha neanche una lista-->
-                                <c:if test="${empty sessionScope.myListId}">
+                                <c:if test="${empty sessionScope.myList}">
 
                                         <div class="list-selector mb-2">
                                                 <h2>
@@ -82,7 +82,7 @@
                                 </c:if>
 
                                 <!-- se utente ha alcuna lista-->
-                                <c:if test="${not empty sessionScope.myListId}">
+                                <c:if test="${not empty sessionScope.myList}">
                                         <div class="list-selector mb-2">
                                                 <form action="#">
                                                         <label  for="select-list" class="d-block">Seleziona la lista:</label>
@@ -102,7 +102,7 @@
                                                 <form action="#">
                                                         <label  for="type-list"  class="d-block">Tipo della lista:</label>
                                                         <select id="type-list" class="form-control custom-select w-50">
-                                                                <custom:printAllCategoryList catoryIdOfCurrentList="-1"></custom:printAllCategoryList>
+                                                                <custom:printAllCategoryList catoryIdOfCurrentList="${sessionScope.myList.categoryList}"></custom:printAllCategoryList>
                                                                 </select>
                                                                 <div class="d-inline-block w-25">
                                                                         <input class="btn btn-info" type="submit" value="cambia"/>
@@ -110,7 +110,8 @@
                                                         </form>
                                                 </div>
                                                 <div class="list-manage">
-                                                        <a class="btn btn-info w-100" href="#">salvare lista</a>
+                                                        <a class="btn btn-info w-100" href="#">gestire la lista</a>
+
                                                 </div>
                                                 <div class="list-content table-responsive">
                                                         <table class="table">
@@ -123,25 +124,9 @@
                                                                 </thead>
                                                                 <tbody>
 
-                                                                <c:forEach var="product" items="${sessionScope.productsOfMyList}">
-
-                                                                        <tr>
-                                                                                <td class="td-img">
-                                                                                        <img src="${pageContext.request.contextPath}/${product.img}"  alt="${product.name}" />
-                                                                                </td>
-                                                                                <td class="td-name">
-                                                                                        <span>${product.name}</span>
-                                                                                </td>
-                                                                                <td class="td-buttons">
-                                                                                        <a href="#" title="comprato"><i class="fas fa-check-circle"></i></a>
-                                                                                                <c:if test="${sessionScope.myListPermission.deleteObject==true}">
-                                                                                                <a href="#" title="elimina"><i class="fas fa-ban"></i></a>
-                                                                                                </c:if>
-                                                                                </td>
-                                                                        </tr>
-                                                                </c:forEach>
-
-                                                        </tbody>
+                                                                        <custom:getProductListByListId listId="${sessionScope.myList.id}">
+                                                                        </custom:getProductListByListId>
+                                                                </tbody>
                                                 </table>
                                         </div>
                                 </c:if>       
