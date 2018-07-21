@@ -37,6 +37,11 @@
                                         <!-- utente loggato-->
                                         <!-- per memorizzare quale lista è stato scelto si usa un attributo sessione che memorizza list id -->
                                         
+                                        <c:if test="${empty sessionScope.myListId}">
+                                                
+                                                
+                                                
+                                        </c:if>
                                         
                                 </c:otherwise>
                         </c:choose>

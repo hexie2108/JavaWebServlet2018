@@ -76,10 +76,18 @@ public interface ListDAO extends DAO<ShoppingList, Integer> {
      * Gets all the lists shared with the specified user
      *
      * @param userId
-     * @return the list of the lists shared with the specified user
+     * @return the list of the shopping lists shared with the specified user
      * @throws DAOException if an error occurred during the action.
      */
     public List<ShoppingList> getSharedWithUserListsByUserId(Integer userId) throws DAOException;
+    
+    /**
+     * Gets all the lists of one specified user
+     * @param userId
+     * @return the list of the shoppinglists
+     * @throws DAOException 
+     */
+    public List<ShoppingList> getAllListByUserId(Integer userId) throws DAOException;
     
     /**
      * Gets the count of products in a list specified via listId, passed as parameter

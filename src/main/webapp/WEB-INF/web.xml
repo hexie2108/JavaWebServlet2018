@@ -81,7 +81,7 @@
         </listener>
         <!-- FILTERS -->
 
-        <!-- memorizza la array di id della lisa di spesa per l'utente anonimo e registrato-->
+        <!-- 
         <filter>
                 <filter-name>SetShoppingListIdsInSession</filter-name>
                 <filter-class>it.unitn.webprogramming18.dellmm.filters.SetShoppingListIdsInSession</filter-class>
@@ -90,7 +90,7 @@
                 <filter-name>SetShoppingListIdsInSession</filter-name>
                 <url-pattern>/</url-pattern>
         </filter-mapping>
-    
+    -->
     
         <filter>
                 <filter-name>LoggedUserOnlyFilter</filter-name>
