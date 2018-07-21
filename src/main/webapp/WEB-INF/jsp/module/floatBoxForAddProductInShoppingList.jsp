@@ -23,16 +23,37 @@
 
                         <!-- box-body -->
                         <div class="modal-body">
-                                <!-- utente anonimo-->
+                                
                                 <form action="${pageContext.request.contextPath}/service/UpdateItemInListService" method="POST">
                                         <label  for="select-list" class="d-block">Seleziona la lista:</label>
-                                        <select id="select-list" class="form-control custom-select w-50" name="listId">
-                                                <option value="default">Default list</option>
+                                        <select id="select-list" class="form-control custom-select w-100" name="listId">
+                                                <c:if test="${empty sessionScope.user}">
+                                                        <option value="default">Default list</option>
+                                                </c:if>
+                                                <c:if test="${not empty sessionScope.user}">
+                                                        <c:if test="${not empty sessionScope.allMyList}">
+                                                                <c:forEach var="i" begin="0" end="${sessionScope.allMyList.size()}">
+                                                                        <c:if test="${sessionScope.allMyListPermission[i].addObject == true}">
+                                                                                <option value="${sessionScope.allMyList[i].id}" ${sessionScope.allMyList[i].id == sessionScope.myListId?"selected=\"selected\"":""}>${sessionScope.allMyList[i].name}</option>
+                                                                                <c:set var="hasAtLestOneList" value="1"></c:set>
+                                                                        </c:if>
+                                                                </c:forEach>
+                                                        </c:if>
+
+                                                </c:if>
+
                                         </select>
-                                        <div class="d-inline-block w-25">
+                                        
+                                        <div class="operation mt-3">
                                                 <input id="productIdToAdd" type="hidden" name="productId" value="1"/>
-                                                <input class="btn btn-info disabled" type="submit" value="aggiunge"/>
+                                                <c:if test="${empty sessionScope.user || not empty hasAtLestOneList}">   
+                                                        <input class="btn btn-info d-inline-block" type="submit" value="aggiunge" />
+                                                </c:if>
+                                                <a class="btn btn-info d-inline-block" href="#">crea una nuova</a>       
                                         </div>
+                                         
+                                        
+                                        
                                 </form>
                         </div>
 

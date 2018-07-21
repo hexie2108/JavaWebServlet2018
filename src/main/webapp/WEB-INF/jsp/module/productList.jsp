@@ -24,14 +24,14 @@
                                 </c:if>
                         </div>
                         
-                        <div class="list-item-title card-title">
+                        <div class="list-item-title card-title mb-2 mt-2">
                                 ${product.name}
                         </div>
-                        <div class="list-item_info text-center row">
-                                <div class="list-item-log card-text d-inline-block col">
+                        <div class="list-item_info text-center mb-2">
+                                <div class="list-item-log card-text d-inline-block w-50">
                                         ${product.logo}
                                 </div>
-                                <div class="list-item-add  d-inline-block col">
+                                <div class="list-item-add  d-inline-block ">
                                         <button class="btn btn-info" data-toggle="modal" data-target="#boxAddItem" onclick="setProductIdForAddInList(${product.id})">Aggiunge</button>
                                 </div>
                         </div>

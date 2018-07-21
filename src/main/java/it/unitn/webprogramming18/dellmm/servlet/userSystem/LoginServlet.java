@@ -173,8 +173,10 @@ public class LoginServlet extends HttpServlet
                                         if(productsOfMyList!=null && productsOfMyList.size()>0){
                                                 session.setAttribute("productsOfMyList", productsOfMyList);
                                         }
-                                        //set la prima come la liste corrente
+                                        //memorizza id della prima come la liste corrente
                                         session.setAttribute("myListId", allMyList.get(0).getId());
+                                         //memoria relativi permessi della lista corrente
+                                        session.setAttribute("myListPermission", allMyListPermission.get(0));
                                         //memoriazza tutte le liste che manipolabile
                                         session.setAttribute("allMyList", allMyList);
                                          //memorizza relativi permessi su tutte le liste

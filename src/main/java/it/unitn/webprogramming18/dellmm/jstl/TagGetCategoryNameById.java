@@ -23,6 +23,8 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
  */
 public class TagGetCategoryNameById extends SimpleTagSupport
 {
+        CategoryProductDAO categoryProductDAO;
+        
         private Integer categoryId;
        // private StringWriter sw = new StringWriter();
 
@@ -38,7 +40,7 @@ public class TagGetCategoryNameById extends SimpleTagSupport
         public void doTag() throws JspException, IOException
         {
                 if(this.categoryId != null){
-                        CategoryProductDAO categoryProductDAO = new JDBCCategoryProductDAO();
+                        categoryProductDAO = new JDBCCategoryProductDAO();
                         String categoryName;
                         try {
                                 categoryName = categoryProductDAO.getByPrimaryKey(categoryId).getName();

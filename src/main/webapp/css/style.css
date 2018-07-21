@@ -139,7 +139,15 @@
         width: 32.25%;
 }
 
+.front-page .product-list  .list-item .list-item_info{
+        line-height: 34px;
 
+}
+.front-page  .product-list  .list-item .list-item-title{
+        text-align: center;
+        font-weight: bold;
+        
+}
 
 
 /*floatBoxForShoppingList.jsp------------------------------------------------------------*/
@@ -173,7 +181,7 @@
 
 }
 .front-page #list-float-box .list-body .list-content{
-        
+        text-align: center;
         overflow-x: hidden;
 }
 
@@ -188,8 +196,8 @@
 }
 
 .front-page #list-float-box .list-body .list-content table  tbody  td.td-buttons a{
-        
-                width: 50%;
-                display: inline-block;
-        
+
+        width: 50%;
+        display: inline-block;
+
 }
