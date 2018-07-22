@@ -135,4 +135,28 @@ public class JDBCProductInListDAO extends JDBCDAO<ProductInList, Integer> implem
 
         return productInList;
     }
+    
+    public Boolean checkIsProductInListByIds(Integer listId, Integer productId) throws DAOException {
+        
+        Boolean res = false;
+        
+        if (listId == null || productId == null) {
+            throw new DAOException("One or both parameters (listId, productId) are null");
+        }
+        
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM ProductInList WHERE listId = ? AND productId = ?")) {
+            
+            stm.setInt(1, listId);
+            stm.setInt(2, productId);
+            try(ResultSet rs = stm.executeQuery()) {
+                if (rs.next()) {
+                    res = true;
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to count productInList", ex);
+        }
+
+        return res;
+    }
 }

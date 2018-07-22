@@ -62,4 +62,14 @@ public interface ProductInListDAO extends DAO<ProductInList, Integer> {
      */
     @Override
     public ProductInList update(ProductInList productInList) throws DAOException;
+    
+    /**
+     * Returns a boolean which indicates if a product is already into a list; operates on specified parameters
+      
+     * @param listId    id of the list in which the product could be into.
+     * @param productId id of the product of which presence in list must be checked
+     * @return          TRUE if the product is in the list, FALSE otherwise
+     * @throws DAOException if an error occurred during the action.
+     */
+    public Boolean checkIsProductInListByIds(Integer listId, Integer productId) throws DAOException;
 }
