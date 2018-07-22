@@ -48,4 +48,15 @@
       <rtexprvalue>true</rtexprvalue>
     </attribute>
   </tag>
+  <tag>
+    <name>getProductBoughtListByListId</name>
+    <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagGetProductBoughtListByListId</tag-class>
+    <body-content>scriptless</body-content>
+    <attribute>
+      <name>listId</name>
+      <required>true</required>
+      <type>java.lang.Integer</type>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
 </taglib>

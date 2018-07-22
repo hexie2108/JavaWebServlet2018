@@ -73,7 +73,7 @@ public class TagGetElementsOfShoppingListByCookie extends SimpleTagSupport
                                                             + "</td>");
                                                 jspWriter.println("<td class=\"td-buttons\">"
                                                             + ""
-                                                            + "<a href=\""+basePath+"/service/unLoggedUserOnlyService?action=delete&productId="+product.getId()+"\" title=\"delete\"><i class=\"fas fa-ban\"></i></a>"
+                                                            + "<a href=\""+basePath+"/service/updateItemInListUnloggedUserOnlyService?action=delete&productId="+product.getId()+"\" title=\"delete\"><i class=\"fas fa-ban\"></i></a>"
                                                             + "</td>");
                                                 jspWriter.println("</tr>");
                                         }

@@ -67,16 +67,13 @@ public class JDBCLogDAO extends JDBCDAO<Log, Integer> implements LogDAO
                 }
                 
                  CON = C3p0Util.getConnection();
-                try (PreparedStatement stm = CON.prepareStatement("INSERT INTO Log (productId, userId, last1, last2, last3, last4) VALUES (?,?,?,?,?,?)",
+                try (PreparedStatement stm = CON.prepareStatement("INSERT INTO Log (productId, userId, last1, last2, last3, last4) VALUES (?,?,?,null,null,null)",
                             Statement.RETURN_GENERATED_KEYS))
                 {
 
                         stm.setInt(1, log.getProductId());
                         stm.setInt(2, log.getUserId());
                         stm.setTimestamp(3, log.getLast1());
-                        stm.setTimestamp(4, log.getLast2());
-                        stm.setTimestamp(5, log.getLast3());
-                        stm.setTimestamp(6, log.getLast4());
 
                         stm.executeUpdate();
 
@@ -170,22 +167,22 @@ public class JDBCLogDAO extends JDBCDAO<Log, Integer> implements LogDAO
                  CON = C3p0Util.getConnection();
                 try (PreparedStatement stm = CON.prepareStatement(
                             "UPDATE Log SET "
-                            + "productId =?,"
-                            + "userId =?,"
-                            + "last1 =?,"
-                            + "last2 =?,"
-                            + "last3 =?,"
-                            + "last4 =? "
-                            + "WHERE id = ?"
+                            + " productId =?, "
+                            + " userId =?, "
+                            + " last1 =?, "
+                            + " last2 =?, "
+                            + " last3 =?, "
+                            + " last4 =?  "
+                            + " WHERE id = ? "
                 ))
                 {
                         stm.setInt(1, log.getProductId());
                         stm.setInt(2, log.getUserId());
-                        stm.setTimestamp(2, log.getLast1());
-                        stm.setTimestamp(3, log.getLast2());
-                        stm.setTimestamp(4, log.getLast3());
-                        stm.setTimestamp(5, log.getLast4());
-                        stm.setInt(6, log.getId());
+                        stm.setTimestamp(3, log.getLast1());
+                        stm.setTimestamp(4, log.getLast2());
+                        stm.setTimestamp(5, log.getLast3());
+                        stm.setTimestamp(6, log.getLast4());
+                        stm.setInt(7, log.getId());
 
                         if (stm.executeUpdate() != 1)
                         {

@@ -65,10 +65,20 @@ public interface ProductInListDAO extends DAO<ProductInList, Integer> {
     
     /**
      * dato la lista id e product id, elimina la loro relazione
-     * @param listId
-     * @param productId
+     * @param listId id lista
+     * @param productId id prodotto
      * @return
      * @throws DAOException 
      */
-    public void deleteByListIdAndProductId(Integer productId, Integer listId) throws DAOException;
+    public void deleteByProductIdAndListId(Integer productId, Integer listId) throws DAOException;
+    
+    /**
+     * 
+     * dato la lista id e product id, controlla se esiste già tale prodotto in lista
+     * @param listId id lista
+     * @param productId id prodotto
+     * @return
+     * @throws DAOException 
+     */
+    public ProductInList getByProductIdAndListId(Integer productId, Integer listId) throws DAOException;
 }

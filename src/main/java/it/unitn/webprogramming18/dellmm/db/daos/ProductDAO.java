@@ -112,4 +112,13 @@ public interface ProductDAO extends DAO<Product, Integer> {
      * @throws DAOException if an error occurred during the action.
      */
     public List<Product> getProductsNotBuyInListByListId(Integer listId) throws DAOException;
+    
+     /**
+     * get una lista di prodotti già comprato in una specifica lista di spesa
+     *
+     * @param listId
+     * @return A list of the products in a dellmm.list
+     * @throws DAOException if an error occurred during the action.
+     */
+    public List<Product> getProductsBoughtInListByListId(Integer listId) throws DAOException;
 }

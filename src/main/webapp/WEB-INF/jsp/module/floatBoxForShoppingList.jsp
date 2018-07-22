@@ -33,7 +33,7 @@
                                         </form>
                                 </div>
                                 <div class="list-type-selector mb-3">
-                                        <form action="${pageContext.request.contextPath}/service/unLoggedUserOnlyService" method="GET">
+                                        <form action="${pageContext.request.contextPath}/service/updateItemInListUnloggedUserOnlyService" method="GET">
                                                 <label  for="type-list"  class="d-block">Tipo della lista:</label>
                                                 <select id="type-list" class="form-control custom-select w-50" name ="categoryList">
 
@@ -99,7 +99,7 @@
 
                                                         <select id="select-list" class="form-control custom-select w-50" name="listId">
                                                                 <c:forEach var="shoppingList" items="${sessionScope.allMyList}">
-                                                                        <option value="${shoppingList.id}">${shoppingList.name}</option>
+                                                                        <option value="${shoppingList.id}" ${sessionScope.myList.id == shoppingList.id?"selected=\"selected\"":""}>${shoppingList.name}</option>
                                                                 </c:forEach>
                                                         </select>
                                                         
@@ -142,6 +142,8 @@
 
                                                                 <custom:getProductNotBuyListByListId listId="${sessionScope.myList.id}">
                                                                 </custom:getProductNotBuyListByListId>
+                                                                <custom:getProductBoughtListByListId  listId="${sessionScope.myList.id}">
+                                                                </custom:getProductBoughtListByListId>
                                                         </tbody>
                                                 </table>
                                         </div>

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
     <!-- Session settings -->
-
     <session-config>
         <session-timeout>
                         30
@@ -113,11 +112,7 @@
         <url-pattern>/forgotPassword</url-pattern>
         <url-pattern>/resetPassword</url-pattern>
     </filter-mapping>
-    
-    
     <!-- FRONT PAGE SERVLETS-->
-    
-    
     <servlet>
         <servlet-name>HomeServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlet.HomeServlet</servlet-class>
@@ -158,15 +153,23 @@
         <servlet-name>UpdateListService</servlet-name>
         <url-pattern>/service/updateListService</url-pattern>
     </servlet-mapping>
-    
-      <servlet>
-        <servlet-name>UnloggedUserOnlyService</servlet-name>
-        <servlet-class>it.unitn.webprogramming18.dellmm.servlet.service.UnloggedUserOnlyService</servlet-class>
+    <servlet>
+        <servlet-name>UpdateItemInListUnloggedUserOnlyService</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlet.service.UpdateItemInListUnloggedUserOnlyService</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>UnloggedUserOnlyService</servlet-name>
-        <url-pattern>/service/unLoggedUserOnlyService</url-pattern>
+        <servlet-name>UpdateItemInListUnloggedUserOnlyService</servlet-name>
+        <url-pattern>/service/updateItemInListUnloggedUserOnlyService</url-pattern>
     </servlet-mapping>
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     <!-- USER SYSTEM SERVLETS -->
     <servlet>

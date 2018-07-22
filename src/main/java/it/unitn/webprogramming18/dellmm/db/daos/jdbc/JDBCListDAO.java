@@ -302,9 +302,9 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
                 }
 
                 CON = C3p0Util.getConnection();
-                try (PreparedStatement stm = CON.prepareStatement("SELECT COUNT(*) FROM List JOIN ProductInList"
-                            + "ON List.id = ProductInList.listId"
-                            + "WHERE List.id = ?"))
+                try (PreparedStatement stm = CON.prepareStatement("SELECT COUNT(*) FROM List JOIN ProductInList "
+                            + " ON List.id = ProductInList.listId "
+                            + " WHERE List.id = ?" ))
                 {
                         stm.setInt(1, listId);
                         ResultSet counter = stm.executeQuery();

@@ -294,14 +294,14 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
                 CON = C3p0Util.getConnection();
 
                 try (PreparedStatement stm = CON.prepareStatement(
-                            "UPDATE Product SET "
-                            + "name =?,"
-                            + "description =?,"
-                            + "img =?,"
-                            + "logo =?,"
-                            + "categoryProductId =? "
-                            + "privateListId =?"
-                            + "WHERE id = ?"
+                            " UPDATE Product SET "
+                            + " name =?, "
+                            + " description =?, "
+                            + " img =?, "
+                            + " logo =?, "
+                            + " categoryProductId =? "
+                            + " privateListId =? "
+                            + " WHERE id = ? "
                 ))
                 {
                         stm.setString(1, product.getName());
@@ -340,7 +340,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
                 CON = C3p0Util.getConnection();
 
                 try (PreparedStatement stm = CON.prepareStatement("SELECT Product.* FROM ProductInList JOIN Product ON ProductInList.productId = Product.id "
-                            + "WHERE  ProductInList.listId = ?"))
+                            + " WHERE  ProductInList.listId = ?"))
                 {
                         stm.setInt(1, listId);
 
@@ -375,7 +375,43 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
                 CON = C3p0Util.getConnection();
 
                 try (PreparedStatement stm = CON.prepareStatement("SELECT Product.* FROM ProductInList JOIN Product ON ProductInList.productId = Product.id "
-                            + "WHERE  ProductInList.listId = ? AND ProductInList.status = \"0\""))
+                            + " WHERE  ProductInList.listId = ? AND ProductInList.status = \"0\""))
+                {
+                        stm.setInt(1, listId);
+
+                        try (ResultSet rs = stm.executeQuery())
+                        {
+                                while (rs.next())
+                                {
+                                        products.add(getProductFromResultSet(rs));
+                                }
+                        }
+                }
+                catch (SQLException ex)
+                {
+                        throw new DAOException("Impossible to get the list of productInList", ex);
+                } finally
+                {
+                        C3p0Util.close(CON);
+                }
+
+                return products;
+                
+        }
+        
+         public List<Product> getProductsBoughtInListByListId(Integer listId) throws DAOException{
+                
+                 List<Product> products = new ArrayList<>();
+
+                if (listId == null)
+                {
+                        throw new DAOException("listId is null");
+                }
+
+                CON = C3p0Util.getConnection();
+
+                try (PreparedStatement stm = CON.prepareStatement("SELECT Product.* FROM ProductInList JOIN Product ON ProductInList.productId = Product.id "
+                            + " WHERE  ProductInList.listId = ? AND ProductInList.status = \"1\""))
                 {
                         stm.setInt(1, listId);
 

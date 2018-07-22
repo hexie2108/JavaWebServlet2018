@@ -21,8 +21,8 @@
 }
 
 .front-page header .site-logo-section{
-    float: left;
-    margin-left: 1%;
+        float: left;
+        margin-left: 1%;
 }
 
 .front-page header .site-logo-section .logo{
@@ -145,8 +145,15 @@
 .front-page  .product-list  .list-item .list-item-title{
         text-align: center;
         font-weight: bold;
-        
+
 }
+
+.front-page .category-main-section .product-list .list-item .list-item-cat{
+        display: none;
+}
+
+
+
 
 
 /*floatBoxForShoppingList.jsp------------------------------------------------------------*/
@@ -182,6 +189,11 @@
 .front-page #list-float-box .list-body .list-content{
         text-align: center;
         overflow-x: hidden;
+        height: 660px;
+}
+
+.front-page #list-float-box .list-body .list-content table tbody tr.bought-item{
+            background-color: rgba(0, 0, 0, 0.11);
 }
 
 .front-page #list-float-box .list-body .list-content table tbody td{
@@ -203,4 +215,31 @@
         width: 40%;
         display: inline-block;
 
+}
+
+
+@media (max-height: 900px){
+        .front-page #list-float-box .list-body .list-content{
+                height: 500px;
+        }
+}
+@media (max-height: 800px){
+        .front-page #list-float-box .list-body .list-content{
+                height: 400px;
+        }
+}
+@media (max-height: 700px){
+        .front-page #list-float-box .list-body .list-content{
+                height: 300px;
+        }
+}
+@media (max-height: 600px){
+        .front-page #list-float-box .list-body .list-content{
+                height: 250px;
+        }
+}
+@media (max-height: 500px){
+        .front-page #list-float-box .list-body .list-content{
+                height: 200px;
+        }
 }

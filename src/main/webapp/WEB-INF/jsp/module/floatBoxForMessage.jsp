@@ -32,7 +32,10 @@
                                                         </c:when>       
                                                         <c:when test="${sessionScope.result == 'ChangeListCategoryOk'}">
                                                                 complimenti
-                                                        </c:when>        
+                                                        </c:when>
+                                                        <c:when test="${sessionScope.result == 'BoughtOk'}">
+                                                                complimenti
+                                                        </c:when>
                                                 </c:choose>         
                                         </h4>
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -56,6 +59,9 @@
                                                         </c:when>   
                                                         <c:when test="${sessionScope.result  == 'ChangeListCategoryOk'}">
                                                                 la categoria della lista è stata cambiata correttamente
+                                                        </c:when>
+                                                        <c:when test="${sessionScope.result  == 'BoughtOk'}">
+                                                                il prodotto specificato è stato assegnato come già comprato
                                                         </c:when>
                                                 </c:choose>
                                         </p>

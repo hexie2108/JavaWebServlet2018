@@ -25,7 +25,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author mikuc
  */
-public class UnloggedUserOnlyService extends HttpServlet
+public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet
 {
 
         /**

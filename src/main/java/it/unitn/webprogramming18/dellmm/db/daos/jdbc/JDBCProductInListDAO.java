@@ -155,10 +155,10 @@ public class JDBCProductInListDAO extends JDBCDAO<ProductInList, Integer> implem
                 CON = C3p0Util.getConnection();
                 try (PreparedStatement stm = CON.prepareStatement(
                             "UPDATE ProductInList SET "
-                            + "productId = ?,"
-                            + "listId = ? "
-                            + "status = ? "
-                            + "WHERE id = ?"
+                            + " productId = ?, "
+                            + " listId = ?, "
+                            + " status = ? "
+                            + " WHERE id = ? "
                 ))
                 {
 
@@ -184,7 +184,7 @@ public class JDBCProductInListDAO extends JDBCDAO<ProductInList, Integer> implem
         }
 
         @Override
-        public void deleteByListIdAndProductId(Integer productId, Integer listId) throws DAOException
+        public void deleteByProductIdAndListId(Integer productId, Integer listId) throws DAOException
         {
                 if (listId == null || productId == null)
                 {
@@ -192,8 +192,8 @@ public class JDBCProductInListDAO extends JDBCDAO<ProductInList, Integer> implem
                 }
                 CON = C3p0Util.getConnection();
                 try (PreparedStatement stm = CON.prepareStatement(
-                            "DELETE ProductInList WHERE "
-                            + "productId = ?,"
+                            " DELETE FROM ProductInList WHERE "
+                            + "productId = ? AND "
                             + "listId = ? "
                 ))
                 {
@@ -214,4 +214,42 @@ public class JDBCProductInListDAO extends JDBCDAO<ProductInList, Integer> implem
                 }
 
         }
+
+        @Override
+        public ProductInList getByProductIdAndListId(Integer productId, Integer listId) throws DAOException
+        {
+                ProductInList productInList = null;
+                if (listId == null || productId == null)
+                {
+                        throw new DAOException("parameter not valid", new IllegalArgumentException("The passed listId or  productId is null"));
+                }
+
+                CON = C3p0Util.getConnection();
+                try (PreparedStatement stm = CON.prepareStatement(" SELECT * FROM ProductInList WHERE "
+                            + " productId = ? AND "
+                            + " listId = ? "))
+                {
+                        stm.setInt(1, productId);
+                        stm.setInt(2, listId);
+
+                        try (ResultSet rs = stm.executeQuery())
+                        {
+                                if (rs.next())
+                                {
+                                        productInList = getProductInListFromResultSet(rs);
+                                }
+                        }
+                }
+                catch (SQLException ex)
+                {
+                        throw new DAOException("Impossible to get the productInList for the passed productId and listId", ex);
+                } finally
+                {
+                        C3p0Util.close(CON);
+                }
+
+                return productInList;
+
+        }
+
 }

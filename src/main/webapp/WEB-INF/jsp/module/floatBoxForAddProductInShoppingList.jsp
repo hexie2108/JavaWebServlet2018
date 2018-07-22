@@ -25,10 +25,10 @@
                         <div class="modal-body">
                                 <!-- se è un utente anonimo-->
                                 <c:if test="${empty sessionScope.user}">
-                                        <form action="${pageContext.request.contextPath}/service/unLoggedUserOnlyService" method="GET">
+                                        <form action="${pageContext.request.contextPath}/service/updateItemInListUnloggedUserOnlyService" method="GET">
                                </c:if>       
                                 <c:if test="${not empty sessionScope.user}">
-                                                <form action="${pageContext.request.contextPath}/service/updateItemInListService" method="POST">
+                                          <form action="${pageContext.request.contextPath}/service/updateItemInListService" method="GET">
                                  </c:if>
                                                 <!-- se non è un utente anonimo--> 
 
