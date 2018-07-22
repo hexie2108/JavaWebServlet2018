@@ -1,7 +1,7 @@
-
-package it.unitn.webprogramming18.dellmm.servlet.another;
+package it.unitn.webprogramming18.dellmm.servlet.service;
 
 import it.unitn.webprogramming18.dellmm.db.daos.ListDAO;
+import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCListDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
@@ -15,10 +15,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- *aggiornare la lista
+ * aggiornare/inserire la lista
+ *
  * @author luca_morgese
  */
-public class AddUpdateListServlet extends HttpServlet
+public class UpdateListService extends HttpServlet
 {
 
         private ListDAO listDAO;
@@ -26,20 +27,8 @@ public class AddUpdateListServlet extends HttpServlet
         @Override
         public void init() throws ServletException
         {
-                DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
-                if (daoFactory == null)
-                {
-                        throw new ServletException("Impossible to get db factory for user storage system");
-                }
-
-                try
-                {
-                        listDAO = daoFactory.getDAO(ListDAO.class);
-                }
-                catch (DAOFactoryException ex)
-                {
-                        throw new ServletException("Impossible to get ListDAO for user storage system", ex);
-                }
+               
+                        listDAO = new JDBCListDAO();
         }
 
         /**
@@ -75,11 +64,9 @@ public class AddUpdateListServlet extends HttpServlet
                         String description = request.getParameter("description");
                         String img = request.getParameter("img");
 
-                        
-                        
                         try
                         {
-                                
+
                                 ShoppingList list = new ShoppingList();
 
                                 list.setId(listId);

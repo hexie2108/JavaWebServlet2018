@@ -46,7 +46,7 @@ public class TagGetElementsOfShoppingListByCookie extends SimpleTagSupport
                         }
                 }
                 //se è stato aggiunto l'elemento nella lista locale, lo trasforma in array di stringa
-                if (localtListProduct != null)
+                if (localtListProduct != null && localtListProduct!="")
                 {
                         productsId = localtListProduct.split(",");
 
@@ -62,6 +62,7 @@ public class TagGetElementsOfShoppingListByCookie extends SimpleTagSupport
 
                                         for (int i = 0; i < productsId.length; i++)
                                         {
+                                                
                                                 product = productDAO.getByPrimaryKey(Integer.parseInt(productsId[i]));
                                                 jspWriter.println("<tr>");
                                                 jspWriter.println("<td class=\"td-img\">"
@@ -71,8 +72,8 @@ public class TagGetElementsOfShoppingListByCookie extends SimpleTagSupport
                                                             + "<span>" + product.getName() + "</span>"
                                                             + "</td>");
                                                 jspWriter.println("<td class=\"td-buttons\">"
-                                                            + "<a href=\"#\" title=\"comprato\"><i class=\"fas fa-check-circle\"></i></a>"
-                                                            + "<a href=\"#\" title=\"elimina\"><i class=\"fas fa-ban\"></i></a>"
+                                                            + ""
+                                                            + "<a href=\""+basePath+"/service/unLoggedUserOnlyService?action=delete&productId="+product.getId()+"\" title=\"delete\"><i class=\"fas fa-ban\"></i></a>"
                                                             + "</td>");
                                                 jspWriter.println("</tr>");
                                         }

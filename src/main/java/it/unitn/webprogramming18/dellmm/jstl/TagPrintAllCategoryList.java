@@ -22,14 +22,14 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 public class TagPrintAllCategoryList extends SimpleTagSupport
 {
 
-        private Integer catoryIdOfCurrentList;
+        private String catoryIdOfCurrentList;
         private CategoryListDAO categoryListDAO = new JDBCCategoryListDAO();
         // private StringWriter sw = new StringWriter();
 
         /**
          * @param catoryIdOfCurrentList the categoryId to set
          */
-        public void setCatoryIdOfCurrentList(int catoryIdOfCurrentList)
+        public void setCatoryIdOfCurrentList(String catoryIdOfCurrentList)
         {
                 this.catoryIdOfCurrentList = catoryIdOfCurrentList;
         }
@@ -53,7 +53,7 @@ public class TagPrintAllCategoryList extends SimpleTagSupport
                 for (CategoryList singleCategory : categoryList)
                 {
 
-                        jspWriter.println("<option value=\"" + singleCategory.getId() + "\" " + (singleCategory.getId() == catoryIdOfCurrentList ? " selected=\"selected\"" : "") + ">" + singleCategory.getName() + "</option>");
+                        jspWriter.println("<option value=\"" + singleCategory.getId() + "\" " + (singleCategory.getId() == Integer.parseInt(catoryIdOfCurrentList) ? " selected=\"selected\"" : "") + ">" + singleCategory.getName() + "</option>");
                 }
 
         }

@@ -362,4 +362,40 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
 
                 return products;
         }
+        
+        public List<Product> getProductsNotBuyInListByListId(Integer listId) throws DAOException{
+                
+                 List<Product> products = new ArrayList<>();
+
+                if (listId == null)
+                {
+                        throw new DAOException("listId is null");
+                }
+
+                CON = C3p0Util.getConnection();
+
+                try (PreparedStatement stm = CON.prepareStatement("SELECT Product.* FROM ProductInList JOIN Product ON ProductInList.productId = Product.id "
+                            + "WHERE  ProductInList.listId = ? AND ProductInList.status = \"0\""))
+                {
+                        stm.setInt(1, listId);
+
+                        try (ResultSet rs = stm.executeQuery())
+                        {
+                                while (rs.next())
+                                {
+                                        products.add(getProductFromResultSet(rs));
+                                }
+                        }
+                }
+                catch (SQLException ex)
+                {
+                        throw new DAOException("Impossible to get the list of productInList", ex);
+                } finally
+                {
+                        C3p0Util.close(CON);
+                }
+
+                return products;
+                
+        }
 }

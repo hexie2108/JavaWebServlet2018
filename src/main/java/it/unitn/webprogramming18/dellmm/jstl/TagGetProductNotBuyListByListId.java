@@ -30,7 +30,7 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
  * datto il id della lista , stampa tutti i prodotti
  * @author mikuc
  */
-public class TagGetProductListByListId extends SimpleTagSupport
+public class TagGetProductNotBuyListByListId extends SimpleTagSupport
 {
 
         private Integer listId;
@@ -57,7 +57,7 @@ public class TagGetProductListByListId extends SimpleTagSupport
 
                 try
                 {
-                        productsOfMyList = productDAO.getProductsInListByListId(listId);
+                        productsOfMyList = productDAO.getProductsNotBuyInListByListId(listId);
 
                         //se la lista di spesa non è vuota
                         if (productsOfMyList != null && productsOfMyList.size() > 0)
