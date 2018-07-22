@@ -89,6 +89,14 @@ public interface ListDAO extends DAO<ShoppingList, Integer> {
      */
     public List<ShoppingList> getAllListByUserId(Integer userId) throws DAOException;
     
+        /**
+     * Gets tutte le liste in cui un utente ha il permesso di aggiungere il prodotto 
+     * @param userId id utente
+     * @return the list of the shoppinglists
+     * @throws DAOException 
+     */
+    public List<ShoppingList> getAllAddableListByUserId(Integer userId) throws DAOException;
+    
     /**
      * Gets the count of products in a list specified via listId, passed as parameter
      * 

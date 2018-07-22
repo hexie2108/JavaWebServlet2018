@@ -203,7 +203,7 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet
                 {
                         String categoryList = null;
                         categoryList = request.getParameter("categoryList");
-                        if (categoryList == null || categoryList == "-1")
+                        if (categoryList == null || categoryList.equals("-1"))
                         {
                                 throw new ServletException("manca il parametro id categoria della lista");
                         }

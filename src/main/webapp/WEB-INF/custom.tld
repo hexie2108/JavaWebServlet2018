@@ -59,4 +59,9 @@
       <rtexprvalue>true</rtexprvalue>
     </attribute>
   </tag>
+    <tag>
+    <name>getAllAddableListByUserId</name>
+    <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagGetAllAddableListByUserId</tag-class>
+    <body-content>scriptless</body-content>
+  </tag>
 </taglib>

@@ -75,7 +75,7 @@
                                                                 <c:if test="${not empty sessionScope.user}">
                                                                         <li class="nav-item">
                                                                                 <a class="nav-link" href="#">
-                                                                                        <i class="fas fa-list"></i> MIA LISTA
+                                                                                        <i class="fas fa-list"></i> MIE LISTE
                                                                                 </a>
                                                                         </li>
                                                                         <li class="nav-item">

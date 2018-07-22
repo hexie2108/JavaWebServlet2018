@@ -81,15 +81,15 @@
     </listener>
     <!-- FILTERS -->
     <!-- 
-        <filter>
-                <filter-name>SetShoppingListIdsInSession</filter-name>
-                <filter-class>it.unitn.webprogramming18.dellmm.filters.SetShoppingListIdsInSession</filter-class>
-        </filter>
-        <filter-mapping>
-                <filter-name>SetShoppingListIdsInSession</filter-name>
-                <url-pattern>/</url-pattern>
-        </filter-mapping>
-    -->
+            <filter>
+                    <filter-name>SetShoppingListIdsInSession</filter-name>
+                    <filter-class>it.unitn.webprogramming18.dellmm.filters.SetShoppingListIdsInSession</filter-class>
+            </filter>
+            <filter-mapping>
+                    <filter-name>SetShoppingListIdsInSession</filter-name>
+                    <url-pattern>/</url-pattern>
+            </filter-mapping>
+        -->
     <filter>
         <filter-name>LoggedUserOnlyFilter</filter-name>
         <filter-class>it.unitn.webprogramming18.dellmm.filters.LoggedUserOnlyFilter</filter-class>
@@ -161,14 +161,14 @@
         <servlet-name>UpdateItemInListUnloggedUserOnlyService</servlet-name>
         <url-pattern>/service/updateItemInListUnloggedUserOnlyService</url-pattern>
     </servlet-mapping>
-    
-    
-    
-    
-    
-    
-    
-    
+    <servlet>
+        <servlet-name>ChangeListService</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlet.service.ChangeListService</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ChangeListService</servlet-name>
+        <url-pattern>/service/changeListService</url-pattern>
+    </servlet-mapping>
     
     
     <!-- USER SYSTEM SERVLETS -->

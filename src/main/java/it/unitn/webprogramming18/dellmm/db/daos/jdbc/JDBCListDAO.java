@@ -292,6 +292,38 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
                 return lists;
         }
 
+        public List<ShoppingList> getAllAddableListByUserId(Integer userId) throws DAOException
+        {
+                List<ShoppingList> lists = new ArrayList<>();
+                if (userId == null)
+                {
+                        throw new DAOException("userId is null");
+                }
+
+                CON = C3p0Util.getConnection();
+                try (PreparedStatement stm = CON.prepareStatement("SELECT List.* FROM Permission JOIN List ON Permission.listId = List.id WHERE Permission.userId = ? AND Permission.addObject = 1"))
+                {
+                        stm.setInt(1, userId);
+                        try (ResultSet rs = stm.executeQuery())
+                        {
+                                while (rs.next())
+                                {
+                                        lists.add(getListFromResultSet(rs));
+                                }
+                        }
+                }
+                catch (SQLException ex)
+                {
+                        throw new DAOException("Impossible to get the list of user's List", ex);
+                } finally
+                {
+                        C3p0Util.close(CON);
+                }
+
+                return lists;
+
+        }
+
         @Override
         public Integer getNumberOfProductsInListByListId(Integer listId) throws DAOException
         {
@@ -304,7 +336,7 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
                 CON = C3p0Util.getConnection();
                 try (PreparedStatement stm = CON.prepareStatement("SELECT COUNT(*) FROM List JOIN ProductInList "
                             + " ON List.id = ProductInList.listId "
-                            + " WHERE List.id = ?" ))
+                            + " WHERE List.id = ?"))
                 {
                         stm.setInt(1, listId);
                         ResultSet counter = stm.executeQuery();

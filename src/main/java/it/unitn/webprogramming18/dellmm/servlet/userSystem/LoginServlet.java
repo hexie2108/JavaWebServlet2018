@@ -170,8 +170,8 @@ public class LoginServlet extends HttpServlet
                                         productsOfMyList = productDAO.getProductsInListByListId(allMyList.get(0).getId());
                                         
                                        
-                                        //memorizza id della prima come la liste corrente
-                                        session.setAttribute("myList", allMyList.get(0));
+                                        //memorizza id della prima lista come la liste corrente
+                                        session.setAttribute("myListId", allMyList.get(0).getId());
                                        
                                         //memoriazza tutte le liste che manipolabile
                                         session.setAttribute("allMyList", allMyList);

@@ -2,15 +2,18 @@ package it.unitn.webprogramming18.dellmm.servlet.service;
 
 import it.unitn.webprogramming18.dellmm.db.daos.CategoryProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.LogDAO;
+import it.unitn.webprogramming18.dellmm.db.daos.PermissionDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ProductInListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCCategoryProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCLogDAO;
+import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCPermissionDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCProductInListDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.javaBeans.CategoryProduct;
 import it.unitn.webprogramming18.dellmm.javaBeans.Log;
+import it.unitn.webprogramming18.dellmm.javaBeans.Permission;
 import it.unitn.webprogramming18.dellmm.javaBeans.ProductInList;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import java.io.IOException;
@@ -38,12 +41,14 @@ public class UpdateItemInListService extends HttpServlet
 
         private ProductInListDAO productInListDAO;
         private LogDAO logDAO;
+        private PermissionDAO permissionDAO;
 
         @Override
         public void init() throws ServletException
         {
                 productInListDAO = new JDBCProductInListDAO();
                 logDAO = new JDBCLogDAO();
+                permissionDAO = new JDBCPermissionDAO();
         }
 
         @Override
@@ -73,31 +78,61 @@ public class UpdateItemInListService extends HttpServlet
                 //memorizza il risultato dell'operazione
                 String result = "";
 
+                //get user corrente
+                User user = (User) request.getSession().getAttribute("user");
+                if (user == null)
+                {
+                        throw new ServletException("non sei loggato");
+                }
+                //get permesso dell'utente su tale lista
+                Permission permission;
+                try
+                {
+                        permission = permissionDAO.getUserPermissionOnListByIds(user.getId(), Integer.parseInt(listId));
+
+                }
+                catch (DAOException ex)
+                {
+                        throw new ServletException(ex.getMessage(), ex);
+                }
+                //se il permesso è  vuoto
+                if (permission == null)
+                {
+                        throw new ServletException("non hai nessun permesso su tale lista");
+                }
+
                 //in caso di inserimento
                 if (action.equals("insert"))
                 {
-
-                        try
+                        if (permission.isAddObject())
                         {
-                                //se non esiste la ripetizione
-                                if (productInListDAO.getByProductIdAndListId(Integer.parseInt(productId), Integer.parseInt(listId)) == null)
+                                try
                                 {
-                                        ProductInList productInList = new ProductInList();
-                                        productInList.setProductId(Integer.parseInt(productId));
-                                        productInList.setListId(Integer.parseInt(listId));
-                                        productInList.setStatus(false);
-                                        productInListDAO.insert(productInList);
-                                        result = "InsertOk";
+
+                                        //se non esiste la ripetizione
+                                        if (!productInListDAO.checkIsProductInListByIds(Integer.parseInt(productId), Integer.parseInt(listId)))
+                                        {
+                                                ProductInList productInList = new ProductInList();
+                                                productInList.setProductId(Integer.parseInt(productId));
+                                                productInList.setListId(Integer.parseInt(listId));
+                                                productInList.setStatus(false);
+                                                productInListDAO.insert(productInList);
+                                                result = "InsertOk";
+                                        }
+                                        //se esiste la ripetizione, lancia un messaggio 
+                                        else
+                                        {
+                                                result = "InsertFail";
+                                        }
                                 }
-                                //se esiste la ripetizione, lancia un messaggio 
-                                else
+                                catch (DAOException ex)
                                 {
-                                        result = "InsertFail";
+                                        throw new ServletException(ex.getMessage(), ex);
                                 }
                         }
-                        catch (DAOException ex)
+                        else
                         {
-                                throw new ServletException(ex.getMessage(), ex);
+                                throw new ServletException("non hai il permesso di aggiungere il prodotto in questa lista");
                         }
 
                 }
@@ -105,17 +140,22 @@ public class UpdateItemInListService extends HttpServlet
                 //in caso elimina un prodotto dalla lista
                 else if (action.equals("delete"))
                 {
-
-                        try
+                        if (permission.isDeleteObject())
                         {
-                                productInListDAO.deleteByProductIdAndListId(Integer.parseInt(productId), Integer.parseInt(listId));
+                                try
+                                {
+                                        productInListDAO.deleteByProductIdAndListId(Integer.parseInt(productId), Integer.parseInt(listId));
+                                }
+                                catch (DAOException ex)
+                                {
+                                        throw new ServletException(ex.getMessage(), ex);
+                                }
+                                result = "DeleteOk";
                         }
-                        catch (DAOException ex)
+                        else
                         {
-                                throw new ServletException(ex.getMessage(), ex);
+                                throw new ServletException("non hai il permesso di eliminare il prodotto in questa lista");
                         }
-                        result = "DeleteOk";
-
                 }
 
                 //in caso comprato
@@ -123,6 +163,7 @@ public class UpdateItemInListService extends HttpServlet
                 {
                         ProductInList productInList = null;
                         Log log = null;
+
                         try
                         {
                                 //aggiornare lo stato del prodotto in lista
@@ -131,7 +172,6 @@ public class UpdateItemInListService extends HttpServlet
                                 productInListDAO.update(productInList);
 
                                 //inserire o aggiornare il log di acquisto
-                                User user = (User) request.getSession().getAttribute("user");
                                 log = logDAO.getUserProductLogByIds(user.getId(), Integer.parseInt(productId));
 
                                 //se non esiste un log su tale prodotto e utente
@@ -170,15 +210,13 @@ public class UpdateItemInListService extends HttpServlet
                                         log.setLast1(new Timestamp(System.currentTimeMillis()));
                                         logDAO.update(log);
                                 }
-                                
-                                
 
                         }
                         catch (DAOException ex)
                         {
                                 throw new ServletException(ex.getMessage(), ex);
                         }
-                         result = "BoughtOk";
+                        result = "BoughtOk";
 
                 }
 
