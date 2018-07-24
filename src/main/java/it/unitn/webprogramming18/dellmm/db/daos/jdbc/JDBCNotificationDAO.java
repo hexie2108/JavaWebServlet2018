@@ -5,26 +5,28 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.jdbc.JDBCDAO;
 import it.unitn.webprogramming18.dellmm.javaBeans.Notification;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * The JDBC implementation of the {@link NotificationDAO} interface.
  */
 public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implements NotificationDAO {
+    private Calendar cal = Calendar.getInstance();
+
     public JDBCNotificationDAO(Connection con) {
         super(con);
+        cal.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
 
     private Notification getNotificationFromResultSet(ResultSet rs) throws SQLException {
         Notification notification = new Notification();
 
         notification.setId(rs.getInt("id"));
-        notification.setDate(rs.getTimestamp("date"));
+        notification.setDate(rs.getTimestamp("date", cal));
         notification.setText(rs.getString("text"));
         notification.setStatus(rs.getBoolean("status"));
         notification.setUserId(rs.getInt("userId"));
@@ -113,21 +115,32 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
         return notification;
     }
 
-    public List<Notification> getUnreadNotificationByUserId(Integer userId) throws DAOException {
+    public List<Notification> getNotificationsByUserId(Integer userId, Boolean read) throws DAOException {
         List<Notification> notificationList = new ArrayList<>();
         if (userId == null) {
             throw new DAOException("primaryKey is null");
         }
-        try (PreparedStatement stm = CON.prepareStatement("SELECT Notification.* FROM Notification JOIN User ON  User.id = Notification.userId"
-                + " WHERE  User.id = ? AND  Notification.status = false")) {
+        try (PreparedStatement stm = CON.prepareStatement(
+                "SELECT Notification.* FROM " +
+                    "Notification JOIN User ON  User.id = Notification.userId " +
+                    "WHERE  User.id = ? AND  (? IS NULL OR Notification.status = ?) " +
+                    "ORDER BY Notification.date DESC")) {
             stm.setInt(1, userId);
+            if(read == null) {
+                stm.setNull(2, Types.BOOLEAN);
+                stm.setBoolean(3, false); // Dummy data
+            } else {
+                stm.setBoolean(2, read);
+                stm.setBoolean(3, read);
+            }
+
             try (ResultSet rs = stm.executeQuery()) {
                 while (rs.next()) {
                     notificationList.add(getNotificationFromResultSet(rs));
                 }
             }
         } catch (SQLException ex) {
-            throw new DAOException("Impossible to get the list of unread notification", ex);
+            throw new DAOException("Impossible to get the list of notification", ex);
         }
 
         return notificationList;

@@ -7,5 +7,6 @@ public class PagePathsConstants {
                                LOGIN = "login",
                                ALREADY_LOGGED_IN = "alreadyLoggedIn",
                                FORGOT_PASSWORD = "forgotPassword",
-                               MODIFY_USER = "modifyUser";
+                               MODIFY_USER = "modifyUser",
+                               NOTIFICATIONS_JSON = "notifications.json";
 }

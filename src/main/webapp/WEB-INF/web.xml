@@ -68,6 +68,8 @@
         <url-pattern>/modifyUser</url-pattern>
         <url-pattern>/resendEmail</url-pattern>
         <url-pattern>/alreadyLoggedIn</url-pattern>
+        <url-pattern>/notifications</url-pattern>
+        <url-pattern>/notifications.json</url-pattern>
     </filter-mapping>
 
     <filter>
@@ -172,5 +174,24 @@
         <servlet-name>AlreadyLoggedInServlet</servlet-name>
         <url-pattern>/alreadyLoggedIn</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>NotificationsServlet</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.NotificationsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>NotificationsServlet</servlet-name>
+        <url-pattern>/notifications</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>NotificationsServletJSON</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.JSONNotificationsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>NotificationsServletJSON</servlet-name>
+        <url-pattern>/notifications.json</url-pattern>
+    </servlet-mapping>
+
 
 </web-app>
