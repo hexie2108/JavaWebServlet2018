@@ -11,8 +11,8 @@
     <title>Notifiche</title>
 
     <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css">
-    <script src="${pageContext.servletContext.contextPath}/libs/jquery/jquery-3.3.1.min.js"></script>
-    <script src="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/js/bootstrap.min.js"></script>
+    <script src="${pageContext.servletContext.contextPath}/libs/jquery/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+    <script src="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <script>
@@ -42,63 +42,36 @@
         }
     }
 </script>
-<div id="idListNotifications" class="container-fluid">
+<button id="reloadBtn"> Reload notifications </button>
+<ul id="idListNotifications" class="list-group">
     <c:forEach items="${notifications}" var="notification">
-        <div class="notification row-fluid">
-            <small class="float-right" title="<fmt:formatDate value="${notification.date}" pattern="yyyy-MM-dd'T'HH:mm:ss'Z'" timeZone="UTC"/>"><fmt:formatDate value="${notification.date}" type="both"/> UTC</small>
-            <small> <%-- TODO: Sostituire con icona? --%>
-                <c:if test="${notification.status}">Letto</c:if>
-                <c:if test="${not notification.status}">Non letto</c:if>
-            </small>
-            <div>${notification.text}</div>
-        </div>
+        <li class="list-group-item">
+            <div class="d-flex w-100 justify-content-between">
+                <small> <%-- TODO: Sostituire con icona? --%>
+                    <c:if test="${notification.status}">Letto</c:if>
+                    <c:if test="${not notification.status}">Non letto</c:if>
+                </small>
+                <small class="float-right" title="<fmt:formatDate value="${notification.date}" pattern="yyyy-MM-dd'T'HH:mm:ss'Z'" timeZone="UTC"/>"><fmt:formatDate value="${notification.date}" type="both"/> UTC</small>
+            </div>
+            <p>${notification.text}</p>
+        </li>
     </c:forEach>
-</div>
+</ul>
+<script src="${pageContext.servletContext.contextPath}/js/notifications.js" crossorigin="anonymous"></script>
 <script>
     $(document).ready(function() {
-        const url = "${pageContext.servletContext.contextPath}/${PagePathsConstants.NOTIFICATIONS_JSON}";
+        const URL = "${pageContext.servletContext.contextPath}/${PagePathsConstants.NOTIFICATIONS_JSON}";
 
-        function createNotification(notification){
+        const notificationList = $('#notificationsList');
+        const reloadBtn = $('#reloadBtn');
 
-            const dateSm = jQuery('<small/>', {
-                class: "float-right",
-                title: notification.date,
-                text: (new Date(notification.date)).toLocaleString() // La data è in UTC quindi la converto secondo la timezone locale
-            });
+        reloadBtn.click(() => {
+            reloadBtn.prop("disabled", true);
+            updateNotificationList(notificationList, URL, false, null, null);
+            reloadBtn.prop("disabled", false);
+        });
 
-            const textDiv = jQuery('<div/>', {
-                text: notification.text
-            });
-
-            const lettoSm = jQuery('<small/>', {
-                text: notification.status?"Letto":"Non letto"
-            });
-
-            return jQuery('<div/>', {
-                class: ["notification", "row-fluid"].join(' '),
-                html: [lettoSm, dateSm, textDiv]
-            });
-        }
-
-        function updateList(){
-            const notificationList = $('#idListNotifications');
-
-            const request = $.ajax({
-                dataType: "json",
-                url : url,
-                type: "get"
-            });
-
-            request.done(function(data){
-                const notificationDivs = data.map((v) => createNotification(v));
-
-                notificationList.empty();
-                notificationList.append(notificationDivs);
-            });
-        }
-
-        updateList();
-        setTimeout(updateList, 5000); // Update notifications every 5 seconds
+        reloadBtn.trigger('click');
     })
 </script>
 </body>
