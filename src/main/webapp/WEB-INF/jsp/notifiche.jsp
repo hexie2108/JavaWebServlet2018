@@ -43,7 +43,7 @@
     }
 </script>
 <button id="reloadBtn"> Reload notifications </button>
-<ul id="idListNotifications" class="list-group">
+<ul id="notificationsList" class="list-group">
     <c:forEach items="${notifications}" var="notification">
         <li class="list-group-item">
             <div class="d-flex w-100 justify-content-between">
@@ -51,23 +51,25 @@
                     <c:if test="${notification.status}">Letto</c:if>
                     <c:if test="${not notification.status}">Non letto</c:if>
                 </small>
-                <small class="float-right" title="<fmt:formatDate value="${notification.date}" pattern="yyyy-MM-dd'T'HH:mm:ss'Z'" timeZone="UTC"/>"><fmt:formatDate value="${notification.date}" type="both"/> UTC</small>
+                <small class="float-right" title="<fmt:formatDate value="${notification.date}" pattern="yyyy-MM-dd'T'HH:mm:ss'Z'" timeZone="UTC"/>">   <fmt:formatDate value="${notification.date}" type="both"/> UTC</small>
             </div>
             <p>${notification.text}</p>
         </li>
     </c:forEach>
 </ul>
+<div id="notificationsEmtpy" class="p-2" <c:if test="${not notifications.isEmpty()}">style="display: none"</c:if>">Non hai alcuna notifica</div>
 <script src="${pageContext.servletContext.contextPath}/js/notifications.js" crossorigin="anonymous"></script>
 <script>
     $(document).ready(function() {
         const URL = "${pageContext.servletContext.contextPath}/${PagePathsConstants.NOTIFICATIONS_JSON}";
 
         const notificationList = $('#notificationsList');
+        const emptyMessage = $('#notificationsEmtpy');
         const reloadBtn = $('#reloadBtn');
 
         reloadBtn.click(() => {
             reloadBtn.prop("disabled", true);
-            updateNotificationList(notificationList, URL, false, null, null);
+            updateNotificationList(notificationList, URL, false, null, null, emptyMessage);
             reloadBtn.prop("disabled", false);
         });
 

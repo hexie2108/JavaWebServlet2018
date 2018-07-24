@@ -28,7 +28,7 @@ function createDivNotification(notification){
     });
 }
 
-function updateNotificationList(list, url, async, status, count){
+function updateNotificationList(list, url, async, status, count, empty){
     if (status === true || status === false) {
         status = "" + status;
     } else if (status === undefined || status === null) {
@@ -49,6 +49,16 @@ function updateNotificationList(list, url, async, status, count){
     request.done(function(data){
         list.empty();
         list.append(data.map(v => createDivNotification(v)));
+
+        if (empty !== null && empty !== undefined) {
+            if(data.length > 0) {
+                list.show();
+                empty.hide();
+            } else {
+                list.hide();
+                empty.show();
+            }
+        }
 
         if(count !== null && count !== undefined) {
             count.html(" "+ data.length);
