@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.unitn.webprogramming18.dellmm.jstl;
+package it.unitn.webprogramming18.dellmm.jstl.notUse;
 
 import it.unitn.webprogramming18.dellmm.db.daos.ListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCListDAO;

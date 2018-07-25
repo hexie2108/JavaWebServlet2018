@@ -143,50 +143,6 @@ public class LoginServlet extends HttpServlet
                         session.setMaxInactiveInterval(-1);
                 }
 
-                /*--------------------------------------------------------------------------------------------------------------------*/
-                //non ha ottenuto ancora selzionato una lista
-                if (session.getAttribute("myList") == null)
-                {
-                        List<ShoppingList> allMyList = new ArrayList();
-                        List<Permission> allMyListPermission = new ArrayList();
-                        List<Product> productsOfMyList = null;
-
-                        try
-                        {
-                                //ottiene tutte liste dell'utente
-                                allMyList = listDAO.getAllListByUserId(user.getId());
-                                //se possiede qualche liste
-                                if (allMyList != null && allMyList.size() > 0)
-                                {
-                                        
-                                        Permission permission = null;
-                                        for (int i = 0; i < allMyList.size(); i++)
-                                        {
-                                                //get relativi permessi di ogni lista
-                                                permission = permissionDAO.getUserPermissionOnListByIds(user.getId(), allMyList.get(i).getId());
-                                                allMyListPermission.add(permission);
-                                        }
-                                        
-                                        productsOfMyList = productDAO.getProductsInListByListId(allMyList.get(0).getId());
-                                        
-                                       
-                                        //memorizza id della prima lista come la liste corrente
-                                        session.setAttribute("myListId", allMyList.get(0).getId());
-                                       
-                                        //memoriazza tutte le liste che manipolabile
-                                        session.setAttribute("allMyList", allMyList);
-                                         //memorizza relativi permessi su tutte le liste
-                                        session.setAttribute("allMyListPermission", allMyListPermission);
-                                        
-                                }
-                        }
-                        catch (DAOException ex)
-                        {
-                                throw new ServletException(ex.getMessage(), ex);
-                        }
-
-                }
-                /*---------------------------------------------------------------------------------------------------------------------*/
 
                 response.sendRedirect(response.encodeRedirectURL(nextUrl));
         }

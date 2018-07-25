@@ -18,7 +18,7 @@ import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 /**
- *
+ *get prodotto della lista locale dalla cookie (utente anonimo)
  * @author mikuc
  */
 public class TagGetElementsOfShoppingListByCookie extends SimpleTagSupport

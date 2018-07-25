@@ -16,7 +16,7 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 /**
- *
+ *stampa tutte  categorie della lista per utente anonimo
  * @author mikuc
  */
 public class TagPrintAllCategoryList extends SimpleTagSupport

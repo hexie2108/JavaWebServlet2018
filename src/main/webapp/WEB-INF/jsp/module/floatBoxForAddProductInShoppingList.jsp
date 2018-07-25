@@ -37,17 +37,33 @@
                                                 </div>
                                         </form>
                                 </c:if>       
-                                <!-- se non è un utente anonimo--> 
+                                <!-- se è un utente loggato--> 
                                 <c:if test="${not empty sessionScope.user}">
-                                        <form action="${pageContext.request.contextPath}/service/updateItemInListService" method="GET">
+                                        <!-- se utente loggato ha qualche lista aggiungibile-->
+                                        <c:if test="${not empty requestScope.addbleLists}">
+                                                <form action="${pageContext.request.contextPath}/service/updateItemInListService" method="GET">
 
-                                                <label  for="select-list" class="d-block">Seleziona la lista:</label>
-                                                <select id="select-list" class="form-control custom-select w-100" name="listId">
-                                                       
-                                                        <custom:getAllAddableListByUserId>
-                                                        </custom:getAllAddableListByUserId> 
-                                                 <!--select verrà chiuso dentro custom tag-->     
-                                        </form>
+                                                        <label  for="select-list" class="d-block">Seleziona la lista:</label>
+                                                        <select id="select-list" class="form-control custom-select w-100" name="listId">
+                                                                <c:forEach var="shoppingList" items="${requestScope.addbleLists}">
+                                                                        <option value="${shoppingList.id}" ${sessionScope.myListId==shoppingList.id?"selected=\"selected\"" : ""} >${shoppingList.name}</option>
+                                                                </c:forEach>
+                                                        </select>
+                                                        <div class="operation mt-3">
+                                                                <input id="productIdToAdd" type="hidden" name="productId" value="1"/>
+                                                                <input type="hidden" name="action" value="insert"/>
+                                                                <input class="btn btn-info d-inline-block" type="submit" value="aggiunge" />
+                                                                <a class="btn btn-info d-inline-block" href="#">crea una nuova</a>
+                                                        </div>
+                                                </form>
+                                        </c:if>
+                                        <!-- se utente loggato non ha nessun lista aggiungibile-->
+                                        <c:if test="${empty requestScope.addbleLists}">
+                                                <p>non hai ancora una lista</p>
+                                                <div class="operation mt-3">
+                                                        <a class="btn btn-info d-inline-block" href="#">crea una nuova</a>
+                                                </div>
+                                        </c:if>
                                 </c:if>           
                         </div>
 

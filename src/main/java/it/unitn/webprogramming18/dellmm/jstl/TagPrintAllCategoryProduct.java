@@ -17,7 +17,7 @@ import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 /**
- *
+ *stampa tutte le categorie del prodotto solo nel home.jsp
  * @author mikuc
  */
 public class TagPrintAllCategoryProduct extends SimpleTagSupport

@@ -43,7 +43,7 @@
                                                         </c:if>
                                                         <!-- se non è ancora stato assegnato una categoria di lista locale-->
                                                         <c:if test="${empty cookie.localShoppingListCategory}">
-                                                                <option value="-1">-----</option>
+                                                                <option value="-1">-------</option>
                                                                 <custom:printAllCategoryList catoryIdOfCurrentList="-1"></custom:printAllCategoryList>
                                                         </c:if>
 
@@ -98,14 +98,14 @@
                                                         <label  for="select-list" class="d-block">Seleziona la lista:</label>
 
                                                         <select id="select-list" class="form-control custom-select w-50" name="listId">
-                                                                <c:forEach var="shoppingList" items="${sessionScope.allMyList}">
+                                                                <c:forEach var="shoppingList" items="${requestScope.allMyList}">
                                                                         <option value="${shoppingList.id}" ${sessionScope.myListId == shoppingList.id?"selected=\"selected\"":""}>${shoppingList.name}</option>
                                                                 </c:forEach>
                                                         </select>
 
 
                                                         <div class="d-inline-block w-25">
-                                                                
+
                                                                 <input class="btn btn-info" type="submit" value="cambia"/>
                                                         </div>
                                                 </form>
@@ -125,11 +125,57 @@
                                                                 </tr>
                                                         </thead>
                                                         <tbody>
-
-                                                                <custom:getProductNotBuyListByListId listId="${sessionScope.myListId}">
-                                                                </custom:getProductNotBuyListByListId>
-                                                                <custom:getProductBoughtListByListId  listId="${sessionScope.myListId}">
-                                                                </custom:getProductBoughtListByListId>
+                                                                <!-- se la lista corrente contiene alcuni prodotto ancora da comprare-->
+                                                                <c:if test="${not empty requestScope.productsOfMyList}">
+                                                                        <c:forEach var="product" items="${productsOfMyList}">
+                                                                                <tr>
+                                                                                        <td class="td-img">
+                                                                                                <img src="${pageContext.request.contextPath}/${product.img}" alt="${product.name}" />
+                                                                                        </td>
+                                                                                        <td class="td-name">
+                                                                                                <span>${product.name}</span>
+                                                                                        </td>
+                                                                                        <td class="td-buttons">
+                                                                                                <a href="${pageContext.request.contextPath}/service/updateItemInListService?action=bought&productId=${product.id}&listId=${sessionScope.myListId}" title="comprato">
+                                                                                                        <i class="fas fa-check-circle"></i>
+                                                                                                </a>
+                                                                                                <!-- se utente loggato può eliminare prodotto della lista-->      
+                                                                                                <c:if test="${MylistPermission.deleteObject == true}">
+                                                                                                        <a href="${pageContext.request.contextPath}/service/updateItemInListService?action=delete&productId=${product.id}&listId=${sessionScope.myListId}" title="elimina">
+                                                                                                                <i class="fas fa-ban"></i>
+                                                                                                        </a>
+                                                                                                </c:if>
+                                                                                        </td>
+                                                                                </tr>
+                                                                        </c:forEach>
+                                                                </c:if>
+                                                                <!-- se la lista corrente contiene alcuni prodotto già comprato-->
+                                                                <c:if test="${not empty requestScope.productsBoughtOfMyList}">
+                                                                        <c:forEach var="product" items="${productsBoughtOfMyList}">
+                                                                                <tr class="bought-item">
+                                                                                        <td class="td-img">
+                                                                                                <img src="${pageContext.request.contextPath}/${product.img}" alt="${product.name}" />
+                                                                                        </td>
+                                                                                        <td class="td-name">
+                                                                                                <span>${product.name}</span>
+                                                                                        </td>
+                                                                                        <td class="td-buttons">
+                                                                                                <a href="${pageContext.request.contextPath}/service/updateItemInListService?action=bought&productId=${product.id}&listId=${sessionScope.myListId}" title="comprato">
+                                                                                                        <i class="fas fa-check-circle"></i>
+                                                                                                </a>
+                                                                                                <c:if test="${MylistPermission.deleteObject == true}">
+                                                                                                        <a href="${pageContext.request.contextPath}/service/updateItemInListService?action=delete&productId=${product.id}&listId=${sessionScope.myListId}" title="elimina">
+                                                                                                                <i class="fas fa-ban"></i>
+                                                                                                        </a>
+                                                                                                </c:if>
+                                                                                        </td>
+                                                                                </tr>
+                                                                        </c:forEach>
+                                                                </c:if>
+                                                                <!-- se la lista corrente è vuoto-->
+                                                                <c:if test="${empty requestScope.productsOfMyList && empty requestScope.productsBoughtOfMyList}">
+                                                                        <tr><td colspan = "3">è ancora vuoto</td></tr>
+                                                                </c:if>
                                                         </tbody>
                                                 </table>
                                         </div>

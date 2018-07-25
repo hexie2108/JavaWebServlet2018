@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.unitn.webprogramming18.dellmm.jstl;
+package it.unitn.webprogramming18.dellmm.jstl.notUse;
 
 import it.unitn.webprogramming18.dellmm.db.daos.CategoryListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ListDAO;
@@ -30,16 +30,15 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 /**
  * datto il id della lista , stampa tutti i prodotti
- *
  * @author mikuc
  */
-public class TagGetProductBoughtListByListId extends SimpleTagSupport
+public class TagGetProductNotBuyListByListId extends SimpleTagSupport
 {
 
         private Integer listId;
         private ProductDAO productDAO = new JDBCProductDAO();
         private PermissionDAO permissionDAO = new JDBCPermissionDAO();
-        private ListDAO listDAO = new JDBCListDAO();
+        
         List<Product> productsOfMyList = null;
 
         /**
@@ -61,7 +60,7 @@ public class TagGetProductBoughtListByListId extends SimpleTagSupport
 
                 try
                 {
-                        productsOfMyList = productDAO.getProductsBoughtInListByListId(listId);
+                        productsOfMyList = productDAO.getProductsNotBuyInListByListId(listId);
 
                         //se la lista di spesa non è vuota
                         if (productsOfMyList != null && productsOfMyList.size() > 0)
@@ -71,7 +70,7 @@ public class TagGetProductBoughtListByListId extends SimpleTagSupport
                                 //stampa tutti i prodotti
                                 for (Product product : productsOfMyList)
                                 {
-                                        jspWriter.println("<tr class=\"bought-item\">");
+                                        jspWriter.println("<tr>");
                                         jspWriter.println("<td class=\"td-img\">"
                                                     + "<img src=\"" + basePath + "/" + product.getImg() + "\" alt=\"" + product.getName() + "\" />"
                                                     + "</td>");
@@ -79,20 +78,16 @@ public class TagGetProductBoughtListByListId extends SimpleTagSupport
                                                     + "<span>" + product.getName() + "</span>"
                                                     + "</td>");
                                         jspWriter.println("<td class=\"td-buttons\">");
-                                        //jspWriter.println("<a href=\"" + basePath + "/service/updateItemInListService?action=bought&productId=" + product.getId() + "&listId=" + listId + "\" title=\"comprato\"><i class=\"fas fa-check-circle\"></i></a>");
+                                        jspWriter.println("<a href=\""+basePath+"/service/updateItemInListService?action=bought&productId="+product.getId()+"&listId="+listId+"\" title=\"comprato\"><i class=\"fas fa-check-circle\"></i></a>");
                                         if (permission.isDeleteObject())
                                         {
-                                                jspWriter.println("<a href=\"" + basePath + "/service/updateItemInListService?action=delete&productId=" + product.getId() + "&listId=" + listId + "\" title=\"elimina\"><i class=\"fas fa-ban\"></i></a>");
+                                                jspWriter.println("<a href=\""+basePath+"/service/updateItemInListService?action=delete&productId="+product.getId()+"&listId="+listId+"\" title=\"elimina\"><i class=\"fas fa-ban\"></i></a>");
                                         }
                                         jspWriter.println("</td>");
                                         jspWriter.println("</tr>");
                                 }
                         }
-                        //se la lista è vuota
-                        if(listDAO.getNumberOfProductsInListByListId(listId)==0)
-                        {
-                                 jspWriter.println("<tr><td colspan = \"3\">è ancora vuoto</td></tr>");
-                        }
+                        
                         
                 }
                 catch (DAOException ex)

@@ -80,16 +80,18 @@
         <listener-class>it.unitn.webprogramming18.dellmm.listeners.WebAppContextListener</listener-class>
     </listener>
     <!-- FILTERS -->
-    <!-- 
+    
             <filter>
-                    <filter-name>SetShoppingListIdsInSession</filter-name>
-                    <filter-class>it.unitn.webprogramming18.dellmm.filters.SetShoppingListIdsInSession</filter-class>
+                    <filter-name>FrontPagePrintListFilter</filter-name>
+                    <filter-class>it.unitn.webprogramming18.dellmm.filters.FrontPagePrintListFilter</filter-class>
             </filter>
             <filter-mapping>
-                    <filter-name>SetShoppingListIdsInSession</filter-name>
-                    <url-pattern>/</url-pattern>
+                    <filter-name>FrontPagePrintListFilter</filter-name>
+                    <url-pattern>/home</url-pattern>
+                    <url-pattern>/category</url-pattern>
+                    <url-pattern>/search</url-pattern>
             </filter-mapping>
-        -->
+      
     <filter>
         <filter-name>LoggedUserOnlyFilter</filter-name>
         <filter-class>it.unitn.webprogramming18.dellmm.filters.LoggedUserOnlyFilter</filter-class>

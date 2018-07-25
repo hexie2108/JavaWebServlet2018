@@ -13,7 +13,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 /**
- *
+ *stampare il nome di categoria datto id, usato nella productList.jsp
  * @author mikuc
  */
 public class TagGetCategoryNameById extends SimpleTagSupport

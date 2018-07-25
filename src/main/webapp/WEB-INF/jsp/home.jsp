@@ -17,7 +17,7 @@
                         <div class="product-list">
                                 <div class="product-list-head">
                                         <h1 class="list-title">
-                                                i prodotti
+                                                i prodotti 
                                         </h1>
                                         
                                         

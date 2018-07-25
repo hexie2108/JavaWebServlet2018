@@ -52,7 +52,7 @@
                                         <div class="site-logo-section">
                                                 
                                                 <img class="logo d-inline" src="${pageContext.request.contextPath}/image/base/logo.png" alt="logo"/>
-                                                <h2 class="text-white d-inline">Il nome del sito</h2>
+                                                <h2 class="text-white d-inline">Il nome del sito ${filter}</h2>
                                         </div> 
 
                                         
