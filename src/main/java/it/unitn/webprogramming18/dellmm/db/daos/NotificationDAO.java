@@ -17,6 +17,16 @@ public interface NotificationDAO extends DAO<Notification, Integer> {
      */
     @Override
     public Long getCount() throws DAOException;
+    
+    /**
+     * Persists the new notification passed as parameter
+     * to the storage system.
+     * 
+     * @param notification the new notification to insert as entry
+     * @return the id of the new persisted record.
+     * @throws DAOException if an error occurred during the persist action.
+     */
+    public Integer insert(Notification notification) throws DAOException;
 
     /**
      * Returns the {@link Notification notification} with the primary key equals to the one

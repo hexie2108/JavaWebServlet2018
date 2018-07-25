@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 
@@ -25,6 +26,8 @@ public class JDBCListDAO extends JDBCDAO<List, Integer> implements ListDAO {
 
         list.setId(rs.getInt("id"));
         list.setName(rs.getString("name"));
+        list.setDescription(rs.getString("description"));
+        list.setImg(rs.getString("img"));
         list.setOwnerId(rs.getInt("ownerId"));
         list.setCategoryList(rs.getInt("categoryList"));
 
@@ -43,6 +46,31 @@ public class JDBCListDAO extends JDBCDAO<List, Integer> implements ListDAO {
         }
 
         return 0L;
+    }
+    
+    public Integer insert(List list) throws DAOException {
+        if (list == null) {
+            throw new DAOException("list bean is null");
+        }
+        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO List (name, description, img, ownerId, categoryList) VALUES (?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
+
+            stm.setString(1, list.getName());
+            stm.setString(2, list.getDescription());
+            stm.setString(3, list.getImg());
+            stm.setInt(4, list.getOwnerId());
+            stm.setInt(5, list.getCategoryList());
+
+            stm.executeUpdate();
+            
+            ResultSet rs = stm.getGeneratedKeys();
+            if (rs.next()) {
+                list.setId(rs.getInt(1));
+            }
+            
+            return list.getId();
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to insert the new list", ex);
+        }
     }
 
     @Override
@@ -91,15 +119,19 @@ public class JDBCListDAO extends JDBCDAO<List, Integer> implements ListDAO {
         try (PreparedStatement stm = CON.prepareStatement(
                 "UPDATE List SET " +
                         "name = ?," +
+                        "description = ?," +
+                        "img = ?" +
                         "ownerId = ?," +
                         "categoryList = ?" +
                         "WHERE id = ?"
         )) {
 
-            stm.setString(1, list.getName());
-            stm.setInt(2, list.getOwnerId());
-            stm.setInt(3, list.getCategoryList());
-            stm.setInt(4, list.getId());
+            stm.setString(1, list.getName());            
+            stm.setString(2, list.getDescription());
+            stm.setString(3, list.getImg());
+            stm.setInt(4, list.getCategoryList());
+            stm.setInt(5, list.getOwnerId());
+            stm.setInt(6, list.getId());
             if (stm.executeUpdate() != 1) {
                 throw new DAOException("Impossible to update the list");
             }
@@ -150,4 +182,25 @@ public class JDBCListDAO extends JDBCDAO<List, Integer> implements ListDAO {
 
         return lists;
     }
+
+    @Override
+    public Integer getNumberOfProductsInListByListId(Integer listId) throws DAOException {
+        Integer res = null;
+        if(listId == null) {
+            throw new DAOException("listId is null");
+        }
+        try (PreparedStatement stm = CON.prepareStatement("SELECT COUNT(*) FROM List JOIN ProductInList"
+                                                        + "ON List.id = ProductInList.listId"
+                                                        + "WHERE List.id = ?")) {
+            stm.setInt(1, listId);
+            ResultSet counter = stm.executeQuery();
+            if (counter.next()) {
+                res = counter.getInt(1);
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to count list", ex);
+        }
+        return res;
+    }
+
 }

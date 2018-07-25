@@ -18,6 +18,16 @@ public interface CommentDAO extends DAO<Comment, Integer> {
      */
     @Override
     public Long getCount() throws DAOException;
+    
+    /**
+     * Persists the new comment passed as parameter
+     * to the storage system.
+     * 
+     * @param comment the new comment to insert as entry
+     * @return the id of the new persisted record.
+     * @throws DAOException if an error occurred during the persist action.
+     */
+    public Integer insert(Comment comment) throws DAOException;
 
     /**
      * Returns the {@link Comment comment} with the primary key equals to the one

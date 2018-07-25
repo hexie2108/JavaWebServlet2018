@@ -4,14 +4,31 @@
 <%@ page import="it.unitn.webprogramming18.dellmm.util.PagePathsConstants" %>
 
 <html>
-<head>
-    <title>AlreadyLoggedIn</title>
-</head>
-<body>
-${sessionScope['user'].name}<br>
-${sessionScope['user'].surname}<br>
-Sei già loggato cosa vuoi fare?
-<a href="${pageContext.servletContext.contextPath}/${PagePathsConstants.LOGOUT}?${LogoutServlet.NEXT_URL_KEY}=${param.nextUrl}">Logout</a><br>
-<a href="${requestScope.prevUrl}">Go back</a>
-</body>
+    <head>
+        <title>Homepage</title>
+    </head>
+    <body>
+        <div class="py-3">
+            <span class="px-2">
+                <button class="btn btn-outline-primary" type="button" href="#">Home</button>
+                <button class="btn btn-outline-primary" type="button" href="#">Inbox</button>
+                <button class="btn btn-outline-primary" type="button" href="#">Profile</button>
+                <form action="">
+                    <button class="btn btn-outline-primary" type="submit">Logout</button>
+                </form>
+            </span>
+            <div>
+                <form action="PrepareAddUpdateListPageServlet" method="get">
+                    <button class="btn btn-primary" type="submit">Add List</button>
+                </form>
+            </div>
+            <div>
+
+            </div>
+        </div>
+        ${sessionScope['user'].name}<br>
+        ${sessionScope['user'].surname}<br>
+        <a href="${pageContext.servletContext.contextPath}/${PagePathsConstants.LOGOUT}?${LogoutServlet.NEXT_URL_KEY}=${param.nextUrl}">Logout</a><br>
+        <a href="${requestScope.prevUrl}">Go back</a>
+    </body>
 </html>

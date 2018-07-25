@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +46,33 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
         }
 
         return 0L;
+    }
+    
+    public Integer insert(Product product) throws DAOException {
+        if (product == null) {
+            throw new DAOException("product bean is null");
+        }
+        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO Product (name, description, img, logo, categoryProductId, privateListId) VALUES (?,?,?,?,?,?)", 
+                                                                Statement.RETURN_GENERATED_KEYS)) {
+
+            stm.setString(1, product.getName());
+            stm.setString(2, product.getDescription());
+            stm.setString(3, product.getImg());
+            stm.setString(4, product.getLogo());
+            stm.setInt(5, product.getCategoryProductId());
+            stm.setInt(6, product.getPrivateListId());
+            
+            stm.executeUpdate();
+            
+            ResultSet rs = stm.getGeneratedKeys();
+            if (rs.next()) {
+                product.setId(rs.getInt(1));
+            }
+            
+            return product.getId();
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to insert the new product", ex);
+        }
     }
 
     @Override
@@ -97,6 +125,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
                         "img =?," +
                         "logo =?," +
                         "categoryProductId =? " +
+                        "privateListId =?" +
                         "WHERE id = ?"
         )) {
             stm.setString(1, product.getName());
@@ -104,7 +133,8 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
             stm.setString(3, product.getImg());
             stm.setString(4, product.getLogo());
             stm.setInt(5, product.getCategoryProductId());
-            stm.setInt(6, product.getId());
+            stm.setInt(6, product.getPrivateListId());
+            stm.setInt(7, product.getId());
 
             if (stm.executeUpdate() != 1) {
                 throw new DAOException("Impossible to update the product");
@@ -123,7 +153,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
         if (listId == null) {
             throw new DAOException("listId is null");
         }
-        try (PreparedStatement stm = CON.prepareStatement("SELECT Product.* FROM Product JOIN ProductInList ON Product.id = ProductInList.productId "
+        try (PreparedStatement stm = CON.prepareStatement("SELECT Product.* FROM ProductInList JOIN Product ON ProductInList.productId = Product.id "
                 + "WHERE  ProductInList.listId = ?")) {
             stm.setInt(1, listId);
             try (ResultSet rs = stm.executeQuery()) {

@@ -12,6 +12,8 @@ public class List {
 
     private int id;
     private String name;
+    private String description;
+    private String img;
     private int ownerId;
     private int categoryList;
 
@@ -45,6 +47,34 @@ public class List {
     }
 
     /**
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * @param description the description to set
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
+     * @return the img
+     */
+    public String getImg() {
+        return img;
+    }
+
+    /**
+     * @param img the img to set
+     */
+    public void setImg(String img) {
+        this.img = img;
+    }
+    
+    /**
      * @return the ownerId
      */
     public int getOwnerId() {
@@ -57,7 +87,7 @@ public class List {
     public void setOwnerId(int ownerId) {
         this.ownerId = ownerId;
     }
-
+    
     /**
      * @return the categoryList
      */

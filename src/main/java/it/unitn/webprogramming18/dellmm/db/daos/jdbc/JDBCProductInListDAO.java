@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class JDBCProductInListDAO extends JDBCDAO<ProductInList, Integer> implem
 
         productInList.setId(rs.getInt("id"));
         productInList.setProductId(rs.getInt("productId"));
+        productInList.setStatus(rs.getBoolean("status"));
         productInList.setListId(rs.getInt("listId"));
 
         return productInList;
@@ -44,6 +46,30 @@ public class JDBCProductInListDAO extends JDBCDAO<ProductInList, Integer> implem
         return 0L;
     }
 
+    public Integer insert(ProductInList productInList) throws DAOException {
+        if (productInList == null) {
+            throw new DAOException("productInList bean is null");
+        }
+        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO ProductInList (productId, listId, status) VALUES (?,?,?)", 
+                                                                Statement.RETURN_GENERATED_KEYS)) {
+
+            stm.setInt(1, productInList.getProductId());
+            stm.setInt(2, productInList.getListId());
+            stm.setBoolean(3, productInList.isStatus());
+            
+            stm.executeUpdate();
+            
+            ResultSet rs = stm.getGeneratedKeys();
+            if (rs.next()) {
+                productInList.setId(rs.getInt(1));
+            }
+            
+            return productInList.getId();
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to insert the new productInList entry", ex);
+        }
+    }
+    
     @Override
     public ProductInList getByPrimaryKey(Integer primaryKey) throws DAOException {
         ProductInList productInList = null;
@@ -91,12 +117,15 @@ public class JDBCProductInListDAO extends JDBCDAO<ProductInList, Integer> implem
                 "UPDATE ProductInList SET " +
                         "productId = ?," +
                         "listId = ? " +
+                        "status = ? " +
                         "WHERE id = ?"
         )) {
 
             stm.setInt(1, productInList.getProductId());
             stm.setInt(2, productInList.getListId());
-            stm.setInt(3, productInList.getId());
+            stm.setBoolean(3, productInList.isStatus());
+            stm.setInt(4, productInList.getId());
+            
             if (stm.executeUpdate() != 1) {
                 throw new DAOException("Impossible to update the productInList");
             }
@@ -105,5 +134,29 @@ public class JDBCProductInListDAO extends JDBCDAO<ProductInList, Integer> implem
         }
 
         return productInList;
+    }
+    
+    public Boolean checkIsProductInListByIds(Integer listId, Integer productId) throws DAOException {
+        
+        Boolean res = false;
+        
+        if (listId == null || productId == null) {
+            throw new DAOException("One or both parameters (listId, productId) are null");
+        }
+        
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM ProductInList WHERE listId = ? AND productId = ?")) {
+            
+            stm.setInt(1, listId);
+            stm.setInt(2, productId);
+            try(ResultSet rs = stm.executeQuery()) {
+                if (rs.next()) {
+                    res = true;
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to count productInList", ex);
+        }
+
+        return res;
     }
 }

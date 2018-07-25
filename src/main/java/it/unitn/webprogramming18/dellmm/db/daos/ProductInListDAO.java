@@ -17,6 +17,16 @@ public interface ProductInListDAO extends DAO<ProductInList, Integer> {
      */
     @Override
     public Long getCount() throws DAOException;
+    
+    /**
+     * Persists the new productInList passed as parameter
+     * to the storage system.
+     * 
+     * @param productInList the new productInList to insert as entry
+     * @return the id of the new persisted record.
+     * @throws DAOException if an error occurred during the persist action.
+     */
+    public Integer insert(ProductInList productInList) throws DAOException;
 
     /**
      * Returns the {@link ProductInList productInList} with the primary key equals to the one
@@ -52,4 +62,14 @@ public interface ProductInListDAO extends DAO<ProductInList, Integer> {
      */
     @Override
     public ProductInList update(ProductInList productInList) throws DAOException;
+    
+    /**
+     * Returns a boolean which indicates if a product is already into a list; operates on specified parameters
+      
+     * @param listId    id of the list in which the product could be into.
+     * @param productId id of the product of which presence in list must be checked
+     * @return          TRUE if the product is in the list, FALSE otherwise
+     * @throws DAOException if an error occurred during the action.
+     */
+    public Boolean checkIsProductInListByIds(Integer listId, Integer productId) throws DAOException;
 }

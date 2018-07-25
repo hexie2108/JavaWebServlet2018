@@ -134,7 +134,7 @@ public class User implements Serializable {
     public void setVerifyEmailLink(String verifyEmailLink) {
         this.verifyEmailLink = verifyEmailLink;
     }
-
+    
     /**
      * @return the resetPwdEmailLink
      */

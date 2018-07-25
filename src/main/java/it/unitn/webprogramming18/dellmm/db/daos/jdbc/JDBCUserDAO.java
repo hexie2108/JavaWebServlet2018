@@ -179,7 +179,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
 
         return user;
     }
-
+    
     public void changePassword(String resetLink, String newPassword) throws DAOException {
         try(PreparedStatement stm = CON.prepareStatement(
                 "UPDATE User SET resetPwdEmailLink=NULL, password=?" +
@@ -195,7 +195,6 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
             throw new DAOException("Impossible to update the password");
         }
     }
-
 
     public int checkUserRegisteredByEmail(String email) throws DAOException {
         int res = -1;

@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +45,29 @@ public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements Comment
         }
 
         return 0L;
+    }
+    
+    public Integer insert(Comment comment) throws DAOException {
+        if (comment == null) {
+            throw new DAOException("comment bean is null");
+        }
+        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO Comment (userId, listId, text) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
+
+            stm.setInt(1, comment.getUserId());
+            stm.setInt(2, comment.getListId());
+            stm.setString(3, comment.getText());
+
+            stm.executeUpdate();
+            
+            ResultSet rs = stm.getGeneratedKeys();
+            if (rs.next()) {
+                comment.setId(rs.getInt(1));
+            }
+            
+            return comment.getId();
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to insert the new comment", ex);
+        }
     }
 
     @Override
