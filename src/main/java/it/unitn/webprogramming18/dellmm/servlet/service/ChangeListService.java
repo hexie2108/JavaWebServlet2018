@@ -84,6 +84,7 @@ public class ChangeListService extends HttpServlet
                 
                 //memorizza  id della nuova lista 
                 request.getSession().setAttribute("myListId", Integer.parseInt(listId));
+                
                 //ritorna alla pagina di provenienza
                 String prevUrl = request.getHeader("Referer");
                 if (prevUrl == null)

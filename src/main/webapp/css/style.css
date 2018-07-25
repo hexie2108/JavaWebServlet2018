@@ -131,24 +131,36 @@
 }
 
 .front-page .main-section .product-list  .list-item{
-        width: 32%;
+        width: 31%;
 }
 
 .front-page .category-main-section .product-list  .list-item, .front-page .search-main-section .product-list  .list-item{
-        width: 32.25%;
+        width: 31%;
 }
 
-.front-page .product-list  .list-item .list-item_info{
-        line-height: 34px;
 
-}
+
+
 .front-page  .product-list  .list-item .list-item-title{
         text-align: center;
         font-weight: bold;
-
 }
 
-.front-page .category-main-section .product-list .list-item .list-item-cat{
+.front-page  .product-list  .list-item .list-item-info{
+        height: 40px;
+        line-height: 40px;
+        margin: 2px 2px;
+}
+.front-page  .product-list  .list-item .list-item-info .list-item-logo{
+        height: 40px;
+
+}
+.front-page  .product-list  .list-item .list-item-info .list-item-logo .list-item-logo-img{
+        height: auto;
+        max-height: 100%;
+}
+
+.front-page .category-main-section .product-list .list-item .hiddin-cat{
         display: none;
 }
 
@@ -193,7 +205,7 @@
 }
 
 .front-page #list-float-box .list-body .list-content table tbody tr.bought-item{
-            background-color: rgba(0, 0, 0, 0.11);
+        background-color: rgba(0, 0, 0, 0.11);
 }
 
 .front-page #list-float-box .list-body .list-content table tbody td{
@@ -242,4 +254,29 @@
         .front-page #list-float-box .list-body .list-content{
                 height: 200px;
         }
+}
+
+
+
+/*floatBoxForAddProductInShoppingList.jsp-------------------------------------- */
+@media (min-width: 800px){
+        #boxAddItem .modal-dialog{
+                max-width: 600px;
+        }
+}
+
+#boxAddItem .left-body{
+        width: 50%;
+        display: inline-block;
+        vertical-align: top;
+}
+
+#boxAddItem .right-body{
+        width: 49%;
+        display: inline-block;
+}
+
+#boxAddItem .right-body .item-description p.item-description-text{
+        max-height: 250px;
+        overflow-y: hidden;
 }

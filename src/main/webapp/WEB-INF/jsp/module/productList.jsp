@@ -12,32 +12,34 @@
 
 <div class="list-body">
         <c:forEach var="product" items="${productList}">
-                <div class="list-item card d-inline-flex m-1 p-1">
+                <div id="item-${product.id}" class="list-item card d-inline-flex m-2 p-2">
                         <img class="list-item-img img-fluid card-img-top" src="${pageContext.request.contextPath}/${product.img}" alt="${product.name}"/>
 
-                        <div class="list-item-cat">
-                                <c:if test="${empty categoria}">
-                                        <a href="${pageContext.request.contextPath}/category?catid=${product.categoryProductId}">
+                        <div class="list-item-cat ${not empty categoria ?"hiddin-cat":""}">
+                                
+                                        <a class="list-item-cat-link" href="${pageContext.request.contextPath}/category?catid=${product.categoryProductId}">
                                                 <custom:getCategoryNameById categoryId="${product.categoryProductId}">
                                                 </custom:getCategoryNameById>
                                         </a>
-                                </c:if>
+                                
                         </div>
-                        
+
                         <div class="list-item-title card-title mb-2 mt-2">
                                 ${product.name}
                         </div>
-                        <div class="list-item_info text-center mb-2">
-                                <div class="list-item-log card-text d-inline-block w-50">
-                                        ${product.logo}
-                                </div>
-                                <div class="list-item-add  d-inline-block ">
-                                        <button class="btn btn-info" data-toggle="modal" data-target="#boxAddItem" onclick="setProductIdForAddInList(${product.id})">Aggiunge</button>
-                                </div>
-                        </div>
-                        <div class="list-item-description card-text">
+
+                        <div class="list-item-description card-text mb-2">
                                 ${product.description}
 
+                        </div>
+                                <div class="list-item-info">       
+                                        <div class="list-item-logo  d-inline-block w-50">
+                                                <img class="list-item-logo-img img-fluid" src="${pageContext.request.contextPath}/${product.logo}" alt="logo"/>
+
+                                        </div>
+                                        <div class="list-item-add  float-right ">
+                                                <button class="list-item-add-button btn btn-info" data-toggle="modal" data-target="#boxAddItem" onclick="setProductIdForAddInList(${product.id})">Aggiunge</button>
+                                        </div>
                         </div>
 
                 </div>

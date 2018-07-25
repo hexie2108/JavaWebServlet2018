@@ -45,6 +45,10 @@ import javax.servlet.http.HttpServletResponseWrapper;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 
+/**
+ * filtro che pre elabrora i dati della lista per utente loggato
+ * @author mikuc
+ */
 public class FrontPagePrintListFilter implements Filter
 {
 

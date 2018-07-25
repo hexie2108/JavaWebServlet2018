@@ -160,9 +160,7 @@
                                                                                                 <span>${product.name}</span>
                                                                                         </td>
                                                                                         <td class="td-buttons">
-                                                                                                <a href="${pageContext.request.contextPath}/service/updateItemInListService?action=bought&productId=${product.id}&listId=${sessionScope.myListId}" title="comprato">
-                                                                                                        <i class="fas fa-check-circle"></i>
-                                                                                                </a>
+                                                                                                
                                                                                                 <c:if test="${MylistPermission.deleteObject == true}">
                                                                                                         <a href="${pageContext.request.contextPath}/service/updateItemInListService?action=delete&productId=${product.id}&listId=${sessionScope.myListId}" title="elimina">
                                                                                                                 <i class="fas fa-ban"></i>
