@@ -26,7 +26,7 @@
                 </small>
                 <small class="float-right" title="<fmt:formatDate value="${notification.date}" pattern="yyyy-MM-dd'T'HH:mm:ss'Z'" timeZone="UTC"/>">   <fmt:formatDate value="${notification.date}" type="both"/> UTC</small>
             </div>
-            <p>${notification.text}</p>
+            <div>${notification.text}</div>
         </li>
     </c:forEach>
 </ul>
