@@ -124,8 +124,8 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
                         "description =?," +
                         "img =?," +
                         "logo =?," +
-                        "categoryProductId =? " +
-                        "privateListId =?" +
+                        "categoryProductId =?, " +
+                        "privateListId =? " +
                         "WHERE id = ?"
         )) {
             stm.setString(1, product.getName());

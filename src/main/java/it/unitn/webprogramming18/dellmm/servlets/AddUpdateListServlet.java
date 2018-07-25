@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.unitn.webprogramming18.dellmm.servlet;
+package it.unitn.webprogramming18.dellmm.servlets;
 
 import it.unitn.webprogramming18.dellmm.db.daos.ListDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
@@ -24,7 +24,6 @@ import javax.servlet.http.HttpSession;
  */
 public class AddUpdateListServlet extends HttpServlet {
 
-    
     private ListDAO listDAO;
     
     @Override

@@ -122,8 +122,8 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
                 "UPDATE CategoryList SET " +
                         "name = ?," +
                         "description = ?," +
-                        "img1 = ? " +
-                        "img2 = ? " +
+                        "img1 = ?, " +
+                        "img2 = ?, " +
                         "img3 = ? " +
                         "WHERE id = ?"
         )) {

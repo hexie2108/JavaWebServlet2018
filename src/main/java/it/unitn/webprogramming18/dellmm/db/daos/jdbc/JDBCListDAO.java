@@ -120,7 +120,7 @@ public class JDBCListDAO extends JDBCDAO<List, Integer> implements ListDAO {
                 "UPDATE List SET " +
                         "name = ?," +
                         "description = ?," +
-                        "img = ?" +
+                        "img = ?," +
                         "ownerId = ?," +
                         "categoryList = ?" +
                         "WHERE id = ?"

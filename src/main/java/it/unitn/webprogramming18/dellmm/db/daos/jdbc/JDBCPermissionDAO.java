@@ -172,7 +172,7 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
         if (userId == null || listId == null) {
             throw new DAOException("One or both parameters (userId, listId) are null");
         }
-        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Permission WHERE userId = ? AND listId == ?")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Permission WHERE userId = ? AND listId = ?")) {
             stm.setInt(1, userId);
             stm.setInt(2, listId);
             

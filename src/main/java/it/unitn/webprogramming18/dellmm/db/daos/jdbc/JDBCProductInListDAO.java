@@ -116,7 +116,7 @@ public class JDBCProductInListDAO extends JDBCDAO<ProductInList, Integer> implem
         try (PreparedStatement stm = CON.prepareStatement(
                 "UPDATE ProductInList SET " +
                         "productId = ?," +
-                        "listId = ? " +
+                        "listId = ?, " +
                         "status = ? " +
                         "WHERE id = ?"
         )) {
