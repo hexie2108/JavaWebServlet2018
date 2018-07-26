@@ -5,11 +5,11 @@
  */
 package it.unitn.webprogramming18.dellmm.servlets;
 
-import it.unitn.webprogramming18.dellmm.db.daos.ListDAO;
+import it.unitn.webprogramming18.dellmm.db.daos.CategoryListDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
-import it.unitn.webprogramming18.dellmm.javaBeans.List;
+import it.unitn.webprogramming18.dellmm.javaBeans.CategoryList;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -22,9 +22,10 @@ import javax.servlet.http.HttpSession;
  *
  * @author luca_morgese
  */
-public class AddUpdateListServlet extends HttpServlet {
+public class AddUpdateCategoryListServlet extends HttpServlet {
 
-    private ListDAO listDAO;
+
+    private CategoryListDAO categoryListDAO;
     
     @Override
     public void init() throws ServletException {
@@ -34,11 +35,12 @@ public class AddUpdateListServlet extends HttpServlet {
         }
 
         try {
-            listDAO = daoFactory.getDAO(ListDAO.class);
+            categoryListDAO = daoFactory.getDAO(CategoryListDAO.class);
         } catch (DAOFactoryException ex) {
             throw new ServletException("Impossible to get ListDAO for user storage system", ex);
         }
     }
+    
 
     /**
      * Handles the HTTP <code>POST</code> method.
@@ -56,41 +58,36 @@ public class AddUpdateListServlet extends HttpServlet {
             //request.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(request, response);
         } else {
             
-            Integer listId = null;
-            listId = Integer.valueOf(request.getParameter("listId"));
+            //Being null or not null defines if occurring action is of "modify catList" or "create catList"
+            Integer categoryListId = null;
+            categoryListId = Integer.valueOf(request.getParameter("categoryListId"));
             
             String name = request.getParameter("name");
             String description = request.getParameter("description");
-            String img = request.getParameter("img");
-            
-            Integer categoryList = Integer.valueOf(request.getParameter("categoryList"));
+            String img1 = request.getParameter("img1");
+            String img2 = request.getParameter("img2");
+            String img3 = request.getParameter("img3");
             
             try {
-                //List bean, NOT a java.util.List
-                List list = new List();
-                
-                list.setId(listId);
-                
-                list.setName(name);
-                list.setDescription(description);
-                list.setImg(img);
-                //Owner id is set if new list is created, otherwise, the field is not changed
-                list.setCategoryList(categoryList);
-                
-                if (listId == null) {
-                    //List is new and current user is its owner
-                    list.setOwnerId(user.getId());
-                    listDAO.insert(list);
+                CategoryList categoryList = new CategoryList();
+
+                categoryList.setId(categoryListId);
+
+                categoryList.setName(name);
+                categoryList.setDescription(description);
+                categoryList.setImg1(img1);
+                categoryList.setImg2(img2);
+                categoryList.setImg3(img3);
+
+                if (categoryListId == null) {
+                    categoryListDAO.insert(categoryList);
                 } else {
-                    //List is being modified, listId is != null
-                    //ownerId is the same as the one prior to the modification
-                    List prevList = listDAO.getByPrimaryKey(listId);
-                    list.setOwnerId(prevList.getOwnerId());
-                    listDAO.update(list);
+                    categoryListDAO.update(categoryList);
                 }
+                
             } catch (DAOException ex) {
                 ex.printStackTrace();
-                throw new ServletException("Impossible to update or create new list");
+                throw new ServletException("Impossible to update or create new list category");
             }
             
             response.sendRedirect("/WEB-INF/jsp/yourHome.jsp");
@@ -99,11 +96,12 @@ public class AddUpdateListServlet extends HttpServlet {
 
     /**
      * Returns a short description of the servlet.
+     *
      * @return a String containing servlet description
      */
     @Override
     public String getServletInfo() {
-        return "Servlet that gets info from form to update or create a new list";
+        return "Inserts into persistence system new CategoryList entry";
     }// </editor-fold>
 
 }
