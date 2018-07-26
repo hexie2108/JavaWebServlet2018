@@ -15,6 +15,7 @@ import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.CategoryList;
 import it.unitn.webprogramming18.dellmm.javaBeans.Permission;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
+import it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import java.io.IOException;
 import java.util.List;
@@ -73,7 +74,7 @@ public class DisplaySpecificListServlet extends HttpServlet {
             int listId = Integer.parseInt(request.getParameter("listId"));
             
             //Obtains ListBean with listId
-            it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList list = new it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList();
+            ShoppingList list = new ShoppingList();
             try {
                 list = listDAO.getByPrimaryKey(listId);
             } catch (DAOException ex) {

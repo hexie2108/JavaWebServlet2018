@@ -11,7 +11,7 @@
 
 
 <!-- finestrina -->
-<div class="modal fade" id="boxAddItem">
+<div class="modal fade custom-modal" id="boxAddItem">
         <div class="modal-dialog">
                 <div class="modal-content">
 
@@ -25,11 +25,11 @@
                         <div class="modal-body">
                                 <div class="left-body">
                                         <img class="item-img img-fluid" alt="item-name" />
-                                        <div class="item-logo text-center mt-2 mb-2">
+                                        <div class="item-logo">
                                                 <p class="font-weight-bold">
                                                         logo:
                                                 </p>
-                                                <img class="item-logo-img img-fluid w-50 "  alt="logo" />
+                                                <img class="item-logo-img img-fluid"  alt="logo" />
                                         </div>
                                 </div>
 

@@ -1,4 +1,4 @@
-package it.unitn.webprogramming18.dellmm.servlets.userSystem;
+package it.unitn.webprogramming18.dellmm.servlet.userSystem;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

@@ -128,12 +128,22 @@
                                                                 <!-- se la lista corrente contiene alcuni prodotto ancora da comprare-->
                                                                 <c:if test="${not empty requestScope.productsOfMyList}">
                                                                         <c:forEach var="product" items="${productsOfMyList}">
-                                                                                <tr>
+                                                                                <tr id="productIdInList-${product.id}" >
                                                                                         <td class="td-img">
-                                                                                                <img src="${pageContext.request.contextPath}/${product.img}" alt="${product.name}" />
+                                                                                                <a href="javascript:;" data-toggle="modal" data-target="#boxShowItem" onclick="showProductWindowsFromList(${product.id},true,false,${MylistPermission.deleteObject})">
+                                                                                                        <img class="img" src="${pageContext.request.contextPath}/${product.img}" alt="${product.name}" />
+                                                                                                </a>
                                                                                         </td>
                                                                                         <td class="td-name">
-                                                                                                <span>${product.name}</span>
+                                                                                                <span class="name">${product.name}</span>
+
+                                                                                                <!-- campo necessario per visuallizare il prodotto nella finestrina-->
+                                                                                                <input class="logo-img" type="hidden" value="${pageContext.request.contextPath}/${product.logo}" />
+                                                                                                <input class="cat-link" type="hidden" value="${pageContext.request.contextPath}/category?catid=${product.categoryProductId}"/>
+                                                                                                <input class="cat-name" type="hidden" value="<custom:getCategoryNameById categoryId="${product.categoryProductId}" />"/>
+                                                                                                <input class="description" type="hidden" value="${product.description}"/>
+                                                                                                <input class="list-id" type="hidden" value="${sessionScope.myListId}"/>
+
                                                                                         </td>
                                                                                         <td class="td-buttons">
                                                                                                 <a href="${pageContext.request.contextPath}/service/updateItemInListService?action=bought&productId=${product.id}&listId=${sessionScope.myListId}" title="comprato">
@@ -152,15 +162,25 @@
                                                                 <!-- se la lista corrente contiene alcuni prodotto già comprato-->
                                                                 <c:if test="${not empty requestScope.productsBoughtOfMyList}">
                                                                         <c:forEach var="product" items="${productsBoughtOfMyList}">
-                                                                                <tr class="bought-item">
+                                                                                <tr id="productIdInList-${product.id}" class="bought-item" >
                                                                                         <td class="td-img">
-                                                                                                <img src="${pageContext.request.contextPath}/${product.img}" alt="${product.name}" />
+                                                                                                <a href="javascript:;" data-toggle="modal" data-target="#boxShowItem" onclick="showProductWindowsFromList(${product.id},true,true,${MylistPermission.deleteObject})">
+                                                                                                        <img class="img" src="${pageContext.request.contextPath}/${product.img}" alt="${product.name}" />
+                                                                                                </a>
                                                                                         </td>
                                                                                         <td class="td-name">
-                                                                                                <span>${product.name}</span>
+                                                                                                <span class="name">${product.name}</span>
+
+                                                                                                <!-- campo necessario per visuallizare il prodotto nella finestrina-->
+                                                                                                <input class="logo-img" type="hidden" value="${pageContext.request.contextPath}/${product.logo}" />
+                                                                                                <input class="cat-link" type="hidden" value="${pageContext.request.contextPath}/category?catid=${product.categoryProductId}"/>
+                                                                                                <input class="cat-name" type="hidden" value="<custom:getCategoryNameById categoryId="${product.categoryProductId}" />"/>
+                                                                                                <input class="description" type="hidden" value="${product.description}"/>
+                                                                                                <input class="list-id" type="hidden" value="${sessionScope.myListId}"/>
+
                                                                                         </td>
                                                                                         <td class="td-buttons">
-                                                                                                
+
                                                                                                 <c:if test="${MylistPermission.deleteObject == true}">
                                                                                                         <a href="${pageContext.request.contextPath}/service/updateItemInListService?action=delete&productId=${product.id}&listId=${sessionScope.myListId}" title="elimina">
                                                                                                                 <i class="fas fa-ban"></i>

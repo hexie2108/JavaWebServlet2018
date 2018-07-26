@@ -73,4 +73,15 @@ public interface LogDAO extends DAO<Log, Integer> {
      * @throws DAOException if an error occurred during the action.
      */
     public Log getUserProductLogByIds(Integer userId, Integer productId) throws DAOException;
+    
+    /**
+     * Given user and product id, updates the log purchase dates for specified parameters,
+     * or creates a new entry
+     * 
+     * @param userId     user's id
+     * @param productId  product's id
+     * @return updated or newly created log entry
+     * @throws DAOException if an error occurred during the action.
+     */
+    public Log updateUserProductLogTableByIds(Integer userId, Integer productId) throws DAOException;
 }

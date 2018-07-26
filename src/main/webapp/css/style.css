@@ -258,25 +258,42 @@
 
 
 
-/*floatBoxForAddProductInShoppingList.jsp-------------------------------------- */
+/*floatBoxForAddProductInShoppingList.jsp AND floatBoxForViewProductFromShoppingList.jsp-------------------------------------- */
 @media (min-width: 800px){
-        #boxAddItem .modal-dialog{
+        .custom-modal .modal-dialog{
                 max-width: 600px;
         }
 }
 
-#boxAddItem .left-body{
+.custom-modal .left-body{
         width: 50%;
         display: inline-block;
         vertical-align: top;
+        padding: 5px;
 }
 
-#boxAddItem .right-body{
+.custom-modal .left-body .item-logo{
+        text-align: center;
+        margin-top: .5rem;
+        margin-bottom: .5rem;
+}
+
+.custom-modal .left-body .item-logo-img{
+        width: 50%;
+}
+
+.custom-modal .right-body{
         width: 49%;
         display: inline-block;
+        padding: 5px;
 }
 
-#boxAddItem .right-body .item-description p.item-description-text{
+.custom-modal .right-body .item-description p.item-description-text{
         max-height: 250px;
         overflow-y: hidden;
+}
+
+.custom-modal .right-body .item-information{
+        margin-bottom: 2rem;
+
 }
