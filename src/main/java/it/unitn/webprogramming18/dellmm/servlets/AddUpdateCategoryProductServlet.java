@@ -11,12 +11,20 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.CategoryProduct;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 /**
  *
@@ -51,6 +59,27 @@ public class AddUpdateCategoryProductServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+        
+        // Ottieni configurazione cartella immagini
+        String categoryProductImgsFolder = getServletContext().getInitParameter("categoryProductImgsFolder");
+        if (categoryProductImgsFolder == null) {
+            throw new ServletException("CategoryProductImgs folder not configured");
+        }
+
+        // TODO: Controllare quanto questa cosa sia orribile
+        String realContextPath = request.getServletContext().getRealPath(File.separator);
+        if (!realContextPath.endsWith("/")) {
+            realContextPath += "/";
+        }
+
+        Path path = Paths.get(realContextPath + categoryProductImgsFolder);
+        if (!Files.exists(path)) {
+            Files.createDirectories(path);
+        }
+        
+        
+        
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute("user");
         if (session == null || user == null) {
@@ -63,7 +92,45 @@ public class AddUpdateCategoryProductServlet extends HttpServlet {
             
             String name = request.getParameter("name");
             String description = request.getParameter("description");
-            String img = request.getParameter("img");
+            
+            
+            //String img = request.getParameter("img");
+            
+            
+            //IMGS
+            
+            String uuidImg = null;
+            //PART PARAMETER TO BE DEFINED
+            String SPECIFIC_FORM_PART_NAME = null;
+            Part filePart = request.getPart(SPECIFIC_FORM_PART_NAME);
+            
+            if (filePart == null) {
+                response.sendError(400, "No image selected for category list");
+                return;
+            } else if(filePart.getSize() == 0){
+                response.sendError(400, "Image has zero size");
+                return;
+            } else if(filePart.getSize() > 15 * 1000000){ // Non permettere dimensioni superiori ai ~15MB
+                response.sendError(400, "Image have size > 15MB");
+                return;
+            } else {
+                uuidImg = UUID.randomUUID().toString();
+                
+                try (InputStream fileContent = filePart.getInputStream()) {
+                    File file = new File(path.toString(), uuidImg.toString());
+                    System.out.println(file.toPath());
+                    Files.copy(fileContent, file.toPath());
+                    
+                } catch (FileAlreadyExistsException ex) { // Molta sfiga
+                    getServletContext().log("File \"" + uuidImg.toString() + "\" already exists on the server");
+                } catch (RuntimeException ex) {
+                    //TODO: handle the exception
+                    getServletContext().log("impossible to upload the file", ex);
+                }
+            }
+            
+            
+            
             
             try {
                 CategoryProduct categoryProduct = new CategoryProduct();
@@ -72,7 +139,7 @@ public class AddUpdateCategoryProductServlet extends HttpServlet {
 
                 categoryProduct.setName(name);
                 categoryProduct.setDescription(description);
-                categoryProduct.setImg(img);
+                categoryProduct.setImg(uuidImg);
 
                 if (categoryProductId == null) {
                     categoryProductDAO.insert(categoryProduct);

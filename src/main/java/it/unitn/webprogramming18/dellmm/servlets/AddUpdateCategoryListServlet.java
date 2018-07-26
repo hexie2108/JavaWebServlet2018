@@ -11,12 +11,20 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.CategoryList;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 /**
  *
@@ -52,6 +60,26 @@ public class AddUpdateCategoryListServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+        
+        // Ottieni configurazione cartella immagini
+        String categoryListImgsFolder = getServletContext().getInitParameter("categoryListImgsFolder");
+        if (categoryListImgsFolder == null) {
+            throw new ServletException("CategoryListImgs folder not configured");
+        }
+
+        // TODO: Controllare quanto questa cosa sia orribile
+        String realContextPath = request.getServletContext().getRealPath(File.separator);
+        if (!realContextPath.endsWith("/")) {
+            realContextPath += "/";
+        }
+
+        Path path = Paths.get(realContextPath + categoryListImgsFolder);
+        if (!Files.exists(path)) {
+            Files.createDirectories(path);
+        }
+        
+        
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute("user");
         if (session == null || user == null) {
@@ -64,9 +92,75 @@ public class AddUpdateCategoryListServlet extends HttpServlet {
             
             String name = request.getParameter("name");
             String description = request.getParameter("description");
-            String img1 = request.getParameter("img1");
-            String img2 = request.getParameter("img2");
-            String img3 = request.getParameter("img3");
+            
+            //String img1 = request.getParameter("img1");
+            //String img2 = request.getParameter("img2");
+            //String img3 = request.getParameter("img3");
+            
+            
+            //IMGS
+            
+            String uuidImg1 = null;
+            String uuidImg2 = null;
+            String uuidImg3 = null;
+
+            //PART PARAMETER TO BE DEFINED
+            String SPECIFIC_FORM_PART1_NAME = null;
+            Part filePart1 = request.getPart(SPECIFIC_FORM_PART1_NAME);
+            
+            //PART PARAMETER TO BE DEFINED
+            String SPECIFIC_FORM_PART2_NAME = null;
+            Part filePart2 = request.getPart(SPECIFIC_FORM_PART2_NAME);
+            
+            //PART PARAMETER TO BE DEFINED
+            String SPECIFIC_FORM_PART3_NAME = null;
+            Part filePart3 = request.getPart(SPECIFIC_FORM_PART3_NAME);
+            
+            if (filePart1 == null) {
+                response.sendError(400, "No image selected for category list");
+                return;
+            } else if(filePart1.getSize() == 0){
+                response.sendError(400, "Image has zero size");
+                return;
+            } else if(filePart1.getSize() > 15 * 1000000
+                    ||filePart2.getSize() > 15 * 1000000
+                    ||filePart3.getSize() > 15 * 1000000){ // Non permettere dimensioni superiori ai ~15MB
+                response.sendError(400, "One or more images have size > 15MB");
+                return;
+            } else {
+                uuidImg1 = UUID.randomUUID().toString();
+                
+                if (filePart2 != null) {
+                    uuidImg2 = UUID.randomUUID().toString();
+                }
+                if (filePart3 != null) {
+                    uuidImg3 = UUID.randomUUID().toString();
+                }
+
+                try (InputStream fileContent = filePart1.getInputStream()) {
+                    File file1 = new File(path.toString(), uuidImg1.toString());
+                    System.out.println(file1.toPath());
+                    Files.copy(fileContent, file1.toPath());
+                    
+                    if (filePart2 != null) {
+                        File file2 = new File(path.toString(), uuidImg2.toString());
+                        System.out.println(file2.toPath());
+                        Files.copy(fileContent, file2.toPath());
+                    }
+                    if (filePart3 != null) {
+                        File file3 = new File(path.toString(), uuidImg3.toString());
+                        System.out.println(file3.toPath());
+                        Files.copy(fileContent, file3.toPath());
+                    }      
+                    
+                } catch (FileAlreadyExistsException ex) { // Molta sfiga
+                    getServletContext().log("One or more of the files you added already exist on the server");
+                } catch (RuntimeException ex) {
+                    //TODO: handle the exception
+                    getServletContext().log("impossible to upload the file", ex);
+                }
+            }
+            
             
             try {
                 CategoryList categoryList = new CategoryList();
@@ -75,9 +169,9 @@ public class AddUpdateCategoryListServlet extends HttpServlet {
 
                 categoryList.setName(name);
                 categoryList.setDescription(description);
-                categoryList.setImg1(img1);
-                categoryList.setImg2(img2);
-                categoryList.setImg3(img3);
+                categoryList.setImg1(uuidImg1);
+                categoryList.setImg2(uuidImg2);
+                categoryList.setImg3(uuidImg3);
 
                 if (categoryListId == null) {
                     categoryListDAO.insert(categoryList);

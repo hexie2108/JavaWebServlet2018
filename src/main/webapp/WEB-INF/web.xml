@@ -30,6 +30,27 @@
         <param-name>dbpwd</param-name>
         <param-value>passworddacambiare</param-value>
     </context-param>
+    <!--FOLDERS SETTINGS-->
+    <context-param>
+        <description>Path of the folder where CategoryList images are stored</description>
+        <param-name>categoryListImgsFolder</param-name>
+        <param-value>img/categoryListImgs</param-value>
+    </context-param>
+    <context-param>
+        <description>Path of the folder where CategoryProduct images are stored</description>
+        <param-name>categoryProductImgsFolder</param-name>
+        <param-value>img/categoryProductImgs</param-value>
+    </context-param>
+    <context-param>
+        <description>Path of the folder where List images are stored</description>
+        <param-name>listImgsFolder</param-name>
+        <param-value>img/listImgs</param-value>
+    </context-param>
+    <context-param>
+        <description>Path of the folder where Product images are stored</description>
+        <param-name>productImgsFolder</param-name>
+        <param-value>img/productImgs</param-value>
+    </context-param>
     <!-- SMTP SETTINGS -->
     <context-param>
         <description>Hostname of the SMTP server</description>
