@@ -102,7 +102,8 @@
                 <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                 <label for="inputAvatar" class="sr-only">Avatar</label>
                 <input id="inputAvatar" class="form-control" placeholder="Avatar" required=""
-                       type="file" name="${RegistrationValidator.AVATAR_KEY}">
+                       type="file" name="${RegistrationValidator.AVATAR_KEY}"
+                       accept="image/*">
             </div>
             <span id="spanAvatar" class="help-block">
                 ${requestScope.messages.get(RegistrationValidator.AVATAR_KEY)}
@@ -138,7 +139,10 @@
 <script src="${pageContext.servletContext.contextPath}/libs/zxcvbn/zxcvbn.js"></script>
 <script>
     $(document).ready(function() {
+        // Salva oggetti in modo da doverli cercare una sola volta
         const form=$('#form-register');
+        const strPwd = form.find('#strongPassword');
+        const avatarIn = form.find('input[name="${RegistrationValidator.AVATAR_KEY}"]')[0];
 
         function request_errors(async){
             return $.ajax({
@@ -152,7 +156,7 @@
 
         function updateVerifyMessages(data) {
             // Prendi tutti gli <input> che ci sono nella pagina e per ognuno prendine il nome
-            const inputs = $('input').map(function(){return this.name;}).get();
+            const inputs = form.find('input').map(function(){return this.name;}).get();
             // Per ogni input scrivi l'eventuale errore nello span dedicato e restituisci false se ha errori, true altrimenti
             const validityInputs = inputs.map(
                 (key) => {
@@ -180,16 +184,13 @@
                 return;
             }
 
-            // Ottieni input avatar
-            const obj = form.find('input[name="${RegistrationValidator.AVATAR_KEY}"]')[0];
-
             // Se il browser ha l'estensione che permette di accedere alla proprietà files continuo altrimenti no
             // (fatto successivamente dal server)
-            if (!obj.files) {
+            if (!avatarIn.files) {
                 return;
             }
 
-            const fileToUpload = obj.files[0];
+            const fileToUpload = avatarIn.files[0];
 
             if(!fileToUpload) {
                 data["${RegistrationValidator.AVATAR_KEY}"] = "No file";
@@ -206,8 +207,8 @@
             return updateVerifyMessages(add_file_errors(d));
         }
 
-        $('#inputPassword').on("keyup", function(){
-            $('#strongPassword').text("Score: " + zxcvbn(this.value).score + "/4");
+        form.find('#inputPassword').on("keyup", function(){
+            strPwd.text("Score: " + zxcvbn(this.value).score + "/4");
         });
 
 

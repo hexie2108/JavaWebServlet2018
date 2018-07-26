@@ -162,11 +162,13 @@ public class RegistrationValidator {
 
     public static String validateAvatar(Part filePart) {
         if (filePart == null) {
-            return "no avatar";
-        } else if(filePart.getSize() == RegistrationValidator.MIN_LEN_FILE){
-            return "avatar has zero size";
+            return "No avatar";
+        } else if(filePart.getSize() == RegistrationValidator.MIN_LEN_FILE) {
+            return "Avatar has zero size";
         } else if(filePart.getSize() > RegistrationValidator.MAX_LEN_FILE) { // Non permettere dimensioni superiori ai ~15MB
-            return "avatar has size > 15MB";
+            return "Avatar has size > 15MB";
+        } else if(!filePart.getContentType().startsWith("image/")) { // Not safe, uses extensions
+            return "Avatar must be an image";
         }
 
         return null;
