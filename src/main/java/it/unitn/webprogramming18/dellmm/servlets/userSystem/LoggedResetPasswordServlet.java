@@ -45,7 +45,7 @@ public class LoggedResetPasswordServlet extends HttpServlet {
         String firstPassword = request.getParameter(RegistrationValidator.FIRST_PWD_KEY);
         String secondPassword = request.getParameter(RegistrationValidator.SECOND_PWD_KEY);
 
-        HashMap<String, String> kv = new HashMap<>();
+        HashMap<String, Object> kv = new HashMap<>();
         kv.put(RegistrationValidator.FIRST_PWD_KEY, firstPassword);
         kv.put(RegistrationValidator.SECOND_PWD_KEY, secondPassword);
 

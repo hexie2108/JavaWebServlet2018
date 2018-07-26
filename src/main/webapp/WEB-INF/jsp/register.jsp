@@ -23,7 +23,7 @@
     </div>
 </nav>
 <div class="container-fluid">
-    <form id="form-register" method="post">
+    <form id="form-register" method="post" enctype="multipart/form-data">
         <h2 class="form-signin-heading">Registrazione</h2>
         <div class="form-group row">
             <div id="divFirstName" class="col-sm-6  <c:if test='${not empty requestScope.messages.get(RegistrationValidator.FIRST_NAME_KEY)}'>has-error</c:if>">
@@ -97,6 +97,18 @@
             </div>
         </div>
 
+        <div class="form-group row">
+            <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                <label for="inputAvatar" class="sr-only">Avatar</label>
+                <input id="inputAvatar" class="form-control" placeholder="Avatar" required=""
+                       type="file" name="${RegistrationValidator.AVATAR_KEY}">
+            </div>
+            <span id="spanAvatar" class="help-block">
+                ${requestScope.messages.get(RegistrationValidator.AVATAR_KEY)}
+            </span>
+        </div>
+
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h2 class="panel-title">Informativa alla privacy</h2>
@@ -125,64 +137,89 @@
 </div>
 <script src="${pageContext.servletContext.contextPath}/libs/zxcvbn/zxcvbn.js"></script>
 <script>
-    function updateVerifyMessages(data) {
-        // Prendi tutti gli <input> che ci sono nella pagina e per ognuno prendine il nome
-        const inputs = $('input').map(function(){return this.name;}).get();
-        // Per ogni input scrivi l'eventuale errore nello span dedicato e restituisci false se ha errori, true altrimenti
-        const validityInputs = inputs.map(
-            (key) => {
-                if (data.hasOwnProperty(key)) {
-                    $("#div" + key).addClass("has-error");
-                    $("#span" + key).html(String(data[key]));
-                    return false;
-                }
-
-                $("#div" + key).removeClass("has-error");
-                $("#span" + key).html("");
-                return true;
-            }
-        );
-
-        // Se degli input sono false(hanno errori) allora restituisci false, altrimenti true
-        // Se false l'invio del form verrà bloccato altrimenti no
-        return validityInputs.every( v => v );
-    }
-
     $(document).ready(function() {
-        const url = '${pageContext.servletContext.contextPath}/${PagePathsConstants.VALIDATE_REGISTRATION}?strict=';
+        const form=$('#form-register');
+
+        function request_errors(async){
+            return $.ajax({
+                dataType: "json",
+                url : '${pageContext.servletContext.contextPath}/${PagePathsConstants.VALIDATE_REGISTRATION}?strict=',
+                type: "post",
+                async: async,
+                data: form.find("input[name!=${RegistrationValidator.AVATAR_KEY}]").serialize()
+            });
+        }
+
+        function updateVerifyMessages(data) {
+            // Prendi tutti gli <input> che ci sono nella pagina e per ognuno prendine il nome
+            const inputs = $('input').map(function(){return this.name;}).get();
+            // Per ogni input scrivi l'eventuale errore nello span dedicato e restituisci false se ha errori, true altrimenti
+            const validityInputs = inputs.map(
+                (key) => {
+                    if (data.hasOwnProperty(key)) {
+                        $("#div" + key).addClass("has-error");
+                        $("#span" + key).html(String(data[key]));
+                        return false;
+                    }
+
+                    $("#div" + key).removeClass("has-error");
+                    $("#span" + key).html("");
+                    return true;
+                }
+            );
+
+            // Se degli input sono false(hanno errori) allora restituisci false, altrimenti true
+            // Se false l'invio del form verrà bloccato altrimenti no
+            return validityInputs.every( v => v );
+        }
+
+        function add_file_errors(data){
+            // Se l'estensione per leggere i file è supportata faccio il controllo altrimenti no
+            // (fatto successivamente dal server)
+            if (!window.FileReader) {
+                return;
+            }
+
+            // Ottieni input avatar
+            const obj = form.find('input[name="${RegistrationValidator.AVATAR_KEY}"]')[0];
+
+            // Se il browser ha l'estensione che permette di accedere alla proprietà files continuo altrimenti no
+            // (fatto successivamente dal server)
+            if (!obj.files) {
+                return;
+            }
+
+            const fileToUpload = obj.files[0];
+
+            if(!fileToUpload) {
+                data["${RegistrationValidator.AVATAR_KEY}"] = "No file";
+            } else if (fileToUpload.size < ${RegistrationValidator.MIN_LEN_FILE}) {
+                data["${RegistrationValidator.AVATAR_KEY}"] = "File has zero size";
+            } else if(fileToUpload.size > ${RegistrationValidator.MAX_LEN_FILE}){
+                data["${RegistrationValidator.AVATAR_KEY}"] = "File has size > 15MB";
+            }
+
+            return data;
+        }
+
+        function upd(d){
+            return updateVerifyMessages(add_file_errors(d));
+        }
 
         $('#inputPassword').on("keyup", function(){
             $('#strongPassword').text("Score: " + zxcvbn(this.value).score + "/4");
         });
 
-        $('input').on("blur", () => {
-            const form=$('#form-register');
 
-            const request = $.ajax({
-                dataType: "json",
-                url : url,
-                type: "post",
-                data: form.serialize()
-            });
+        form.find('input').on("blur",function(){ request_errors(true).done(upd); });
 
-            request.done(updateVerifyMessages);
-        });
-
-        $('#form-register').on("submit",function(){
-            const form=$('#form-register');
-
-            const request = $.ajax({
-                dataType: "json",
-                url : url,
-                type: "post",
-                async : false,
-                data: form.serialize()
-            });
+        form.on("submit",function(){
+            const request = request_errors(false);
 
             let data;
             request.done(function(data2){data=data2});
 
-            return updateVerifyMessages(data);
+            return upd(data);
         });
     });
 </script>

@@ -101,7 +101,8 @@ public interface UserDAO extends DAO<User, Integer> {
      * @param last_name user's surname
      * @param email the email address of the user
      * @param password password of the user
+     * @param imageName name of the (file) image
      * @return generated user
      */
-    public User generateUser( String first_name, String last_name, String email, String password) throws DAOException;
+    public User generateUser( String first_name, String last_name, String email, String password, String imageName) throws DAOException;
 }

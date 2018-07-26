@@ -29,7 +29,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
         user.setImg(rs.getString("img"));
         user.setIsAdmin(rs.getBoolean("isAdmin"));
         user.setVerifyEmailLink(rs.getString("verifyEmailLink"));
-        user.setResetPwdEmailLink(rs.getString("resetPwdEmailLink"));
+        user.setResetPwdEmailLink(rs.getString("resendPwdEmailLink"));
 
         return user;
     }
@@ -102,7 +102,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
                         "img = ?," +
                         "isAdmin = ?," +
                         "verifyEmailLink = ?," +
-                        "resetPwdEmailLink = ? " +
+                        "resendPwdEmailLink = ? " +
                         "WHERE id = ?"
         )) {
 
@@ -182,8 +182,8 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
     
     public void changePassword(String resetLink, String newPassword) throws DAOException {
         try(PreparedStatement stm = CON.prepareStatement(
-                "UPDATE User SET resetPwdEmailLink=NULL, password=?" +
-                        " WHERE resetPwdEmailLink= ?"
+                "UPDATE User SET resendPwdEmailLink=NULL, password=?" +
+                        " WHERE resendPwdEmailLink= ?"
         )){
             stm.setString(1, newPassword );
             stm.setString(2, resetLink);
@@ -217,7 +217,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
         return res;
     }
 
-    public User generateUser(String first_name, String last_name, String email, String password) throws DAOException {
+    public User generateUser(String first_name, String last_name, String email, String password, String imageName) throws DAOException {
         if(first_name == null || last_name == null || email == null || password == null) {
             throw new DAOException(
                 "parameter not valid",
@@ -237,7 +237,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
                 try
                 {
                     PreparedStatement std = CON.prepareStatement(
-                            "INSERT INTO User (name, surname, email, password, img, isAdmin, verifyEmailLink, resetPwdEmailLink)" +
+                            "INSERT INTO User (name, surname, email, password, img, isAdmin, verifyEmailLink, resendPwdEmailLink)" +
                             "VALUES (?,?,?,?,?,FALSE,?,NULL)",
                             Statement.RETURN_GENERATED_KEYS
                     );
@@ -245,7 +245,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
                     std.setString(2, last_name);
                     std.setString(3, email);
                     std.setString(4, password);
-                    std.setString(5, "come ci organizzamo per l'immagine?"); //TODO: Organizzazione per l'immagine
+                    std.setString(5, imageName);
                     std.setString(6,verifyLink);
 
                     if (std.executeUpdate() != 1) {

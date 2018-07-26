@@ -50,19 +50,14 @@ public class ValidateUserServlet extends HttpServlet {
         HashMap<String, String> messages;
 
         // Usa il validator per verificare la conformità(in caso di strict controllo anche campi non inviati altrimenti no
+        HashMap<String, Object> kv = new HashMap<>();
         if(request.getParameter("strict") != null) {
-            messages = RegistrationValidator.createValidationMessages(
-                    userDAO,
-                    firstName,
-                    lastName,
-                    email,
-                    firstPassword,
-                    secondPassword,
-                    infPrivacy
-            );
+            kv.put(RegistrationValidator.FIRST_NAME_KEY, firstName);
+            kv.put(RegistrationValidator.LAST_NAME_KEY, lastName);
+            kv.put(RegistrationValidator.EMAIL_KEY, email);
+            kv.put(RegistrationValidator.FIRST_PWD_KEY, firstPassword);
+            kv.put(RegistrationValidator.SECOND_PWD_KEY, secondPassword);
         } else {
-            HashMap<String, String> kv = new HashMap<>();
-
             if (firstName != null && !firstName.isEmpty()) {
                 kv.put(RegistrationValidator.FIRST_NAME_KEY, firstName);
             }
@@ -82,9 +77,9 @@ public class ValidateUserServlet extends HttpServlet {
             if (secondPassword != null && !secondPassword.isEmpty()) {
                 kv.put(RegistrationValidator.SECOND_PWD_KEY, secondPassword);
             }
-
-            messages = RegistrationValidator.partialValidate(userDAO, kv);
         }
+
+        messages = RegistrationValidator.partialValidate(userDAO, kv);
 
         PrintWriter out = response.getWriter();
         Gson gson = new Gson();

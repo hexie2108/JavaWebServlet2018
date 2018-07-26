@@ -4,6 +4,7 @@ import it.unitn.webprogramming18.dellmm.db.daos.UserDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 
 import javax.mail.internet.InternetAddress;
+import javax.servlet.http.Part;
 import java.util.HashMap;
 
 public class RegistrationValidator {
@@ -12,7 +13,8 @@ public class RegistrationValidator {
             INF_PRIVACY_KEY = "InfPrivacy",
             FIRST_PWD_KEY = "Password",
             SECOND_PWD_KEY = "Password2",
-            EMAIL_KEY = "Email";
+            EMAIL_KEY = "Email",
+            AVATAR_KEY = "Avatar";
 
     // --- Configurazioni per la validazione dei campi
     private static final int FIRST_NAME_MAX_LEN = 44,
@@ -24,6 +26,9 @@ public class RegistrationValidator {
             PWD_MIN_LOWER = 1,
             PWD_MIN_NUMBER = 1,
             PWD_MIN_SYMBOL = 1;
+
+    public static final int MAX_LEN_FILE = 15 * 1000000,
+                            MIN_LEN_FILE = 0;
 
     // --- Funzioni di validazione
     private static boolean validateEmailFormat(String email) {
@@ -155,14 +160,26 @@ public class RegistrationValidator {
         return null;
     }
 
+    public static String validateAvatar(Part filePart) {
+        if (filePart == null) {
+            return "no avatar";
+        } else if(filePart.getSize() == RegistrationValidator.MIN_LEN_FILE){
+            return "avatar has zero size";
+        } else if(filePart.getSize() > RegistrationValidator.MAX_LEN_FILE) { // Non permettere dimensioni superiori ai ~15MB
+            return "avatar has size > 15MB";
+        }
+
+        return null;
+    }
+
     public static HashMap<String, String> partialValidate(
             UserDAO userDAO,
-            HashMap<String, String> kv
+            HashMap<String, Object> kv
     ) {
         HashMap<String, String> messages = new HashMap<>();
 
         if (kv.containsKey(FIRST_NAME_KEY)) {
-            String firstName = kv.get(FIRST_NAME_KEY);
+            String firstName = (String)kv.get(FIRST_NAME_KEY);
 
             String messageFirstName = validateFirstName(firstName);
             if (messageFirstName != null) {
@@ -171,7 +188,7 @@ public class RegistrationValidator {
         }
 
         if (kv.containsKey(LAST_NAME_KEY)) {
-            String lastName = kv.get(LAST_NAME_KEY);
+            String lastName = (String)kv.get(LAST_NAME_KEY);
 
             String messageLastName = validateLastName(lastName);
             if (messageLastName != null) {
@@ -180,7 +197,7 @@ public class RegistrationValidator {
         }
 
         if (kv.containsKey(INF_PRIVACY_KEY)) {
-            String infPrivacy = kv.get(INF_PRIVACY_KEY);
+            String infPrivacy = (String)kv.get(INF_PRIVACY_KEY);
 
             String messageInfPrivacy = validateInfPrivacy(infPrivacy);
             if (messageInfPrivacy != null) {
@@ -189,7 +206,7 @@ public class RegistrationValidator {
         }
 
         if (kv.containsKey(FIRST_PWD_KEY)) {
-            String firstPassword = kv.get(FIRST_PWD_KEY);
+            String firstPassword = (String)kv.get(FIRST_PWD_KEY);
 
             String messagePwd = validatePassword(firstPassword);
             if (messagePwd != null) {
@@ -198,8 +215,8 @@ public class RegistrationValidator {
         }
 
         if (kv.containsKey(FIRST_PWD_KEY) && kv.containsKey(SECOND_PWD_KEY)) {
-            String firstPassword = kv.get(FIRST_PWD_KEY);
-            String secondPassword = kv.get(SECOND_PWD_KEY);
+            String firstPassword = (String)kv.get(FIRST_PWD_KEY);
+            String secondPassword = (String)kv.get(SECOND_PWD_KEY);
 
             String messageSecondPassword = validateSecondPassword(firstPassword, secondPassword);
             if (messageSecondPassword != null) {
@@ -208,11 +225,20 @@ public class RegistrationValidator {
         }
 
         if (kv.containsKey(EMAIL_KEY)) {
-            String email = kv.get(EMAIL_KEY);
+            String email = (String)kv.get(EMAIL_KEY);
 
             String messageValidateEmail = validateEmail(email, userDAO);
             if (messageValidateEmail != null) {
                 messages.put(EMAIL_KEY, messageValidateEmail);
+            }
+        }
+
+        if (kv.containsKey(AVATAR_KEY)) {
+            Part filePart = (Part)kv.get(AVATAR_KEY);
+
+            String messageValidateAvatar = validateAvatar(filePart);
+            if (messageValidateAvatar != null) {
+                messages.put(AVATAR_KEY, messageValidateAvatar);
             }
         }
 
@@ -226,14 +252,17 @@ public class RegistrationValidator {
             String email,
             String firstPassword,
             String secondPassword,
-            String infPrivacy) {
-        HashMap<String, String> kv = new HashMap<>();
+            String infPrivacy,
+            Part avatar
+    ) {
+        HashMap<String, Object> kv = new HashMap<>();
         kv.put(FIRST_NAME_KEY, firstName);
         kv.put(LAST_NAME_KEY, lastName);
         kv.put(EMAIL_KEY, email);
         kv.put(FIRST_PWD_KEY, firstPassword);
         kv.put(SECOND_PWD_KEY, secondPassword);
         kv.put(INF_PRIVACY_KEY, infPrivacy);
+        kv.put(AVATAR_KEY, avatar);
 
         return partialValidate(userDAO, kv);
     }

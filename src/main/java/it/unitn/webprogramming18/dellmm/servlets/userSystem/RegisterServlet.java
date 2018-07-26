@@ -11,18 +11,28 @@ import it.unitn.webprogramming18.dellmm.util.RegistrationValidator;
 
 import javax.mail.MessagingException;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 @WebServlet(name = "RegisterServlet")
+@MultipartConfig
 public class RegisterServlet extends HttpServlet {
     private static final String JSP_PAGE_PATH = "/WEB-INF/jsp/register.jsp";
 
@@ -54,6 +64,23 @@ public class RegisterServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Ottieni configurazione cartella avatars
+        String avatarsFolder = getServletContext().getInitParameter("avatarsFolder");
+        if (avatarsFolder == null) {
+            throw new ServletException("Avatars folder not configured");
+        }
+
+        String realContextPath = request.getServletContext().getRealPath(File.separator);
+        if (!realContextPath.endsWith("/")) {
+            realContextPath += "/";
+        }
+
+        Path path = Paths.get(realContextPath + avatarsFolder);
+
+        if (!Files.exists(path)) {
+            Files.createDirectories(path);
+        }
+
         // Ottieni tutti i parametri
         String firstName = request.getParameter(RegistrationValidator.FIRST_NAME_KEY);
         String lastName = request.getParameter(RegistrationValidator.LAST_NAME_KEY);
@@ -61,6 +88,9 @@ public class RegisterServlet extends HttpServlet {
         String firstPassword = request.getParameter(RegistrationValidator.FIRST_PWD_KEY);
         String secondPassword = request.getParameter(RegistrationValidator.SECOND_PWD_KEY);
         String infPrivacy = request.getParameter(RegistrationValidator.INF_PRIVACY_KEY);
+
+
+        Part avatarPart = request.getPart(RegistrationValidator.AVATAR_KEY);
 
         // Usa il validator per verifiacare la conformità
         HashMap<String, String> messages = RegistrationValidator.createValidationMessages(
@@ -70,7 +100,9 @@ public class RegisterServlet extends HttpServlet {
                 email,
                 firstPassword,
                 secondPassword,
-                infPrivacy);
+                infPrivacy,
+                avatarPart
+                );
 
         // In caso i campi non siano validi ricarica la pagina con gli errori indicati
         if (!messages.isEmpty()) {
@@ -79,13 +111,30 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
 
+        String uuidAvatar = UUID.randomUUID().toString();
+
+        try (InputStream fileContent = avatarPart.getInputStream()) {
+            File file = new File(path.toString(), uuidAvatar.toString());
+            System.out.println(file.toPath());
+            Files.copy(fileContent, file.toPath());
+        } catch (FileAlreadyExistsException ex) { // Molta sfiga
+            getServletContext().log("File \"" + uuidAvatar.toString() + "\" already exists on the server");
+            response.sendError(500,"File \"" + uuidAvatar.toString() + "\" already exists on the server");
+            return;
+        } catch (RuntimeException ex) {
+            //TODO: handle better the exception
+            getServletContext().log("impossible to upload the file", ex);
+            throw ex;
+        }
+
         // Genera l'utente, manda la mail di verifica e in caso visualizza gli errori
         try {
             User user = userDAO.generateUser(
                     firstName,
                     lastName,
                     email,
-                    firstPassword);
+                    firstPassword,
+                    uuidAvatar);
 
             HttpSession session = request.getSession();
             session.setAttribute("user", user);

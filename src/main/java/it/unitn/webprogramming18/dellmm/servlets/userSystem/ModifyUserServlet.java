@@ -53,7 +53,7 @@ public class ModifyUserServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         User user = (User)session.getAttribute("user");
 
-        HashMap<String, String> kv = new HashMap<>();
+        HashMap<String, Object> kv = new HashMap<>();
 
         if (firstName != null && !firstName.isEmpty()) {
             kv.put(RegistrationValidator.FIRST_NAME_KEY, firstName);

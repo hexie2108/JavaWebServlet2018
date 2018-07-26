@@ -6,6 +6,7 @@
             30
         </session-timeout>
     </session-config>
+
     <!-- DB SETTINGS -->
     <context-param>
         <description>The url of the JDBC persistence system database position</description>
@@ -22,6 +23,7 @@
         <param-name>dbpwd</param-name>
         <param-value>passworddacambiare</param-value>
     </context-param>
+
     <!-- SMTP SETTINGS -->
     <context-param>
         <description>Hostname of the SMTP server</description>
@@ -43,6 +45,14 @@
         <param-name>smtpPassword</param-name>
         <param-value>xeecaoS5tood3bee</param-value>
     </context-param>
+
+    <!-- AVATAR SETTINGS -->
+    <context-param>
+        <description>Path of the folder where avatars are stored</description>
+        <param-name>avatarsFolder</param-name>
+        <param-value>img/avatars</param-value>
+    </context-param>
+
     <!-- LISTENERS -->
     <listener>
         <description>ServletContextListener</description>
