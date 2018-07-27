@@ -40,7 +40,7 @@ public class LoginServlet extends HttpServlet
         public static final String ERR_NOUSER_PWD_KEY = "error_noUserOrPassword",
                     ERR_NO_VER_KEY = "error_noVerified";
 
-        private static final String LOGIN_JSP = "/WEB-INF/jsp/another/login.jsp";
+        private static final String LOGIN_JSP = "/WEB-INF/jsp/userSystem/login.jsp";
 
         private UserDAO userDAO;
         private ProductDAO productDAO;

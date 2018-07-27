@@ -219,7 +219,7 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
                 }
                 catch (SQLException ex)
                 {
-                        throw new DAOException("Impossible to get the list of user's List", ex);
+                        throw new DAOException("Impossible to get the owner list of user's List", ex);
                 } finally
                 {
                         C3p0Util.close(CON);
@@ -237,8 +237,8 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
                 }
 
                 CON = C3p0Util.getConnection();
-                try (PreparedStatement stm = CON.prepareStatement("SELECT List.* FROM Permission JOIN List ON Permission.listId = List.id WHERE Permission.userId = ?"
-                            + "AND List.ownerId <> ?"))
+                try (PreparedStatement stm = CON.prepareStatement("SELECT List.* FROM Permission JOIN List ON Permission.listId = List.id WHERE Permission.userId = ? "
+                            + " AND List.ownerId <> ? "))
                 {
                         stm.setInt(1, userId);
                         stm.setInt(2, userId);
@@ -252,7 +252,7 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
                 }
                 catch (SQLException ex)
                 {
-                        throw new DAOException("Impossible to get the list of user's List", ex);
+                        throw new DAOException("Impossible to get the shared list of user's List", ex);
                 } finally
                 {
                         C3p0Util.close(CON);

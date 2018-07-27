@@ -260,4 +260,35 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
 
                 return permission;
         }
+
+        public Integer getNumberSharedByListId(Integer listId) throws DAOException
+        {
+
+                Integer number = null;
+                if (listId == null)
+                {
+                        throw new DAOException("listId is null");
+                }
+
+                CON = C3p0Util.getConnection();
+                try (PreparedStatement stm = CON.prepareStatement("SELECT COUNT(*) FROM Permission WHERE listId = ?"))
+                {
+                        stm.setInt(1, listId);
+                        ResultSet counter = stm.executeQuery();
+                        if (counter.next())
+                        {
+                                number = counter.getInt(1);
+                        }
+                }
+                catch (SQLException ex)
+                {
+                        throw new DAOException("Impossible to count permission", ex);
+                } finally
+                {
+                        C3p0Util.close(CON);
+                }
+
+                return number;
+
+        }
 }

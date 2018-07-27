@@ -138,6 +138,7 @@
                                                                                                 <span class="name">${product.name}</span>
 
                                                                                                 <!-- campo necessario per visuallizare il prodotto nella finestrina-->
+                                                                                                 <input class="name" type="hidden" value="${product.name}" />
                                                                                                 <input class="logo-img" type="hidden" value="${pageContext.request.contextPath}/${product.logo}" />
                                                                                                 <input class="cat-link" type="hidden" value="${pageContext.request.contextPath}/category?catid=${product.categoryProductId}"/>
                                                                                                 <input class="cat-name" type="hidden" value="<custom:getCategoryNameById categoryId="${product.categoryProductId}" />"/>
@@ -169,9 +170,10 @@
                                                                                                 </a>
                                                                                         </td>
                                                                                         <td class="td-name">
-                                                                                                <span class="name">${product.name}</span>
+                                                                                                <span class="">${product.name}</span>
 
                                                                                                 <!-- campo necessario per visuallizare il prodotto nella finestrina-->
+                                                                                                 <input class="name" type="hidden" value="${product.name}" />
                                                                                                 <input class="logo-img" type="hidden" value="${pageContext.request.contextPath}/${product.logo}" />
                                                                                                 <input class="cat-link" type="hidden" value="${pageContext.request.contextPath}/category?catid=${product.categoryProductId}"/>
                                                                                                 <input class="cat-name" type="hidden" value="<custom:getCategoryNameById categoryId="${product.categoryProductId}" />"/>

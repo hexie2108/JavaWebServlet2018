@@ -5,7 +5,9 @@
  */
 package it.unitn.webprogramming18.dellmm.jstl;
 
+import it.unitn.webprogramming18.dellmm.db.daos.CategoryListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.CategoryProductDAO;
+import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCCategoryListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCCategoryProductDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import java.io.IOException;
@@ -13,35 +15,35 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 /**
- *stampare il nome di categoria datto id
+ *stampare il nome di categoria della lista datto id
  * @author mikuc
  */
-public class TagGetCategoryNameById extends SimpleTagSupport
+public class TagGetListCategoryNameByListCategoryId extends SimpleTagSupport
 {
-        CategoryProductDAO categoryProductDAO= new JDBCCategoryProductDAO();
+        CategoryListDAO categoryListDAO= new JDBCCategoryListDAO();
         
-        private Integer categoryId;
+        private Integer listCategoryId;
        // private StringWriter sw = new StringWriter();
 
         /**
-         * @param categoryId the categoryId to set
+         * @param listCategoryId il id della categoria lista
          */
-        public void setCategoryId(int categoryId)
+        public void setListCategoryId(int listCategoryId)
         {
-                this.categoryId = categoryId;
+                this.listCategoryId = listCategoryId;
         }
 
         @Override
         public void doTag() throws JspException, IOException
         {
-                if(this.categoryId != null){
+                if(this.listCategoryId != null){
                         
                         String categoryName;
                         try {
-                                categoryName = categoryProductDAO.getByPrimaryKey(categoryId).getName();
+                                categoryName = categoryListDAO.getByPrimaryKey(listCategoryId).getName();
                         }
                         catch (DAOException ex) {
-                              throw new JspException("errore durante ottenimento del nome di categoria");
+                              throw new JspException("errore durante ottenimento del nome della categoria di lista");
                         }
                         getJspContext().getOut().println(categoryName);
                 }

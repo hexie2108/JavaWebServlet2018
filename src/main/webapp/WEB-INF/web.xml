@@ -171,6 +171,17 @@
         <servlet-name>ChangeListService</servlet-name>
         <url-pattern>/service/changeListService</url-pattern>
     </servlet-mapping>
+     <servlet>
+        <servlet-name>DisplayListsServlet</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlet.DisplayListsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DisplayListsServlet</servlet-name>
+        <url-pattern>/mylists</url-pattern>
+    </servlet-mapping>   
+    
+    
+    
     
     
     <!-- USER SYSTEM SERVLETS -->

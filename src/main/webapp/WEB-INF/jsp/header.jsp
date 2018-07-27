@@ -74,7 +74,7 @@
                                                                 </c:if>
                                                                 <c:if test="${not empty sessionScope.user}">
                                                                         <li class="nav-item">
-                                                                                <a class="nav-link" href="#">
+                                                                                <a class="nav-link" href="${pageContext.request.contextPath}/mylists">
                                                                                         <i class="fas fa-list"></i> MIE LISTE
                                                                                 </a>
                                                                         </li>

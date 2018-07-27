@@ -47,7 +47,7 @@ function showProductWindowsFromList(productId, loggerUser, statusOfBuy, canYouDe
         var image = item.getElementsByClassName("img")[0].getAttribute("src");
         var categoryName = item.getElementsByClassName("cat-name")[0].value;
         var categoryLink = item.getElementsByClassName("cat-link")[0].value;
-        var name = item.getElementsByClassName("name")[0].innerHTML;
+        var name = item.getElementsByClassName("name")[0].value;
         var description = item.getElementsByClassName("description")[0].value;
         var logo = item.getElementsByClassName("logo-img")[0].value;
 

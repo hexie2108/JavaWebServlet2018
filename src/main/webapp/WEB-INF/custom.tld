@@ -17,6 +17,17 @@
     </attribute>
   </tag>
   <tag>
+    <name>getListCategoryNameByListCategoryId</name>
+    <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagGetListCategoryNameByListCategoryId</tag-class>
+    <body-content>scriptless</body-content>
+    <attribute>
+      <name>listCategoryId</name>
+      <required>true</required>
+      <type>java.lang.Integer</type>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+  <tag>
     <name>printAllCategoryProduct</name>
     <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagPrintAllCategoryProduct</tag-class>
     <body-content>scriptless</body-content>
@@ -32,15 +43,12 @@
       <rtexprvalue>true</rtexprvalue>
     </attribute>
   </tag>
- 
   <tag>
     <name>getElementsOfShppingListByCookie</name>
     <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagGetElementsOfShoppingListByCookie</tag-class>
     <body-content>scriptless</body-content>
   </tag>
-  
-  
-   <!--
+  <!--
   <tag>
     <name>getProductNotBuyListByListId</name>
     <tag-class>it.unitn.webprogramming18.dellmm.jstl.notUse.TagGetProductNotBuyListByListId</tag-class>
@@ -53,21 +61,21 @@
     </attribute>
   </tag>
   
-  <tag>
-    <name>getProductBoughtListByListId</name>
-    <tag-class>it.unitn.webprogramming18.dellmm.jstl.notUse.TagGetProductBoughtListByListId</tag-class>
-    <body-content>scriptless</body-content>
-    <attribute>
-      <name>listId</name>
-      <required>true</required>
-      <type>java.lang.Integer</type>
-      <rtexprvalue>true</rtexprvalue>
-    </attribute>
-  </tag>
-  <tag>
-    <name>getAllAddableListByUserId</name>
-    <tag-class>it.unitn.webprogramming18.dellmm.jstl.notUse.TagGetAllAddableListByUserId</tag-class>
-    <body-content>scriptless</body-content>
-  </tag>
-  -->
+        <tag>
+          <name>getProductBoughtListByListId</name>
+          <tag-class>it.unitn.webprogramming18.dellmm.jstl.notUse.TagGetProductBoughtListByListId</tag-class>
+          <body-content>scriptless</body-content>
+          <attribute>
+            <name>listId</name>
+            <required>true</required>
+            <type>java.lang.Integer</type>
+            <rtexprvalue>true</rtexprvalue>
+          </attribute>
+        </tag>
+        <tag>
+          <name>getAllAddableListByUserId</name>
+          <tag-class>it.unitn.webprogramming18.dellmm.jstl.notUse.TagGetAllAddableListByUserId</tag-class>
+          <body-content>scriptless</body-content>
+        </tag>
+        -->
 </taglib>

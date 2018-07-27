@@ -69,19 +69,19 @@ public class TagGetElementsOfShoppingListByCookie extends SimpleTagSupport
 
                                                 product = productDAO.getByPrimaryKey(Integer.parseInt(productsId[i]));
                                                 catName = categoryProductDAO.getByPrimaryKey(product.getCategoryProductId()).getName();
-                                                jspWriter.println("<tr id=\"productIdInList-"+product.getId()+"\">\n");
+                                                jspWriter.println("<tr id=\"productIdInList-" + product.getId() + "\">\n");
                                                 jspWriter.println("<td class=\"td-img\">\n"
-                                                            + "<a href=\"javascript:;\" data-toggle=\"modal\" data-target=\"#boxShowItem\" onclick=\"showProductWindowsFromList("+product.getId()+",false,false,false)\">\n"
+                                                            + "<a href=\"javascript:;\" data-toggle=\"modal\" data-target=\"#boxShowItem\" onclick=\"showProductWindowsFromList(" + product.getId() + ",false,false,false)\">\n"
                                                             + "<img class=\"img\" src=\"" + basePath + "/" + product.getImg() + "\" alt=\"" + product.getName() + "\" />\n"
                                                             + "</a>\n"
                                                             + "</td>\n");
                                                 jspWriter.println("<td class=\"td-name\">\n"
-                                                            + "<span class=\"name\">" + product.getName() + "</span>"
-                                                            + "<input class=\"logo-img\" type=\"hidden\" value=\""+ basePath +"/"+ product.getLogo()+"\" />\n"
-                                                            + " <input class=\"cat-link\" type=\"hidden\" value=\""+ basePath +"/category?catid="+product.getCategoryProductId() +"\" />\n"
-                                                            + "<input class=\"cat-name\" type=\"hidden\" value=\""+catName+"\" />\n"
-                                                            + "<input class=\"description\" type=\"hidden\" value=\""+product.getDescription()+"\"/>\n"
-
+                                                            + "<span class=\"\">" + product.getName() + "</span>"
+                                                            + "<input class=\"name\" type=\"hidden\" value=\"" + product.getName() + "\" />\n"
+                                                            + "<input class=\"logo-img\" type=\"hidden\" value=\"" + basePath + "/" + product.getLogo() + "\" />\n"
+                                                            + " <input class=\"cat-link\" type=\"hidden\" value=\"" + basePath + "/category?catid=" + product.getCategoryProductId() + "\" />\n"
+                                                            + "<input class=\"cat-name\" type=\"hidden\" value=\"" + catName + "\" />\n"
+                                                            + "<input class=\"description\" type=\"hidden\" value=\"" + product.getDescription() + "\"/>\n"
                                                             + "</td>\n");
                                                 jspWriter.println("<td class=\"td-buttons\">\n"
                                                             + ""

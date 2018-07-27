@@ -297,3 +297,96 @@
         margin-bottom: 2rem;
 
 }
+
+
+
+/*mylists.jsp-------------------------------*/
+
+.mylist-main-section{
+        min-height: 500px;
+}
+
+.mylist-main-section .add-list-box{
+
+        margin-top:  70px;
+}
+
+
+
+.mylist-main-section .list-item{
+
+        border: 1px solid #d0d0d0;
+        padding: 5px;
+        border-radius: 5px;
+}
+
+.mylist-main-section .my-lists{
+
+        margin: 30px 0;
+}
+
+.mylist-main-section .list-item .list-head{
+
+
+}
+
+.mylist-main-section .list-item .list-head .list-left-head{
+        display: inline-block;
+        width: 80%;
+        vertical-align: top;
+
+}
+.mylist-main-section .list-item .list-head .list-right-head{
+        display: inline-block;
+        width: 19%;
+
+}
+.mylist-main-section .list-item .list-head .list-right-head a{
+        width: 100%;
+        margin: 5px 0px;
+}
+.mylist-main-section .list-item .list-head .list-right-head .permission span{
+        display: inline-block;
+        width: 48%;
+}
+
+
+.mylist-main-section .list-item .list-head .list-info{
+
+        display: inline-block;
+}
+
+.mylist-main-section .list-item .list-head .list-logo{
+        width: 150px;
+        height: 100px;
+        display: inline-block;
+        vertical-align: top;
+}
+
+.mylist-main-section .list-item .list-head .list-logo img{
+        height: 100%;
+
+}
+
+.mylist-main-section .list-item .list-body{
+        padding: 5px;
+        margin-top: 10px;
+
+}
+
+
+.mylist-main-section .list-item .list-body .list-product{
+        width: 10%;
+        display: inline-block;
+        margin: 0 1%;
+
+}
+
+.mylist-main-section .list-item .list-body .bought-item{
+         border: 1px solid #d0d0d0;
+
+}
+
+
+
+

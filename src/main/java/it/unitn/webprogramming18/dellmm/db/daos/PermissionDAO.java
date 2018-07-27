@@ -84,4 +84,13 @@ public interface PermissionDAO extends DAO<Permission, Integer> {
      * @throws DAOException if an error occurred during the action
      */
     public Permission getUserPermissionOnListByIds(Integer userId, Integer listId) throws DAOException;
+    
+    
+    /**
+     * get il numero di persone condiviso di una lista
+     * @param listId
+     * @return il numero di persone condiviso (include anche owner stesso)
+     * @throws DAOException 
+     */
+    public Integer getNumberSharedByListId (Integer listId) throws DAOException;
 }
