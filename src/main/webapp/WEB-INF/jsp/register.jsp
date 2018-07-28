@@ -177,37 +177,37 @@
 </div>
 <script src="${pageContext.servletContext.contextPath}/libs/zxcvbn/zxcvbn.js"></script>
 <script>
-    $(document).ready(function() {
-        // Salva oggetti in modo da doverli cercare una sola volta
-        const form=$('#form-register');
-        const strPwd = form.find('#strongPassword');
-        const avatarImgCustom = form.find('input[name="${RegistrationValidator.AVATAR_IMG_KEY}"]')[0];
-        const URL = '${pageContext.servletContext.contextPath}/${PagePathsConstants.VALIDATE_REGISTRATION}?strict=';
+    "use strict";
 
-        function request_errors(async, url){
+    $(document).ready(function() {
+        function request_errors(form, async, url){
             return $.ajax({
                 dataType: "json",
                 url : url,
                 type: "post",
                 async: async,
-                data: form.find("input[name!=${RegistrationValidator.AVATAR_IMG_KEY}]").serialize()
+                data: form.find("input").serialize()
             });
         }
 
-        function updateVerifyMessages(data) {
+        function updateVerifyMessages(form, data) {
             // Prendi tutti gli <input> che ci sono nella pagina e per ognuno prendine il nome
             const inputs = form.find('input').map(function(){return this.name;}).get();
             // Per ogni input scrivi l'eventuale errore nello span dedicato e restituisci false se ha errori, true altrimenti
             const validityInputs = inputs.map(
                 (key) => {
+                    const div = $("#div" + key);
+                    const span = $("#span" + key);
+
                     if (data.hasOwnProperty(key)) {
-                        $("#div" + key).addClass("has-error");
-                        $("#span" + key).html(String(data[key]));
+                        div.addClass("has-error");
+                        span.html(String(data[key]));
+
                         return false;
                     }
 
-                    $("#div" + key).removeClass("has-error");
-                    $("#span" + key).html("");
+                    div.removeClass("has-error");
+                    span.html("");
                     return true;
                 }
             );
@@ -217,8 +217,9 @@
             return validityInputs.every( v => v );
         }
 
-        function add_file_errors(data){
+        function add_file_errors(form, data){
             const checked_radio = form.find('input[name="${RegistrationValidator.AVATAR_KEY}"]:checked');
+            const avatarImgCustom = form.find('input[name="${RegistrationValidator.AVATAR_IMG_KEY}"]')[0];
 
             if(checked_radio.length === 0 || checked_radio.val() !== "${RegistrationValidator.CUSTOM_AVATAR}" ) {
                 return data;
@@ -251,19 +252,24 @@
             return data;
         }
 
+        // Salva oggetti in modo da doverli cercare una sola volta
+        const form=$('#form-register');
+        const strPwd = form.find('#strongPassword');
+        const URL = '${pageContext.servletContext.contextPath}/${PagePathsConstants.VALIDATE_REGISTRATION}?strict=';
+
         function upd(d){
-            return updateVerifyMessages(add_file_errors(d));
+            return updateVerifyMessages(form, add_file_errors(form, d));
         }
+
 
         form.find('#inputPassword').on("keyup", function(){
             strPwd.text("Score: " + zxcvbn(this.value).score + "/4");
         });
 
-
-        form.find('input').on("blur", function(){ request_errors(true, URL).done(upd); });
+        form.find('input').on("blur", function(){ request_errors(form, true, URL).done(upd); });
 
         form.on("submit",function(){
-            const request = request_errors(false, URL);
+            const request = request_errors(form, false, URL);
 
             let data;
             request.done(function(data2){data=data2});
