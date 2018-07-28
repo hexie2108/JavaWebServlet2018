@@ -14,6 +14,25 @@
     <script src="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/js/bootstrap.js"></script>
     <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/libs/fontawesome-free-5.1.1-web/css/all.min.css">
+
+    <style type="text/css">
+        #customAvatar:checked ~ #customAvatarImg {
+            display: inline-block;
+        }
+
+        #customAvatar:not(checked) ~ #customAvatarImg {
+            display: none;
+        }
+
+        input[type="radio"]:checked ~ .img-input{
+            filter: contrast(5%);
+        }
+
+        .img-input {
+            width: 3.5rem;
+            height: 3.5rem;
+        }
+    </style>
 </head>
 <body>
 <nav class="navbar navbar-default navbar-static-top">
@@ -99,30 +118,20 @@
         </div>
 
         <div class="form-group">
-            <style type="text/css">
-                #customAvatar:checked ~ #customAvatarImg {
-                    display: inline-block;
-                }
-
-                #customAvatar:not(checked) ~ #customAvatarImg {
-                    display: none;
-                }
-            </style>
-
             <div class="row">
-                <c:forEach items="${RegistrationValidator.DEFAULT_AVATARS}" var="av">
-                    <label>
-                        <input class="d-none" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}" value="${av}">
-                        <img src="${pageContext.servletContext.getInitParameter("avatarsFolder")}/${av}" style="width: 32px; height: 32px;">
-                    </label>
+                <c:forEach items="${RegistrationValidator.DEFAULT_AVATARS}" var="av" varStatus="st">
+                <label>
+                    <input class="d-none" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}" value="${av}" <c:if test="${st.first}">checked</c:if>>
+                    <img class="img-input" src="${pageContext.servletContext.getInitParameter("avatarsFolder")}/${av}">
+                </label>
                 </c:forEach>
                 <label>
-                    <i class="far fa-plus-square" style="font-size: 32px;"></i>
-                    <input required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}" value="custom" id="customAvatar" style="display: none">
+                    <input class="d-none" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}" value="custom" id="customAvatar">
+                    <img src="${pageContext.servletContext.contextPath}/libs/fontawesome-free-5.1.1-web/svgs/regular/plus-square.svg" class="img-input">
+                    <input id="customAvatarImg"
+                           type="file" name="${RegistrationValidator.AVATAR_IMG_KEY}"
+                           accept="image/*">
                 </label>
-                <input id="customAvatarImg"
-                       type="file" name="${RegistrationValidator.AVATAR_IMG_KEY}"
-                       accept="image/*">
             </div>
             <span id="spanAvatar" class="help-block">
                 ${requestScope.messages.get(RegistrationValidator.AVATAR_KEY)}
@@ -172,7 +181,7 @@
         // Salva oggetti in modo da doverli cercare una sola volta
         const form=$('#form-register');
         const strPwd = form.find('#strongPassword');
-        const avatarIn = form.find('input[name="${RegistrationValidator.AVATAR_KEY}"]')[0];
+        const avatarImgCustom = form.find('input[name="${RegistrationValidator.AVATAR_IMG_KEY}"]')[0];
 
         function request_errors(async){
             return $.ajax({
@@ -208,29 +217,34 @@
         }
 
         function add_file_errors(data){
-            return data;
+            const checked_radio = form.find('input[name="${RegistrationValidator.AVATAR_KEY}"]:checked');
 
+            if(checked_radio.length === 0 || checked_radio.val() !== "${RegistrationValidator.CUSTOM_AVATAR}" ) {
+                return data;
+            }
 
             // Se l'estensione per leggere i file è supportata faccio il controllo altrimenti no
             // (fatto successivamente dal server)
             if (!window.FileReader) {
-                return;
+                return data;
             }
 
             // Se il browser ha l'estensione che permette di accedere alla proprietà files continuo altrimenti no
             // (fatto successivamente dal server)
-            if (!avatarIn.files) {
-                return;
+            if (!avatarImgCustom.files) {
+                return data;
             }
 
-            const fileToUpload = avatarIn.files[0];
+            const fileToUpload = avatarImgCustom.files[0];
 
             if(!fileToUpload) {
-                data["${RegistrationValidator.AVATAR_KEY}"] = "No file";
+                data["${RegistrationValidator.AVATAR_IMG_KEY}"] = "No file";
             } else if (fileToUpload.size < ${RegistrationValidator.MIN_LEN_FILE}) {
-                data["${RegistrationValidator.AVATAR_KEY}"] = "File has zero size";
+                data["${RegistrationValidator.AVATAR_IMG_KEY}"] = "File has zero size";
             } else if(fileToUpload.size > ${RegistrationValidator.MAX_LEN_FILE}){
-                data["${RegistrationValidator.AVATAR_KEY}"] = "File has size > 15MB";
+                data["${RegistrationValidator.AVATAR_IMG_KEY}"] = "File has size > 15MB";
+            } else if(window.Blob && !fileToUpload.type.startsWith("image/")) {
+                data["${RegistrationValidator.AVATAR_IMG_KEY}"] = "File must be an image";
             }
 
             return data;
@@ -245,7 +259,7 @@
         });
 
 
-        form.find('input').on("blur",function(){ request_errors(true).done(upd); });
+        form.find('input').on("blur", function(){ request_errors(true).done(upd); });
 
         form.on("submit",function(){
             const request = request_errors(false);
