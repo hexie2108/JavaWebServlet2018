@@ -21,7 +21,7 @@ function setProductIdForAddInList(productId) {
         var boxAddItem = document.getElementById("boxAddItem");
         boxAddItem.getElementsByClassName("item-img")[0].setAttribute("src", image);
         boxAddItem.getElementsByClassName("item-img")[0].setAttribute("alt", name);
-        boxAddItem.getElementsByClassName("modal-title")[0].innerHTML = name;
+        boxAddItem.getElementsByClassName("modal-title")[0].innerHTML = boxAddItem.getElementsByClassName("modal-title")[0].innerHTML + name;
         boxAddItem.getElementsByClassName("item-logo-img")[0].setAttribute("src", logo);
         boxAddItem.getElementsByClassName("item-cat-link")[0].setAttribute("href", categoryLink);
         boxAddItem.getElementsByClassName("item-cat-link")[0].innerHTML = categoryName;
@@ -55,7 +55,7 @@ function showProductWindowsFromList(productId, loggerUser, statusOfBuy, canYouDe
         var boxShowItem = document.getElementById("boxShowItem");
         boxShowItem.getElementsByClassName("item-img")[0].setAttribute("src", image);
         boxShowItem.getElementsByClassName("item-img")[0].setAttribute("alt", name);
-        boxShowItem.getElementsByClassName("modal-title")[0].innerHTML = name;
+        boxShowItem.getElementsByClassName("modal-title")[0].innerHTML = boxShowItem.getElementsByClassName("modal-title")[0].innerHTML+name;
         boxShowItem.getElementsByClassName("item-logo-img")[0].setAttribute("src", logo);
         boxShowItem.getElementsByClassName("item-cat-link")[0].setAttribute("href", categoryLink);
         boxShowItem.getElementsByClassName("item-cat-link")[0].innerHTML = categoryName;

@@ -16,12 +16,12 @@
                         <img class="list-item-img img-fluid card-img-top" src="${pageContext.request.contextPath}/${product.img}" alt="${product.name}"/>
 
                         <div class="list-item-cat ${not empty categoria ?"hiddin-cat":""}">
-                                
-                                        <a class="list-item-cat-link" href="${pageContext.request.contextPath}/category?catid=${product.categoryProductId}">
-                                                <custom:getCategoryNameById categoryId="${product.categoryProductId}">
-                                                </custom:getCategoryNameById>
-                                        </a>
-                                
+
+                                <a class="list-item-cat-link" href="${pageContext.request.contextPath}/category?catid=${product.categoryProductId}">
+                                        <custom:getCategoryNameById categoryId="${product.categoryProductId}">
+                                        </custom:getCategoryNameById>
+                                </a>
+
                         </div>
 
                         <div class="list-item-title card-title mb-2 mt-2">
@@ -32,16 +32,18 @@
                                 ${product.description}
 
                         </div>
-                                <div class="list-item-info">       
-                                        <div class="list-item-logo  d-inline-block w-50">
-                                                <img class="list-item-logo-img img-fluid" src="${pageContext.request.contextPath}/${product.logo}" alt="logo"/>
+                        <div class="list-item-info">       
+                                <div class="list-item-logo  d-inline-block w-50">
+                                        <img class="list-item-logo-img img-fluid" src="${pageContext.request.contextPath}/${product.logo}" alt="logo"/>
 
-                                        </div>
-                                        <div class="list-item-add  float-right ">
-                                                <button class="list-item-add-button btn btn-info" data-toggle="modal" data-target="#boxAddItem" onclick="setProductIdForAddInList(${product.id})">Aggiunge</button>
-                                        </div>
+                                </div>
+
                         </div>
 
+                        <div class="list-item-add">
+                                <button class="list-item-add-button btn btn-info" data-toggle="modal" data-target="#boxAddItem" onclick="setProductIdForAddInList(${product.id})"><i class="fas fa-cart-plus"></i> Aggiunge</button>
+                        </div>
+                        
                 </div>
         </c:forEach>
 </div>

@@ -16,7 +16,7 @@
                 <div class="content">
 
                         <!-- breadcrumb-->
-                        <div class="breadcrumbs d-inline">
+                        <div class="breadcrumbs">
 
                                 <a href="${pageContext.request.contextPath}">
                                 <i class="fas fa-home"></i>
@@ -30,7 +30,7 @@
 
 
                 <div class="add-list-box">
-                        <a class="btn btn-info" href="">crea una nuova lista</a>
+                        <a class="btn btn-info" href=""><i class="fas fa-plus"></i> crea una nuova lista</a>
                 </div>
                 <!-- se possiede almeno una lista owner -->         
                 <c:if test="${not empty ownedLists}">
@@ -47,13 +47,11 @@
                                                                 </div>
                                                                 <div class="list-info">
                                                                         <span class="list-name">
-                                                                                nome: <b>${list.name}</b>
+                                                                                <b>nome:</b> ${list.name}
                                                                         </span>
                                                                         <span class="list-category">
-                                                                                categoria: 
-                                                                                <b>
-                                                                                        <custom:getListCategoryNameByListCategoryId listCategoryId="${list.categoryList}"/>
-                                                                                </b>
+                                                                               <b>categoria: </b>
+                                                                                <custom:getListCategoryNameByListCategoryId listCategoryId="${list.categoryList}"/>
                                                                         </span>
                                                                         <div class="list-description">
 
@@ -64,8 +62,8 @@
 
                                                         </div>
                                                         <div class="list-right-head"> 
-                                                                <a class="link-to-shared btn btn-info" href="#">${ownedListsMap.get(list).get("numberOfShared")} condivisione</a>
-                                                                <a class="link-to-comment btn btn-info" href="#">${ownedListsMap.get(list).get("numberComment")} commenti</a>
+                                                                <a class="link-to-shared btn btn-info" href="#"><i class="fas fa-share-alt"></i> ${ownedListsMap.get(list).get("numberOfShared")} condivisione</a>
+                                                                <a class="link-to-comment btn btn-info" href="#"><i class="fas fa-comments"></i> ${ownedListsMap.get(list).get("numberComment")} commenti</a>
                                                         </div>
                                                 </div>
                                                 <div class="list-body">
@@ -142,22 +140,22 @@
                                                         </div>
                                                         <div class="list-right-head"> 
                                                                 <div class="permission">
-                                                                        <span class="modify-list">
-                                                                                modificare la lista: ${sharedListsMap.get(list).get("permission").modifyList?"si":"no"}
+                                                                        <span class="modify-list" title="modifica la lista">
+                                                                                <i class="fas fa-edit"></i> ${sharedListsMap.get(list).get("permission").modifyList?"si":"no"}
                                                                         </span>
-                                                                        <span class="delete-list">
-                                                                                eliminare la lista: ${sharedListsMap.get(list).get("permission").deleteList?"si":"no"}
+                                                                        <span class="delete-list" title="elimina la lista">
+                                                                                <i class="fas fa-trash-alt"></i> ${sharedListsMap.get(list).get("permission").deleteList?"si":"no"}
                                                                         </span>
-                                                                        <span class="add-item">
-                                                                                aggiungere il prodotto: ${sharedListsMap.get(list).get("permission").addObject?"si":"no"}
+                                                                        <span class="add-item" title="aggiunge il prodotto">
+                                                                              <i class="fas fa-cart-plus"></i> ${sharedListsMap.get(list).get("permission").addObject?"si":"no"}
                                                                         </span>
-                                                                        <span class="delete-item">
-                                                                                elimina il prodotto: ${sharedListsMap.get(list).get("permission").deleteObject?"si":"no"}
+                                                                        <span class="delete-item" title="elimina il prodotto">
+                                                                               <i class="fas fa-ban"></i> ${sharedListsMap.get(list).get("permission").deleteObject?"si":"no"}
                                                                         </span>
 
                                                                 </div>
 
-                                                                <a class="link-to-comment btn btn-info" href="#">${sharedListsMap.get(list).get("numberComment")} commenti</a>
+                                                                <a class="link-to-comment btn btn-info" href="#"><i class="fas fa-comments"></i> ${sharedListsMap.get(list).get("numberComment")} commenti</a>
                                                         </div>
                                                 </div>
                                                 <div class="list-body">

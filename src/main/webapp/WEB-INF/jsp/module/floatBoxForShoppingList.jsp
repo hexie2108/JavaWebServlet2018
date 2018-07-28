@@ -25,7 +25,7 @@
                                 <!--se è un utente anonimo-->
                                 <div class="list-selector mb-2">
                                         <form action="#">
-                                                <label  for="select-list" class="d-block">Seleziona la lista:</label>
+                                                <label  for="select-list" class="d-block"><i class="fas fa-list"></i> Seleziona la lista:</label>
                                                 <select id="select-list" class="form-control custom-select w-50" name="listId">
                                                         <option value="default">Default list</option>
                                                 </select>
@@ -34,7 +34,7 @@
                                 </div>
                                 <div class="list-type-selector mb-3">
                                         <form action="${pageContext.request.contextPath}/service/updateItemInListUnloggedUserOnlyService" method="GET">
-                                                <label  for="type-list"  class="d-block">Tipo della lista:</label>
+                                                <label  for="type-list"  class="d-block"><i class="fas fa-sitemap"></i> Tipo della lista:</label>
                                                 <select id="type-list" class="form-control custom-select w-50" name ="categoryList" onchange="checkValueOfCategoryList(this)">
 
                                                         <!-- se è stato assegnato una categoria di lista locale-->
@@ -87,7 +87,7 @@
                                                 </h2>
                                         </div>
                                         <div class="list-manage">
-                                                <a class="btn btn-info w-100" href="#">Crea una nuova lista</a>
+                                                <a class="btn btn-info w-100" href="#"><i class="fas fa-plus"></i> Crea una nuova lista</a>
                                         </div>
                                 </c:if>
 
@@ -95,7 +95,7 @@
                                 <c:if test="${not empty sessionScope.myListId}">
                                         <div class="list-selector mb-2">
                                                 <form action="${pageContext.request.contextPath}/service/changeListService" method="GET">
-                                                        <label  for="select-list" class="d-block">Seleziona la lista:</label>
+                                                        <label  for="select-list" class="d-block"><i class="fas fa-list"></i> Seleziona la lista:</label>
 
                                                         <select id="select-list" class="form-control custom-select w-50" name="listId">
                                                                 <c:forEach var="shoppingList" items="${requestScope.allMyList}">
@@ -111,10 +111,7 @@
                                                 </form>
                                         </div>
 
-                                        <div class="list-manage">
-                                                <a class="btn btn-info w-100" href="#">gestire la lista</a>
-
-                                        </div>
+                                        
                                         <div class="list-content table-responsive">
                                                 <table class="table">
                                                         <thead>
@@ -135,7 +132,7 @@
                                                                                                 </a>
                                                                                         </td>
                                                                                         <td class="td-name">
-                                                                                                <span class="name">${product.name}</span>
+                                                                                                <span>${product.name}</span>
 
                                                                                                 <!-- campo necessario per visuallizare il prodotto nella finestrina-->
                                                                                                  <input class="name" type="hidden" value="${product.name}" />
@@ -170,7 +167,7 @@
                                                                                                 </a>
                                                                                         </td>
                                                                                         <td class="td-name">
-                                                                                                <span class="">${product.name}</span>
+                                                                                                <span>${product.name}</span>
 
                                                                                                 <!-- campo necessario per visuallizare il prodotto nella finestrina-->
                                                                                                  <input class="name" type="hidden" value="${product.name}" />

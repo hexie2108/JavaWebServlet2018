@@ -7,6 +7,7 @@
 
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="custom" uri="/WEB-INF/custom.tld"%>
 
 <!DOCTYPE html>
 <html> 
@@ -50,12 +51,13 @@
                                 <div class="top-bar  fixed-top bg-dark ">
 
                                         <div class="site-logo-section">
-                                                
-                                                <img class="logo d-inline" src="${pageContext.request.contextPath}/image/base/logo.png" alt="logo"/>
-                                                <h2 class="text-white d-inline">Il nome del sito ${filter}</h2>
+                                                <a href="${pageContext.request.contextPath}" title="home">
+                                                        <img class="logo d-inline" src="${pageContext.request.contextPath}/image/base/logo.png" alt="logo"/>
+                                                        <h2 class="text-white d-inline">Il nome del sito ${filter}</h2>
+                                                </a>
                                         </div> 
 
-                                        
+
                                         <div class="site-top-menu float-right">
                                                 <nav class="navbar navbar-expand-sm navbar-dark" >
                                                         <ul class="navbar-nav ">
@@ -103,11 +105,11 @@
                                 <div class="top-windows ">
 
                                         <div class="search-section col">
-                                                <form class="mt-5" action="${pageContext.request.contextPath}/search">
+                                                <form id="search-form" class="mt-5" action="${pageContext.request.contextPath}/search">
                                                         <div class="input-group mb-3">
-                                                                <input type="search" class="form-control" name="searchWords" placeholder="cerchi qualcosa?" required="required">
+                                                                <input type="search" class="form-control" name="searchWords" placeholder="cerchi qualcosa?" >
                                                                 <div class="input-group-append">
-                                                                        <input class="btn btn-info" type="submit" value="CERCA"/>
+                                                                        <button class="btn btn-info" onclick="document.search - form.submit()"><i class="fas fa-search"></i> CERCA</button>
 
                                                                 </div>
                                                         </div> 
@@ -124,16 +126,20 @@
                                                                         HOME
                                                                 </a>
                                                         </li>
+                                                        <li class="nav-item dropdown">
+                                                                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                                                                        CATEGORIA
+                                                                </a>
+                                                                <div class="dropdown-menu">
+                                                                        <custom:printAllCategoryProductForMenu/>
+                                                                </div>
+                                                        </li>
                                                         <li class="nav-item">
                                                                 <a class="nav-link" href="#">
                                                                         AGGIUNGE PRODOTTO
                                                                 </a>
                                                         </li>
-                                                        <li class="nav-item">
-                                                                <a class="nav-link" href="#">
-                                                                        link2
-                                                                </a>
-                                                        </li>
+
                                                         <li class="nav-item">
                                                                 <a class="nav-link" href="#">
                                                                         link3

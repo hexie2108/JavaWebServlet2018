@@ -10,7 +10,7 @@
 
 <jsp:include page="/WEB-INF/jsp/header.jsp"></jsp:include>
 
-        
+
         <div class="main-section col-9">
                 <div class="content">
                 <jsp:include page="/WEB-INF/jsp/module/slider.jsp"></jsp:include>
@@ -19,8 +19,8 @@
                                         <h1 class="list-title">
                                                 i prodotti 
                                         </h1>
-                                        
-                                        
+
+
                                 </div>
                         <jsp:include page="/WEB-INF/jsp/module/productList.jsp"></jsp:include>
                         </div>
@@ -28,4 +28,6 @@
         </div>
 
 <jsp:include page="/WEB-INF/jsp/sidebar.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/jsp/module/floatBoxForShoppingList.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/jsp/module/floatBoxForAddProductInShoppingList.jsp"></jsp:include>
 <jsp:include page="/WEB-INF/jsp/footer.jsp"></jsp:include>

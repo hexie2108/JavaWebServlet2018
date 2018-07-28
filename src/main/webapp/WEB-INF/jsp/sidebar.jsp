@@ -14,7 +14,7 @@
         
          <!-- la lista di tutti categoira -->
         <div class="tag-category">
-                <h2 class="text-center"><i class="fas fa-shopping-basket"></i> CATEGORIA</h2>
+                <h2 class="text-center"><i class="fas fa-store"></i> CATEGORIA</h2>
                 <custom:printAllCategoryProduct>
                         
                 </custom:printAllCategoryProduct>

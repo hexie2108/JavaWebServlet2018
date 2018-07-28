@@ -32,6 +32,11 @@
     <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagPrintAllCategoryProduct</tag-class>
     <body-content>scriptless</body-content>
   </tag>
+    <tag>
+    <name>printAllCategoryProductForMenu</name>
+    <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagPrintAllCategoryProductForMenu</tag-class>
+    <body-content>scriptless</body-content>
+  </tag>
   <tag>
     <name>printAllCategoryList</name>
     <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagPrintAllCategoryList</tag-class>

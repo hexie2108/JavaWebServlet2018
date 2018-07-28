@@ -17,7 +17,7 @@
 
                         <!-- box-head -->
                         <div class="modal-header">
-                                <h4 class="modal-title">il nome prodotto</h4>
+                                <h4 class="modal-title"><i class="fas fa-shopping-basket"></i> </h4>
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
 
@@ -25,11 +25,13 @@
                         <div class="modal-body">
                                 <div class="left-body">
                                         <img class="item-img img-fluid" alt="item-name" />
-                                        <div class="item-logo text-center mt-2 mb-2">
+                                        <div class="item-logo">
                                                 <p class="font-weight-bold">
-                                                        logo:
+                                                      <i class="far fa-bookmark"></i>  logo:
                                                 </p>
-                                                <img class="item-logo-img img-fluid w-50 "  alt="logo" />
+                                                <div class="item-logo-img-box">
+                                                        <img class="item-logo-img img-fluid"  alt="logo" />
+                                                </div>
                                         </div>
                                 </div>
 
@@ -39,7 +41,7 @@
 
                                                 <div class="item-cat">
                                                         <p class="font-weight-bold">
-                                                                categoria:
+                                                               <i class="fas fa-store"></i> categoria:
                                                         </p>
                                                         <p>
                                                                 <a class="item-cat-link" href="#" >nome della categoria</a>
@@ -47,7 +49,7 @@
                                                 </div>
                                                 <div class="item-description">
                                                         <p class="font-weight-bold">
-                                                                descrizione:
+                                                              <i class="far fa-file-alt"></i>  descrizione:
                                                         </p>
                                                         <p class="item-description-text">
                                                                 la descrizione del prodotto

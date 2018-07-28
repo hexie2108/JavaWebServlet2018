@@ -12,8 +12,7 @@
               
             </section>
             
-            <jsp:include page="/WEB-INF/jsp/module/floatBoxForShoppingList.jsp"></jsp:include>
-            <jsp:include page="/WEB-INF/jsp/module/floatBoxForAddProductInShoppingList.jsp"></jsp:include>
+           
             <jsp:include page="/WEB-INF/jsp/module/floatBoxForViewProductFromShoppingList.jsp"></jsp:include>
             <jsp:include page="/WEB-INF/jsp/module/floatBoxForMessage.jsp"></jsp:include>
            

@@ -47,7 +47,7 @@ public class HomeServlet extends HttpServlet
                 //set titolo della pagina
                 request.setAttribute("head_title", "Home");
                 //get numero di categoria per il slider
-                int numberProductForSlider = Integer.parseInt(getServletContext().getInitParameter("quantityCatForSlider"));
+                int numberCatForSlider = Integer.parseInt(getServletContext().getInitParameter("quantityCatForSlider"));
                 //posizione di start di query per get lista di prodotto, servira per paginazione futura
                 int startPosition =0;
                 //get numero di prodotto per singola pagina
@@ -55,7 +55,7 @@ public class HomeServlet extends HttpServlet
                 try
                 {
                         //get e set la lista di cat per slider nella richesta
-                        request.setAttribute("sliderProductList", categoryProductDAO.getCategoryProductList(0, numberProductForSlider));
+                        request.setAttribute("categoryListForSlider", categoryProductDAO.getCategoryProductList(0, numberCatForSlider));
                         //get e set la lista di prodotto per visualizzazione nella richesta
                         request.setAttribute("productList", productDAO.getProductList(startPosition, numebrProductForList));
                 }
