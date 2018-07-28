@@ -17,6 +17,7 @@ import it.unitn.webprogramming18.dellmm.javaBeans.Permission;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -82,7 +83,7 @@ public class DisplaySpecificListServlet extends HttpServlet {
             }
             
             //Gets all products on list
-            List<Product> products = null;
+            List<Product> products = new ArrayList();
             try {
                 products = productDAO.getProductsInListByListId(listId);
             } catch (DAOException ex) {
@@ -92,8 +93,8 @@ public class DisplaySpecificListServlet extends HttpServlet {
             
             //Gets set of permissions associated to the list,
             //and user's permissions on list if user is not owner
-            List<Permission> generalPermissionsOnList;
-            Permission userPermissionsOnList = null;
+            List<Permission> generalPermissionsOnList = new ArrayList();
+            Permission userPermissionsOnList = new Permission();
             try {
                 generalPermissionsOnList = permissionDAO.getPermissionsOnListByListId(listId);
                 
