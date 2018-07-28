@@ -79,5 +79,5 @@ public interface ProductDAO extends DAO<Product, Integer> {
      * @return the list of all the names of the products
      * @throws DAOException if an error occurred during the information retrieving.
      */
-    public List<String> getAllNames() throws DAOException;
+    public List<String> getAllPublicProductsNames() throws DAOException;
 }

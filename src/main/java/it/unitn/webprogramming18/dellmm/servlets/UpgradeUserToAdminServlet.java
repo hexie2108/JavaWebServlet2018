@@ -58,7 +58,7 @@ public class UpgradeUserToAdminServlet extends HttpServlet {
                 //request.getRequestDispatcher("/WEB-INF/jsp/nonAuthorizedAction.jsp").forward(request, response);
             } else {
                 
-                User userToUpgrade = null;
+                User userToUpgrade = new User() ;
                 String emailUserToUpgrade = request.getParameter("email");
                 
                 try {

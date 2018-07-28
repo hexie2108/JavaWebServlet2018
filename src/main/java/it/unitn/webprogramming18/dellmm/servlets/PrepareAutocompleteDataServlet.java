@@ -5,27 +5,27 @@
  */
 package it.unitn.webprogramming18.dellmm.servlets;
 
+import com.google.gson.Gson;
 import it.unitn.webprogramming18.dellmm.db.daos.ProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ProductInListDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
-import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author luca_morgese
  */
-public class PrepareNamesAutocomplServlet extends HttpServlet {
+public class PrepareAutocompleteDataServlet extends HttpServlet {
 
     private ProductDAO productDAO;
     private ProductInListDAO productInListDAO;
@@ -46,7 +46,7 @@ public class PrepareNamesAutocomplServlet extends HttpServlet {
     }
     
     /**
-     * Handles the HTTP <code>GET</code> method.
+     * Handles the HTTP <code>POST</code> method.
      *
      * @param request servlet request
      * @param response servlet response
@@ -54,30 +54,41 @@ public class PrepareNamesAutocomplServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession(false);
-        User user = (User) session.getAttribute("user");
-        if (session == null || user == null) {
-            //request.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(request, response);
-        } else {
-            //Java List
-            List<String> productsNames = null;
-            
-            try {
-                productsNames = productDAO.getAllNames();
-            } catch (DAOException ex) {
-                ex.printStackTrace();
-                throw new ServletException("Impossible to get products' names");
-            }
-            
-            
-            request.setAttribute("productsNames", productsNames);
-            request.setAttribute("productInListDAO", productInListDAO);
-
-            //URL TO BE DEFINED
-            request.getRequestDispatcher("/WEB-INF/jsp/RESEARCH_PRODUCT_TO_ADD_TO_LIST_LINK").forward(request, response);
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setHeader("Cache-Control", "no-cache");
+        response.setHeader("Pragma", "no-cache");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
         
+        //Java List
+        List<String> productsNamesList = new ArrayList();
+
+        try {
+            productsNamesList = productDAO.getAllPublicProductsNames();
+        } catch (DAOException ex) {
+            ex.printStackTrace();
+            throw new ServletException("Impossible to get products' names");
         }
+        
+        HashMap<String, java.io.Serializable> productEntry;
+        List<HashMap<String, java.io.Serializable>> productEntries = new ArrayList();
+        HashMap<String, List<HashMap<String, java.io.Serializable>>> jsonData = new HashMap();
+        
+        for (int i = 0; i < productsNamesList.size(); i++) {
+            productEntry = new HashMap();
+            productEntry.put("id", i+1);
+            productEntry.put("text", productsNamesList.get(i));
+
+            productEntries.add(productEntry);
+            productEntry.clear();
+        }
+        
+        jsonData.put("results", productEntries);
+        
+        PrintWriter out = response.getWriter();
+        Gson gson = new Gson();
+        out.print(gson.toJson(jsonData));
+
     }
 
     /**
@@ -87,7 +98,7 @@ public class PrepareNamesAutocomplServlet extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
+        return "Prepares data for search autocomplete";
+    }
 
 }

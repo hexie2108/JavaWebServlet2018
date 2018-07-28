@@ -168,10 +168,10 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
         return products;
     }
     
-    public List<String> getAllNames() throws DAOException {
+    public List<String> getAllPublicProductsNames() throws DAOException {
         List<String> productList = new ArrayList<>();
 
-        try (PreparedStatement stm = CON.prepareStatement("SELECT name FROM Product")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT name FROM Product WHERE privateListId IS NULL")) {
             try (ResultSet rs = stm.executeQuery()) {
                 while (rs.next()) {
                     productList.add(rs.getString("name"));

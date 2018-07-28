@@ -84,7 +84,7 @@
     </servlet>
     <servlet>
         <servlet-name>PrepareNamesAutocomplServlet</servlet-name>
-        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.PrepareNamesAutocomplServlet</servlet-class>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.PrepareAutocompleteDataServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>DisplaySpecificListServlet</servlet-name>
