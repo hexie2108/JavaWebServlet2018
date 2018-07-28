@@ -182,11 +182,12 @@
         const form=$('#form-register');
         const strPwd = form.find('#strongPassword');
         const avatarImgCustom = form.find('input[name="${RegistrationValidator.AVATAR_IMG_KEY}"]')[0];
+        const URL = '${pageContext.servletContext.contextPath}/${PagePathsConstants.VALIDATE_REGISTRATION}?strict=';
 
-        function request_errors(async){
+        function request_errors(async, url){
             return $.ajax({
                 dataType: "json",
-                url : '${pageContext.servletContext.contextPath}/${PagePathsConstants.VALIDATE_REGISTRATION}?strict=',
+                url : url,
                 type: "post",
                 async: async,
                 data: form.find("input[name!=${RegistrationValidator.AVATAR_IMG_KEY}]").serialize()
@@ -259,10 +260,10 @@
         });
 
 
-        form.find('input').on("blur", function(){ request_errors(true).done(upd); });
+        form.find('input').on("blur", function(){ request_errors(true, URL).done(upd); });
 
         form.on("submit",function(){
-            const request = request_errors(false);
+            const request = request_errors(false, URL);
 
             let data;
             request.done(function(data2){data=data2});

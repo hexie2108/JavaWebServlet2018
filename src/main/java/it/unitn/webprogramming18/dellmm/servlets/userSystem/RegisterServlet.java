@@ -105,8 +105,6 @@ public class RegisterServlet extends HttpServlet {
             avatarImg
         );
 
-        System.out.println(avatarImg);
-
         // In caso i campi non siano validi ricarica la pagina con gli errori indicati
         if (!messages.isEmpty()) {
             request.setAttribute("messages", messages);
