@@ -45,7 +45,7 @@ public class ValidateUserServlet extends HttpServlet {
         String email = request.getParameter(RegistrationValidator.EMAIL_KEY);
         String firstPassword = request.getParameter(RegistrationValidator.FIRST_PWD_KEY);
         String secondPassword = request.getParameter(RegistrationValidator.SECOND_PWD_KEY);
-        String infPrivacy = request.getParameter(RegistrationValidator.INF_PRIVACY_KEY);
+        String avatar = request.getParameter(RegistrationValidator.AVATAR_KEY);
 
         HashMap<String, String> messages;
 
@@ -57,6 +57,7 @@ public class ValidateUserServlet extends HttpServlet {
             kv.put(RegistrationValidator.EMAIL_KEY, email);
             kv.put(RegistrationValidator.FIRST_PWD_KEY, firstPassword);
             kv.put(RegistrationValidator.SECOND_PWD_KEY, secondPassword);
+            kv.put(RegistrationValidator.AVATAR_KEY, avatar);
         } else {
             if (firstName != null && !firstName.isEmpty()) {
                 kv.put(RegistrationValidator.FIRST_NAME_KEY, firstName);
@@ -76,6 +77,10 @@ public class ValidateUserServlet extends HttpServlet {
 
             if (secondPassword != null && !secondPassword.isEmpty()) {
                 kv.put(RegistrationValidator.SECOND_PWD_KEY, secondPassword);
+            }
+
+            if (avatar != null && !avatar.isEmpty()) {
+                kv.put(RegistrationValidator.AVATAR_KEY, avatar);
             }
         }
 

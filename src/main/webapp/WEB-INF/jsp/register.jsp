@@ -13,6 +13,7 @@
     <script src="${pageContext.servletContext.contextPath}/libs/jquery/jquery-3.3.1.min.js"></script>
     <script src="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/js/bootstrap.js"></script>
     <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/libs/fontawesome-free-5.1.1-web/css/all.min.css">
 </head>
 <body>
 <nav class="navbar navbar-default navbar-static-top">
@@ -97,17 +98,46 @@
             </div>
         </div>
 
-        <div class="form-group row">
-            <div class="input-group">
-                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                <label for="inputAvatar" class="sr-only">Avatar</label>
-                <input id="inputAvatar" class="form-control" placeholder="Avatar" required=""
-                       type="file" name="${RegistrationValidator.AVATAR_KEY}"
+        <div class="form-group">
+            <style type="text/css">
+                #customAvatar:checked ~ #customAvatarImg {
+                    display: inline-block;
+                }
+
+                #customAvatar:not(checked) ~ #customAvatarImg {
+                    display: none;
+                }
+            </style>
+
+            <div class="row">
+                <c:forEach items="${RegistrationValidator.DEFAULT_AVATARS}" var="av">
+                    <label>
+                        <input class="d-none" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}" value="${av}">
+                        <img src="${pageContext.servletContext.getInitParameter("avatarsFolder")}/${av}" style="width: 32px; height: 32px;">
+                    </label>
+                </c:forEach>
+                <label>
+                    <i class="far fa-plus-square" style="font-size: 32px;"></i>
+                    <input required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}" value="custom" id="customAvatar" style="display: none">
+                </label>
+                <input id="customAvatarImg"
+                       type="file" name="${RegistrationValidator.AVATAR_IMG_KEY}"
                        accept="image/*">
             </div>
             <span id="spanAvatar" class="help-block">
                 ${requestScope.messages.get(RegistrationValidator.AVATAR_KEY)}
             </span>
+            <span id="spanAvatarImg" class="help-block">
+                ${requestScope.messages.get(RegistrationValidator.AVATAR_IMG_KEY)}
+            </span>
+
+            <script>
+                $('form').submit(function(){
+                    if(!$('#customAvatar').is(':checked')){
+                        $('#customAvatarImg').val("");
+                    }
+                });
+            </script>
         </div>
 
         <div class="panel panel-default">
@@ -150,7 +180,7 @@
                 url : '${pageContext.servletContext.contextPath}/${PagePathsConstants.VALIDATE_REGISTRATION}?strict=',
                 type: "post",
                 async: async,
-                data: form.find("input[name!=${RegistrationValidator.AVATAR_KEY}]").serialize()
+                data: form.find("input[name!=${RegistrationValidator.AVATAR_IMG_KEY}]").serialize()
             });
         }
 
@@ -178,6 +208,9 @@
         }
 
         function add_file_errors(data){
+            return data;
+
+
             // Se l'estensione per leggere i file è supportata faccio il controllo altrimenti no
             // (fatto successivamente dal server)
             if (!window.FileReader) {

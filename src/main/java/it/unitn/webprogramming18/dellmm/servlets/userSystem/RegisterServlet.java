@@ -88,21 +88,24 @@ public class RegisterServlet extends HttpServlet {
         String firstPassword = request.getParameter(RegistrationValidator.FIRST_PWD_KEY);
         String secondPassword = request.getParameter(RegistrationValidator.SECOND_PWD_KEY);
         String infPrivacy = request.getParameter(RegistrationValidator.INF_PRIVACY_KEY);
+        String avatar = request.getParameter(RegistrationValidator.AVATAR_KEY);
 
-
-        Part avatarPart = request.getPart(RegistrationValidator.AVATAR_KEY);
+        Part avatarImg = request.getPart(RegistrationValidator.AVATAR_IMG_KEY);
 
         // Usa il validator per verifiacare la conformità
         HashMap<String, String> messages = RegistrationValidator.createValidationMessages(
-                userDAO,
-                firstName,
-                lastName,
-                email,
-                firstPassword,
-                secondPassword,
-                infPrivacy,
-                avatarPart
-                );
+            userDAO,
+            firstName,
+            lastName,
+            email,
+            firstPassword,
+            secondPassword,
+            infPrivacy,
+            avatar,
+            avatarImg
+        );
+
+        System.out.println(avatarImg);
 
         // In caso i campi non siano validi ricarica la pagina con gli errori indicati
         if (!messages.isEmpty()) {
@@ -113,9 +116,8 @@ public class RegisterServlet extends HttpServlet {
 
         String uuidAvatar = UUID.randomUUID().toString();
 
-        try (InputStream fileContent = avatarPart.getInputStream()) {
+        try (InputStream fileContent = avatarImg.getInputStream()) {
             File file = new File(path.toString(), uuidAvatar.toString());
-            System.out.println(file.toPath());
             Files.copy(fileContent, file.toPath());
         } catch (FileAlreadyExistsException ex) { // Molta sfiga
             getServletContext().log("File \"" + uuidAvatar.toString() + "\" already exists on the server");

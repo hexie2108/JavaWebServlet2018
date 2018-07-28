@@ -257,5 +257,4 @@
         <servlet-name>NotificationsServletJSON</servlet-name>
         <url-pattern>/notifications.json</url-pattern>
     </servlet-mapping>
-
 </web-app>

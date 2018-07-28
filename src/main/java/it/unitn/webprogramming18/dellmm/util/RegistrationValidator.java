@@ -5,7 +5,10 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 
 import javax.mail.internet.InternetAddress;
 import javax.servlet.http.Part;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 public class RegistrationValidator {
     public static final String FIRST_NAME_KEY = "FirstName",
@@ -14,7 +17,8 @@ public class RegistrationValidator {
             FIRST_PWD_KEY = "Password",
             SECOND_PWD_KEY = "Password2",
             EMAIL_KEY = "Email",
-            AVATAR_KEY = "Avatar";
+            AVATAR_KEY = "Avatar",
+            AVATAR_IMG_KEY = "AvatarImg";
 
     // --- Configurazioni per la validazione dei campi
     private static final int FIRST_NAME_MAX_LEN = 44,
@@ -29,6 +33,17 @@ public class RegistrationValidator {
 
     public static final int MAX_LEN_FILE = 15 * 1000000,
                             MIN_LEN_FILE = 0;
+
+    public static final List<String> DEFAULT_AVATARS = Collections.unmodifiableList(Arrays.asList(
+                "user.svg",
+                "user-astronaut.svg",
+                "user-graduate.svg",
+                "user-md.svg",
+                "user-ninja.svg",
+                "user-secret.svg"
+        ));
+
+    public static final String CUSTOM_AVATAR = "custom";
 
     // --- Funzioni di validazione
     private static boolean validateEmailFormat(String email) {
@@ -160,15 +175,29 @@ public class RegistrationValidator {
         return null;
     }
 
-    public static String validateAvatar(Part filePart) {
+    public static String validateAvatar(String avatar) {
+        // Se avatar è custom allora controllo il file, se nessun controllo segnala errori esco immediatamente
+        if(avatar == null || avatar.isEmpty()) {
+            return "No avatar selected";
+        }
+
+        // Se avatar non è custom controllo se è tra i valori permessi
+        if (!avatar.equals(CUSTOM_AVATAR) && DEFAULT_AVATARS.stream().noneMatch(avatar::equals)) {
+            return "Selected value is not valid";
+        }
+
+        return null;
+    }
+
+    public static String validateAvatarImg(Part filePart) {
         if (filePart == null) {
-            return "No avatar";
-        } else if(filePart.getSize() == RegistrationValidator.MIN_LEN_FILE) {
-            return "Avatar has zero size";
+            return "No file";
+        } else if(filePart.getSize() <= RegistrationValidator.MIN_LEN_FILE) {
+            return "File has zero size";
         } else if(filePart.getSize() > RegistrationValidator.MAX_LEN_FILE) { // Non permettere dimensioni superiori ai ~15MB
-            return "Avatar has size > 15MB";
+            return "File has size > 15MB";
         } else if(!filePart.getContentType().startsWith("image/")) { // Not safe, uses extensions
-            return "Avatar must be an image";
+            return "File must be an image";
         }
 
         return null;
@@ -236,13 +265,23 @@ public class RegistrationValidator {
         }
 
         if (kv.containsKey(AVATAR_KEY)) {
-            Part filePart = (Part)kv.get(AVATAR_KEY);
+            String avatar = (String)kv.get(AVATAR_KEY);
 
-            String messageValidateAvatar = validateAvatar(filePart);
+            String messageValidateAvatar = validateAvatar(avatar);
             if (messageValidateAvatar != null) {
                 messages.put(AVATAR_KEY, messageValidateAvatar);
             }
         }
+
+        if (kv.containsKey(AVATAR_KEY) && kv.containsKey(AVATAR_IMG_KEY) && kv.get(AVATAR_KEY).equals(CUSTOM_AVATAR)){
+            Part filePart = (Part)kv.get(AVATAR_IMG_KEY);
+
+            String messageValidateAvatarImg = validateAvatarImg(filePart);
+            if(messageValidateAvatarImg != null) {
+                messages.put(AVATAR_IMG_KEY, messageValidateAvatarImg);
+            }
+        }
+
 
         return messages;
     }
@@ -255,7 +294,8 @@ public class RegistrationValidator {
             String firstPassword,
             String secondPassword,
             String infPrivacy,
-            Part avatar
+            String avatar,
+            Part avatarImg
     ) {
         HashMap<String, Object> kv = new HashMap<>();
         kv.put(FIRST_NAME_KEY, firstName);
@@ -265,6 +305,7 @@ public class RegistrationValidator {
         kv.put(SECOND_PWD_KEY, secondPassword);
         kv.put(INF_PRIVACY_KEY, infPrivacy);
         kv.put(AVATAR_KEY, avatar);
+        kv.put(AVATAR_IMG_KEY, avatarImg);
 
         return partialValidate(userDAO, kv);
     }
