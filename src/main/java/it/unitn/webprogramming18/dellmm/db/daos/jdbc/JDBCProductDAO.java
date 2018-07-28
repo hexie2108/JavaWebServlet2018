@@ -167,4 +167,20 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
 
         return products;
     }
+    
+    public List<String> getAllNames() throws DAOException {
+        List<String> productList = new ArrayList<>();
+
+        try (PreparedStatement stm = CON.prepareStatement("SELECT name FROM Product")) {
+            try (ResultSet rs = stm.executeQuery()) {
+                while (rs.next()) {
+                    productList.add(rs.getString("name"));
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get the list of products' names", ex);
+        }
+
+        return productList;
+    }
 }
