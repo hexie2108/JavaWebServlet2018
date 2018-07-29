@@ -282,6 +282,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
         user.setSurname(last_name);
         user.setEmail(email);
         user.setPassword(password);
+        user.setImg(imageName);
         user.setVerifyEmailLink(verifyLink);
         user.setResetPwdEmailLink(null); //TODO: Convertire resendEmailLink in resetPassword?
 

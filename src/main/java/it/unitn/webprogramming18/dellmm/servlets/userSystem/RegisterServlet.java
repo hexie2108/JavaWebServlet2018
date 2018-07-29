@@ -60,6 +60,8 @@ public class RegisterServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setAttribute(RegistrationValidator.AVATAR_KEY, RegistrationValidator.DEFAULT_AVATARS.get(0));
+
         request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
     }
 
@@ -112,20 +114,27 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
 
-        String uuidAvatar = UUID.randomUUID().toString();
+        String imageName;
 
-        try (InputStream fileContent = avatarImg.getInputStream()) {
-            File file = new File(path.toString(), uuidAvatar.toString());
-            Files.copy(fileContent, file.toPath());
-        } catch (FileAlreadyExistsException ex) { // Molta sfiga
-            getServletContext().log("File \"" + uuidAvatar.toString() + "\" already exists on the server");
-            response.sendError(500,"File \"" + uuidAvatar.toString() + "\" already exists on the server");
-            return;
-        } catch (RuntimeException ex) {
-            //TODO: handle better the exception
-            getServletContext().log("impossible to upload the file", ex);
-            throw ex;
+        if (RegistrationValidator.DEFAULT_AVATARS.stream().noneMatch(avatar::equals)) {
+            imageName = UUID.randomUUID().toString();
+
+            try (InputStream fileContent = avatarImg.getInputStream()) {
+                File file = new File(path.toString(), imageName.toString());
+                Files.copy(fileContent, file.toPath());
+            } catch (FileAlreadyExistsException ex) { // Molta sfiga
+                getServletContext().log("File \"" + imageName.toString() + "\" already exists on the server");
+                response.sendError(500,"File \"" + imageName.toString() + "\" already exists on the server");
+                return;
+            } catch (RuntimeException ex) {
+                //TODO: handle better the exception
+                getServletContext().log("impossible to upload the file", ex);
+                throw ex;
+            }
+        } else {
+            imageName = avatar;
         }
+
 
         // Genera l'utente, manda la mail di verifica e in caso visualizza gli errori
         try {
@@ -134,7 +143,7 @@ public class RegisterServlet extends HttpServlet {
                     lastName,
                     email,
                     firstPassword,
-                    uuidAvatar);
+                    imageName);
 
             HttpSession session = request.getSession();
             session.setAttribute("user", user);

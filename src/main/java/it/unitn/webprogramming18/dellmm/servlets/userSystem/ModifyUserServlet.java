@@ -166,7 +166,18 @@ public class ModifyUserServlet extends HttpServlet {
                 avatarName = avatar;
             }
 
+            String oldImg = user.getImg();
+
             user.setImg(avatarName);
+
+            if (RegistrationValidator.DEFAULT_AVATARS.stream().noneMatch(oldImg::equals) ) {
+                Path toDelete = Paths.get(path.toString(), oldImg);
+                try {
+                    Files.delete(toDelete);
+                } catch (IOException e) {
+                    getServletContext().log("File " + toDelete.toString() + " cannot be delete");
+                }
+            }
         }
 
         try {

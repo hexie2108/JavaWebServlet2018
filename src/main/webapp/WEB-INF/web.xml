@@ -257,4 +257,13 @@
         <servlet-name>NotificationsServletJSON</servlet-name>
         <url-pattern>/notifications.json</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UserValidateJS</servlet-name>
+        <jsp-file>/WEB-INF/jsp/js/userValidateJS.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserValidateJS</servlet-name>
+        <url-pattern>/js/userValidate.js</url-pattern>
+    </servlet-mapping>
 </web-app>
