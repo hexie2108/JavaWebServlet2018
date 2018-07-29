@@ -1,4 +1,4 @@
-package it.unitn.webprogramming18.dellmm.servlet;
+package it.unitn.webprogramming18.dellmm.servlets;
 
 import it.unitn.webprogramming18.dellmm.db.daos.CategoryListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.CommentDAO;

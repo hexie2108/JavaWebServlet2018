@@ -57,12 +57,12 @@
     <context-param>
         <description>quantià di item per categoria</description>
         <param-name>quantityItemForCategory</param-name>
-        <param-value>25</param-value>
+        <param-value>9</param-value>
     </context-param>
     <context-param>
         <description>quantià di item per la ricerca</description>
         <param-name>quantityItemForSearch</param-name>
-        <param-value>25</param-value>
+        <param-value>9</param-value>
     </context-param>
     <!-- pagina di index -->
     <welcome-file-list>
@@ -80,18 +80,16 @@
         <listener-class>it.unitn.webprogramming18.dellmm.listeners.WebAppContextListener</listener-class>
     </listener>
     <!-- FILTERS -->
-    
-            <filter>
-                    <filter-name>FrontPagePrintListFilter</filter-name>
-                    <filter-class>it.unitn.webprogramming18.dellmm.filters.FrontPagePrintListFilter</filter-class>
-            </filter>
-            <filter-mapping>
-                    <filter-name>FrontPagePrintListFilter</filter-name>
-                    <url-pattern>/home</url-pattern>
-                    <url-pattern>/category</url-pattern>
-                    <url-pattern>/search</url-pattern>
-            </filter-mapping>
-      
+    <filter>
+        <filter-name>FrontPagePrintListFilter</filter-name>
+        <filter-class>it.unitn.webprogramming18.dellmm.filters.FrontPagePrintListFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>FrontPagePrintListFilter</filter-name>
+        <url-pattern>/home</url-pattern>
+        <url-pattern>/category</url-pattern>
+        <url-pattern>/search</url-pattern>
+    </filter-mapping>
     <filter>
         <filter-name>LoggedUserOnlyFilter</filter-name>
         <filter-class>it.unitn.webprogramming18.dellmm.filters.LoggedUserOnlyFilter</filter-class>
@@ -117,7 +115,7 @@
     <!-- FRONT PAGE SERVLETS-->
     <servlet>
         <servlet-name>HomeServlet</servlet-name>
-        <servlet-class>it.unitn.webprogramming18.dellmm.servlet.HomeServlet</servlet-class>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.HomeServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>HomeServlet</servlet-name>
@@ -125,7 +123,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>search</servlet-name>
-        <servlet-class>it.unitn.webprogramming18.dellmm.servlet.SearchServlet</servlet-class>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.SearchServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>search</servlet-name>
@@ -133,7 +131,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>CategoryServlet</servlet-name>
-        <servlet-class>it.unitn.webprogramming18.dellmm.servlet.CategoryServlet</servlet-class>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.CategoryServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>CategoryServlet</servlet-name>
@@ -141,7 +139,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>UpdateItemInListService</servlet-name>
-        <servlet-class>it.unitn.webprogramming18.dellmm.servlet.service.UpdateItemInListService</servlet-class>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.service.UpdateItemInListService</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>UpdateItemInListService</servlet-name>
@@ -157,7 +155,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>UpdateItemInListUnloggedUserOnlyService</servlet-name>
-        <servlet-class>it.unitn.webprogramming18.dellmm.servlet.service.UpdateItemInListUnloggedUserOnlyService</servlet-class>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.service.UpdateItemInListUnloggedUserOnlyService</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>UpdateItemInListUnloggedUserOnlyService</servlet-name>
@@ -165,29 +163,24 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>ChangeListService</servlet-name>
-        <servlet-class>it.unitn.webprogramming18.dellmm.servlet.service.ChangeListService</servlet-class>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.service.ChangeListService</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ChangeListService</servlet-name>
         <url-pattern>/service/changeListService</url-pattern>
     </servlet-mapping>
-     <servlet>
+    <servlet>
         <servlet-name>DisplayListsServlet</servlet-name>
-        <servlet-class>it.unitn.webprogramming18.dellmm.servlet.DisplayListsServlet</servlet-class>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.DisplayListsServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>DisplayListsServlet</servlet-name>
         <url-pattern>/mylists</url-pattern>
-    </servlet-mapping>   
-    
-    
-    
-    
-    
+    </servlet-mapping>
     <!-- USER SYSTEM SERVLETS -->
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
-        <servlet-class>it.unitn.webprogramming18.dellmm.servlet.userSystem.LoginServlet</servlet-class>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.LoginServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
@@ -211,7 +204,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>ResendEmailServlet</servlet-name>
-        <servlet-class>it.unitn.webprogramming18.dellmm.servlet.userSystem.ResendEmailServlet</servlet-class>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.ResendEmailServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ResendEmailServlet</servlet-name>
@@ -219,7 +212,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>ValidateUserServlet</servlet-name>
-        <servlet-class>it.unitn.webprogramming18.dellmm.servlet.userSystem.ValidateUserServlet</servlet-class>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.ValidateUserServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ValidateUserServlet</servlet-name>
@@ -227,7 +220,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>ForgotPasswordServlet</servlet-name>
-        <servlet-class>it.unitn.webprogramming18.dellmm.servlet.userSystem.ForgotPasswordServlet</servlet-class>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.ForgotPasswordServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ForgotPasswordServlet</servlet-name>
@@ -243,7 +236,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>ModifyUserServlet</servlet-name>
-        <servlet-class>it.unitn.webprogramming18.dellmm.servlet.userSystem.ModifyUserServlet</servlet-class>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.ModifyUserServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ModifyUserServlet</servlet-name>

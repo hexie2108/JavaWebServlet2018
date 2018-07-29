@@ -200,6 +200,42 @@
 }
 
 
+.pagination-box{
+        
+        margin: 20px 0;
+}
+
+.pagination-box .pagination .page-item{
+        width:10%;
+}
+
+.pagination-box .pagination .page-item.page-previous{
+        width:25%;
+}
+.pagination-box .pagination .page-item.page-next{
+        width:25%;
+}
+
+.pagination-box .pagination .page-item .page-link{
+        text-align: center;
+        color: #17a2b8;
+}
+
+
+
+.pagination-box .pagination .page-item.active .page-link{
+
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+        color: white;
+}
+
+
+
+
+
+
+
 
 /*floatBoxForShoppingList.jsp------------------------------------------------------------*/
 .front-page .list-button-float-box{

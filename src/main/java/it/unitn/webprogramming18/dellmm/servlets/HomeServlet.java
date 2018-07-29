@@ -1,5 +1,4 @@
-
-package it.unitn.webprogramming18.dellmm.servlet;
+package it.unitn.webprogramming18.dellmm.servlets;
 
 import it.unitn.webprogramming18.dellmm.db.daos.CategoryProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ProductDAO;
@@ -13,7 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- *servlet per la pagina di home
+ * servlet per la pagina di home
+ *
  * @author mikuc
  */
 public class HomeServlet extends HttpServlet
@@ -48,26 +48,45 @@ public class HomeServlet extends HttpServlet
                 request.setAttribute("head_title", "Home");
                 //get numero di categoria per il slider
                 int numberCatForSlider = Integer.parseInt(getServletContext().getInitParameter("quantityCatForSlider"));
-                //posizione di start di query per get lista di prodotto, servira per paginazione futura
-                int startPosition =0;
                 //get numero di prodotto per singola pagina
                 int numebrProductForList = Integer.parseInt(getServletContext().getInitParameter("quantityItemForHome"));
+                //posizione di start di query per get lista di prodotto
+                int startPosition = 0;
+                //get parametro di paginazione
+                String page = request.getParameter("page");
+
+                //se non è nullo
+                if (page != null && Integer.parseInt(page) > 1)
+                {
+                        //aggiorna la posizione di start di query
+                        startPosition = (Integer.parseInt(page) - 1) * numebrProductForList;
+                }
+                else
+                {
+                        page = "1";
+                }
+
                 try
                 {
+
                         //get e set la lista di cat per slider nella richesta
                         request.setAttribute("categoryListForSlider", categoryProductDAO.getCategoryProductList(0, numberCatForSlider));
                         //get e set la lista di prodotto per visualizzazione nella richesta
-                        request.setAttribute("productList", productDAO.getProductList(startPosition, numebrProductForList));
+                        request.setAttribute("productList", productDAO.getPublicProductList(startPosition, numebrProductForList));
+                        //get e set il numero di paginazione
+                        int totalNumberOfPage = (int) Math.ceil(productDAO.getCountOfPublicProduct() * 1.0 / numebrProductForList);
+                        request.setAttribute("numberOfPageRest", (totalNumberOfPage - Integer.parseInt(page)));
+                        //set url per la paginazione
+                        request.setAttribute("basePath", request.getContextPath()+"?");
                 }
                 catch (DAOException ex)
                 {
                         throw new ServletException(ex.getMessage(), ex);
                 }
-                
+
                 //inoltra a jsp
-               
                 request.getRequestDispatcher("/WEB-INF/jsp/home.jsp").forward(request, response);
-                
+
         }
 
 }

@@ -28,6 +28,17 @@ public interface ProductDAO extends DAO<Product, Integer> {
      */
     public Integer insert(Product product) throws DAOException;
 
+    
+       /**
+     * Update the product passed as parameter and returns it.
+     *
+     * @param product the product used to update the persistence system.
+     * @return the updated product.
+     * @throws DAOException if an error occurred during the action.
+     */
+    @Override
+    public Product update(Product product) throws DAOException;
+    
     /**
      * Returns the {@link Product product} with the primary key equals to the one
      * passed as parameter.
@@ -61,7 +72,14 @@ public interface ProductDAO extends DAO<Product, Integer> {
      * @return la lista di prodotto
      * @throws DAOException 
      */
-    public List<Product> getProductList(Integer index, Integer number) throws DAOException;
+    public List<Product> getPublicProductList(Integer index, Integer number) throws DAOException;
+    
+    /**
+     * get il numero del prodotto pubblico
+     * @return il numero del prodotto pubblico
+     * @throws DAOException 
+     */
+    public Integer getCountOfPublicProduct() throws DAOException;
     
     /**
      * recupera una lista di prodotto di una determina categoria in base a id decrescente
@@ -71,7 +89,18 @@ public interface ProductDAO extends DAO<Product, Integer> {
      * @return la lista di prodotto di una determinata categoria
      * @throws DAOException 
      */
-    public List<Product> getProductListByCatId(Integer catid, Integer index, Integer number) throws DAOException;
+    public List<Product> getPublicProductListByCatId(Integer catId, Integer index, Integer number) throws DAOException;
+    
+    
+    /**
+     * get il numero del prodotto pubblico di una categoria specificato 
+     * @param catid id categoria
+     * @return il numero del prodotto pubblico di una categoria specificato 
+     * @throws DAOException 
+     */
+    public Integer getCountOfPublicProductByCatId(Integer catId) throws DAOException;
+    
+
     
     /**
      * dato un nome (anche incompleto), trovare i prodotti corrispondenti
@@ -82,18 +111,17 @@ public interface ProductDAO extends DAO<Product, Integer> {
      * @return la lista di prodtto corrispondente
      * @throws DAOException 
      */
-    public List<Product> getProductListByNameSearch(String name, String order, Integer index, Integer number) throws DAOException;
+    public List<Product> getPublicProductListByNameSearch(String name, String order, Integer index, Integer number) throws DAOException;
 
     
-    /**
-     * Update the product passed as parameter and returns it.
-     *
-     * @param product the product used to update the persistence system.
-     * @return the updated product.
-     * @throws DAOException if an error occurred during the action.
+        /**
+     * get il numero del prodotto pubblico con nome corrisondente 
+     * @param name nome da ricercare
+     * @return il numero del prodotto pubblico con nome corrisondente 
+     * @throws DAOException 
      */
-    @Override
-    public Product update(Product product) throws DAOException;
+    public Integer getCountOfPublicProductByNameSearch(String name) throws DAOException;
+ 
 
     /**
      * Get a list of all the products in a dellmm.list with specified listId

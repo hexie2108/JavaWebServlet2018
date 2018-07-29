@@ -1,4 +1,4 @@
-package it.unitn.webprogramming18.dellmm.servlet.userSystem;
+package it.unitn.webprogramming18.dellmm.servlets.userSystem;
 
 import it.unitn.webprogramming18.dellmm.db.daos.ListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.PermissionDAO;

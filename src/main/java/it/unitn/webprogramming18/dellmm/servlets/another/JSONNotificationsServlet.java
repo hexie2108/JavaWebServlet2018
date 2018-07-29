@@ -1,4 +1,4 @@
-package it.unitn.webprogramming18.dellmm.servlet.another;
+package it.unitn.webprogramming18.dellmm.servlets.another;
 
 import com.google.gson.Gson;
 import it.unitn.webprogramming18.dellmm.db.daos.NotificationDAO;

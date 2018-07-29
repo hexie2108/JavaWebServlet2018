@@ -43,7 +43,9 @@
                         <div class="list-item-add">
                                 <button class="list-item-add-button btn btn-info" data-toggle="modal" data-target="#boxAddItem" onclick="setProductIdForAddInList(${product.id})"><i class="fas fa-cart-plus"></i> Aggiunge</button>
                         </div>
-                        
+
                 </div>
         </c:forEach>
 </div>
+
+<jsp:include page="/WEB-INF/jsp/module/pagination.jsp"></jsp:include>

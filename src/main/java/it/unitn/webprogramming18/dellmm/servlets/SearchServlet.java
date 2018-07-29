@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.unitn.webprogramming18.dellmm.servlet;
+package it.unitn.webprogramming18.dellmm.servlets;
 
 import it.unitn.webprogramming18.dellmm.db.daos.CategoryProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ProductDAO;
@@ -11,6 +11,7 @@ import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCCategoryProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCProductDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import java.io.IOException;
+import java.net.URLEncoder;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -49,14 +50,15 @@ public class SearchServlet extends HttpServlet
                 //get parola ricercata
                 String searchWords = null;
                 searchWords = request.getParameter("searchWords");
-               //se parola non esiste
+                //se parola non esiste
                 if (searchWords == null)
                 {
                         throw new ServletException("la parola da cercare è vuota");
                 }
-                
+
                 //set titolo della pagina nella richesta
                 request.setAttribute("head_title", "Search: " + searchWords);
+                //path per la paginazione
                 
                 //get ordine richiesta
                 String order = null;
@@ -75,23 +77,40 @@ public class SearchServlet extends HttpServlet
                 {
                         order = "productName";
                 }
-             
-                //posizione di start di query per get lista di prodotto, servira per paginazione futura        
-                int startPosition = 0;
+
                 //get numero di prodotto per singola pagina
                 int numebrProductForList = Integer.parseInt(getServletContext().getInitParameter("quantityItemForSearch"));
+                //posizione di start di query per get lista di prodotto
+                int startPosition = 0;
+                //get parametro di paginazione
+                String page = request.getParameter("page");
+
+                //se non è nullo
+                if (page != null && Integer.parseInt(page) > 1)
+                {
+                        //aggiorna la posizione di start di query
+                        startPosition = (Integer.parseInt(page) - 1) * numebrProductForList;
+                }
+                else
+                {
+                        page = "1";
+                }
 
                 try
                 {
                         //get e set la lista di prodotto secondo la parola ricercata e ordine richiesta per visualizzazione nella richesta
-                        request.setAttribute("productList", productDAO.getProductListByNameSearch(searchWords, order, startPosition, numebrProductForList));
-
+                        request.setAttribute("productList", productDAO.getPublicProductListByNameSearch(searchWords, order, startPosition, numebrProductForList));
+                        //get e set il numero di paginazione
+                        int totalNumberOfPage = (int) Math.ceil(productDAO.getCountOfPublicProductByNameSearch(searchWords) * 1.0 / numebrProductForList);
+                        request.setAttribute("numberOfPageRest", (totalNumberOfPage - Integer.parseInt(page)));
+                        //set url per la paginazione
+                        request.setAttribute("basePath", request.getContextPath()+request.getServletPath()+"?searchWords="+URLEncoder.encode(searchWords, "utf-8")+"&order="+order+"&");
                 }
                 catch (DAOException ex)
                 {
                         throw new ServletException(ex.getMessage(), ex);
                 }
-                
+
                 //inoltra jsp
                 request.getRequestDispatcher("/WEB-INF/jsp/search.jsp").forward(request, response);
         }

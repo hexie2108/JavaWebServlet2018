@@ -1,4 +1,4 @@
-package it.unitn.webprogramming18.dellmm.servlet.service;
+package it.unitn.webprogramming18.dellmm.servlets.service;
 
 import it.unitn.webprogramming18.dellmm.db.daos.CategoryProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.LogDAO;
