@@ -2,6 +2,8 @@
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="it.unitn.webprogramming18.dellmm.servlets.userSystem.LoginServlet" %>
 <%@ page import="it.unitn.webprogramming18.dellmm.util.PagePathsConstants" %>
+
+<%@include file="../jspf/i18n.jsp"%>
 <html>
 <head>
     <meta charset="utf-8">
@@ -11,22 +13,23 @@
 
     <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css">
     <script src="${pageContext.servletContext.contextPath}/libs/jquery/jquery-3.3.1.min.js"></script>
-    <script src="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/js/bootstrap.min.js"></script>
+    <script src="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/css/tmpToDelete/login-style.css">
     <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/css/tmpToDelete/common.css">
 </head>
 <body>
+<%@include file="../jspf/i18n switcher.jsp"%>
 <div class="container-fluid" id="div-signin">
     <div id="div-inner">
         <form id="form-signin" method="post">
             <div class="container-fluid">
-                <h2 class="form-signin-heading">Accedi</h2>
+                <h2 class="form-signin-heading"><fmt:message key="login.label.signin"/></h2>
                 <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                        <label for="inputEmail" class="sr-only">Email address</label>
-                        <input id="inputEmail" class="form-control" placeholder="Email" required="" autofocus=""
+                        <label for="inputEmail" class="sr-only"><fmt:message key="login.label.email"/></label>
+                        <input id="inputEmail" class="form-control" placeholder="<fmt:message key="login.label.email"/>" required="" autofocus=""
                                type="text" name="${LoginServlet.EMAIL_KEY}"
                                value="${param[LoginServlet.EMAIL_KEY]}">
                     </div>
@@ -35,8 +38,8 @@
                 <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                        <label for="inputPassword" class="sr-only">Password</label>
-                        <input id="inputPassword" class="form-control" placeholder="Password" required=""
+                        <label for="inputPassword" class="sr-only"><fmt:message key="login.label.password"/></label>
+                        <input id="inputPassword" class="form-control" placeholder="<fmt:message key="login.label.password"/>" required=""
                                type="password" name="${LoginServlet.PWD_KEY}"
                                value="">
                     </div>
@@ -49,37 +52,37 @@
 
                 <c:if test="${not empty param[LoginServlet.ERR_NOUSER_PWD_KEY]}">
                     <div class="alert alert-danger" id="id-UP-alert">
-                        Username o password sbagliati
+                        <fmt:message key="login.errors.wrongUsernameOrPassword"/>
                     </div>
                 </c:if>
 
                 <c:if test="${not empty param[LoginServlet.ERR_NO_VER_KEY]}">
                     <div class="alert alert-danger" id="id-UP-alert">
-                        Devi prima verificare la tua mail attraverso il link mandato alla mail per la registrazione
+                        <fmt:message key="login.errors.noValidatedEmail"/>
                     </div>
                 </c:if>
 
 
                 <div class="checkbox pull-left">
-                    <label><input class="noMarginTop" name="remember" type="checkbox" value="">Remember me</label>
+                    <label><input class="noMarginTop" name="remember" type="checkbox" value=""><fmt:message key="login.label.rememberMe"/></label>
                 </div>
                 <a id="pwdDimenticata" class="pull-right"
-                   href="${pageContext.servletContext.contextPath}/${PagePathsConstants.FORGOT_PASSWORD}">Password dimenticata</a>
+                   href="${pageContext.servletContext.contextPath}/${PagePathsConstants.FORGOT_PASSWORD}"><fmt:message key="login.label.forgotPassword"/></a>
 
                 <div class="btn-group btn-group-justified" role="group" aria-label="...">
                     <div class="btn-group" role="group" id="id-annulla">
-                        <a href="${param[LoginServlet.PREV_URL_KEY]}" class="btn btn-default" role="button">Annulla</a>
+                        <a href="${param[LoginServlet.PREV_URL_KEY]}" class="btn btn-default" role="button"><fmt:message key="login.label.cancel"/> </a>
                     </div>
                     <div class="btn-group" role="group" id="id-accedi">
-                        <button class="btn btn-primary" type="submit">Accedi</button>
+                        <button class="btn btn-primary" type="submit"><fmt:message key="login.label.signin"/></button>
                     </div>
                 </div>
 
             </div>
         </form>
-        <div class="content-divider"><span class="content-divider-text">Non sei registrato?</span></div>
+        <div class="content-divider"><span class="content-divider-text"><fmt:message key="login.label.notRegistered"/></span></div>
         <a href="${pageContext.servletContext.contextPath}/${PagePathsConstants.REGISTER}"
-           class="btn btn-default" role="button" id="register-btn">Registrati</a>
+           class="btn btn-default" role="button" id="register-btn"><fmt:message key="login.label.register"/></a>
     </div>
 </div>
 </body>
