@@ -201,7 +201,7 @@
 
 
 .pagination-box{
-        
+
         margin: 20px 0;
 }
 
@@ -274,7 +274,7 @@
 }
 
 .front-page #list-float-box .list-body .list-content table tbody tr.bought-item{
-        background-color: rgba(0, 0, 0, 0.11);
+        background-color: #f5f5f5;
 }
 
 .front-page #list-float-box .list-body .list-content table tbody td{
@@ -375,59 +375,60 @@
 
 
 
-/*mylists.jsp-------------------------------*/
+/*mylists.jsp tutte le liste-------------------------------------------------------------------------------------------------*/
 
-.mylist-main-section{
+.mylists-main-section{
         min-height: 500px;
 }
 
-.mylist-main-section .add-list-box{
+.mylists-main-section .add-list-box{
 
         margin-top:  70px;
 }
 
-.mylist-main-section .my-lists{
+.mylists-main-section .my-lists{
 
         margin: 30px 0;
 }
 
-.mylist-main-section .list-item{
+.mylists-main-section .list-item{
 
         border: 1px solid #d0d0d0;
         padding: 5px;
-        border-radius: 5px;
+        border-radius: .25rem;
         margin: 20px 0;
+        position: relative;
 }
 
 
 
-.mylist-main-section .list-item .list-head{
+.mylists-main-section .list-item .list-head{
 
 
 }
 
-.mylist-main-section .list-item .list-head .list-left-head{
+.mylists-main-section .list-item .list-head .list-left-head{
         display: inline-block;
         width: 80%;
         vertical-align: top;
 
 }
-.mylist-main-section .list-item .list-head .list-right-head{
+.mylists-main-section .list-item .list-head .list-right-head{
         display: inline-block;
         width: 19%;
 
 }
-.mylist-main-section .list-item .list-head .list-right-head a{
+.mylists-main-section .list-item .list-head .list-right-head a{
         width: 100%;
         margin: 5px 0px;
 }
 
-.mylist-main-section .list-item .list-head .list-right-head .permission{
+.mylists-main-section .list-item .list-head .list-right-head .permission{
         margin: 10px 0;
         text-align: center;
 }
 
-.mylist-main-section .list-item .list-head .list-right-head .permission span{
+.mylists-main-section .list-item .list-head .list-right-head .permission span{
         display: inline-block;
         width: 20%;
 }
@@ -435,42 +436,128 @@
 
 
 
-.mylist-main-section .list-item .list-head .list-info{
+.mylists-main-section .list-item .list-head .list-info{
 
         display: inline-block;
 }
 
-.mylist-main-section .list-item .list-head .list-logo{
+.mylists-main-section .list-item .list-head .list-info span {
+        display: block;
+        margin: 5px 0;
+}
+
+.mylists-main-section .list-item .list-head .list-logo{
         width: 150px;
         height: 100px;
         display: inline-block;
         vertical-align: top;
 }
 
-.mylist-main-section .list-item .list-head .list-logo img{
+.mylists-main-section .list-item .list-head .list-logo img{
         height: 100%;
 
 }
 
-.mylist-main-section .list-item .list-body{
+.mylists-main-section .list-item .list-body{
         padding: 5px;
         margin-top: 10px;
 
 }
 
 
-.mylist-main-section .list-item .list-body .list-product{
+.mylists-main-section .list-item .list-body .list-product{
         width: 10%;
         display: inline-block;
         margin: 0 1%;
 
 }
 
-.mylist-main-section .list-item .list-body .bought-item{
+.mylists-main-section .list-item .list-body .bought-item{
         border: 1px solid #d0d0d0;
 
 }
 
 
+.mylists-main-section .list-item .list-detail-link{
+        position: absolute;
+        right: 0;
+        bottom: 0;
+}
+.mylists-main-section .list-item .list-detail-link a{ 
+        width: 200px;
+        display: inline-block;
+        border-radius: .25rem 0 .25rem 0;
+}
 
 
+/*mylist.jsp singola lista specificata------------------------------------------------------------------------------------------------*/
+
+.mylist{
+
+        position: relative;
+
+}
+.mylist .list-left-body {
+        width: 20%;
+        display: inline-block;
+        vertical-align: top;
+        border: 1px solid #d0d0d0;
+        border-radius: .25rem;
+        padding: 10px;
+}
+
+
+
+
+.mylist .list-left-body .list-sharing {
+        margin-top: 20px;
+}
+
+.mylist .list-right-body {
+        width: 78%;
+        display: inline-block;
+        margin-left: 1%;
+}
+
+.mylist .list-right-body .list-item {
+        margin-bottom: 10px;
+        border: 1px solid #d0d0d0;
+        border-radius: .25rem;
+        padding: 10px;
+}
+
+.mylist .list-right-body .list-item.item-bought{
+        background-color: #f5f5f5;
+}
+
+
+
+.mylist .list-right-body .list-item div{
+        display: inline-block;
+        text-align: center;
+}
+
+.mylist .list-right-body  .list-item .item-img {
+        width: 15%;
+}
+.mylist .list-right-body  .list-item .item-name {
+        width: 20%;
+
+}
+.mylist .list-right-body  .list-item .item-cat {
+        width: 15%;
+}
+.mylist .list-right-body  .list-item .item-logo {
+        width: 10%;
+}
+.mylist .list-right-body  .list-item .item-description {
+        width: 20%;
+}
+.mylist .list-right-body  .list-item .item-manage {
+        width: 14%;
+}
+
+.mylist .list-right-body  .list-item .item-manage a {
+        width: 100%;
+        margin: 2px 0;
+}

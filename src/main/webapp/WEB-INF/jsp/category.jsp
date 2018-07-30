@@ -16,15 +16,13 @@
 
                         <!-- breadcrumb-->
                         <div class="breadcrumbs">
-                                <a href="${pageContext.request.contextPath}">
-                                <i class="fas fa-home"></i>
-                        </a>
-                        <span>&gt;</span>                       
-                        <span>
-                                ${categoria.name}
-                        </span>  
-
-                </div>
+                                <a href="${pageContext.request.contextPath}"><i class="fas fa-home"></i></a>
+                                <span>&gt;</span>
+                                <span><i class="fas fa-store"></i> categoria</span>  
+                                <span>&gt;</span>
+                                <span>${categoria.name}</span>
+                        </div>
+                        
                 <div class="category-image-section d-inline">
                         <img class="category-logo " src="${pageContext.request.contextPath}/${categoria.img}" alt="${categoria.name}"/>
                 </div>

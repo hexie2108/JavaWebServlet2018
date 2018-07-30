@@ -6,13 +6,20 @@
 package it.unitn.webprogramming18.dellmm.servlets;
 
 import it.unitn.webprogramming18.dellmm.db.daos.CategoryListDAO;
+import it.unitn.webprogramming18.dellmm.db.daos.CommentDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.PermissionDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ProductDAO;
+import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCCategoryListDAO;
+import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCCommentDAO;
+import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCListDAO;
+import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCPermissionDAO;
+import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCProductDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.CategoryList;
+import it.unitn.webprogramming18.dellmm.javaBeans.Comment;
 import it.unitn.webprogramming18.dellmm.javaBeans.Permission;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList;
@@ -27,128 +34,136 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
+ * visualizza una lista specificato datto id lista
  *
  * @author luca_morgese
  */
-public class DisplaySpecificListServlet extends HttpServlet {
+public class DisplaySpecificListServlet extends HttpServlet
+{
 
-    private ListDAO listDAO;
-    private ProductDAO productDAO;
-    private PermissionDAO permissionDAO;
-    private CategoryListDAO categoryListDAO;
-    
-    @Override
-    public void init() throws ServletException {
-        DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
-        if (daoFactory == null) {
-            throw new ServletException("Impossible to get db factory for user storage system");
+        private ListDAO listDAO;
+        private ProductDAO productDAO;
+        private PermissionDAO permissionDAO;
+        private CategoryListDAO categoryListDAO;
+        private CommentDAO commentDAO;
+
+        @Override
+        public void init() throws ServletException
+        {
+
+                listDAO = new JDBCListDAO();
+                productDAO = new JDBCProductDAO();
+                permissionDAO = new JDBCPermissionDAO();
+                categoryListDAO = new JDBCCategoryListDAO();
+                commentDAO = new JDBCCommentDAO();
+
         }
 
-        try {
-            listDAO = daoFactory.getDAO(ListDAO.class);
-            productDAO = daoFactory.getDAO(ProductDAO.class);
-            permissionDAO = daoFactory.getDAO(PermissionDAO.class);
-            categoryListDAO = daoFactory.getDAO(CategoryListDAO.class);
-        } catch (DAOFactoryException ex) {
-            throw new ServletException("Impossible to get DAOs for user storage system", ex);
-        }
-    }
+        /**
+         * Handles the HTTP <code>GET</code> method.
+         *
+         * @param request servlet request
+         * @param response servlet response
+         * @throws ServletException if a servlet-specific error occurs
+         * @throws IOException if an I/O error occurs
+         */
+        @Override
+        protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+        {
+                HttpSession session = request.getSession(false);
+                User user = (User) session.getAttribute("user");
 
-
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession(false);
-        User user = (User) session.getAttribute("user");
-        if (session == null || user == null) {
-            //request.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(request, response);
-        } else {
-            
-            //Obtains listId from parameter on URL
-            int listId = Integer.parseInt(request.getParameter("listId"));
-            
-            //Obtains ListBean with listId
-            ShoppingList list = new ShoppingList();
-            try {
-                list = listDAO.getByPrimaryKey(listId);
-            } catch (DAOException ex) {
-                ex.printStackTrace();
-                throw new ServletException("Impossible to get the list with specified ID");
-            }
-            
-            //Gets all products on list
-            List<Product> products = new ArrayList();
-            try {
-                products = productDAO.getProductsInListByListId(listId);
-            } catch (DAOException ex) {
-                ex.printStackTrace();
-                throw new ServletException("Impossible to get list products");
-            }
-            
-            //Gets set of permissions associated to the list,
-            //and user's permissions on list if user is not owner
-            List<Permission> generalPermissionsOnList = new ArrayList();
-            Permission userPermissionsOnList = new Permission();
-            try {
-                generalPermissionsOnList = permissionDAO.getPermissionsOnListByListId(listId);
-                
-                //If user is not owner of the list being visualized, its permissions are set as attribute
-                //In order to filter actions on list
-                if (list.getOwnerId() != user.getId()) {
-                    userPermissionsOnList = permissionDAO.getUserPermissionOnListByIds(user.getId(), listId);
+                //Obtains listId from parameter on URL
+                String listIdInString = request.getParameter("listId");
+                if (listIdInString == null)
+                {
+                        throw new ServletException("manca il parametro id della lista");
                 }
-            } catch (DAOException ex) {
-                ex.printStackTrace();
-                throw new ServletException("Impossible to get permissions set of list");
-            }
-            
-            //Gets the category object of the list
-            CategoryList categoryList;
-            try {
-                categoryList = categoryListDAO.getByPrimaryKey(listId);
-            } catch (DAOException ex) {
-                ex.printStackTrace();
-                throw new ServletException("Impossible to get list category");
-            }
-            
-            request.setAttribute("list", list);
-            request.setAttribute("products", products);
-            request.setAttribute("generalPermissionsOnList", generalPermissionsOnList);
-            request.setAttribute("userPermissionsOnList", userPermissionsOnList);
-            request.setAttribute("categoryList", categoryList);
-            
-            request.getRequestDispatcher("/WEB-INF/jsp/yourList").forward(request, response);
+                int listId = Integer.parseInt(listIdInString);
+
+                //Obtains ListBean with listId
+                ShoppingList shoppingList = null;
+                //Gets all products on list
+                List<Product> listProductsNotBuy = null;
+                List<Product> listProductsBought = null;
+                //la lista dei commenti
+                List<Comment> listComment = null;
+                
+                //permesso dell'utente su tale lista
+                Permission userPermissionsOnList = null;
+                //lista di permesso su tale lista
+                List<Permission> generalPermissionsOnList = null;
+                try
+                {
+                        shoppingList = listDAO.getByPrimaryKey(listId);
+                        listProductsNotBuy = productDAO.getProductsNotBuyInListByListId(listId);
+                        listProductsBought = productDAO.getProductsBoughtInListByListId(listId);
+                        listComment = commentDAO.getCommentsOnListByListId2(listId);
+                        userPermissionsOnList = permissionDAO.getUserPermissionOnListByIds(user.getId(), listId);
+                        if (userPermissionsOnList == null)
+                        {
+                                throw new ServletException("non hai nessun permesso su questa lista");
+                        }
+                        //in caso sono proprietario
+                        if (shoppingList.getOwnerId() == user.getId())
+                        {
+                                generalPermissionsOnList = permissionDAO.getPermissionsOnListByListId(listId);
+                        }
+
+                }
+                catch (DAOException ex)
+                {
+                        throw new ServletException(ex.getMessage(), ex);
+                }
+
+                request.setAttribute("list", shoppingList);
+                if (listProductsNotBuy.size() > 0)
+                {
+                        request.setAttribute("listProductsNotBuy", listProductsNotBuy);
+                }
+                if (listProductsBought.size() > 0)
+                {
+                        request.setAttribute("listProductsBought", listProductsBought);
+                }
+                if (listComment.size() > 0)
+                {
+                        request.setAttribute("listComment", listComment);
+                }
+                if (generalPermissionsOnList != null)
+                {
+                        request.setAttribute("generalPermissionsOnList", generalPermissionsOnList);
+                }
+                if (userPermissionsOnList != null)
+                {
+                        request.setAttribute("userPermissionsOnList", userPermissionsOnList);
+                }
+
+                request.getRequestDispatcher("/WEB-INF/jsp/mylist.jsp").forward(request, response);
         }
-    }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-    }
+        /**
+         * Handles the HTTP <code>POST</code> method.
+         *
+         * @param request servlet request
+         * @param response servlet response
+         * @throws ServletException if a servlet-specific error occurs
+         * @throws IOException if an I/O error occurs
+         */
+        @Override
+        protected void doPost(HttpServletRequest request, HttpServletResponse response)
+                    throws ServletException, IOException
+        {
+        }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Displays comprehensive info about a list";
-    }// </editor-fold>
+        /**
+         * Returns a short description of the servlet.
+         *
+         * @return a String containing servlet description
+         */
+        @Override
+        public String getServletInfo()
+        {
+                return "Displays comprehensive info about a list";
+        }// </editor-fold>
 
 }

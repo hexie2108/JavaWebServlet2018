@@ -100,6 +100,9 @@
         <url-pattern>/modifyUser</url-pattern>
         <url-pattern>/resendEmail</url-pattern>
         <url-pattern>/alreadyLoggedIn</url-pattern>
+        <url-pattern>/mylists</url-pattern>
+        <url-pattern>/service/changeListService</url-pattern>
+        <url-pattern>/service/updateItemInListService</url-pattern>
     </filter-mapping>
     <filter>
         <filter-name>UnloggedUserOnlyFilter</filter-name>
@@ -177,6 +180,16 @@
         <servlet-name>DisplayListsServlet</servlet-name>
         <url-pattern>/mylists</url-pattern>
     </servlet-mapping>
+        <servlet>
+        <servlet-name>DisplaySpecificListServlet</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.DisplaySpecificListServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DisplaySpecificListServlet</servlet-name>
+        <url-pattern>/mylist</url-pattern>
+    </servlet-mapping>
+    
+    
     <!-- USER SYSTEM SERVLETS -->
     <servlet>
         <servlet-name>LoginServlet</servlet-name>

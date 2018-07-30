@@ -17,6 +17,19 @@
     </attribute>
   </tag>
   <tag>
+    <name>getUserNameAndImgById</name>
+    <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagGetUserNameAndImgById</tag-class>
+    <body-content>scriptless</body-content>
+    <attribute>
+      <name>userId</name>
+      <required>true</required>
+      <type>java.lang.Integer</type>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+
+  
+  <tag>
     <name>getListCategoryNameByListCategoryId</name>
     <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagGetListCategoryNameByListCategoryId</tag-class>
     <body-content>scriptless</body-content>

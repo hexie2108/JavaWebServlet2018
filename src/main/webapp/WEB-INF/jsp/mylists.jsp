@@ -12,19 +12,14 @@
 <jsp:include page="/WEB-INF/jsp/header.jsp"></jsp:include>
 
 
-        <div class="mylist-main-section col-12">
+        <div class="mylists-main-section col-12">
                 <div class="content">
 
                         <!-- breadcrumb-->
                         <div class="breadcrumbs">
-
-                                <a href="${pageContext.request.contextPath}">
-                                <i class="fas fa-home"></i>
-                        </a>
+                        <a href="${pageContext.request.contextPath}"><i class="fas fa-home"></i></a>
                         <span>&gt;</span>                       
-                        <span>
-                                le mie liste
-                        </span>  
+                        <span><i class="fas fa-list"></i> le mie liste</span>  
 
                 </div>
 
@@ -36,7 +31,7 @@
                 <c:if test="${not empty ownedLists}">
                         <div class="owner-lists my-lists">
                                 <h2>
-                                        le liste che possiede
+                                        <i class="fas fa-list"></i> le liste che possiede
                                 </h2>
                                 <c:forEach var="list" items="${ownedLists}">
                                         <div class="list-item">
@@ -47,15 +42,15 @@
                                                                 </div>
                                                                 <div class="list-info">
                                                                         <span class="list-name">
-                                                                                <b>nome:</b> ${list.name}
+                                                                                <i class="fas fa-info-circle"></i> <b>nome:</b> ${list.name}
                                                                         </span>
                                                                         <span class="list-category">
-                                                                               <b>categoria: </b>
+                                                                                 <i class="fas fa-sitemap"> <b></i> categoria: </b>
                                                                                 <custom:getListCategoryNameByListCategoryId listCategoryId="${list.categoryList}"/>
                                                                         </span>
                                                                         <div class="list-description">
 
-                                                                                <b>descrizione: </b> ${list.description}
+                                                                                <i class="far fa-file-alt"></i> <b>descrizione: </b> ${list.description}
 
                                                                         </div>
                                                                 </div>
@@ -102,6 +97,9 @@
                                                                 </div>
                                                         </c:forEach>
                                                 </div> 
+                                                <div class="list-detail-link">
+                                                        <a class="btn btn-info"  href="${pageContext.request.contextPath}/mylist?listId=${list.id}"><i class="fas fa-search-plus"></i> in dettaglio</a>
+                                                </div>
                                         </div>
 
 
@@ -113,7 +111,7 @@
                 <c:if test="${not empty sharedLists}">
                         <div class="shared-lists my-lists">
                                 <h2>
-                                        le liste condivise dagli altri
+                                        <i class="fas fa-list"></i> le liste condivise dagli altri
                                 </h2>
                                 <c:forEach var="list" items="${sharedLists}">
                                         <div class="list-item">
@@ -124,16 +122,16 @@
                                                                 </div>
                                                                 <div class="list-info">
                                                                         <span class="list-name">
-                                                                                nome: <b>${list.name}</b>
+                                                                                <b><i class="fas fa-info-circle"></i> nome:</b> ${list.name}
                                                                         </span>
                                                                         <span class="list-category">
-                                                                                categoria: 
-                                                                                <b>
+                                                                                <b><i class="fas fa-sitemap"></i> categoria:</b> 
+                                                                                
                                                                                         <custom:getListCategoryNameByListCategoryId listCategoryId="${list.categoryList}"/>
-                                                                                </b>
+                                                                                
                                                                         </span>
                                                                         <div class="list-description">
-                                                                                <b>descrizione: </b> ${list.description}
+                                                                                <b><i class="far fa-file-alt"></i> descrizione: </b> ${list.description}
                                                                         </div>
                                                                 </div>
 
@@ -141,16 +139,16 @@
                                                         <div class="list-right-head"> 
                                                                 <div class="permission">
                                                                         <span class="modify-list" title="modifica la lista">
-                                                                                <i class="fas fa-edit"></i> ${sharedListsMap.get(list).get("permission").modifyList?"si":"no"}
+                                                                                <i class="fas fa-edit"></i> ${sharedListsMap.get(list).get("permission").modifyList?"<i class=\"fas fa-check\"></i>":"<i class=\"fas fa-times\"></i>"}
                                                                         </span>
                                                                         <span class="delete-list" title="elimina la lista">
-                                                                                <i class="fas fa-trash-alt"></i> ${sharedListsMap.get(list).get("permission").deleteList?"si":"no"}
+                                                                                <i class="fas fa-trash-alt"></i> ${sharedListsMap.get(list).get("permission").deleteList?"<i class=\"fas fa-check\"></i>":"<i class=\"fas fa-times\"></i>"}
                                                                         </span>
                                                                         <span class="add-item" title="aggiunge il prodotto">
-                                                                              <i class="fas fa-cart-plus"></i> ${sharedListsMap.get(list).get("permission").addObject?"si":"no"}
+                                                                                <i class="fas fa-cart-plus"></i> ${sharedListsMap.get(list).get("permission").addObject?"<i class=\"fas fa-check\"></i>":"<i class=\"fas fa-times\"></i>"}
                                                                         </span>
                                                                         <span class="delete-item" title="elimina il prodotto">
-                                                                               <i class="fas fa-ban"></i> ${sharedListsMap.get(list).get("permission").deleteObject?"si":"no"}
+                                                                                <i class="fas fa-ban"></i> ${sharedListsMap.get(list).get("permission").deleteObject?"<i class=\"fas fa-check\"></i>":"<i class=\"fas fa-times\"></i>"}
                                                                         </span>
 
                                                                 </div>
@@ -196,6 +194,9 @@
                                                                 </div>
                                                         </c:forEach>
                                                 </div> 
+                                                <div class="list-detail-link">
+                                                        <a class="btn btn-info" href="${pageContext.request.contextPath}/mylist?listId=${list.id}"><i class="fas fa-search-plus"></i> in dettaglio</a>
+                                                </div>
                                         </div>
 
 

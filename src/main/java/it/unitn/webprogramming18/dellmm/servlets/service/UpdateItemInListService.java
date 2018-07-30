@@ -80,10 +80,6 @@ public class UpdateItemInListService extends HttpServlet
 
                 //get user corrente
                 User user = (User) request.getSession().getAttribute("user");
-                if (user == null)
-                {
-                        throw new ServletException("non sei loggato");
-                }
                 //get permesso dell'utente su tale lista
                 Permission permission;
                 try

@@ -15,14 +15,12 @@
                 <div class="content">
                         <!-- breadcrumb-->
                         <div class="breadcrumbs">
-                                <a href="${pageContext.request.contextPath}">
-                                <i class="fas fa-home"></i>
-                        </a>
-                        <span>&gt;</span>                       
-                        <span>ricerca</span>  
-                        <span>&gt;</span>                       
-                        <span>${param.searchWords}</span>
-                </div>
+                                <a href="${pageContext.request.contextPath}"><i class="fas fa-home"></i></a>
+                               <span>&gt;</span>
+                               <span><i class="fas fa-search"></i> ricerca</span>
+                               <span>&gt;</span>
+                               <span>${param.searchWords}</span>
+                        </div>
                 <!-- bottone per impostare l'ordine-->
                 <div class="order-manage float-right">
                         <span>ordina per : 

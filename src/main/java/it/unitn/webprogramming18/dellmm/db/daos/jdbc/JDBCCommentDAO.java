@@ -197,7 +197,7 @@ public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements Comment
                 }
 
                 CON = C3p0Util.getConnection();
-                try (PreparedStatement stm = CON.prepareStatement("SELECT Comment.userId, Comment.text FROM Comment WHERE Comment.listId = ?"))
+                try (PreparedStatement stm = CON.prepareStatement("SELECT Comment.userId, Comment.text FROM Comment WHERE Comment.listId = ? "))
                 {
                         stm.setString(1, listId);
                         try (ResultSet rs = stm.executeQuery())
@@ -234,7 +234,7 @@ public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements Comment
                 }
 
                 CON = C3p0Util.getConnection();
-                try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Comment WHERE Comment.listId = ?"))
+                try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Comment WHERE Comment.listId = ? ORDER BY Comment.id ASC"))
                 {
                         stm.setInt(1, listId);
                         try (ResultSet rs = stm.executeQuery())

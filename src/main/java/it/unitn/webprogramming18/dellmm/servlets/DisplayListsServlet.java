@@ -63,108 +63,99 @@ public class DisplayListsServlet extends HttpServlet
         {
                 HttpSession session = request.getSession(false);
                 User user = (User) session.getAttribute("user");
-                //se non è un utente loggato
-                if (session == null || user == null)
+                
+                int userId = user.getId();
+                //get le liste di prodotto per ogni lista che possiede
+                List<ShoppingList> ownedLists;
+                List<ShoppingList> sharedLists;
+                try
                 {
-                        //rindirizza alla pagina di login
-                        String loginUrl = request.getContextPath() + "/login";
-                        response.sendRedirect(response.encodeRedirectURL(loginUrl));
+                        ownedLists = listDAO.getOwnedUserListsByUserId(userId);
+                        sharedLists = listDAO.getSharedWithUserListsByUserId(userId);
                 }
-                else
+                catch (DAOException ex)
                 {
-                        //get le liste di prodotto per ogni lista che possiede
-                        int userId = user.getId();
-                        List<ShoppingList> ownedLists;
-                        List<ShoppingList> sharedLists;
+                        throw new ServletException(ex.getMessage(), ex);
+                }
+
+                //associando ogni lista una hashmap
+                //se è una lista owner, verrà associato: la lista di prodotto, il numero di sharing, il numero di commento
+                //se è una lista condivisa , verrà associato: la lista di prodotto, il permesso su tale lista, il numero di commento
+                HashMap<ShoppingList, HashMap<String, Object>> completeOwnedLists = new HashMap();
+                HashMap<ShoppingList, HashMap<String, Object>> completeSharedLists = new HashMap();
+                HashMap<String, Object> singleCompleteList = null;
+                List<Product> productsList = null;
+
+                for (ShoppingList shoppingList : ownedLists)
+                {
+                        singleCompleteList = new HashMap();
+
                         try
                         {
-                                ownedLists = listDAO.getOwnedUserListsByUserId(userId);
-                                sharedLists = listDAO.getSharedWithUserListsByUserId(userId);
+                                //get la lista di prodotto
+                                productsList = productDAO.getProductsNotBuyInListByListId(shoppingList.getId());
+                                singleCompleteList.put("productsListNotBuy", productsList);
+                                productsList = productDAO.getProductsBoughtInListByListId(shoppingList.getId());
+                                singleCompleteList.put("productsListBought", productsList);
+                                //get numero di condivisione
+                                singleCompleteList.put("numberOfShared", permissionDAO.getNumberSharedByListId(shoppingList.getId()));
+                                //get numero di commento
+                                singleCompleteList.put("numberComment", commentDAO.getNumberOfCommentsByListId(shoppingList.getId()));
+                                //aggiunge map locale nella map globale
+                                completeOwnedLists.put(shoppingList, singleCompleteList);
                         }
                         catch (DAOException ex)
                         {
                                 throw new ServletException(ex.getMessage(), ex);
                         }
-
-                        //associando ogni lista una hashmap
-                        //se è una lista owner, verrà associato: la lista di prodotto, il numero di sharing, il numero di commento
-                        //se è una lista condivisa , verrà associato: la lista di prodotto, il permesso su tale lista, il numero di commento
-                        HashMap<ShoppingList, HashMap<String, Object>> completeOwnedLists = new HashMap();
-                        HashMap<ShoppingList, HashMap<String, Object>> completeSharedLists = new HashMap();
-                        HashMap<String, Object> singleCompleteList = null;
-                        List<Product> productsList = null;
-
-                        for (ShoppingList shoppingList : ownedLists)
-                        {
-                                singleCompleteList = new HashMap();
-
-                                try
-                                {
-                                        //get la lista di prodotto
-                                        productsList = productDAO.getProductsNotBuyInListByListId(shoppingList.getId());
-                                        singleCompleteList.put("productsListNotBuy", productsList);
-                                        productsList = productDAO.getProductsBoughtInListByListId(shoppingList.getId());
-                                        singleCompleteList.put("productsListBought", productsList);
-                                        //get numero di condivisione
-                                        singleCompleteList.put("numberOfShared", permissionDAO.getNumberSharedByListId(shoppingList.getId()));
-                                        //get numero di commento
-                                        singleCompleteList.put("numberComment", commentDAO.getNumberOfCommentsByListId(shoppingList.getId()));
-                                        //aggiunge map locale nella map globale
-                                        completeOwnedLists.put(shoppingList, singleCompleteList);
-                                }
-                                catch (DAOException ex)
-                                {
-                                        throw new ServletException(ex.getMessage(), ex);
-                                }
-                        }
-
-                        for (ShoppingList shoppingList : sharedLists)
-                        {
-                                singleCompleteList = new HashMap();
-
-                                try
-                                {
-                                        //get la lista di prodotto
-                                        productsList = productDAO.getProductsNotBuyInListByListId(shoppingList.getId());
-                                        singleCompleteList.put("productsListNotBuy", productsList);
-                                        productsList = productDAO.getProductsBoughtInListByListId(shoppingList.getId());
-                                        singleCompleteList.put("productsListBought", productsList);
-
-                                        //get numero di commento
-                                        singleCompleteList.put("numberComment", commentDAO.getNumberOfCommentsByListId(shoppingList.getId()));
-
-                                        //get l'oggetto permesso
-                                        singleCompleteList.put("permission", permissionDAO.getUserPermissionOnListByIds(userId, shoppingList.getId()));
-
-                                        //aggiunge map locale nella map globale
-                                        completeSharedLists.put(shoppingList, singleCompleteList);
-                                }
-                                catch (DAOException ex)
-                                {
-                                        throw new ServletException(ex.getMessage(), ex);
-                                }
-                        }
-
-                        // se ha almeno una lista owner
-                        if (ownedLists.size() > 0)
-                        {
-                                
-                                request.setAttribute("ownedLists", ownedLists);
-                                request.setAttribute("ownedListsMap", completeOwnedLists);
-                        }
-                        // se ha almeno una lista condivisa
-                        if (sharedLists.size() > 0)
-                        {
-                                request.setAttribute("sharedLists", sharedLists);            
-                                request.setAttribute("sharedListsMap", completeSharedLists);
-                        }
-                        //set titolo della pagina
-                        request.setAttribute("head_title", "le mie liste");
-
-                        //inoltra a jsp
-                        request.getRequestDispatcher("/WEB-INF/jsp/mylists.jsp").forward(request, response);
-
                 }
+
+                for (ShoppingList shoppingList : sharedLists)
+                {
+                        singleCompleteList = new HashMap();
+
+                        try
+                        {
+                                //get la lista di prodotto
+                                productsList = productDAO.getProductsNotBuyInListByListId(shoppingList.getId());
+                                singleCompleteList.put("productsListNotBuy", productsList);
+                                productsList = productDAO.getProductsBoughtInListByListId(shoppingList.getId());
+                                singleCompleteList.put("productsListBought", productsList);
+
+                                //get numero di commento
+                                singleCompleteList.put("numberComment", commentDAO.getNumberOfCommentsByListId(shoppingList.getId()));
+
+                                //get l'oggetto permesso
+                                singleCompleteList.put("permission", permissionDAO.getUserPermissionOnListByIds(userId, shoppingList.getId()));
+
+                                //aggiunge map locale nella map globale
+                                completeSharedLists.put(shoppingList, singleCompleteList);
+                        }
+                        catch (DAOException ex)
+                        {
+                                throw new ServletException(ex.getMessage(), ex);
+                        }
+                }
+
+                // se ha almeno una lista owner
+                if (ownedLists.size() > 0)
+                {
+
+                        request.setAttribute("ownedLists", ownedLists);
+                        request.setAttribute("ownedListsMap", completeOwnedLists);
+                }
+                // se ha almeno una lista condivisa
+                if (sharedLists.size() > 0)
+                {
+                        request.setAttribute("sharedLists", sharedLists);
+                        request.setAttribute("sharedListsMap", completeSharedLists);
+                }
+                //set titolo della pagina
+                request.setAttribute("head_title", "le mie liste");
+
+                //inoltra a jsp
+                request.getRequestDispatcher("/WEB-INF/jsp/mylists.jsp").forward(request, response);
+
         }
 
         /**
