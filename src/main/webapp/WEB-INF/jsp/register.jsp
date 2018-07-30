@@ -94,8 +94,8 @@
             <div id="divPassword2" class="col-sm-6 <c:if test='${not empty requestScope.messages.get(RegistrationValidator.SECOND_PWD_KEY)}'>has-error</c:if>">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                    <label for="inputPassword2" class="sr-only"><fmt:message key="register.label.repeatPassword"/></label>
-                    <input id="inputPassword2" class="form-control" placeholder="<fmt:message key="register.label.repeatPassword"/>" required=""
+                    <label for="inputPassword2" class="sr-only"><fmt:message key="user.label.repeatPassword"/></label>
+                    <input id="inputPassword2" class="form-control" placeholder="<fmt:message key="user.label.repeatPassword"/>" required=""
                            type="password" name="${RegistrationValidator.SECOND_PWD_KEY}"
                            value="">
                 </div>

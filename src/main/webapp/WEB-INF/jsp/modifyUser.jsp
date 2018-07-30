@@ -1,23 +1,27 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page import="it.unitn.webprogramming18.dellmm.util.RegistrationValidator" %>
 <%@ page import="it.unitn.webprogramming18.dellmm.util.PagePathsConstants" %>
+
+<%@ include file="../jspf/i18n.jsp"%>
 
 <html>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Registrazione</title>
+    <title><fmt:message key="modifyUser.title"/></title>
 
     <script src="${pageContext.servletContext.contextPath}/libs/jquery/jquery-3.3.1.min.js"></script>
-    <script src="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/js/bootstrap.js"></script>
+    <script src="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css">
 
     <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/libs/fontawesome-free-5.1.1-web/css/all.min.css" type="text/css" media="all">
     <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/css/userPages.css">
 </head>
 <body>
+<%@ include file="../jspf/i18n_switcher.jsp"%>
 <nav class="navbar navbar-default navbar-static-top">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -27,14 +31,14 @@
 </nav>
 <div class="container-fluid">
     <form id="form-register" method="post" enctype="multipart/form-data">
-        <h2 class="form-signin-heading">Registrazione</h2>
+        <h2 class="form-signin-heading"><fmt:message key="modifyUser.label.form"/></h2>
         <div class="form-group row">
             <div id="divFirstName" class="col-sm-6  <c:if test='${not empty requestScope.messages.get(RegistrationValidator.FIRST_NAME_KEY)}'>has-error</c:if>">
                 <div class="input-group ">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                    <label for="inputFirstName" class="sr-only">Nome</label>
+                    <label for="inputFirstName" class="sr-only"><fmt:message key="user.label.name"/></label>
                     <span> ${sessionScope.user.name}</span>
-                    <input id="inputFirstName" class="form-control" placeholder="Nome" autofocus=""
+                    <input id="inputFirstName" class="form-control" placeholder="<fmt:message key="user.label.name"/>" autofocus=""
                            type="text" name="${RegistrationValidator.FIRST_NAME_KEY}"
                            value="${requestScope[RegistrationValidator.FIRST_NAME_KEY]}">
                 </div>
@@ -46,9 +50,9 @@
             <div id="divLastName" class="col-sm-6 <c:if test='${not empty requestScope.messages.get(RegistrationValidator.LAST_NAME_KEY)}'>has-error</c:if>">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                    <label for="inputLastName" class="sr-only">Cognome</label>
+                    <label for="inputLastName" class="sr-only"><fmt:message key="user.label.surname"/></label>
                     <span class="input-group-addon"> ${sessionScope.user.surname}</span>
-                    <input id="inputLastName" class="form-control" placeholder="Cognome" autofocus=""
+                    <input id="inputLastName" class="form-control" placeholder="<fmt:message key="user.label.surname"/>" autofocus=""
                            type="text" name="${RegistrationValidator.LAST_NAME_KEY}"
                            value="${requestScope[RegistrationValidator.LAST_NAME_KEY]}">
                 </div>
@@ -63,9 +67,9 @@
             <div id="divEmail" class="col-sm-6 <c:if test='${not empty requestScope.messages.get(RegistrationValidator.EMAIL_KEY)}'>has-error</c:if>">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-                    <label for="inputEmail" class="sr-only">Email address</label>
+                    <label for="inputEmail" class="sr-only"><fmt:message key="user.label.email"/></label>
                     <span> ${sessionScope.user.email}</span>
-                    <input id="inputEmail" class="form-control" placeholder="Email address" autofocus=""
+                    <input id="inputEmail" class="form-control" placeholder="<fmt:message key="user.label.email"/>" autofocus=""
                            type="email" name="${RegistrationValidator.EMAIL_KEY}"
                            value="${requestScope[RegistrationValidator.EMAIL_KEY]}">
                 </div>
@@ -118,7 +122,7 @@
             </script>
         </div>
 
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Apply</button>
+        <button class="btn btn-lg btn-primary btn-block" type="submit"><fmt:message key="modifyUser.label.submit"/></button>
     </form>
 </div>
 <script src="${pageContext.servletContext.contextPath}/js/userValidate.js"></script>
