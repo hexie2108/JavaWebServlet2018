@@ -67,14 +67,17 @@
         // Per ogni input scrivi l'eventuale errore nello span dedicato e restituisci false se ha errori, true altrimenti
         const validityInputs = inputs.map(
             (key) => {
+                const div = $("#div" + key);
+                const span = $("#span" + key);
+
                 if (data.hasOwnProperty(key)) {
-                    $("#div" + key).addClass("has-error");
-                    $("#span" + key).html(String(data[key]));
+                    div.addClass("has-error");
+                    span.html(String(data[key]));
                     return false;
                 }
 
-                $("#div" + key).removeClass("has-error");
-                $("#span" + key).html("");
+                div.removeClass("has-error");
+                span.html("");
                 return true;
             }
         );
@@ -86,14 +89,14 @@
 
     $(document).ready(function() {
         const url = '${pageContext.servletContext.contextPath}/${PagePathsConstants.VALIDATE_REGISTRATION}';
+        const form=$('#form-register');
+        const strPwd = form.find('#strongPassword');
 
-        $('#inputPassword').on("keyup", function(){
-            $('#strongPassword').text("Score: " + zxcvbn(this.value).score + "/4");
+        form.find('#inputPassword').keyup(function(){
+            strPwd.text("Score: " + zxcvbn(this.value).score + "/4");
         });
 
-        $('input').on("blur", () => {
-            const form=$('#form-register');
-
+        form.find('input').blur(function(){
             const request = $.ajax({
                 dataType: "json",
                 url : url,
@@ -104,9 +107,7 @@
             request.done(updateVerifyMessages);
         });
 
-        $('#form-register').on("submit",function(){
-            const form=$('#form-register');
-
+        form.submit(function(){
             const request = $.ajax({
                 dataType: "json",
                 url : url,

@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/css/tmpToDelete/common.css">
 </head>
 <body>
-<%@include file="../jspf/i18n switcher.jsp"%>
+<%@include file="../jspf/i18n_switcher.jsp"%>
 <div class="container-fluid" id="div-signin">
     <div id="div-inner">
         <form id="form-signin" method="post">

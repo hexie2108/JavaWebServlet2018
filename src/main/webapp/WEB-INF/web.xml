@@ -260,7 +260,7 @@
 
     <servlet>
         <servlet-name>UserValidateJS</servlet-name>
-        <jsp-file>/WEB-INF/jsp/js/userValidateJS.jsp</jsp-file>
+        <jsp-file>/WEB-INF/js/userValidateJS.jsp</jsp-file>
     </servlet>
     <servlet-mapping>
         <servlet-name>UserValidateJS</servlet-name>
