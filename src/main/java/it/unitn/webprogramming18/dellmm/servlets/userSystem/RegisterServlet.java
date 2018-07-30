@@ -27,9 +27,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @WebServlet(name = "RegisterServlet")
 @MultipartConfig
@@ -94,18 +93,24 @@ public class RegisterServlet extends HttpServlet {
 
         Part avatarImg = request.getPart(RegistrationValidator.AVATAR_IMG_KEY);
 
+        ResourceBundle bundle = it.unitn.webprogramming18.dellmm.util.i18n.getBundle(request);
+
         // Usa il validator per verifiacare la conformità
-        HashMap<String, String> messages = RegistrationValidator.createValidationMessages(
-            userDAO,
-            firstName,
-            lastName,
-            email,
-            firstPassword,
-            secondPassword,
-            infPrivacy,
-            avatar,
-            avatarImg
-        );
+        Map<String, String> messages =
+                RegistrationValidator.createValidationMessages(
+                    userDAO,
+                    firstName,
+                    lastName,
+                    email,
+                    firstPassword,
+                    secondPassword,
+                    infPrivacy,
+                    avatar,
+                    avatarImg
+                ).entrySet().stream().collect(Collectors.toMap(
+                    (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> e.getKey(),
+                    (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> bundle.getString(RegistrationValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString())
+                ));
 
         // In caso i campi non siano validi ricarica la pagina con gli errori indicati
         if (!messages.isEmpty()) {

@@ -28,8 +28,8 @@
                 <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                        <label for="inputEmail" class="sr-only"><fmt:message key="login.label.email"/></label>
-                        <input id="inputEmail" class="form-control" placeholder="<fmt:message key="login.label.email"/>" required="" autofocus=""
+                        <label for="inputEmail" class="sr-only"><fmt:message key="user.label.email"/></label>
+                        <input id="inputEmail" class="form-control" placeholder="<fmt:message key="user.label.email"/>" required="" autofocus=""
                                type="text" name="${LoginServlet.EMAIL_KEY}"
                                value="${param[LoginServlet.EMAIL_KEY]}">
                     </div>
@@ -38,8 +38,8 @@
                 <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                        <label for="inputPassword" class="sr-only"><fmt:message key="login.label.password"/></label>
-                        <input id="inputPassword" class="form-control" placeholder="<fmt:message key="login.label.password"/>" required=""
+                        <label for="inputPassword" class="sr-only"><fmt:message key="user.label.password"/></label>
+                        <input id="inputPassword" class="form-control" placeholder="<fmt:message key="user.label.password"/>" required=""
                                type="password" name="${LoginServlet.PWD_KEY}"
                                value="">
                     </div>

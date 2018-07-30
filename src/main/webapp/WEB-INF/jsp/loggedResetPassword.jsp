@@ -101,7 +101,10 @@
                 dataType: "json",
                 url : url,
                 type: "post",
-                data: form.serialize()
+                data: form.serialize(),
+                xhrFields: {
+                    withCredentials: true
+                }
             });
 
             request.done(updateVerifyMessages);
@@ -113,7 +116,10 @@
                 url : url,
                 type: "post",
                 async : false,
-                data: form.serialize()
+                data: form.serialize(),
+                xhrFields: {
+                    withCredentials: true
+                }
             });
 
             let data;

@@ -24,7 +24,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @WebServlet(name = "ModifyUserServlet")
 @MultipartConfig
@@ -118,8 +121,18 @@ public class ModifyUserServlet extends HttpServlet {
             avatar = "";
         }
 
+        ResourceBundle bundle = it.unitn.webprogramming18.dellmm.util.i18n.getBundle(request);
+
         // Usa il validator per verifiacare la conformità
-        HashMap<String, String> messages = RegistrationValidator.partialValidate(userDAO, kv);
+        Map<String, String> messages =
+                RegistrationValidator.partialValidate(userDAO, kv)
+                        .entrySet()
+                        .stream()
+                        .collect(Collectors.toMap(
+                                (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> e.getKey(),
+                                (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> bundle.getString(RegistrationValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString())
+                                )
+                        );
 
         if (!messages.isEmpty()) {
             request.setAttribute("messages", messages);

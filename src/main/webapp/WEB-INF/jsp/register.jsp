@@ -3,6 +3,8 @@
 <%@ page import="it.unitn.webprogramming18.dellmm.util.RegistrationValidator" %>
 <%@ page import="it.unitn.webprogramming18.dellmm.util.PagePathsConstants" %>
 
+<%@ include file="../jspf/i18n.jsp"%>
+
 <html>
 <head>
     <meta charset="utf-8">
@@ -11,13 +13,16 @@
     <title>Registrazione</title>
 
     <script src="${pageContext.servletContext.contextPath}/libs/jquery/jquery-3.3.1.min.js"></script>
-    <script src="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/js/bootstrap.js"></script>
+    <script src="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/libs/fontawesome-free-5.1.1-web/css/all.min.css">
 
     <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/css/userPages.css">
 </head>
 <body>
+
+<%@ include file="../jspf/i18n_switcher.jsp"%>
+
 <nav class="navbar navbar-default navbar-static-top">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -27,13 +32,13 @@
 </nav>
 <div class="container-fluid">
     <form id="form-register" method="post" enctype="multipart/form-data">
-        <h2 class="form-signin-heading">Registrazione</h2>
+        <h2 class="form-signin-heading"><fmt:message key="register.label.title"/></h2>
         <div class="form-group row">
             <div id="divFirstName" class="col-sm-6  <c:if test='${not empty requestScope.messages.get(RegistrationValidator.FIRST_NAME_KEY)}'>has-error</c:if>">
                 <div class="input-group ">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                    <label for="inputFirstName" class="sr-only">Nome</label>
-                    <input id="inputFirstName" class="form-control" placeholder="Nome" required="" autofocus=""
+                    <label for="inputFirstName" class="sr-only"><fmt:message key="user.label.name"/></label>
+                    <input id="inputFirstName" class="form-control" placeholder="<fmt:message key="user.label.name"/>" required="" autofocus=""
                            type="text" name="${RegistrationValidator.FIRST_NAME_KEY}"
                            value="${param[RegistrationValidator.FIRST_NAME_KEY]}">
                 </div>
@@ -45,8 +50,8 @@
             <div id="divLastName" class="col-sm-6 <c:if test='${not empty requestScope.messages.get(RegistrationValidator.LAST_NAME_KEY)}'>has-error</c:if>">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                    <label for="inputLastName" class="sr-only">Cognome</label>
-                    <input id="inputLastName" class="form-control" placeholder="Cognome" required="" autofocus=""
+                    <label for="inputLastName" class="sr-only"><fmt:message key="user.label.surname"/></label>
+                    <input id="inputLastName" class="form-control" placeholder="<fmt:message key="user.label.surname"/>" required="" autofocus=""
                            type="text" name="${RegistrationValidator.LAST_NAME_KEY}"
                            value="${param[RegistrationValidator.LAST_NAME_KEY]}">
                 </div>
@@ -61,8 +66,8 @@
             <div id="divEmail" class="col-sm-6 <c:if test='${not empty requestScope.messages.get(RegistrationValidator.EMAIL_KEY)}'>has-error</c:if>">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-                    <label for="inputEmail" class="sr-only">Email address</label>
-                    <input id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus=""
+                    <label for="inputEmail" class="sr-only"><fmt:message key="user.label.email"/></label>
+                    <input id="inputEmail" class="form-control" placeholder="<fmt:message key="user.label.email"/>" required="" autofocus=""
                            type="email" name="${RegistrationValidator.EMAIL_KEY}"
                            value="${param[RegistrationValidator.EMAIL_KEY]}">
                 </div>
@@ -76,11 +81,11 @@
             <div id="divPassword" class="col-sm-6 <c:if test='${not empty requestScope.messages.get(RegistrationValidator.FIRST_PWD_KEY)}'>has-error</c:if>">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                    <label for="inputPassword" class="sr-only">Password</label>
-                    <input id="inputPassword" class="form-control" placeholder="Password" required=""
+                    <label for="inputPassword" class="sr-only"><fmt:message key="user.label.password"/></label>
+                    <input id="inputPassword" class="form-control" placeholder="<fmt:message key="user.label.password"/>" required=""
                            type="password" name="${RegistrationValidator.FIRST_PWD_KEY}"
                            value="">
-                    <span id="strongPassword" class="input-group-addon">Score: x/x</span>
+                    <span id="strongPassword" class="input-group-addon"><fmt:message key="user.label.passwordScore"/>: x/x</span>
                 </div>
                 <span id="spanPassword" class="help-block">
                     ${requestScope.messages.get(RegistrationValidator.FIRST_PWD_KEY)}
@@ -89,8 +94,8 @@
             <div id="divPassword2" class="col-sm-6 <c:if test='${not empty requestScope.messages.get(RegistrationValidator.SECOND_PWD_KEY)}'>has-error</c:if>">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                    <label for="inputPassword2" class="sr-only">Repeat password</label>
-                    <input id="inputPassword2" class="form-control" placeholder="Repeat password" required=""
+                    <label for="inputPassword2" class="sr-only"><fmt:message key="register.label.repeatPassword"/></label>
+                    <input id="inputPassword2" class="form-control" placeholder="<fmt:message key="register.label.repeatPassword"/>" required=""
                            type="password" name="${RegistrationValidator.SECOND_PWD_KEY}"
                            value="">
                 </div>
@@ -132,10 +137,10 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h2 class="panel-title">Informativa alla privacy</h2>
+                <h2 class="panel-title"><fmt:message key="register.label.privacyStatement"/></h2>
             </div>
             <div class="panel-body" id="privacyPolicy">
-                Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus
+                <fmt:message key="register.text.privacyStatement"/>
             </div>
         </div>
 
@@ -144,8 +149,8 @@
                 <div class="input-group">
                     <input id="inputInfPrivacy" required=""
                            type="checkbox" name="${RegistrationValidator.INF_PRIVACY_KEY}"
-                           value="${param[RegistrationValidator.INF_PRIVACY_KEY]}">Accetta l'informativa sulla privacy
-                    <label for="inputInfPrivacy" ></label>
+                           value="${param[RegistrationValidator.INF_PRIVACY_KEY]}">
+                    <label for="inputInfPrivacy"><fmt:message key="register.label.privacyStatementCheckbox"/></label>
                     <span id="spanInfPrivacy" class="help-block">
                         ${requestScope.messages.get(RegistrationValidator.INF_PRIVACY_KEY)}
                     </span>
@@ -153,7 +158,7 @@
             </div>
         </div>
 
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <button class="btn btn-lg btn-primary btn-block" type="submit"><fmt:message key="register.label.submit"/></button>
     </form>
 </div>
 <script src="${pageContext.servletContext.contextPath}/libs/zxcvbn/zxcvbn.js"></script>
@@ -173,7 +178,7 @@
         });
 
         form.find('#inputPassword').on("keyup", function(){
-            strPwd.text("Score: " + zxcvbn(this.value).score + "/4");
+            strPwd.text("<fmt:message key="user.label.passwordScore"/>: " + zxcvbn(this.value).score + "/4");
         });
 
 

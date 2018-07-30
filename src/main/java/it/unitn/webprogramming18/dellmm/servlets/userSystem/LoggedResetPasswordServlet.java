@@ -15,6 +15,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 @WebServlet(name = "LoggedResetPasswordServlet")
 public class LoggedResetPasswordServlet extends HttpServlet {
@@ -49,7 +52,17 @@ public class LoggedResetPasswordServlet extends HttpServlet {
         kv.put(RegistrationValidator.FIRST_PWD_KEY, firstPassword);
         kv.put(RegistrationValidator.SECOND_PWD_KEY, secondPassword);
 
-        HashMap<String, String> messages = RegistrationValidator.partialValidate(null, kv);
+        ResourceBundle bundle = it.unitn.webprogramming18.dellmm.util.i18n.getBundle(request);
+
+        Map<String, String> messages =
+                RegistrationValidator.partialValidate(null, kv)
+                    .entrySet()
+                    .stream()
+                    .collect(Collectors.toMap(
+                        (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> e.getKey(),
+                        (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> bundle.getString(RegistrationValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString())
+                    )
+                );
 
         if (!messages.isEmpty()) {
             request.setAttribute("messages", messages);

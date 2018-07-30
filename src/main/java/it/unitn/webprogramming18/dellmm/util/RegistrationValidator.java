@@ -45,6 +45,32 @@ public class RegistrationValidator {
 
     public static final String CUSTOM_AVATAR = "custom";
 
+    public static final String I18N_ERROR_STRING_PREFIX = "validateUser.errors.";
+
+    public enum ErrorMessage {
+        FIRST_NAME_MISSING,
+        FIRST_NAME_TOO_LONG,
+        LAST_NAME_MISSING,
+        LAST_NAME_TOO_LONG,
+        PASSWORD_MISSING,
+        PASSWORD_TOO_LONG,
+        PASSWORD_NOT_VALID,
+        PASSWORDS_MISSING,
+        PASSWORD2_MISSING,
+        PASSWORD2_NOT_SAME,
+        EMAIL_MISSING,
+        EMAIL_TOO_LONG,
+        EMAIL_NOT_VALID,
+        EMAIL_ALREADY_USED,
+        INF_PRIVACY_MISSING,
+        AVATAR_MISSING,
+        AVATAR_NOT_VALID,
+        AVATAR_IMG_MISSING,
+        AVATAR_IMG_ZERO_DIM,
+        AVATAR_IMG_TOO_BIG,
+        AVATAR_IMG_NOT_IMG,
+    }
+
     // --- Funzioni di validazione
     private static boolean validateEmailFormat(String email) {
         boolean ris = false;
@@ -58,38 +84,38 @@ public class RegistrationValidator {
         return ris;
     }
 
-    public static String validateFirstName(String firstName) {
+    public static ErrorMessage validateFirstName(String firstName) {
         if (firstName == null || firstName.isEmpty()) {
-            return "Complete il campo first name";
+            return ErrorMessage.FIRST_NAME_MISSING;
         }
 
         if (firstName.length() > FIRST_NAME_MAX_LEN) {
-            return "Nome troppo lungo";
+            return ErrorMessage.FIRST_NAME_TOO_LONG;
         }
 
         return null;
     }
 
-    public static String validateLastName(String lastName) {
+    public static ErrorMessage validateLastName(String lastName) {
         if (lastName == null || lastName.isEmpty()) {
-            return "Completa il campo last name";
+            return ErrorMessage.LAST_NAME_MISSING;
         }
 
         if (lastName.length() > LAST_NAME_MAX_LEN) {
-            return "Nome troppo lungo";
+            return ErrorMessage.LAST_NAME_TOO_LONG;
         }
 
         return null;
     }
 
-    public static String validatePassword(String password) {
+    public static ErrorMessage validatePassword(String password) {
         if (password == null || password.isEmpty()) {
-            return "Completa questo campo";
+            return ErrorMessage.PASSWORD_MISSING;
         }
 
 
         if (password.length() > PWD_MAX_LEN) {
-            return "Password troppo lunga";
+            return ErrorMessage.PASSWORD_TOO_LONG;
         }
 
         int upper = 0;
@@ -113,51 +139,46 @@ public class RegistrationValidator {
                 (lower < PWD_MIN_LOWER) ||
                 (number < PWD_MIN_NUMBER) ||
                 (symbol < PWD_MIN_SYMBOL)) {
-            return "La password deve essere:<br>" +
-                    "  1. Lunga almeno 8 caratteri<br>" +
-                    "  2. Avere almeno una lettera minuscola<br>" +
-                    "  3. Avere almeno una lettera maiuscola<br>" +
-                    "  4. Avere almeno un numero<br>" +
-                    "  5. Avere almeno un simbolo<br>";
+            return ErrorMessage.PASSWORD_NOT_VALID;
         }
 
         return null;
     }
 
-    public static String validateSecondPassword(String firstPassword, String secondPassword) {
+    public static ErrorMessage validateSecondPassword(String firstPassword, String secondPassword) {
         if (firstPassword == null ||
                 secondPassword == null ||
                 firstPassword.isEmpty() ||
                 secondPassword.isEmpty()) {
-            return "Completa tutti e due i campi password";
+            return ErrorMessage.PASSWORD2_MISSING;
         }
 
         if (firstPassword.length() > PWD_MAX_LEN) {
-            return "Password troppo lunga";
+            return ErrorMessage.PASSWORD_TOO_LONG;
         }
 
         if (!firstPassword.equals(secondPassword)) { // Controlla che le due password coincidano
-            return "Le due password non corrispondono";
+            return ErrorMessage.PASSWORD2_NOT_SAME;
         }
 
         return null;
     }
 
-    public static String validateEmail(String email, UserDAO userDAO) {
+    public static ErrorMessage validateEmail(String email, UserDAO userDAO) {
         if (email == null || email.isEmpty()) {
-            return "Completa il campo email";
+            return ErrorMessage.EMAIL_MISSING;
         }
 
         if (email.length() > EMAIL_MAX_LEN) {
-            return "Indirizzo email troppo lungo";
+            return ErrorMessage.EMAIL_TOO_LONG;
         }
 
         if (!validateEmailFormat(email)) { // Controllo che la mail abbia un formato valido
-            return "Indirizzo email non valido";
+            return ErrorMessage.EMAIL_NOT_VALID;
         } else {
             try {
                 if (userDAO != null && userDAO.checkUserRegisteredByEmail(email) != 0) {
-                    return "Indirizzo email già usato";
+                    return ErrorMessage.EMAIL_ALREADY_USED;
                 }
             } catch (DAOException ignored) {
                 // If the check doesn't work postpone to real registration
@@ -167,52 +188,52 @@ public class RegistrationValidator {
         return null;
     }
 
-    public static String validateInfPrivacy(String infPrivacy) {
+    public static ErrorMessage validateInfPrivacy(String infPrivacy) {
         if (infPrivacy == null) { // Controlla che sia stata accettata l'informativa alla privacy
-            return "Devi accettare l'informativa alla privacy";
+            return ErrorMessage.INF_PRIVACY_MISSING;
         }
 
         return null;
     }
 
-    public static String validateAvatar(String avatar) {
+    public static ErrorMessage validateAvatar(String avatar) {
         // Se avatar è custom allora controllo il file, se nessun controllo segnala errori esco immediatamente
         if(avatar == null || avatar.isEmpty()) {
-            return "No avatar selected";
+            return ErrorMessage.AVATAR_MISSING;
         }
 
         // Se avatar non è custom controllo se è tra i valori permessi
         if (!avatar.equals(CUSTOM_AVATAR) && DEFAULT_AVATARS.stream().noneMatch(avatar::equals)) {
-            return "Selected value is not valid";
+            return ErrorMessage.AVATAR_NOT_VALID;
         }
 
         return null;
     }
 
-    public static String validateAvatarImg(Part filePart) {
+    public static ErrorMessage validateAvatarImg(Part filePart) {
         if (filePart == null) {
-            return "No file";
+            return ErrorMessage.AVATAR_IMG_MISSING;
         } else if(filePart.getSize() <= RegistrationValidator.MIN_LEN_FILE) {
-            return "File has zero size";
+            return ErrorMessage.AVATAR_IMG_ZERO_DIM;
         } else if(filePart.getSize() > RegistrationValidator.MAX_LEN_FILE) { // Non permettere dimensioni superiori ai ~15MB
-            return "File has size > 15MB";
+            return ErrorMessage.AVATAR_IMG_TOO_BIG;
         } else if(!filePart.getContentType().startsWith("image/")) { // Not safe, uses extensions
-            return "File must be an image";
+            return ErrorMessage.AVATAR_IMG_NOT_IMG;
         }
 
         return null;
     }
 
-    public static HashMap<String, String> partialValidate(
+    public static HashMap<String, ErrorMessage> partialValidate(
             UserDAO userDAO,
             HashMap<String, Object> kv
     ) {
-        HashMap<String, String> messages = new HashMap<>();
+        HashMap<String, ErrorMessage> messages = new HashMap<>();
 
         if (kv.containsKey(FIRST_NAME_KEY)) {
             String firstName = (String)kv.get(FIRST_NAME_KEY);
 
-            String messageFirstName = validateFirstName(firstName);
+            ErrorMessage messageFirstName = validateFirstName(firstName);
             if (messageFirstName != null) {
                 messages.put(FIRST_NAME_KEY, messageFirstName);
             }
@@ -221,7 +242,7 @@ public class RegistrationValidator {
         if (kv.containsKey(LAST_NAME_KEY)) {
             String lastName = (String)kv.get(LAST_NAME_KEY);
 
-            String messageLastName = validateLastName(lastName);
+            ErrorMessage messageLastName = validateLastName(lastName);
             if (messageLastName != null) {
                 messages.put(LAST_NAME_KEY, messageLastName);
             }
@@ -230,7 +251,7 @@ public class RegistrationValidator {
         if (kv.containsKey(INF_PRIVACY_KEY)) {
             String infPrivacy = (String)kv.get(INF_PRIVACY_KEY);
 
-            String messageInfPrivacy = validateInfPrivacy(infPrivacy);
+            ErrorMessage messageInfPrivacy = validateInfPrivacy(infPrivacy);
             if (messageInfPrivacy != null) {
                 messages.put(INF_PRIVACY_KEY, messageInfPrivacy);
             }
@@ -239,7 +260,7 @@ public class RegistrationValidator {
         if (kv.containsKey(FIRST_PWD_KEY)) {
             String firstPassword = (String)kv.get(FIRST_PWD_KEY);
 
-            String messagePwd = validatePassword(firstPassword);
+            ErrorMessage messagePwd = validatePassword(firstPassword);
             if (messagePwd != null) {
                 messages.put(FIRST_PWD_KEY, messagePwd);
             }
@@ -249,7 +270,7 @@ public class RegistrationValidator {
             String firstPassword = (String)kv.get(FIRST_PWD_KEY);
             String secondPassword = (String)kv.get(SECOND_PWD_KEY);
 
-            String messageSecondPassword = validateSecondPassword(firstPassword, secondPassword);
+            ErrorMessage messageSecondPassword = validateSecondPassword(firstPassword, secondPassword);
             if (messageSecondPassword != null) {
                 messages.put(SECOND_PWD_KEY, messageSecondPassword);
             }
@@ -258,7 +279,7 @@ public class RegistrationValidator {
         if (kv.containsKey(EMAIL_KEY)) {
             String email = (String)kv.get(EMAIL_KEY);
 
-            String messageValidateEmail = validateEmail(email, userDAO);
+            ErrorMessage messageValidateEmail = validateEmail(email, userDAO);
             if (messageValidateEmail != null) {
                 messages.put(EMAIL_KEY, messageValidateEmail);
             }
@@ -267,7 +288,7 @@ public class RegistrationValidator {
         if (kv.containsKey(AVATAR_KEY)) {
             String avatar = (String)kv.get(AVATAR_KEY);
 
-            String messageValidateAvatar = validateAvatar(avatar);
+            ErrorMessage messageValidateAvatar = validateAvatar(avatar);
             if (messageValidateAvatar != null) {
                 messages.put(AVATAR_KEY, messageValidateAvatar);
             }
@@ -276,17 +297,16 @@ public class RegistrationValidator {
         if (kv.containsKey(AVATAR_KEY) && kv.containsKey(AVATAR_IMG_KEY) && kv.get(AVATAR_KEY).equals(CUSTOM_AVATAR)){
             Part filePart = (Part)kv.get(AVATAR_IMG_KEY);
 
-            String messageValidateAvatarImg = validateAvatarImg(filePart);
+            ErrorMessage messageValidateAvatarImg = validateAvatarImg(filePart);
             if(messageValidateAvatarImg != null) {
                 messages.put(AVATAR_IMG_KEY, messageValidateAvatarImg);
             }
         }
 
-
         return messages;
     }
 
-    public static HashMap<String, String> createValidationMessages(
+    public static HashMap<String, ErrorMessage> createValidationMessages(
             UserDAO userDAO,
             String firstName,
             String lastName,

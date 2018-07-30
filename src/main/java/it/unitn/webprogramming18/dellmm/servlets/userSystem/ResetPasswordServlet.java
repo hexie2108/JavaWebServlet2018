@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.ResourceBundle;
 
 @WebServlet(name = "ResetPasswordServlet")
 public class ResetPasswordServlet extends HttpServlet {
@@ -51,7 +53,16 @@ public class ResetPasswordServlet extends HttpServlet {
             return;
         }
 
-        String message = RegistrationValidator.validatePassword(password);
+
+        ResourceBundle bundle = it.unitn.webprogramming18.dellmm.util.i18n.getBundle(request);
+
+        RegistrationValidator.ErrorMessage error =  RegistrationValidator.validatePassword(password);
+
+        String message =
+            error == null?
+                null:
+                bundle.getString(RegistrationValidator.I18N_ERROR_STRING_PREFIX+error.toString());
+
         if (message != null) {
             request.getRequestDispatcher(
                     response.encodeRedirectURL(

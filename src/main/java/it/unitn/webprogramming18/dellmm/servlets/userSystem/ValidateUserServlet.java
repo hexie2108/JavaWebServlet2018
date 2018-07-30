@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 @WebServlet(name = "ValidateUserServlet")
 public class ValidateUserServlet extends HttpServlet {
@@ -46,8 +49,6 @@ public class ValidateUserServlet extends HttpServlet {
         String firstPassword = request.getParameter(RegistrationValidator.FIRST_PWD_KEY);
         String secondPassword = request.getParameter(RegistrationValidator.SECOND_PWD_KEY);
         String avatar = request.getParameter(RegistrationValidator.AVATAR_KEY);
-
-        HashMap<String, String> messages;
 
         // Usa il validator per verificare la conformità(in caso di strict controllo anche campi non inviati altrimenti no
         HashMap<String, Object> kv = new HashMap<>();
@@ -84,7 +85,17 @@ public class ValidateUserServlet extends HttpServlet {
             }
         }
 
-        messages = RegistrationValidator.partialValidate(userDAO, kv);
+        ResourceBundle bundle = it.unitn.webprogramming18.dellmm.util.i18n.getBundle(request);
+
+        Map<String, String> messages =
+                RegistrationValidator.partialValidate(userDAO, kv)
+                        .entrySet()
+                        .stream()
+                        .collect(Collectors.toMap(
+                                (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> e.getKey(),
+                                (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> bundle.getString(RegistrationValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString())
+                                )
+                        );
 
         PrintWriter out = response.getWriter();
         Gson gson = new Gson();

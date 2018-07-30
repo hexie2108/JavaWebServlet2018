@@ -9,7 +9,10 @@ function request_errors(form, async, url){
         url : url,
         type: "post",
         async: async,
-        data: form.find("input").serialize()
+        data: form.find("input").serialize(),
+        xhrFields: {
+            withCredentials: true
+        }
     });
 }
 
