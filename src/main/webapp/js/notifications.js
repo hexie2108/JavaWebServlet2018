@@ -2,9 +2,9 @@ if(typeof jQuery === "undefined") {
     console.error("Jquery needed");
 }
 
-function createDivNotification(notification){
+function createDivNotification(notification, read, notRead){
     const lettoSm = jQuery('<small/>', {
-        text: notification.status?"Letto":"Non letto"
+        text: notification.status? read: notRead
     });
 
     const dateSm = jQuery('<small/>', {
@@ -28,7 +28,7 @@ function createDivNotification(notification){
     });
 }
 
-function updateNotificationList(list, url, async, status, count, empty){
+function updateNotificationList(list, url, async, status, count, empty, read, notRead){
     if (status === true || status === false) {
         status = "" + status;
     } else if (status === undefined || status === null) {
@@ -48,7 +48,7 @@ function updateNotificationList(list, url, async, status, count, empty){
 
     request.done(function(data){
         list.empty();
-        list.append(data.map(v => createDivNotification(v)));
+        list.append(data.map(v => createDivNotification(v, read, notRead)));
 
         if (empty !== null && empty !== undefined) {
             if(data.length > 0) {

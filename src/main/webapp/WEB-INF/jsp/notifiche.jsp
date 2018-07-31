@@ -13,7 +13,7 @@
 
     <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css">
     <script src="${pageContext.servletContext.contextPath}/libs/jquery/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
-    <script src="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <%@include file="../jspf/i18n_switcher.jsp"%>
@@ -44,7 +44,7 @@
 
         reloadBtn.click(() => {
             reloadBtn.prop("disabled", true);
-            updateNotificationList(notificationList, URL, false, null, null, emptyMessage);
+            updateNotificationList(notificationList, URL, false, null, null, emptyMessage, "<fmt:message key="notifications.text.read"/>","<fmt:message key="notifications.text.notRead"/>");
             reloadBtn.prop("disabled", false);
         });
 

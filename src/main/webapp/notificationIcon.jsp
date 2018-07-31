@@ -1,10 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page import="it.unitn.webprogramming18.dellmm.util.PagePathsConstants" %>
 
 <html>
 <head>
-    <title>Title</title>
+    <title><fmt:message key="notificationIcon.title"/></title>
 
     <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css"  type="text/css" media="all">
     <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/libs/fontawesome-free-5.1.1-web/css/all.min.css" type="text/css" media="all">
@@ -23,19 +24,18 @@
     <div class="dropdown-menu pt-0 pb-0" aria-labelledby="notificationsMenu">
         <ul class="list-group list-group-flush" id="notificationsList">
         </ul>
-        <div id="notificationsEmtpy" class="p-2">Non hai alcuna notifica</div>
+        <div id="notificationsEmtpy" class="p-2"><fmt:message key="notificationIcon.label.empty"/> </div>
     </div>
     <script src="${pageContext.servletContext.contextPath}/js/notifications.js" crossorigin="anonymous"></script>
     <script>
         $(document).ready(function() {
             const URL = "${pageContext.servletContext.contextPath}/${PagePathsConstants.NOTIFICATIONS_JSON}";
-            console.log(URL);
 
             const bell = $('#notificationsMenu > i');
             const list = $('#notificationsList');
             const notificationsEmpty = $('#notificationsEmtpy');
 
-            const update = function(){updateNotificationList(list, URL, true, false, bell, notificationsEmpty);};
+            const update = function(){updateNotificationList(list, URL, true, false, bell, notificationsEmpty, "<fmt:message key="notifications.text.read"/>","<fmt:message key="notifications.text.notRead"/>");};
 
             update();
             setInterval(update,5000);

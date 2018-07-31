@@ -8,11 +8,11 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><fmt:message key="login.label.forgotPassword"/></title>
+    <title><fmt:message key="forgotPassword.title"/></title>
 
     <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css">
     <script src="${pageContext.servletContext.contextPath}/libs/jquery/jquery-3.3.1.min.js"></script>
-    <script src="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/js/bootstrap.min.js"></script>
+    <script src="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/js/bootstrap.bundle.min.js"></script>
 
     <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/css/tmpToDelete/login-style.css">
     <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/css/tmpToDelete/common.css">
@@ -30,7 +30,7 @@
     <div id="div-inner">
         <form id="form-signin" method="post">
             <div class="container-fluid">
-                <h2 class="form-signin-heading"><fmt:message key="forgotPassword.label.retrievePwd"/></h2>
+                <h2 class="form-signin-heading"><fmt:message key="forgotPassword.label.recoverPwd"/></h2>
                 <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
