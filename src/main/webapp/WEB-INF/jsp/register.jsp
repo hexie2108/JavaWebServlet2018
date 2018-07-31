@@ -112,7 +112,7 @@
                         <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}"
                                value="${av}" ${requestScope[RegistrationValidator.AVATAR_KEY].equals(av)?'checked':''}
                         >
-                        <img src="${pageContext.servletContext.getInitParameter("avatarsFolder")}/${av}" class="img-input"
+                        <img src="<c:url value="${pageContext.servletContext.getInitParameter('avatarsFolder')}/${av}"/>" class="img-input"
                         ><i class="far fa-check-circle img-check"></i>
                     </label>
                 </c:forEach>

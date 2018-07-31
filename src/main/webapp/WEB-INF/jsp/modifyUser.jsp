@@ -87,7 +87,7 @@
                     <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}" value=""
                            ${requestScope[RegistrationValidator.AVATAR_KEY].equals("")?'checked':''}
                     >
-                    <img src="${pageContext.servletContext.getInitParameter("avatarsFolder")}/${sessionScope.user.img}" class="img-input"
+                    <img src="<c:url value="${pageContext.servletContext.getInitParameter('avatarsFolder')}/${sessionScope.user.img}"/>" class="img-input"
                     ><i class="far fa-check-circle img-check"></i>
                 </label>
                 </c:if>
@@ -96,7 +96,7 @@
                     <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}"
                            value="${av}" ${requestScope[RegistrationValidator.AVATAR_KEY].equals(av)?'checked':''}
                     >
-                    <img src="${pageContext.servletContext.getInitParameter("avatarsFolder")}/${av}" class="img-input"
+                    <img src="<c:url value="${pageContext.servletContext.getInitParameter('avatarsFolder')}/${av}"/>" class="img-input"
                     ><i class="far fa-check-circle img-check"></i>
                 </label>
                 </c:forEach>
@@ -133,11 +133,12 @@
         // Salva oggetti in modo da doverli cercare una sola volta
         const form=$('#form-register');
         const URL = '<c:url value="/${PagePathsConstants.VALIDATE_REGISTRATION}"/>';
+        const customAvatarImg = $('#customAvatarImg');
 
 
         form.submit(function(){
             if(!$('#customAvatar').is(':checked')){
-                $('#customAvatarImg').val("");
+                customAvatarImg.val("");
             }
         });
 

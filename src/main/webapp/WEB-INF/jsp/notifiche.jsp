@@ -33,7 +33,7 @@
     </c:forEach>
 </ul>
 <div id="notificationsEmtpy" class="p-2 ${not notifications.isEmpty()?'d-none':''}"><fmt:message key="notifications.label.noNotifications"/></div>
-<script src="${pageContext.servletContext.contextPath}/js/notifications.js" crossorigin="anonymous"></script>
+<script src="<c:url value="/js/notifications.js"/>" crossorigin="anonymous"></script>
 <script>
     $(document).ready(function() {
         const URL = "<c:url value="/${PagePathsConstants.NOTIFICATIONS_JSON}"/>";
