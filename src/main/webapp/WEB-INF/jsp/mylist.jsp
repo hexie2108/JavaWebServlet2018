@@ -44,7 +44,12 @@
                                         <div class="list-description">
                                                 <i class="far fa-file-alt"></i> <b>descrizione: </b>
                                                 <p>${list.description}</p>
-                                        </div>       
+                                        </div>
+                                        <div class="list-modify">
+                                                <c:if test="${list.ownerId == sessionScope.user.id}">
+                                                        <a class="btn btn-info" href="#" ><i class="fas fa-edit"></i> modifica</a>
+                                                </c:if>
+                                        </div>
                                 </div>
                                 <div class="list-permission">
                                         <p><i class="fas fa-lock"></i> <b>permesso:</b></p>
@@ -128,10 +133,10 @@
                                                 </div>        
                                         </div>
                                 </c:forEach>
-                                
-                                
-                                 <!-- prodotto già comprato -->
-                                 <c:forEach var="product" items="${listProductsBought}">
+
+
+                                <!-- prodotto già comprato -->
+                                <c:forEach var="product" items="${listProductsBought}">
                                         <div class="list-item item-bought">
                                                 <div class="item-img">
                                                         <img class="img-fluid" src="${pageContext.request.contextPath}/${product.img}" alt="${product.name}"/>
@@ -154,7 +159,7 @@
                                                         </p>
                                                 </div>
                                                 <div class="item-manage">
-                                                        
+
                                                         <!-- se utente ha il permesso di eliminare prodotto della lista-->      
                                                         <c:if test="${userPermissionsOnList.deleteObject == true}">
                                                                 <a class="btn btn-danger" href="${pageContext.request.contextPath}/service/updateItemInListService?action=delete&productId=${product.id}&listId=${list.id}" title="elimina">
@@ -164,16 +169,18 @@
                                                 </div>        
                                         </div>
                                 </c:forEach>
-                                 
-                                 
+
+
 
                                 <c:if test="${empty listProductsNotBuy && empty listProductsBought}">
-                                        <h2>la lista è ancora vuoto</h2>
+                                        <div class="list-item item-empty"><h2>la lista è ancora vuota</h2></div>
                                 </c:if>
+                                        
+                               <jsp:include page="/WEB-INF/jsp/module/comment.jsp"></jsp:include>                      
                         </div>
                 </div>
 
-                <jsp:include page="/WEB-INF/jsp/module/comment.jsp"></jsp:include>                           
+                              
 
                 </div>               
         </div>

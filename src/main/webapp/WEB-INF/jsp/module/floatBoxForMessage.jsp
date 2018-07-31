@@ -36,6 +36,14 @@
                                                         <c:when test="${sessionScope.result == 'BoughtOk'}">
                                                                 complimenti
                                                         </c:when>
+                                                        <c:when test="${sessionScope.result == 'commentInsertOk'}">
+                                                                complimenti
+                                                        </c:when>
+                                                        <c:when test="${sessionScope.result == 'commentDeleteOk'}">
+                                                                complimenti
+                                                        </c:when>       
+
+
                                                 </c:choose>         
                                         </h4>
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -63,6 +71,12 @@
                                                         <c:when test="${sessionScope.result  == 'BoughtOk'}">
                                                                 il prodotto specificato è stato assegnato come già comprato
                                                         </c:when>
+                                                        <c:when test="${sessionScope.result == 'commentInsertOk'}">
+                                                                il commento è stato inviato correttamente
+                                                        </c:when>
+                                                        <c:when test="${sessionScope.result == 'commentDeleteOk'}">
+                                                                il commento è stato cancellato correttamente
+                                                        </c:when>    
                                                 </c:choose>
                                         </p>
                                 </div>
@@ -76,5 +90,8 @@
                 </div>
         </div>
 
-        <c:remove var="result" scope="session" />
+        <c:if test="${not empty sessionScope.result}">
+                <c:remove var="result" scope="session" />
+        </c:if>
+
 </c:if>

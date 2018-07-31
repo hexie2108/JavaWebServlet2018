@@ -57,8 +57,8 @@
 
                                                         </div>
                                                         <div class="list-right-head"> 
-                                                                <a class="link-to-shared btn btn-info" href="#"><i class="fas fa-share-alt"></i> ${ownedListsMap.get(list).get("numberOfShared")} condivisione</a>
-                                                                <a class="link-to-comment btn btn-info" href="#"><i class="fas fa-comments"></i> ${ownedListsMap.get(list).get("numberComment")} commenti</a>
+                                                                <span class="button" ><i class="fas fa-share-alt"></i> ${ownedListsMap.get(list).get("numberOfShared")} condivisione</span>
+                                                                <span class="button"><i class="fas fa-comments"></i> ${ownedListsMap.get(list).get("numberComment")} commenti</span>
                                                         </div>
                                                 </div>
                                                 <div class="list-body">
@@ -153,7 +153,7 @@
 
                                                                 </div>
 
-                                                                <a class="link-to-comment btn btn-info" href="#"><i class="fas fa-comments"></i> ${sharedListsMap.get(list).get("numberComment")} commenti</a>
+                                                                <span class="button"><i class="fas fa-comments"></i> ${sharedListsMap.get(list).get("numberComment")} commenti</span>
                                                         </div>
                                                 </div>
                                                 <div class="list-body">

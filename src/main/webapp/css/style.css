@@ -1,3 +1,8 @@
+/*body*/
+
+.front-page .content {
+        min-height: 500px;
+}
 
 
 
@@ -398,6 +403,7 @@
         border-radius: .25rem;
         margin: 20px 0;
         position: relative;
+        min-height: 160px;
 }
 
 
@@ -418,9 +424,16 @@
         width: 19%;
 
 }
-.mylists-main-section .list-item .list-head .list-right-head a{
+.mylists-main-section .list-item .list-head .list-right-head .button{
         width: 100%;
         margin: 5px 0px;
+        color: #fff;
+        background-color: #6c757d;
+        text-align: center;
+        display: inline-block;
+        border: 1px solid transparent;
+        padding: .375rem .75rem;
+        border-radius: .25rem;
 }
 
 .mylists-main-section .list-item .list-head .list-right-head .permission{
@@ -506,12 +519,17 @@
         padding: 10px;
 }
 
+.mylist .list-left-body .list-permission {
+        margin-top: 20px;
+}
 
 
 
 .mylist .list-left-body .list-sharing {
         margin-top: 20px;
 }
+
+
 
 .mylist .list-right-body {
         width: 78%;
@@ -530,7 +548,9 @@
         background-color: #f5f5f5;
 }
 
-
+.mylist .list-right-body .list-item.item-empty {
+        text-align: center;
+}
 
 .mylist .list-right-body .list-item div{
         display: inline-block;
@@ -560,4 +580,61 @@
 .mylist .list-right-body  .list-item .item-manage a {
         width: 100%;
         margin: 2px 0;
+}
+
+
+/*comment.jsp*/
+
+.comments .list-comment .comment-item  {
+        margin-bottom: 10px;
+        border: 1px solid #d0d0d0;
+        border-radius: .25rem;
+        padding: 10px;
+        position: relative;
+}
+
+
+.comments .list-comment h2 {
+        margin: 20px 0;
+}
+
+
+.comments .list-comment .comment-item .comment-info{
+        font-weight: bold;
+}
+
+.comments .list-comment .comment-item .comment-info .user-img {
+        width: 10%;
+        display: inline-block;
+        margin-right: 2%;
+}
+
+
+.comments .list-comment .comment-item .comment-info .user-img img{
+
+        border-radius: 50%
+}
+
+.comments .list-comment .comment-item  .comment-text {
+        margin-top: 1rem;
+        padding: 0 10px;
+}
+
+.comments .list-comment  .my-comment .comment-delete{
+        position: absolute;
+        top:0;
+        right:0;
+}
+.comments .list-comment  .my-comment .comment-delete a{
+        border-radius:  0 .25rem 0 .25rem;
+}
+.comments .edit-comment textarea{
+        width: 100%;
+        border-radius: .25rem;
+        height: 100px;
+}
+
+.comments .edit-comment input{
+        width: 100%;
+        margin-top: 1rem;
 }

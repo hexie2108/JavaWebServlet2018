@@ -88,7 +88,7 @@ public class DisplaySpecificListServlet extends HttpServlet
                 List<Product> listProductsBought = null;
                 //la lista dei commenti
                 List<Comment> listComment = null;
-                
+                Integer numberOfComment = null;
                 //permesso dell'utente su tale lista
                 Permission userPermissionsOnList = null;
                 //lista di permesso su tale lista
@@ -99,6 +99,7 @@ public class DisplaySpecificListServlet extends HttpServlet
                         listProductsNotBuy = productDAO.getProductsNotBuyInListByListId(listId);
                         listProductsBought = productDAO.getProductsBoughtInListByListId(listId);
                         listComment = commentDAO.getCommentsOnListByListId2(listId);
+                        numberOfComment = commentDAO.getNumberOfCommentsByListId(listId);
                         userPermissionsOnList = permissionDAO.getUserPermissionOnListByIds(user.getId(), listId);
                         if (userPermissionsOnList == null)
                         {
@@ -128,6 +129,8 @@ public class DisplaySpecificListServlet extends HttpServlet
                 if (listComment.size() > 0)
                 {
                         request.setAttribute("listComment", listComment);
+                        request.setAttribute("numberOfComment", numberOfComment);
+                        
                 }
                 if (generalPermissionsOnList != null)
                 {
@@ -137,6 +140,9 @@ public class DisplaySpecificListServlet extends HttpServlet
                 {
                         request.setAttribute("userPermissionsOnList", userPermissionsOnList);
                 }
+                
+                //set titolo della pagina
+                request.setAttribute("head_title", "lista: "+shoppingList.getName());
 
                 request.getRequestDispatcher("/WEB-INF/jsp/mylist.jsp").forward(request, response);
         }

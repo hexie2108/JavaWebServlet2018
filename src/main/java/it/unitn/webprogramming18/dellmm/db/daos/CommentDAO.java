@@ -89,4 +89,13 @@ public interface CommentDAO extends DAO<Comment, Integer> {
      * @throws DAOException 
      */
     public Integer getNumberOfCommentsByListId(Integer listId)throws DAOException;
+    
+    
+    /**
+     * dato id commento, eliminare il commento
+     * @param commentId id commento
+     * @throws DAOException 
+     */
+    
+    public void deleteCommentById(Integer commentId) throws DAOException;
 }

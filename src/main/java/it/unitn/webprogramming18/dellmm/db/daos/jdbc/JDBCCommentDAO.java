@@ -286,4 +286,34 @@ public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements Comment
                 return number;
 
         }
+
+        public void deleteCommentById(Integer commentId) throws DAOException
+        {
+
+                if (commentId == null)
+                {
+                        throw new DAOException("parameter not valid", new IllegalArgumentException("The passed commentId is null"));
+                }
+
+                CON = C3p0Util.getConnection();
+                try (PreparedStatement stm = CON.prepareStatement(
+                            " DELETE FROM Comment WHERE "
+                            + " id = ? "
+                ))
+                {
+                        stm.setInt(1, commentId);
+                        if (stm.executeUpdate() != 1)
+                        {
+                                throw new DAOException("Impossible to delete the comment");
+                        }
+                }
+                catch (SQLException ex)
+                {
+                        throw new DAOException("Impossible to update the productInList", ex);
+                } finally
+                {
+                        C3p0Util.close(CON);
+                }
+
+        }
 }

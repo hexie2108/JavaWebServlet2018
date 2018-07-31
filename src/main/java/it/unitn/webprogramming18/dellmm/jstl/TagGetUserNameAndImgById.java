@@ -52,7 +52,7 @@ public class TagGetUserNameAndImgById extends SimpleTagSupport
                         {
                                 throw new JspException("errore durante ottenimento delle info utente nella lista di commento");
                         }
-                        getJspContext().getOut().println("<div class=\"user-img\"><img src=\"" + basePath + "/" + user.getImg() + "\" alt=\" "+user.getName()+"\" /></div><span>" + user.getName() + "</span>");
+                        getJspContext().getOut().println("<div class=\"user-img\"><img class=\"img-fluid\" src=\"" + basePath + "/" + user.getImg() + "\" alt=\" "+user.getName()+"\" /></div><span><i class=\"far fa-address-card\"></i> " + user.getName() + "</span>");
                 }
         }
 

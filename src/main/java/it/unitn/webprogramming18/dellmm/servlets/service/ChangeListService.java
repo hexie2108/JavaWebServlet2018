@@ -55,7 +55,7 @@ public class ChangeListService extends HttpServlet
 
                 if (listId == null)
                 {
-                        throw new ServletException("manca il parametro action o  id del prodotto o id della lista da aggiungere");
+                        throw new ServletException("manca il parametro id lista");
                 }
 
                 //get user corrente
