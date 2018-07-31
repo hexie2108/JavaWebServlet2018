@@ -34,7 +34,7 @@
     <form id="form-register" method="post" enctype="multipart/form-data">
         <h2 class="form-signin-heading"><fmt:message key="register.label.title"/></h2>
         <div class="form-group row">
-            <div id="divFirstName" class="col-sm-6  <c:if test='${not empty requestScope.messages.get(RegistrationValidator.FIRST_NAME_KEY)}'>has-error</c:if>">
+            <div id="divFirstName" class="col-sm-6  ${not empty requestScope.messages.get(RegistrationValidator.FIRST_NAME_KEY)?'has-error':''}">
                 <div class="input-group ">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                     <label for="inputFirstName" class="sr-only"><fmt:message key="user.label.name"/></label>
@@ -47,7 +47,7 @@
                 </span>
             </div>
 
-            <div id="divLastName" class="col-sm-6 <c:if test='${not empty requestScope.messages.get(RegistrationValidator.LAST_NAME_KEY)}'>has-error</c:if>">
+            <div id="divLastName" class="col-sm-6 ${not empty requestScope.messages.get(RegistrationValidator.LAST_NAME_KEY)?'has-error':''}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                     <label for="inputLastName" class="sr-only"><fmt:message key="user.label.surname"/></label>
@@ -63,7 +63,7 @@
 
 
         <div class="form-group row">
-            <div id="divEmail" class="col-sm-6 <c:if test='${not empty requestScope.messages.get(RegistrationValidator.EMAIL_KEY)}'>has-error</c:if>">
+            <div id="divEmail" class="col-sm-6 ${not empty requestScope.messages.get(RegistrationValidator.EMAIL_KEY)?'has-error':''}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
                     <label for="inputEmail" class="sr-only"><fmt:message key="user.label.email"/></label>
@@ -78,7 +78,7 @@
         </div>
 
         <div class="form-group row">
-            <div id="divPassword" class="col-sm-6 <c:if test='${not empty requestScope.messages.get(RegistrationValidator.FIRST_PWD_KEY)}'>has-error</c:if>">
+            <div id="divPassword" class="col-sm-6 ${not empty requestScope.messages.get(RegistrationValidator.FIRST_PWD_KEY)?'has-error':''}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                     <label for="inputPassword" class="sr-only"><fmt:message key="user.label.password"/></label>
@@ -91,7 +91,7 @@
                     ${requestScope.messages.get(RegistrationValidator.FIRST_PWD_KEY)}
                 </span>
             </div>
-            <div id="divPassword2" class="col-sm-6 <c:if test='${not empty requestScope.messages.get(RegistrationValidator.SECOND_PWD_KEY)}'>has-error</c:if>">
+            <div id="divPassword2" class="col-sm-6 ${not empty requestScope.messages.get(RegistrationValidator.SECOND_PWD_KEY)?'has-error':''}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                     <label for="inputPassword2" class="sr-only"><fmt:message key="user.label.repeatPassword"/></label>
@@ -145,7 +145,7 @@
         </div>
 
         <div class="form-group row-fluid">
-            <div id="divPrivacy" class="col-sm-12 <c:if test='${not empty requestScope.messages.get(RegistrationValidator.INF_PRIVACY_KEY)}'>has-error</c:if>">
+            <div id="divPrivacy" class="col-sm-12 ${not empty requestScope.messages.get(RegistrationValidator.INF_PRIVACY_KEY)?'has-error':''}">
                 <div class="input-group">
                     <input id="inputInfPrivacy" required=""
                            type="checkbox" name="${RegistrationValidator.INF_PRIVACY_KEY}"

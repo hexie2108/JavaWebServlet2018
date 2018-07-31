@@ -31,7 +31,7 @@
         <h2 class="form-signin-heading"><fmt:message key="loggedResetPassword.label.form"/></h2>
 
         <div class="form-group row">
-            <div id="divPassword" class="col-sm-6 <c:if test='${not empty requestScope.messages.get(RegistrationValidator.FIRST_PWD_KEY)}'>has-error</c:if>">
+            <div id="divPassword" class="col-sm-6 ${not empty requestScope.messages.get(RegistrationValidator.FIRST_PWD_KEY)?'has-error':''}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                     <label for="inputPassword" class="sr-only"><fmt:message key="user.label.password"/></label>
@@ -47,7 +47,7 @@
         </div>
 
         <div class="form-group row">
-            <div id="divPassword2" class="col-sm-6 <c:if test='${not empty requestScope.messages.get(RegistrationValidator.SECOND_PWD_KEY)}'>has-error</c:if>">
+            <div id="divPassword2" class="col-sm-6 ${not empty requestScope.messages.get(RegistrationValidator.SECOND_PWD_KEY)?'has-error':''}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                     <label for="inputPassword2" class="sr-only"><fmt:message key="user.label.repeatPassword"/></label>

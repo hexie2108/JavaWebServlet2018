@@ -33,7 +33,7 @@
     <form id="form-register" method="post" enctype="multipart/form-data">
         <h2 class="form-signin-heading"><fmt:message key="modifyUser.label.form"/></h2>
         <div class="form-group row">
-            <div id="divFirstName" class="col-sm-6  <c:if test='${not empty requestScope.messages.get(RegistrationValidator.FIRST_NAME_KEY)}'>has-error</c:if>">
+            <div id="divFirstName" class="col-sm-6  ${not empty requestScope.messages.get(RegistrationValidator.FIRST_NAME_KEY)?'has-error':''}">
                 <div class="input-group ">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                     <label for="inputFirstName" class="sr-only"><fmt:message key="user.label.name"/></label>
@@ -47,7 +47,7 @@
                 </span>
             </div>
 
-            <div id="divLastName" class="col-sm-6 <c:if test='${not empty requestScope.messages.get(RegistrationValidator.LAST_NAME_KEY)}'>has-error</c:if>">
+            <div id="divLastName" class="col-sm-6 ${not empty requestScope.messages.get(RegistrationValidator.LAST_NAME_KEY)?'has-error':''}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                     <label for="inputLastName" class="sr-only"><fmt:message key="user.label.surname"/></label>
@@ -64,7 +64,7 @@
 
 
         <div class="form-group row">
-            <div id="divEmail" class="col-sm-6 <c:if test='${not empty requestScope.messages.get(RegistrationValidator.EMAIL_KEY)}'>has-error</c:if>">
+            <div id="divEmail" class="col-sm-6 ${not empty requestScope.messages.get(RegistrationValidator.EMAIL_KEY)?'has-error':''}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
                     <label for="inputEmail" class="sr-only"><fmt:message key="user.label.email"/></label>
@@ -85,7 +85,7 @@
                 <c:if test="${customI}">
                 <label>
                     <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}" value=""
-                           <c:if test='${requestScope[RegistrationValidator.AVATAR_KEY].equals("")}'>checked</c:if>
+                           ${requestScope[RegistrationValidator.AVATAR_KEY].equals("")?'checked':''}
                     >
                     <img src="${pageContext.servletContext.getInitParameter("avatarsFolder")}/${sessionScope.user.img}" class="img-input"
                     ><i class="far fa-check-circle img-check"></i>
@@ -94,7 +94,7 @@
                 <c:forEach items="${RegistrationValidator.DEFAULT_AVATARS}" var="av">
                 <label>
                     <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}"
-                           value="${av}" <c:if test="${requestScope[RegistrationValidator.AVATAR_KEY].equals(av)}">checked</c:if>
+                           value="${av}" ${requestScope[RegistrationValidator.AVATAR_KEY].equals(av)?'checked':''}
                     >
                     <img src="${pageContext.servletContext.getInitParameter("avatarsFolder")}/${av}" class="img-input"
                     ><i class="far fa-check-circle img-check"></i>
@@ -102,7 +102,7 @@
                 </c:forEach>
                 <label>
                     <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}" value="custom" id="customAvatar"
-                           <c:if test="${requestScope[RegistrationValidator.AVATAR_KEY].equals(RegistrationValidator.CUSTOM_AVATAR)}">checked</c:if>
+                           ${requestScope[RegistrationValidator.AVATAR_KEY].equals(RegistrationValidator.CUSTOM_AVATAR)?'checked':''}
                     >
                     <img src="${pageContext.servletContext.contextPath}/libs/fontawesome-free-5.1.1-web/svgs/regular/plus-square.svg" class="img-input"
                     ><i class="far fa-check-circle img-check"></i>
