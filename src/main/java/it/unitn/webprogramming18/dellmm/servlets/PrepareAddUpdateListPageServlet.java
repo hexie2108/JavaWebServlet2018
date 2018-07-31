@@ -79,7 +79,7 @@ public class PrepareAddUpdateListPageServlet extends HttpServlet {
             //If there's a listId parameter it should mean a modify action has been choosen
             if (listId != null) {
                 //List bean
-                List list = null;
+                List list = new List();
                 try {
                     list = listDAO.getByPrimaryKey(listId);
                 } catch (DAOException ex) {

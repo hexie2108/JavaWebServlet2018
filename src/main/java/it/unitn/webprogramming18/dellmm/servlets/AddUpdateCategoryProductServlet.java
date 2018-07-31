@@ -5,11 +5,11 @@
  */
 package it.unitn.webprogramming18.dellmm.servlets;
 
-import it.unitn.webprogramming18.dellmm.db.daos.ListDAO;
+import it.unitn.webprogramming18.dellmm.db.daos.CategoryProductDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
-import it.unitn.webprogramming18.dellmm.javaBeans.List;
+import it.unitn.webprogramming18.dellmm.javaBeans.CategoryProduct;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import java.io.File;
 import java.io.IOException;
@@ -30,9 +30,9 @@ import javax.servlet.http.Part;
  *
  * @author luca_morgese
  */
-public class AddUpdateListServlet extends HttpServlet {
- 
-    private ListDAO listDAO;
+public class AddUpdateCategoryProductServlet extends HttpServlet {
+
+    private CategoryProductDAO categoryProductDAO;
     
     @Override
     public void init() throws ServletException {
@@ -42,11 +42,12 @@ public class AddUpdateListServlet extends HttpServlet {
         }
 
         try {
-            listDAO = daoFactory.getDAO(ListDAO.class);
+            categoryProductDAO = daoFactory.getDAO(CategoryProductDAO.class);
         } catch (DAOFactoryException ex) {
             throw new ServletException("Impossible to get ListDAO for user storage system", ex);
         }
     }
+    
 
     /**
      * Handles the HTTP <code>POST</code> method.
@@ -61,9 +62,9 @@ public class AddUpdateListServlet extends HttpServlet {
         
         
         // Ottieni configurazione cartella immagini
-        String listImgsFolder = getServletContext().getInitParameter("listImgsFolder");
-        if (listImgsFolder == null) {
-            throw new ServletException("ListImgs folder not configured");
+        String categoryProductImgsFolder = getServletContext().getInitParameter("categoryProductImgsFolder");
+        if (categoryProductImgsFolder == null) {
+            throw new ServletException("CategoryProductImgs folder not configured");
         }
 
         // TODO: Controllare quanto questa cosa sia orribile
@@ -72,7 +73,7 @@ public class AddUpdateListServlet extends HttpServlet {
             realContextPath += "/";
         }
 
-        Path path = Paths.get(realContextPath + listImgsFolder);
+        Path path = Paths.get(realContextPath + categoryProductImgsFolder);
         if (!Files.exists(path)) {
             Files.createDirectories(path);
         }
@@ -85,16 +86,17 @@ public class AddUpdateListServlet extends HttpServlet {
             //request.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(request, response);
         } else {
             
-            Integer listId = null;
-            listId = Integer.valueOf(request.getParameter("listId"));
+            //Being null or not null defines if occurring action is of "modify catList" or "create catList"
+            Integer categoryProductId = null;
+            categoryProductId = Integer.valueOf(request.getParameter("categoryProductId"));
             
             String name = request.getParameter("name");
             String description = request.getParameter("description");
-            Integer categoryList = Integer.valueOf(request.getParameter("categoryList"));
-
+            
+            
             //String img = request.getParameter("img");
-
-
+            
+            
             //IMGS
             
             String uuidImg = null;
@@ -103,13 +105,13 @@ public class AddUpdateListServlet extends HttpServlet {
             Part filePart = request.getPart(SPECIFIC_FORM_PART_NAME);
             
             if (filePart == null) {
-                response.sendError(400, "No image selected for list");
+                response.sendError(400, "No image selected for category list");
                 return;
             } else if(filePart.getSize() == 0){
                 response.sendError(400, "Image has zero size");
                 return;
             } else if(filePart.getSize() > 15 * 1000000){ // Non permettere dimensioni superiori ai ~15MB
-                response.sendError(400, "Image has size > 15MB");
+                response.sendError(400, "Image have size > 15MB");
                 return;
             } else {
                 uuidImg = UUID.randomUUID().toString();
@@ -129,47 +131,41 @@ public class AddUpdateListServlet extends HttpServlet {
             
             
             
-                        
+            
             try {
-                //List bean, NOT a java.util.List
-                List list = new List();
-                
-                list.setId(listId);
-                
-                list.setName(name);
-                list.setDescription(description);
-                list.setImg(uuidImg);
+                CategoryProduct categoryProduct = new CategoryProduct();
 
-                //Owner id is set if new list is created, otherwise, the field is not changed
-                list.setCategoryList(categoryList);
-                
-                if (listId == null) {
-                    //List is new and current user is its owner
-                    list.setOwnerId(user.getId());
-                    listDAO.insert(list);
+                categoryProduct.setId(categoryProductId);
+
+                categoryProduct.setName(name);
+                categoryProduct.setDescription(description);
+                categoryProduct.setImg(uuidImg);
+
+                if (categoryProductId == null) {
+                    categoryProductDAO.insert(categoryProduct);
                 } else {
-                    //List is being modified, listId is != null
-                    //ownerId is the same as the one prior to the modification
-                    List prevList = listDAO.getByPrimaryKey(listId);
-                    list.setOwnerId(prevList.getOwnerId());
-                    listDAO.update(list);
+                    categoryProductDAO.update(categoryProduct);
                 }
+                
             } catch (DAOException ex) {
                 ex.printStackTrace();
-                throw new ServletException("Impossible to update or create new list");
+                throw new ServletException("Impossible to update or create new product category");
             }
             
             response.sendRedirect("/WEB-INF/jsp/yourHome.jsp");
         }
     }
 
+    
+    
     /**
      * Returns a short description of the servlet.
+     *
      * @return a String containing servlet description
      */
     @Override
     public String getServletInfo() {
-        return "Servlet that gets info from form to update or create a new list";
+        return "Inserts into persistence system new CategoryProduct entry";
     }// </editor-fold>
 
 }

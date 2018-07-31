@@ -24,6 +24,27 @@
         <param-value>passworddacambiare</param-value>
     </context-param>
 
+    <!--IMG FOLDERS SETTINGS-->
+    <context-param>
+        <description>Path of the folder where CategoryList images are stored</description>
+        <param-name>categoryListImgsFolder</param-name>
+        <param-value>img/categoryListImgs</param-value>
+    </context-param>
+    <context-param>
+        <description>Path of the folder where CategoryProduct images are stored</description>
+        <param-name>categoryProductImgsFolder</param-name>
+        <param-value>img/categoryProductImgs</param-value>
+    </context-param>
+    <context-param>
+        <description>Path of the folder where List images are stored</description>
+        <param-name>listImgsFolder</param-name>
+        <param-value>img/listImgs</param-value>
+    </context-param>
+    <context-param>
+        <description>Path of the folder where Product images are stored</description>
+        <param-name>productImgsFolder</param-name>
+        <param-value>img/productImgs</param-value>
+    </context-param>
     <!-- SMTP SETTINGS -->
     <context-param>
         <description>Hostname of the SMTP server</description>
@@ -58,7 +79,6 @@
         <description>ServletContextListener</description>
         <listener-class>it.unitn.webprogramming18.dellmm.listeners.WebAppContextListener</listener-class>
     </listener>
-
     <!-- FILTERS -->
     <filter>
         <filter-name>LoggedUserOnlyFilter</filter-name>
@@ -73,7 +93,6 @@
         <url-pattern>/notifications</url-pattern>
         <url-pattern>/notifications.json</url-pattern>
     </filter-mapping>
-
     <filter>
         <filter-name>UnloggedUserOnlyFilter</filter-name>
         <filter-class>it.unitn.webprogramming18.dellmm.filters.UnloggedUserOnlyFilter</filter-class>
@@ -85,7 +104,6 @@
         <url-pattern>/forgotPassword</url-pattern>
         <url-pattern>/resetPassword</url-pattern>
     </filter-mapping>
-
     <!-- SERVLETS -->
     <servlet>
         <servlet-name>DisplaySpecificListServlet</servlet-name>
@@ -95,7 +113,22 @@
         <servlet-name>DisplaySpecificListServlet</servlet-name>
         <url-pattern>/DisplaySpecificListServlet</url-pattern>
     </servlet-mapping>
-
+    <servlet>
+        <servlet-name>AddUpdateCategoryListServlet</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.AddUpdateCategoryListServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AddUpdateCategoryListServlet</servlet-name>
+        <url-pattern>/AddUpdateCategoryListServlet</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>AddUpdateCategoryProductServlet</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.AddUpdateCategoryProductServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AddUpdateCategoryProductServlet</servlet-name>
+        <url-pattern>/AddUpdateCategoryProductServlet</url-pattern>
+    </servlet-mapping>
     <servlet>
         <servlet-name>PrepareAddUpdateListPageServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.PrepareAddUpdateListPageServlet</servlet-class>
@@ -104,7 +137,6 @@
         <servlet-name>PrepareAddUpdateListPageServlet</servlet-name>
         <url-pattern>/PrepareAddUpdateListPageServlet</url-pattern>
     </servlet-mapping>
-
     <servlet>
         <servlet-name>AddUpdateListServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.AddUpdateListServlet</servlet-class>
@@ -113,7 +145,6 @@
         <servlet-name>AddUpdateListServlet</servlet-name>
         <url-pattern>/AddUpdateListServlet</url-pattern>
     </servlet-mapping>
-
     <servlet>
         <servlet-name>PrepareAddUpdateProductServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.PrepareAddUpdateProductPageServlet</servlet-class>
@@ -122,7 +153,6 @@
         <servlet-name>PrepareAddUpdateProductServlet</servlet-name>
         <url-pattern>/PrepareAddUpdateProductServlet</url-pattern>
     </servlet-mapping>
-
     <servlet>
         <servlet-name>AddUpdateProductServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.AddUpdateProductServlet</servlet-class>
@@ -131,7 +161,6 @@
         <servlet-name>AddUpdateProductServlet</servlet-name>
         <url-pattern>/AddUpdateProductServlet</url-pattern>
     </servlet-mapping>
-
     <servlet>
         <servlet-name>UpgradeUserToAdminServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.UpgradeUserToAdminServlet</servlet-class>
@@ -140,8 +169,6 @@
         <servlet-name>UpgradeUserToAdminServlet</servlet-name>
         <url-pattern>/UpgradeUserToAdminServlet</url-pattern>
     </servlet-mapping>
-
-
     <servlet>
         <servlet-name>DisplayListsServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.DisplayListsServlet</servlet-class>
@@ -150,7 +177,6 @@
         <servlet-name>DisplayListsServlet</servlet-name>
         <url-pattern>/DisplayListsServlet</url-pattern>
     </servlet-mapping>
-
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.LoginServlet</servlet-class>
@@ -167,7 +193,6 @@
         <servlet-name>LogoutServlet</servlet-name>
         <url-pattern>/logout</url-pattern>
     </servlet-mapping>
-
     <servlet>
         <servlet-name>RegisterServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.RegisterServlet</servlet-class>
@@ -176,7 +201,6 @@
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/register</url-pattern>
     </servlet-mapping>
-    
     <servlet>
         <servlet-name>ResendEmailServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.ResendEmailServlet</servlet-class>
@@ -185,7 +209,6 @@
         <servlet-name>ResendEmailServlet</servlet-name>
         <url-pattern>/resendEmail</url-pattern>
     </servlet-mapping>
-    
     <servlet>
         <servlet-name>ValidateUserServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.ValidateUserServlet</servlet-class>
@@ -194,7 +217,6 @@
         <servlet-name>ValidateUserServlet</servlet-name>
         <url-pattern>/validateUser</url-pattern>
     </servlet-mapping>
-
     <servlet>
         <servlet-name>ForgotPasswordServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.ForgotPasswordServlet</servlet-class>
@@ -203,7 +225,6 @@
         <servlet-name>ForgotPasswordServlet</servlet-name>
         <url-pattern>/forgotPassword</url-pattern>
     </servlet-mapping>
-
     <servlet>
         <servlet-name>ResetPasswordServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.ResetPasswordServlet</servlet-class>
@@ -212,7 +233,6 @@
         <servlet-name>ResetPasswordServlet</servlet-name>
         <url-pattern>/resetPassword</url-pattern>
     </servlet-mapping>
-
     <servlet>
         <servlet-name>ModifyUserServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.ModifyUserServlet</servlet-class>
@@ -221,7 +241,6 @@
         <servlet-name>ModifyUserServlet</servlet-name>
         <url-pattern>/modifyUser</url-pattern>
     </servlet-mapping>
-
     <servlet>
         <servlet-name>LoggedResetPasswordServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.LoggedResetPasswordServlet</servlet-class>
@@ -230,7 +249,6 @@
         <servlet-name>LoggedResetPasswordServlet</servlet-name>
         <url-pattern>/loggedResetPassword</url-pattern>
     </servlet-mapping>
-
     <servlet>
         <servlet-name>AlreadyLoggedInServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.AlreadyLoggedInServlet</servlet-class>
@@ -239,7 +257,6 @@
         <servlet-name>AlreadyLoggedInServlet</servlet-name>
         <url-pattern>/alreadyLoggedIn</url-pattern>
     </servlet-mapping>
-    
     <servlet>
         <servlet-name>NotificationsServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.NotificationsServlet</servlet-class>
@@ -248,7 +265,6 @@
         <servlet-name>NotificationsServlet</servlet-name>
         <url-pattern>/notifications</url-pattern>
     </servlet-mapping>
-
     <servlet>
         <servlet-name>NotificationsServletJSON</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.JSONNotificationsServlet</servlet-class>
@@ -257,7 +273,6 @@
         <servlet-name>NotificationsServletJSON</servlet-name>
         <url-pattern>/notifications.json</url-pattern>
     </servlet-mapping>
-
     <servlet>
         <servlet-name>UserValidateJS</servlet-name>
         <jsp-file>/WEB-INF/js/userValidateJS.jsp</jsp-file>
