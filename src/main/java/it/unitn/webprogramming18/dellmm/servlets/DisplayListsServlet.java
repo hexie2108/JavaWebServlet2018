@@ -15,6 +15,7 @@ import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -84,7 +85,7 @@ public class DisplayListsServlet extends HttpServlet {
                     = (HashMap<it.unitn.webprogramming18.dellmm.javaBeans.List, java.util.List<Product>>) new HashMap();
             
             for (it.unitn.webprogramming18.dellmm.javaBeans.List l:ownedLists) {
-                java.util.List<Product> products = null;
+                java.util.List<Product> products = new ArrayList();
                 try {
                     products = productDAO.getProductsInListByListId(l.getId());
                 } catch (DAOException ex) {
@@ -101,7 +102,7 @@ public class DisplayListsServlet extends HttpServlet {
                     = (HashMap<it.unitn.webprogramming18.dellmm.javaBeans.List, java.util.List<Product>>) new HashMap();
             
             for (it.unitn.webprogramming18.dellmm.javaBeans.List l:sharedLists) {
-                java.util.List<Product> products = null;
+                java.util.List<Product> products = new ArrayList();
                 try {
                     products = productDAO.getProductsInListByListId(l.getId());
                 } catch (DAOException ex) {
