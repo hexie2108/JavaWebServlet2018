@@ -11,12 +11,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><fmt:message key="login.title"/></title>
 
-    <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css">
-    <script src="${pageContext.servletContext.contextPath}/libs/jquery/jquery-3.3.1.min.js"></script>
-    <script src="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="<c:url value="/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css"/>">
+    <script src="<c:url value="/libs/jquery/jquery-3.3.1.min.js"/>"></script>
+    <script src="<c:url value="/libs/bootstrap-4.1.1-dist/js/bootstrap.bundle.min.js"/>" crossorigin="anonymous"></script>
 
-    <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/css/tmpToDelete/login-style.css">
-    <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/css/tmpToDelete/common.css">
+    <link rel="stylesheet" href="<c:url value="/css/tmpToDelete/login-style.css"/>">
+    <link rel="stylesheet" href="<c:url value="/css/tmpToDelete/common.css"/>">
 </head>
 <body>
 <%@include file="../jspf/i18n_switcher.jsp"%>
@@ -67,7 +67,7 @@
                     <label><input class="noMarginTop" name="remember" type="checkbox" value=""><fmt:message key="login.label.rememberMe"/></label>
                 </div>
                 <a id="pwdDimenticata" class="pull-right"
-                   href="${pageContext.servletContext.contextPath}/${PagePathsConstants.FORGOT_PASSWORD}"><fmt:message key="login.label.forgotPassword"/></a>
+                   href="<c:url value="/${PagePathsConstants.FORGOT_PASSWORD}"/>"><fmt:message key="login.label.forgotPassword"/></a>
 
                 <div class="btn-group btn-group-justified" role="group" aria-label="...">
                     <div class="btn-group" role="group" id="id-annulla">
@@ -81,7 +81,7 @@
             </div>
         </form>
         <div class="content-divider"><span class="content-divider-text"><fmt:message key="login.label.notRegistered"/></span></div>
-        <a href="${pageContext.servletContext.contextPath}/${PagePathsConstants.REGISTER}"
+        <a href="<c:url value="/${PagePathsConstants.REGISTER}"/>"
            class="btn btn-default" role="button" id="register-btn"><fmt:message key="login.label.register"/></a>
     </div>
 </div>

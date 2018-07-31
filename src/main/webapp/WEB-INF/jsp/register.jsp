@@ -12,12 +12,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><fmt:message key="register.title"/></title>
 
-    <script src="${pageContext.servletContext.contextPath}/libs/jquery/jquery-3.3.1.min.js"></script>
-    <script src="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/libs/fontawesome-free-5.1.1-web/css/all.min.css">
+    <script src="<c:url value="/libs/jquery/jquery-3.3.1.min.js"/>"></script>
+    <script src="<c:url value="/libs/bootstrap-4.1.1-dist/js/bootstrap.bundle.min.js"/>"></script>
+    <link rel="stylesheet" href="<c:url value="/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/libs/fontawesome-free-5.1.1-web/css/all.min.css"/>">
 
-    <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/css/userPages.css">
+    <link rel="stylesheet" href="<c:url value="/css/userPages.css"/>">
 </head>
 <body>
 
@@ -110,7 +110,7 @@
                 <c:forEach items="${RegistrationValidator.DEFAULT_AVATARS}" var="av">
                     <label>
                         <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}"
-                               value="${av}" <c:if test="${requestScope[RegistrationValidator.AVATAR_KEY].equals(av)}">checked</c:if>
+                               value="${av}" ${requestScope[RegistrationValidator.AVATAR_KEY].equals(av)?'checked':''}
                         >
                         <img src="${pageContext.servletContext.getInitParameter("avatarsFolder")}/${av}" class="img-input"
                         ><i class="far fa-check-circle img-check"></i>
@@ -118,9 +118,9 @@
                 </c:forEach>
                 <label>
                     <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}" value="custom" id="customAvatar"
-                           <c:if test="${requestScope[RegistrationValidator.AVATAR_KEY].equals(RegistrationValidator.CUSTOM_AVATAR)}">checked</c:if>
+                           ${requestScope[RegistrationValidator.AVATAR_KEY].equals(RegistrationValidator.CUSTOM_AVATAR)?'checked':''}
                     >
-                    <img src="${pageContext.servletContext.contextPath}/libs/fontawesome-free-5.1.1-web/svgs/regular/plus-square.svg" class="img-input"
+                    <img src="<c:url value="/libs/fontawesome-free-5.1.1-web/svgs/regular/plus-square.svg"/>" class="img-input"
                     ><i class="far fa-check-circle img-check"></i>
                     <input id="customAvatarImg"
                            type="file" name="${RegistrationValidator.AVATAR_IMG_KEY}"
@@ -161,14 +161,14 @@
         <button class="btn btn-lg btn-primary btn-block" type="submit"><fmt:message key="register.label.submit"/></button>
     </form>
 </div>
-<script src="${pageContext.servletContext.contextPath}/libs/zxcvbn/zxcvbn.js"></script>
-<script src="${pageContext.servletContext.contextPath}/js/userValidate.js"></script>
+<script src="<c:url value="/libs/zxcvbn/zxcvbn.js"/>"></script>
+<script src="<c:url value="/js/userValidate.js"/>"></script>
 <script>
     $(document).ready(function() {
         // Salva oggetti in modo da doverli cercare una sola volta
         const form=$('#form-register');
         const strPwd = form.find('#strongPassword');
-        const URL = '${pageContext.servletContext.contextPath}/${PagePathsConstants.VALIDATE_REGISTRATION}?strict=';
+        const URL = '<c:url value="/${PagePathsConstants.VALIDATE_REGISTRATION}?strict="/>';
 
 
         form.submit(function(){

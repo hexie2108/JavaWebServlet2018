@@ -11,9 +11,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><fmt:message key="notifications.title"/></title>
 
-    <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css">
-    <script src="${pageContext.servletContext.contextPath}/libs/jquery/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
-    <script src="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="<c:url value="/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css"/>">
+    <script src="<c:url value="/libs/jquery/jquery-3.3.1.min.js"/>" crossorigin="anonymous"></script>
+    <script src="<c:url value="/libs/bootstrap-4.1.1-dist/js/bootstrap.bundle.min.js"/>" crossorigin="anonymous"></script>
 </head>
 <body>
 <%@include file="../jspf/i18n_switcher.jsp"%>
@@ -36,7 +36,7 @@
 <script src="${pageContext.servletContext.contextPath}/js/notifications.js" crossorigin="anonymous"></script>
 <script>
     $(document).ready(function() {
-        const URL = "${pageContext.servletContext.contextPath}/${PagePathsConstants.NOTIFICATIONS_JSON}";
+        const URL = "<c:url value="/${PagePathsConstants.NOTIFICATIONS_JSON}"/>";
 
         const notificationList = $('#notificationsList');
         const emptyMessage = $('#notificationsEmtpy');

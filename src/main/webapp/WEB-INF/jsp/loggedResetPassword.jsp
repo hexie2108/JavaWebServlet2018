@@ -13,9 +13,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><fmt:message key="loggedResetPassword.title"/></title>
 
-    <script src="${pageContext.servletContext.contextPath}/libs/jquery/jquery-3.3.1.min.js"></script>
-    <script src="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css">
+    <script src="<c:url value="/libs/jquery/jquery-3.3.1.min.js"/>"></script>
+    <script src="<c:url value="/libs/bootstrap-4.1.1-dist/js/bootstrap.bundle.min.js"/>"></script>
+    <link rel="stylesheet" href="<c:url value="/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css"/>">
 </head>
 <body>
 <%@ include file="../jspf/i18n_switcher.jsp"%>
@@ -92,7 +92,7 @@
     }
 
     $(document).ready(function() {
-        const url = '${pageContext.servletContext.contextPath}/${PagePathsConstants.VALIDATE_REGISTRATION}';
+        const url = '<c:url value="/${PagePathsConstants.VALIDATE_REGISTRATION}"/>';
         const form=$('#form-register');
         const strPwd = form.find('#strongPassword');
 

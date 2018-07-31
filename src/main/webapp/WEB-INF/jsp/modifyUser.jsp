@@ -13,12 +13,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><fmt:message key="modifyUser.title"/></title>
 
-    <script src="${pageContext.servletContext.contextPath}/libs/jquery/jquery-3.3.1.min.js"></script>
-    <script src="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css">
+    <script src="<c:url value="/libs/jquery/jquery-3.3.1.min.js"/>"></script>
+    <script src="<c:url value="/libs/bootstrap-4.1.1-dist/js/bootstrap.bundle.min.js"/>"></script>
+    <link rel="stylesheet" href="<c:url value="/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css"/>">
 
-    <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/libs/fontawesome-free-5.1.1-web/css/all.min.css" type="text/css" media="all">
-    <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/css/userPages.css">
+    <link rel="stylesheet" href="<c:url value="/libs/fontawesome-free-5.1.1-web/css/all.min.css"/>" type="text/css" media="all">
+    <link rel="stylesheet" href="<c:url value="/css/userPages.css"/>">
 </head>
 <body>
 <%@ include file="../jspf/i18n_switcher.jsp"%>
@@ -104,7 +104,7 @@
                     <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}" value="custom" id="customAvatar"
                            ${requestScope[RegistrationValidator.AVATAR_KEY].equals(RegistrationValidator.CUSTOM_AVATAR)?'checked':''}
                     >
-                    <img src="${pageContext.servletContext.contextPath}/libs/fontawesome-free-5.1.1-web/svgs/regular/plus-square.svg" class="img-input"
+                    <img src="<c:url value="/libs/fontawesome-free-5.1.1-web/svgs/regular/plus-square.svg"/>" class="img-input"
                     ><i class="far fa-check-circle img-check"></i>
                     <input id="customAvatarImg"
                            type="file" name="${RegistrationValidator.AVATAR_IMG_KEY}"
@@ -125,14 +125,14 @@
         <button class="btn btn-lg btn-primary btn-block" type="submit"><fmt:message key="modifyUser.label.submit"/></button>
     </form>
 </div>
-<script src="${pageContext.servletContext.contextPath}/js/userValidate.js"></script>
+<script src="<c:url value="/js/userValidate.js"/>"></script>
 <script>
     "use strict";
 
     $(document).ready(function() {
         // Salva oggetti in modo da doverli cercare una sola volta
         const form=$('#form-register');
-        const URL = '${pageContext.servletContext.contextPath}/${PagePathsConstants.VALIDATE_REGISTRATION}';
+        const URL = '<c:url value="/${PagePathsConstants.VALIDATE_REGISTRATION}"/>';
 
 
         form.submit(function(){
