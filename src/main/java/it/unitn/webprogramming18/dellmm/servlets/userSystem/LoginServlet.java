@@ -91,22 +91,22 @@ public class LoginServlet extends HttpServlet {
         int resCode;
 
         if (user == null) {
-            ResourceBundle bundle = it.unitn.webprogramming18.dellmm.util.i18n.getBundle(request);
-
             if(requestedWith == null) {
                 response.sendError(400,"login.errors.wrongUsernameOrPassword");
                 return;
             }
 
+            ResourceBundle bundle = it.unitn.webprogramming18.dellmm.util.i18n.getBundle(request);
+
             res.put("message", bundle.getString("login.errors.wrongUsernameOrPassword"));
             resCode = 400;
         } else if (user.getVerifyEmailLink() != null) {
-            ResourceBundle bundle = it.unitn.webprogramming18.dellmm.util.i18n.getBundle(request);
-
             if(requestedWith == null) {
                 response.sendError(400, "login.errors.noValidatedEmail");
                 return;
             }
+
+            ResourceBundle bundle = it.unitn.webprogramming18.dellmm.util.i18n.getBundle(request);
 
             res.put("message", bundle.getString("login.errors.noValidatedEmail"));
             resCode = 400;

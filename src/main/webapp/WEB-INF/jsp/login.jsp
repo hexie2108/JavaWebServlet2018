@@ -30,8 +30,7 @@
                         <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                         <label for="inputEmail" class="sr-only"><fmt:message key="user.label.email"/></label>
                         <input id="inputEmail" class="form-control" placeholder="<fmt:message key="user.label.email"/>" required="" autofocus=""
-                               type="text" name="${LoginServlet.EMAIL_KEY}"
-                               value="${param[LoginServlet.EMAIL_KEY]}">
+                               type="text" name="${LoginServlet.EMAIL_KEY}">
                     </div>
                 </div>
 
@@ -40,8 +39,7 @@
                         <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                         <label for="inputPassword" class="sr-only"><fmt:message key="user.label.password"/></label>
                         <input id="inputPassword" class="form-control" placeholder="<fmt:message key="user.label.password"/>" required=""
-                               type="password" name="${LoginServlet.PWD_KEY}"
-                               value="">
+                               type="password" name="${LoginServlet.PWD_KEY}">
                     </div>
                 </div>
 
