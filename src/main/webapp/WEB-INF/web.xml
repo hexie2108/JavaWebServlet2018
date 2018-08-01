@@ -99,9 +99,14 @@
     </filter>
     <filter-mapping>
         <filter-name>UnloggedUserOnlyFilter</filter-name>
+
         <url-pattern>/login</url-pattern>
-        <url-pattern>/register</url-pattern>
+
         <url-pattern>/forgotPassword</url-pattern>
+        <url-pattern>/forgotPassword.json</url-pattern>
+
+        <url-pattern>/register</url-pattern>
+
         <url-pattern>/resetPassword</url-pattern>
     </filter-mapping>
     <!-- SERVLETS -->
@@ -185,6 +190,11 @@
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/login</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoginServlet</servlet-name>
+        <url-pattern>/login.json</url-pattern>
+    </servlet-mapping>
+
     <servlet>
         <servlet-name>LogoutServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.LogoutServlet</servlet-class>
@@ -217,6 +227,7 @@
         <servlet-name>ValidateUserServlet</servlet-name>
         <url-pattern>/validateUser</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>ForgotPasswordServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.ForgotPasswordServlet</servlet-class>
@@ -225,6 +236,11 @@
         <servlet-name>ForgotPasswordServlet</servlet-name>
         <url-pattern>/forgotPassword</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ForgotPasswordServlet</servlet-name>
+        <url-pattern>/forgotPassword.json</url-pattern>
+    </servlet-mapping>
+
     <servlet>
         <servlet-name>ResetPasswordServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.ResetPasswordServlet</servlet-class>

@@ -28,7 +28,7 @@
 </nav>
 <div class="container-fluid" id="div-signin">
     <div id="div-inner">
-        <form id="form-signin" method="post">
+        <form id="form-forgot" method="post">
             <div class="container-fluid">
                 <h2 class="form-signin-heading"><fmt:message key="forgotPassword.label.recoverPwd"/></h2>
                 <div class="form-group">
@@ -36,9 +36,10 @@
                         <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                         <label for="inputEmail" class="sr-only"><fmt:message key="user.label.email"/></label>
                         <input id="inputEmail" class="form-control" placeholder="Email" required="" autofocus=""
-                               type="text" name="${ForgotPasswordServlet.EMAIL_KEY}"
-                               value="${param[ForgotPasswordServlet.EMAIL_KEY]}">
+                               type="text" name="${ForgotPasswordServlet.EMAIL_KEY}">
                     </div>
+                </div>
+                <div class="alert alert-danger d-none" id="id-alert">
                 </div>
 
                 <div class="btn-group btn-group-justified" role="group" aria-label="...">
@@ -49,24 +50,35 @@
                         <button class="btn btn-primary" type="submit"><fmt:message key="forgotPassword.label.resetPwd"/></button>
                     </div>
                 </div>
+                <script>
+                    const form = $('#form-forgot');
+                    const alertDiv = $('#id-alert');
 
-                <c:if test="${not empty param[ForgotPasswordServlet.ERR_EMPTY_FIELD_KEY]}">
-                    <div class="alert alert-danger" id="id-UP-alert">
-                        <fmt:message key="validateUser.errors.EMAIL_MISSING"/>
-                    </div>
-                </c:if>
+                    form.submit(function(e){
+                        e.preventDefault();
 
-                <c:if test="${not empty param[ForgotPasswordServlet.ERR_NOEMAIL_KEY]}">
-                    <div class="alert alert-danger" id="id-UP-alert">
-                        <fmt:message key="forgotPassword.error.EMAIL_NOT_REGISTERED"/>
-                    </div>
-                </c:if>
+                        $.ajax({
+                            dataType: "json",
+                            url : '<c:url value="/forgotPassword.json"/>',
+                            type: "post",
+                            async: true,
+                            data: form.serialize(),
+                        }).done((data) => {
+                            window.location.replace('<c:url value="/login"/>');
+                        }).fail( (jqXHR) => {
+                            alertDiv.html(
+                                (typeof jqXHR.responseJSON === 'object' &&
+                                jqXHR.responseJSON !== null &&
+                                jqXHR.responseJSON['message'] !== undefined)?
+                                    jqXHR.responseJSON['message']:
+                                    "<fmt:message key="login.errors.unknownError"/>"
+                            );
 
-                <c:if test="${not empty param[ForgotPasswordServlet.ERR_NOVERIFIED_KEY]}">
-                    <div class="alert alert-danger" id="id-UP-alert">
-                        <fmt:message key="login.errors.noValidatedEmail"/>
-                    </div>
-                </c:if>
+                            alertDiv.removeClass("d-none");
+                        });
+                    });
+                </script>
+
             </div>
         </form>
     </div>

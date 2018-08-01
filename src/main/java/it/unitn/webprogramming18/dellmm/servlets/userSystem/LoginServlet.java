@@ -6,6 +6,7 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
+import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,9 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.HashMap;
-import java.util.ResourceBundle;
 
 @WebServlet(name = "LoginServlet")
 public class LoginServlet extends HttpServlet {
@@ -61,8 +60,6 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter(PWD_KEY);
         String nextUrl = request.getParameter(NEXT_URL_KEY);
 
-        String requestedWith = request.getHeader("x-requested-with");
-
         if (email == null) {
             email = "";
         }
@@ -83,63 +80,40 @@ public class LoginServlet extends HttpServlet {
                 user = userDAO.getByEmailAndPassword(email, password);
             } catch (DAOException e) {
                 e.printStackTrace();
-                throw new ServletException("Impossible to get the user requested");
+                ServletUtility.sendError(request, response,500,"Impossible to get the user requested"); // TODO: To i18n
+                return;
             }
         }
-
-        HashMap<String, String> res = new HashMap<>();
-        int resCode;
 
         if (user == null) {
-            if(requestedWith == null) {
-                response.sendError(400,"login.errors.wrongUsernameOrPassword");
-                return;
-            }
-
-            ResourceBundle bundle = it.unitn.webprogramming18.dellmm.util.i18n.getBundle(request);
-
-            res.put("message", bundle.getString("login.errors.wrongUsernameOrPassword"));
-            resCode = 400;
-        } else if (user.getVerifyEmailLink() != null) {
-            if(requestedWith == null) {
-                response.sendError(400, "login.errors.noValidatedEmail");
-                return;
-            }
-
-            ResourceBundle bundle = it.unitn.webprogramming18.dellmm.util.i18n.getBundle(request);
-
-            res.put("message", bundle.getString("login.errors.noValidatedEmail"));
-            resCode = 400;
-        } else {
-            // Create session, set user
-            HttpSession session = request.getSession();
-
-            session.setAttribute("user", user);
-
-            String remember = request.getParameter(REMEMBER_KEY);
-            if (remember != null && remember.equals("on"))
-                session.setMaxInactiveInterval(-1);
-
-            if(requestedWith == null){
-                response.sendRedirect(response.encodeRedirectURL(nextUrl));
-                return;
-            }
-
-            // Create json structure
-            res.put("nextUrl", response.encodeRedirectURL(nextUrl));
-            resCode = 200;
+            ServletUtility.sendError(request, response, 400, "login.errors.wrongUsernameOrPassword");
+            return;
         }
 
-        response.setHeader("Cache-Control", "no-cache");
-        response.setHeader("Pragma", "no-cache");
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("application/json");
+        if (user.getVerifyEmailLink() != null) {
+            ServletUtility.sendError(request, response, 400, "login.errors.noValidatedEmail");
+            return;
+        }
 
-        // Send json
-        PrintWriter out = response.getWriter();
-        Gson gson = new Gson();
+        // Create session, set user
+        HttpSession session = request.getSession();
 
-        out.print(gson.toJson(res));
-        response.setStatus(resCode);
+        session.setAttribute("user", user);
+
+        String remember = request.getParameter(REMEMBER_KEY);
+        if (remember != null && remember.equals("on"))
+            session.setMaxInactiveInterval(-1);
+
+
+        if(request.getRequestURI().endsWith(".json")) {
+            HashMap<String, String> res = new HashMap<>();
+            res.put("nextUrl", response.encodeRedirectURL(nextUrl));
+            ServletUtility.sendJSON(request, response, 200, res);
+
+            return;
+        } else {
+            response.sendRedirect(response.encodeRedirectURL(nextUrl));
+            return;
+        }
     }
 }

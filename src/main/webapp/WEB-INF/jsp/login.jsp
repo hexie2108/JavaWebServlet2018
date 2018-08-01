@@ -76,7 +76,7 @@
 
                     $.ajax({
                         dataType: "json",
-                        url : '<c:url value="/login"/>',
+                        url : '<c:url value="/login.json"/>',
                         type: "post",
                         async: true,
                         data: form.serialize(),
@@ -87,9 +87,8 @@
                         window.location.replace(data['nextUrl']);
                     }).fail( (jqXHR) => {
                         alertDiv.html(
-                            (jqXHR.status === 400 &&
-                            typeof jqXHR === 'object' &&
-                            jqXHR !== null &&
+                            (typeof jqXHR.responseJSON === 'object' &&
+                            jqXHR.responseJSON !== null &&
                             jqXHR.responseJSON['message'] !== undefined)?
                                 jqXHR.responseJSON['message']:
                                 "<fmt:message key="login.errors.unknownError"/>"

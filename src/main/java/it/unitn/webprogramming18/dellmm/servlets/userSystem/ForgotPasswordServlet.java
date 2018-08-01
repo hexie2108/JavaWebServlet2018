@@ -7,6 +7,8 @@ import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.email.EmailFactory;
 import it.unitn.webprogramming18.dellmm.email.messageFactories.ResetPasswordMail;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
+import it.unitn.webprogramming18.dellmm.util.ServletUtility;
+import it.unitn.webprogramming18.dellmm.util.PagePathsConstants;
 
 import javax.mail.MessagingException;
 import javax.servlet.ServletException;
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.UUID;
 
 @WebServlet(name = "ForgotPasswordServlet")
@@ -24,7 +27,9 @@ public class ForgotPasswordServlet extends HttpServlet {
             PREV_URL_KEY = "prevUrl",
             ERR_NOEMAIL_KEY = "error_noEmail",
             ERR_NOVERIFIED_KEY = "error_noVerified",
-            ERR_EMPTY_FIELD_KEY = "error_emptyField";
+            ERR_EMPTY_FIELD_KEY = "error_emptyField",
+            ERR_GEN_RST_LINK_KEY = "error_gen_rst_link",
+            ERR_SEND_MAIL = "error_send_email";
 
     private static final String FORGOT_PASSWORD_JSP = "/WEB-INF/jsp/forgotPassword.jsp";
 
@@ -56,51 +61,42 @@ public class ForgotPasswordServlet extends HttpServlet {
 
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        /*
+            String prevUrl = request.getParameter(PREV_URL_KEY);
+
+            // Se prevUrl è vuoto allora usa la pagina di default(index)
+            if (prevUrl == null || prevUrl.isEmpty()) {
+                String contextPath = getServletContext().getContextPath();
+                if (!contextPath.endsWith("/")) {
+                    contextPath += "/";
+                }
+
+                prevUrl = contextPath;
+            }
+         */
         String email = request.getParameter(EMAIL_KEY);
 
         if (email == null || email.isEmpty()) {
-            request.getRequestDispatcher(FORGOT_PASSWORD_JSP + "?" +
-                    ERR_EMPTY_FIELD_KEY + "=true"
-            ).forward(request, response);
+            ServletUtility.sendError(request, response, 400,"validateUser.errors.EMAIL_MISSING");
             return;
         }
-
-        String prevUrl = request.getParameter(PREV_URL_KEY);
-
-        // Se prevUrl è vuoto allora usa la pagina di default(index)
-        if (prevUrl == null || prevUrl.isEmpty()) {
-            String contextPath = getServletContext().getContextPath();
-            if (!contextPath.endsWith("/")) {
-                contextPath += "/";
-            }
-
-            prevUrl = contextPath;
-        }
-
         User user;
 
         try {
             user = userDAO.getByEmail(email);
         } catch (DAOException e) {
             e.printStackTrace();
-            throw new ServletException("Impossible trovare l'utente");
+            ServletUtility.sendError(request, response, 500, "Impossible trovare l'utente"); // TODO: To i18n
+            return;
         }
 
         if (user == null) {
-            request.getRequestDispatcher(FORGOT_PASSWORD_JSP + "?" +
-                    ERR_NOEMAIL_KEY + "=true" +
-                    "&" + PREV_URL_KEY + "=" + prevUrl +
-                    "&" + EMAIL_KEY + "=" + email
-            ).forward(request, response);
+            ServletUtility.sendError(request, response, 400, "forgotPassword.error.EMAIL_NOT_REGISTERED");
             return;
         }
 
         if (user.getVerifyEmailLink() != null) {
-            request.getRequestDispatcher(FORGOT_PASSWORD_JSP + "?" +
-                    ERR_NOVERIFIED_KEY + "=true" +
-                    "&" + PREV_URL_KEY + "=" + prevUrl +
-                    "&" + EMAIL_KEY + "=" + email
-            ).forward(request, response);
+            ServletUtility.sendError(request, response, 400, "login.errors.noValidatedEmail");
             return;
         }
 
@@ -108,23 +104,34 @@ public class ForgotPasswordServlet extends HttpServlet {
             user.setResetPwdEmailLink(UUID.randomUUID().toString());
             userDAO.update(user);
 
-            try {
-                emailFactory.sendMail(
-                        "Reset Password",
-                        "Reset Password",
-                        ResetPasswordMail.createMessage(user),
-                        "registrazioneprogettowebprog@gmail.com"
-                );
-                // Per permetterci nel mentre di non creare account mail false per verificare gli account
-                // TODO: Da cambiare
-            } catch (MessagingException | UnsupportedEncodingException ex) {
-                // TODO: Rimettere uuid_pw_rst a null?
-                response.sendError(500, "Impossible to send the email");
-                return;
-            }
+            // TODO: Risettare user?
+
+            emailFactory.sendMail(
+                    "Reset Password",
+                    "Reset Password",
+                    ResetPasswordMail.createMessage(user),
+                    "registrazioneprogettowebprog@gmail.com"
+            );
+            // Per permetterci nel mentre di non creare account mail false per verificare gli account
+            // TODO: Da cambiare
+
         } catch (DAOException ex) {
-            response.sendError(500, "Impossible to create reset password link");
+            ServletUtility.sendError(request, response, 500, "Impossible to create reset password link"); // TODO: To i18n
             return;
+        } catch (MessagingException | UnsupportedEncodingException ex) {
+            ServletUtility.sendError(request, response, 500, "Impossible to send the email"); // TODO: To i18n
+            return;
+        }
+
+        if (request.getRequestURI().endsWith(".json")){
+            ServletUtility.sendJSON(request,response, 200, new HashMap<>());
+        } else {
+            String contextPath = getServletContext().getContextPath();
+            if (!contextPath.endsWith("/")) {
+                contextPath += "/";
+            }
+
+            response.sendRedirect(response.encodeRedirectURL(contextPath + "/" + PagePathsConstants.LOGIN));
         }
     }
 }
