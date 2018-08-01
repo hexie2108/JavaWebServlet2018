@@ -90,6 +90,7 @@
         <url-pattern>/modifyUser</url-pattern>
         <url-pattern>/resendEmail</url-pattern>
         <url-pattern>/alreadyLoggedIn</url-pattern>
+
         <url-pattern>/notifications</url-pattern>
         <url-pattern>/notifications.json</url-pattern>
     </filter-mapping>
@@ -101,6 +102,7 @@
         <filter-name>UnloggedUserOnlyFilter</filter-name>
 
         <url-pattern>/login</url-pattern>
+        <url-pattern>/login.json</url-pattern>
 
         <url-pattern>/forgotPassword</url-pattern>
         <url-pattern>/forgotPassword.json</url-pattern>
@@ -108,6 +110,7 @@
         <url-pattern>/register</url-pattern>
 
         <url-pattern>/resetPassword</url-pattern>
+        <url-pattern>/resetPassword.json</url-pattern>
     </filter-mapping>
     <!-- SERVLETS -->
     <servlet>
@@ -249,6 +252,12 @@
         <servlet-name>ResetPasswordServlet</servlet-name>
         <url-pattern>/resetPassword</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ResetPasswordServlet</servlet-name>
+        <url-pattern>/resetPassword.json</url-pattern>
+    </servlet-mapping>
+
+
     <servlet>
         <servlet-name>ModifyUserServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.ModifyUserServlet</servlet-class>

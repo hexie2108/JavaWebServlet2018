@@ -5,6 +5,7 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.util.RegistrationValidator;
+import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -41,7 +42,11 @@ public class ResetPasswordServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher(RESET_PASSWORD_JSP).forward(request, response);
+        if (request.getRequestURI().endsWith(".json")) {
+            response.sendError(400, "POST only");
+        } else {
+            request.getRequestDispatcher(RESET_PASSWORD_JSP).forward(request, response);
+        }
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -49,44 +54,36 @@ public class ResetPasswordServlet extends HttpServlet {
         String password = request.getParameter(PWD_KEY);
 
         if (pw_rst_id == null) {
-            response.sendError(400,"Paramentro id mancante");
+            ServletUtility.sendError(request,response,400,"Paramentro id mancante"); // TODO: To i18n
             return;
         }
 
-
-        ResourceBundle bundle = it.unitn.webprogramming18.dellmm.util.i18n.getBundle(request);
-
         RegistrationValidator.ErrorMessage error =  RegistrationValidator.validatePassword(password);
 
-        String message =
-            error == null?
-                null:
-                bundle.getString(RegistrationValidator.I18N_ERROR_STRING_PREFIX+error.toString());
-
-        if (message != null) {
-            request.getRequestDispatcher(
-                    response.encodeRedirectURL(
-                            RESET_PASSWORD_JSP + "?" + MSG_KEY + "=" + message
-                    )
-            ).forward(request, response);
+        if (error != null) {
+            ServletUtility.sendError(request, response, 400, RegistrationValidator.I18N_ERROR_STRING_PREFIX + error.toString());
             return;
         }
 
         try {
             userDAO.changePassword(pw_rst_id, password);
+        } catch (IllegalArgumentException ex) {
+            ServletUtility.sendError(request, response, 400,"ID non valido"); // TODO: To i18n
+            return;
+        } catch (DAOException e) {
+            ServletUtility.sendError(request, response, 500,"Impossibile ricercare l'id richiesto"); // TODO: To i18n
+            return;
+        }
 
+        if (request.getRequestURI().endsWith(".json")) {
+            ServletUtility.sendJSON(request, response, 200, new HashMap());
+        } else {
             String contextPath = getServletContext().getContextPath();
             if (!contextPath.endsWith("/")) {
                 contextPath += "/";
             }
 
             response.sendRedirect(contextPath);
-        } catch (IllegalArgumentException ex) {
-            response.sendError(400,"ID non valido");
-            return;
-        } catch (DAOException e) {
-            response.sendError(500, "Impossibile ricercare l'id richiesto");
-            return;
         }
     }
 }

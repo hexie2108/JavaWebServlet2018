@@ -61,7 +61,7 @@
                             dataType: "json",
                             url : '<c:url value="/forgotPassword.json"/>',
                             type: "post",
-                            async: true,
+                            async: false,
                             data: form.serialize(),
                         }).done((data) => {
                             window.location.replace('<c:url value="/login"/>');

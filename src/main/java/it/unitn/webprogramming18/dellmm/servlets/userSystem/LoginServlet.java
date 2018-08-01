@@ -47,7 +47,11 @@ public class LoginServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher(LOGIN_JSP).forward(request, response);
+        if (request.getRequestURI().endsWith(".json")) {
+            response.sendError(400, "POST only");
+        } else {
+            request.getRequestDispatcher(LOGIN_JSP).forward(request, response);
+        }
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -37,9 +37,13 @@
                         <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                         <label for="inputPassword" class="sr-only"><fmt:message key="user.label.password"/></label>
                         <input id="inputPassword" class="form-control" placeholder="<fmt:message key="user.label.password"/>" required="" autofocus=""
-                               type="password" name="${ResetPasswordServlet.PWD_KEY}"
-                               value="${param[ResetPasswordServlet.PWD_KEY]}">
+                               type="password" name="${ResetPasswordServlet.PWD_KEY}">
                     </div>
+                </div>
+
+                <input type="hidden" name="id" id="inputId" value="${param[ResetPasswordServlet.ID_KEY]}">
+
+                <div class="alert alert-danger d-none" id="id-alert">
                 </div>
 
                 <div class="btn-group btn-group-justified" role="group" aria-label="...">
@@ -52,13 +56,34 @@
                     </div>
                 </div>
 
-                <c:if test="${not empty param[ResetPasswordServlet.MSG_KEY]}">
-                    <div class="alert alert-danger" id="id-UP-alert">
-                        ${param[ResetPasswordServlet.MSG_KEY]}
-                    </div>
-                </c:if>
+                <script>
+                    const form = $('#form-signin');
+                    const alertDiv = $('#id-alert');
 
-                <input type="hidden" name="id" id="inputId" value="${param[ResetPasswordServlet.ID_KEY]}">
+                    form.submit(function(e){
+                        e.preventDefault();
+
+                        $.ajax({
+                            dataType: "json",
+                            url : '<c:url value="/resetPassword.json"/>',
+                            type: "post",
+                            async: false,
+                            data: form.serialize()
+                        }).done(( data) => {
+                            window.location.replace('<c:url value="/login"/>');
+                        }).fail( (jqXHR) => {
+                            alertDiv.html(
+                                (typeof jqXHR.responseJSON === 'object' &&
+                                    jqXHR.responseJSON !== null &&
+                                    jqXHR.responseJSON['message'] !== undefined)?
+                                    jqXHR.responseJSON['message']:
+                                    "<fmt:message key="login.errors.unknownError"/>"
+                            );
+
+                            alertDiv.removeClass("d-none");
+                        });
+                    });
+                </script>
             </div>
         </form>
     </div>

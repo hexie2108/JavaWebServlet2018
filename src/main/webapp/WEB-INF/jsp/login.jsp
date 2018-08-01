@@ -78,7 +78,7 @@
                         dataType: "json",
                         url : '<c:url value="/login.json"/>',
                         type: "post",
-                        async: true,
+                        async: false,
                         data: form.serialize(),
                         xhrFields: {
                             withCredentials: true
