@@ -50,18 +50,8 @@
                 <input type="hidden" name="${LoginServlet.NEXT_URL_KEY}"
                        id="inputNextUrl" value="${param[LoginServlet.NEXT_URL_KEY]}">
 
-                <c:if test="${not empty param[LoginServlet.ERR_NOUSER_PWD_KEY]}">
-                    <div class="alert alert-danger" id="id-UP-alert">
-                        <fmt:message key="login.errors.wrongUsernameOrPassword"/>
-                    </div>
-                </c:if>
-
-                <c:if test="${not empty param[LoginServlet.ERR_NO_VER_KEY]}">
-                    <div class="alert alert-danger" id="id-UP-alert">
-                        <fmt:message key="login.errors.noValidatedEmail"/>
-                    </div>
-                </c:if>
-
+                <div class="alert alert-danger d-none" id="id-alert" style="">
+                </div>
 
                 <div class="checkbox pull-left">
                     <label><input class="noMarginTop" name="remember" type="checkbox" value=""><fmt:message key="login.label.rememberMe"/></label>
@@ -79,6 +69,38 @@
                 </div>
 
             </div>
+            <script>
+                const form = $('#form-signin');
+                const alertDiv = $('#id-alert');
+
+                form.submit(function(e){
+                    e.preventDefault();
+
+                    $.ajax({
+                        dataType: "json",
+                        url : '<c:url value="/login"/>',
+                        type: "post",
+                        async: true,
+                        data: form.serialize(),
+                        xhrFields: {
+                            withCredentials: true
+                        }
+                    }).done(( data) => {
+                        window.location.replace(data['nextUrl']);
+                    }).fail( (jqXHR) => {
+                        alertDiv.html(
+                            (jqXHR.status === 400 &&
+                            typeof jqXHR === 'object' &&
+                            jqXHR !== null &&
+                            jqXHR.responseJSON['message'] !== undefined)?
+                                jqXHR.responseJSON['message']:
+                                "<fmt:message key="login.errors.unknownError"/>"
+                        );
+
+                        alertDiv.removeClass("d-none");
+                    });
+                });
+            </script>
         </form>
         <div class="content-divider"><span class="content-divider-text"><fmt:message key="login.label.notRegistered"/></span></div>
         <a href="<c:url value="/${PagePathsConstants.REGISTER}"/>"
