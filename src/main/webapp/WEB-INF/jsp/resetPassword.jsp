@@ -77,7 +77,7 @@
                                     jqXHR.responseJSON !== null &&
                                     jqXHR.responseJSON['message'] !== undefined)?
                                     jqXHR.responseJSON['message']:
-                                    "<fmt:message key="login.errors.unknownError"/>"
+                                    "<fmt:message key="generic.errors.unknownError"/>"
                             );
 
                             alertDiv.removeClass("d-none");

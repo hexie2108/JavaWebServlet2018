@@ -6,7 +6,9 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.RegistrationValidator;
+import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 
+import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -52,22 +54,35 @@ public class LoggedResetPasswordServlet extends HttpServlet {
         kv.put(RegistrationValidator.FIRST_PWD_KEY, firstPassword);
         kv.put(RegistrationValidator.SECOND_PWD_KEY, secondPassword);
 
-        ResourceBundle bundle = it.unitn.webprogramming18.dellmm.util.i18n.getBundle(request);
-
         Map<String, String> messages =
                 RegistrationValidator.partialValidate(null, kv)
                     .entrySet()
                     .stream()
                     .collect(Collectors.toMap(
                         (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> e.getKey(),
-                        (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> bundle.getString(RegistrationValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString())
+                        (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> RegistrationValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString()
                     )
                 );
 
         if (!messages.isEmpty()) {
-            request.setAttribute("messages", messages);
-            request.getRequestDispatcher(LOGGED_RESET_PASSWORD).forward(request, response);
-            return;
+            if (request.getRequestURI().endsWith(".json")) {
+                messages.put("message","ValidationFail");
+                ServletUtility.sendJSON(request, response, 400, messages);
+                return;
+            } else {
+                String errorCodes =
+                        "[" +
+                        String.join(
+                            ",",
+                                messages.entrySet().stream()
+                                    .map((Map.Entry<String, String> e) -> e.getValue())
+                                    .collect(Collectors.toList())
+                        ) +
+                        "]";
+
+                response.sendError(400, errorCodes);
+                return;
+            }
         }
 
         HttpSession session = request.getSession(false);
@@ -78,8 +93,19 @@ public class LoggedResetPasswordServlet extends HttpServlet {
         try {
             userDAO.update(user);
         } catch (DAOException e) {
-            response.sendError(500, "Impossible fare l'update");
+            ServletUtility.sendError(request, response, 500, "Impossible fare l'update");
             return;
+        }
+
+        if(request.getRequestURI().endsWith(".json")) {
+            ServletUtility.sendJSON(request, response, 200, new HashMap<>());
+        } else {
+            String contextPath = getServletContext().getContextPath();
+            if (!contextPath.endsWith("/")) {
+                contextPath += "/";
+            }
+
+            response.sendRedirect(contextPath);
         }
     }
 }

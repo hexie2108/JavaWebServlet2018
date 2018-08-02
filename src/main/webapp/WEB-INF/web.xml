@@ -86,7 +86,10 @@
     </filter>
     <filter-mapping>
         <filter-name>LoggedUserOnlyFilter</filter-name>
+
         <url-pattern>/loggedResetPassword</url-pattern>
+        <url-pattern>/loggedResetPassword.json</url-pattern>
+
         <url-pattern>/modifyUser</url-pattern>
         <url-pattern>/resendEmail</url-pattern>
         <url-pattern>/alreadyLoggedIn</url-pattern>
@@ -266,6 +269,7 @@
         <servlet-name>ModifyUserServlet</servlet-name>
         <url-pattern>/modifyUser</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>LoggedResetPasswordServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.LoggedResetPasswordServlet</servlet-class>
@@ -274,6 +278,11 @@
         <servlet-name>LoggedResetPasswordServlet</servlet-name>
         <url-pattern>/loggedResetPassword</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoggedResetPasswordServlet</servlet-name>
+        <url-pattern>/loggedResetPassword.json</url-pattern>
+    </servlet-mapping>
+
     <servlet>
         <servlet-name>AlreadyLoggedInServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.AlreadyLoggedInServlet</servlet-class>

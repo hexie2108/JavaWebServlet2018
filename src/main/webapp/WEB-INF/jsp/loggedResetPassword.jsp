@@ -61,6 +61,9 @@
             </div>
         </div>
 
+        <div class="alert alert-danger d-none" id="id-alert">
+        </div>
+
         <button class="btn btn-lg btn-primary btn-block" type="submit"><fmt:message key="loggedResetPassword.submit"/></button>
     </form>
 </div>
@@ -96,6 +99,8 @@
         const form=$('#form-register');
         const strPwd = form.find('#strongPassword');
 
+        const alertDiv = $('#id-alert');
+
         form.find('#inputPassword').keyup(function(){
             strPwd.text("<fmt:message key="user.label.passwordScore"/>: " + zxcvbn(this.value).score + "/4");
         });
@@ -114,22 +119,54 @@
             request.done(updateVerifyMessages);
         });
 
-        form.submit(function(){
-            const request = $.ajax({
+        form.submit(function(e){
+            e.preventDefault();
+
+            $.ajax({
                 dataType: "json",
-                url : url,
+                url : "<c:url value="/loggedResetPassword.json"/>",
                 type: "post",
                 async : false,
                 data: form.serialize(),
                 xhrFields: {
                     withCredentials: true
                 }
+            }).done((data) => {
+                window.location.replace('<c:url value="/"/>');
+            }).fail( (jqXHR) => {
+
             });
 
-            let data;
-            request.done(function(data2){data=data2});
+            request.done(function(data){data=data2});
 
-            return updateVerifyMessages(data);
+
+            $.ajax({
+                dataType: "json",
+                url : '<c:url value="/resetPassword.json"/>',
+                type: "post",
+                async: false,
+                data: form.serialize()
+            }).done(( data) => {
+                window.location.replace('<c:url value="/login"/>');
+            }).fail( (jqXHR) => {
+                if (typeof jqXHR.responseJSON === 'object' &&
+                    jqXHR.responseJSON !== null &&
+                    jqXHR.responseJSON['message'] !== undefined
+                ) {
+                    if (jqXHR.responseJSON['message'] === "ValidationFail") {
+                        updateVerifyMessages(data);
+                    } else {
+                        alertDiv.html(jqXHR.responseJSON['message']);
+                    }
+                } else {
+                    alertDiv.html("<fmt:message key="generic.errors.unknownError"/>");
+                }
+
+                alertDiv.removeClass("d-none");
+            });
+
+
+            updateVerifyMessages(data);
         });
     });
 </script>

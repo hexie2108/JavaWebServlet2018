@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.ResourceBundle;
 
 public interface ServletUtility {
-    static void sendJSON(HttpServletRequest request, HttpServletResponse response, int statusCode, java.io.Serializable json) throws IOException {
+    static void sendJSON(HttpServletRequest request, HttpServletResponse response, int statusCode, Object json) throws IOException {
         response.setHeader("Cache-Control", "no-cache");
         response.setHeader("Pragma", "no-cache");
         response.setCharacterEncoding("UTF-8");
