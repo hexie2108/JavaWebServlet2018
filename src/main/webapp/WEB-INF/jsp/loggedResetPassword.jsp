@@ -101,6 +101,8 @@
 
         const alertDiv = $('#id-alert');
 
+        /*
+
         form.find('#inputPassword').keyup(function(){
             strPwd.text("<fmt:message key="user.label.passwordScore"/>: " + zxcvbn(this.value).score + "/4");
         });
@@ -119,6 +121,9 @@
             request.done(updateVerifyMessages);
         });
 
+        */
+
+
         form.submit(function(e){
             e.preventDefault();
 
@@ -131,42 +136,25 @@
                 xhrFields: {
                     withCredentials: true
                 }
-            }).done((data) => {
-                window.location.replace('<c:url value="/"/>');
-            }).fail( (jqXHR) => {
-
-            });
-
-            request.done(function(data){data=data2});
-
-
-            $.ajax({
-                dataType: "json",
-                url : '<c:url value="/resetPassword.json"/>',
-                type: "post",
-                async: false,
-                data: form.serialize()
             }).done(( data) => {
-                window.location.replace('<c:url value="/login"/>');
+                window.location.replace('<c:url value="/"/>');
             }).fail( (jqXHR) => {
                 if (typeof jqXHR.responseJSON === 'object' &&
                     jqXHR.responseJSON !== null &&
                     jqXHR.responseJSON['message'] !== undefined
                 ) {
                     if (jqXHR.responseJSON['message'] === "ValidationFail") {
-                        updateVerifyMessages(data);
+                        jqXHR.responseJSON['message'] = undefined;
+                        updateVerifyMessages(jqXHR.responseJSON);
                     } else {
                         alertDiv.html(jqXHR.responseJSON['message']);
+                        alertDiv.removeClass("d-none");
                     }
                 } else {
                     alertDiv.html("<fmt:message key="generic.errors.unknownError"/>");
+                    alertDiv.removeClass("d-none");
                 }
-
-                alertDiv.removeClass("d-none");
             });
-
-
-            updateVerifyMessages(data);
         });
     });
 </script>

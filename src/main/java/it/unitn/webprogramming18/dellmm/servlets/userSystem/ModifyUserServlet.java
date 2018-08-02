@@ -7,7 +7,9 @@ import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.PagePathsConstants;
 import it.unitn.webprogramming18.dellmm.util.RegistrationValidator;
+import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 
+import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -121,8 +123,6 @@ public class ModifyUserServlet extends HttpServlet {
             avatar = "";
         }
 
-        ResourceBundle bundle = it.unitn.webprogramming18.dellmm.util.i18n.getBundle(request);
-
         // Usa il validator per verifiacare la conformità
         Map<String, String> messages =
                 RegistrationValidator.partialValidate(userDAO, kv)
@@ -130,18 +130,34 @@ public class ModifyUserServlet extends HttpServlet {
                         .stream()
                         .collect(Collectors.toMap(
                                 (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> e.getKey(),
-                                (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> bundle.getString(RegistrationValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString())
+                                (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> RegistrationValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString()
                                 )
                         );
 
         if (!messages.isEmpty()) {
-            request.setAttribute("messages", messages);
-            request.setAttribute(RegistrationValidator.FIRST_NAME_KEY, firstName);
-            request.setAttribute(RegistrationValidator.LAST_NAME_KEY, lastName);
-            request.setAttribute(RegistrationValidator.EMAIL_KEY, email);
-            request.setAttribute(RegistrationValidator.AVATAR_KEY, avatar);
+            if(request.getRequestURI().endsWith(".json")) {
+                ResourceBundle bundle = it.unitn.webprogramming18.dellmm.util.i18n.getBundle(request);
 
-            request.getRequestDispatcher(MODIFY_USER_JSP).forward(request, response);
+                Map<String, String> res = messages.entrySet().stream().collect(Collectors.toMap(
+                        (Map.Entry<String, String> e) -> e.getKey(),
+                        (Map.Entry<String, String> e) -> bundle.getString(e.getValue())
+                ));
+
+                res.put("message","ValidationFail");
+
+                ServletUtility.sendJSON(request,response,400,res);
+            } else {
+                response.sendError(
+                    400,
+                    "[" +
+                        messages.entrySet()
+                                .stream()
+                                .map((Map.Entry<String, String> e) -> e.getValue())
+                                .collect(Collectors.joining(",")) +
+                    "]"
+                );
+            }
+
             return;
         }
 
@@ -158,7 +174,7 @@ public class ModifyUserServlet extends HttpServlet {
         }
 
         if (!avatar.isEmpty()) {
-            String avatarName;
+            String avatarName = avatar;
 
             if(avatar.equals(RegistrationValidator.CUSTOM_AVATAR)) {
                 avatarName = UUID.randomUUID().toString();
@@ -167,16 +183,14 @@ public class ModifyUserServlet extends HttpServlet {
                     File file = new File(path.toString(), avatarName.toString());
                     Files.copy(fileContent, file.toPath());
                 } catch (FileAlreadyExistsException ex) { // Molta sfiga
+                    ServletUtility.sendError(request, response, 500, "File collison or file already exists on the server");
                     getServletContext().log("File \"" + avatarName.toString() + "\" already exists on the server");
-                    response.sendError(500,"File \"" + avatarName.toString() + "\" already exists on the server");
                     return;
                 } catch (RuntimeException ex) {
-                    //TODO: handle better the exception
+                    ServletUtility.sendError(request, response, 500, "impossible to upload the file");
                     getServletContext().log("impossible to upload the file", ex);
-                    throw ex;
+                    return;
                 }
-            } else {
-                avatarName = avatar;
             }
 
             String oldImg = user.getImg();
@@ -188,6 +202,7 @@ public class ModifyUserServlet extends HttpServlet {
                 try {
                     Files.delete(toDelete);
                 } catch (IOException e) {
+                    // If we can't delete the old image we just log and continue
                     getServletContext().log("File " + toDelete.toString() + " cannot be delete");
                 }
             }
@@ -195,17 +210,20 @@ public class ModifyUserServlet extends HttpServlet {
 
         try {
             userDAO.update(user);
-            session.setAttribute("user", user);
+        } catch (DAOException e) {
+            ServletUtility.sendError(request, response, 500, "Impossibile aggiornare l'utente");
+            return;
+        }
 
+        if (request.getRequestURI().endsWith(".json")) {
+            ServletUtility.sendJSON(request, response, 200, new HashMap<>());
+        } else {
             String contextPath = getServletContext().getContextPath();
             if (!contextPath.endsWith("/")) {
                 contextPath += "/";
             }
 
             response.sendRedirect(contextPath + PagePathsConstants.MODIFY_USER);
-        } catch (DAOException e) {
-            response.sendError(500, "Impossibile aggiornare l'utente");
-            return;
         }
     }
 }

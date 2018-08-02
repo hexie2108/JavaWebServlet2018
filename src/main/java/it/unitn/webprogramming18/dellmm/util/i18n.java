@@ -33,8 +33,6 @@ public class i18n {
 
         ResourceBundle bundle = ResourceBundle.getBundle("text", locale);
 
-        System.out.println(locale);
-
         return bundle;
     }
 }

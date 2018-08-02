@@ -66,8 +66,16 @@ public class LoggedResetPasswordServlet extends HttpServlet {
 
         if (!messages.isEmpty()) {
             if (request.getRequestURI().endsWith(".json")) {
-                messages.put("message","ValidationFail");
-                ServletUtility.sendJSON(request, response, 400, messages);
+                ResourceBundle bundle = it.unitn.webprogramming18.dellmm.util.i18n.getBundle(request);
+
+                Map<String, String> res = messages.entrySet().stream().collect(Collectors.toMap(
+                        (Map.Entry<String, String> e) -> e.getKey(),
+                        (Map.Entry<String, String> e) -> bundle.getString(e.getValue())
+                ));
+
+                res.put("message","ValidationFail");
+
+                ServletUtility.sendJSON(request, response, 400, res);
                 return;
             } else {
                 String errorCodes =

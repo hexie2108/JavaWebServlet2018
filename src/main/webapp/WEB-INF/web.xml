@@ -91,6 +91,8 @@
         <url-pattern>/loggedResetPassword.json</url-pattern>
 
         <url-pattern>/modifyUser</url-pattern>
+        <url-pattern>/modifyUser.json</url-pattern>
+
         <url-pattern>/resendEmail</url-pattern>
         <url-pattern>/alreadyLoggedIn</url-pattern>
 
@@ -268,6 +270,10 @@
     <servlet-mapping>
         <servlet-name>ModifyUserServlet</servlet-name>
         <url-pattern>/modifyUser</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ModifyUserServlet</servlet-name>
+        <url-pattern>/modifyUser.json</url-pattern>
     </servlet-mapping>
 
     <servlet>

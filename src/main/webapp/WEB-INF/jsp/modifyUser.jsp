@@ -39,11 +39,9 @@
                     <label for="inputFirstName" class="sr-only"><fmt:message key="user.label.name"/></label>
                     <span> ${sessionScope.user.name}</span>
                     <input id="inputFirstName" class="form-control" placeholder="<fmt:message key="user.label.name"/>" autofocus=""
-                           type="text" name="${RegistrationValidator.FIRST_NAME_KEY}"
-                           value="${requestScope[RegistrationValidator.FIRST_NAME_KEY]}">
+                           type="text" name="${RegistrationValidator.FIRST_NAME_KEY}">
                 </div>
                 <span id="spanFirstName" class="help-block">
-                    ${requestScope.messages.get(RegistrationValidator.FIRST_NAME_KEY)}
                 </span>
             </div>
 
@@ -53,11 +51,9 @@
                     <label for="inputLastName" class="sr-only"><fmt:message key="user.label.surname"/></label>
                     <span class="input-group-addon"> ${sessionScope.user.surname}</span>
                     <input id="inputLastName" class="form-control" placeholder="<fmt:message key="user.label.surname"/>" autofocus=""
-                           type="text" name="${RegistrationValidator.LAST_NAME_KEY}"
-                           value="${requestScope[RegistrationValidator.LAST_NAME_KEY]}">
+                           type="text" name="${RegistrationValidator.LAST_NAME_KEY}">
                 </div>
                 <span id="spanLastName" class="help-block">
-                    ${requestScope.messages.get(RegistrationValidator.LAST_NAME_KEY)}
                 </span>
             </div>
         </div>
@@ -70,11 +66,9 @@
                     <label for="inputEmail" class="sr-only"><fmt:message key="user.label.email"/></label>
                     <span> ${sessionScope.user.email}</span>
                     <input id="inputEmail" class="form-control" placeholder="<fmt:message key="user.label.email"/>" autofocus=""
-                           type="email" name="${RegistrationValidator.EMAIL_KEY}"
-                           value="${requestScope[RegistrationValidator.EMAIL_KEY]}">
+                           type="email" name="${RegistrationValidator.EMAIL_KEY}">
                 </div>
                 <span id="spanEmail" class="help-block">
-                    ${requestScope.messages.get(RegistrationValidator.EMAIL_KEY)}
                 </span>
             </div>
         </div>
@@ -84,9 +78,7 @@
                 <c:set var="customI" value="${RegistrationValidator.DEFAULT_AVATARS.stream().noneMatch(x -> sessionScope.user.img.equals(x)).get()}" scope="page"/>
                 <c:if test="${customI}">
                 <label>
-                    <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}" value=""
-                           ${requestScope[RegistrationValidator.AVATAR_KEY].equals("")?'checked':''}
-                    >
+                    <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}" value="" checked>
                     <img src="<c:url value="${pageContext.servletContext.getInitParameter('avatarsFolder')}/${sessionScope.user.img}"/>" class="img-input"
                     ><i class="far fa-check-circle img-check"></i>
                 </label>
@@ -94,16 +86,14 @@
                 <c:forEach items="${RegistrationValidator.DEFAULT_AVATARS}" var="av">
                 <label>
                     <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}"
-                           value="${av}" ${requestScope[RegistrationValidator.AVATAR_KEY].equals(av)?'checked':''}
+                           value="${av}" ${sessionScope.user.img.equals(av)?'checked':''}
                     >
                     <img src="<c:url value="${pageContext.servletContext.getInitParameter('avatarsFolder')}/${av}"/>" class="img-input"
                     ><i class="far fa-check-circle img-check"></i>
                 </label>
                 </c:forEach>
                 <label>
-                    <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}" value="custom" id="customAvatar"
-                           ${requestScope[RegistrationValidator.AVATAR_KEY].equals(RegistrationValidator.CUSTOM_AVATAR)?'checked':''}
-                    >
+                    <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}" value="custom" id="customAvatar">
                     <img src="<c:url value="/libs/fontawesome-free-5.1.1-web/svgs/regular/plus-square.svg"/>" class="img-input"
                     ><i class="far fa-check-circle img-check"></i>
                     <input id="customAvatarImg"
@@ -112,14 +102,9 @@
                 </label>
             </div>
             <span id="spanAvatar" class="help-block">
-                ${requestScope.messages.get(RegistrationValidator.AVATAR_KEY)}
             </span>
             <span id="spanAvatarImg" class="help-block">
-                ${requestScope.messages.get(RegistrationValidator.AVATAR_IMG_KEY)}
             </span>
-
-            <script>
-            </script>
         </div>
 
         <button class="btn btn-lg btn-primary btn-block" type="submit"><fmt:message key="modifyUser.label.submit"/></button>
@@ -142,20 +127,41 @@
             }
         });
 
+        form.find('input').blur(() => {
+            request_errors(form, true, URL).done((d) => updateVerifyMessages(form, add_file_errors(form,d)));
+        });
 
-        function upd(d){
-            return updateVerifyMessages(form, add_file_errors(form, d));
-        }
+        form.submit(function(e){
+            e.preventDefault();
 
-        form.find('input').blur(function(){ request_errors(form, true, URL).done(upd); });
-
-        form.submit(function(){
-            const request = request_errors(form, false, URL);
-
-            let data;
-            request.done(function(data2){data=data2});
-
-            return upd(data);
+            $.ajax({
+                dataType: "json",
+                url : '<c:url value="/modifyUser.json"/>',
+                type: "post",
+                async: false,
+                data: new FormData(form[0]),
+                processData: false,
+                contentType: false,
+                cache: false
+            }).done((data) => {
+                window.location.href = '<c:url value="/login"/>';
+            }).fail( (jqXHR) => {
+                if (typeof jqXHR.responseJSON === 'object' &&
+                    jqXHR.responseJSON !== null &&
+                    jqXHR.responseJSON['message'] !== undefined
+                ) {
+                    if (jqXHR.responseJSON['message'] === "ValidationFail") {
+                        jqXHR.responseJSON['message'] = undefined;
+                        updateVerifyMessages(jqXHR.responseJSON);
+                    } else {
+                        alertDiv.html(jqXHR.responseJSON['message']);
+                        alertDiv.removeClass("d-none");
+                    }
+                } else {
+                    alertDiv.html("<fmt:message key="generic.errors.unknownError"/>");
+                    alertDiv.removeClass("d-none");
+                }
+            });
         });
     });
 </script>
