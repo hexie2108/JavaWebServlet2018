@@ -67,33 +67,9 @@
         <button class="btn btn-lg btn-primary btn-block" type="submit"><fmt:message key="loggedResetPassword.submit"/></button>
     </form>
 </div>
+
+<script src="<c:url value="/js/userValidate.js"/>"></script>
 <script>
-    function updateVerifyMessages(data) {
-        // Prendi tutti gli <input> che ci sono nella pagina e per ognuno prendine il nome
-        const inputs = $('input').map(function(){return this.name;}).get();
-        // Per ogni input scrivi l'eventuale errore nello span dedicato e restituisci false se ha errori, true altrimenti
-        const validityInputs = inputs.map(
-            (key) => {
-                const div = $("#div" + key);
-                const span = $("#span" + key);
-
-                if (data.hasOwnProperty(key)) {
-                    div.addClass("has-error");
-                    span.html(String(data[key]));
-                    return false;
-                }
-
-                div.removeClass("has-error");
-                span.html("");
-                return true;
-            }
-        );
-
-        // Se degli input sono false(hanno errori) allora restituisci false, altrimenti true
-        // Se false l'invio del form verrà bloccato altrimenti no
-        return validityInputs.every( v => v );
-    }
-
     $(document).ready(function() {
         const url = '<c:url value="/${PagePathsConstants.VALIDATE_REGISTRATION}"/>';
         const form=$('#form-register');
@@ -145,7 +121,7 @@
                 ) {
                     if (jqXHR.responseJSON['message'] === "ValidationFail") {
                         jqXHR.responseJSON['message'] = undefined;
-                        updateVerifyMessages(jqXHR.responseJSON);
+                        updateVerifyMessages(form, jqXHR.responseJSON);
                     } else {
                         alertDiv.html(jqXHR.responseJSON['message']);
                         alertDiv.removeClass("d-none");

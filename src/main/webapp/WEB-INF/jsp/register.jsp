@@ -171,16 +171,9 @@
         const URL = '<c:url value="/${PagePathsConstants.VALIDATE_REGISTRATION}?strict="/>';
 
 
-        form.submit(function(){
-            if(!$('#customAvatar').is(':checked')){
-                $('#customAvatarImg').val("");
-            }
-        });
-
         form.find('#inputPassword').on("keyup", function(){
             strPwd.text("<fmt:message key="user.label.passwordScore"/>: " + zxcvbn(this.value).score + "/4");
         });
-
 
         function upd(d){
             return updateVerifyMessages(form, add_file_errors(form, d));
@@ -188,13 +181,41 @@
 
         form.find('input').blur(function(){ request_errors(form, true, URL).done(upd); });
 
-        form.submit(function(){
-            const request = request_errors(form, false, URL);
+        form.submit(function(e){
+            e.preventDefault();
 
-            let data;
-            request.done(function(data2){data=data2});
+            if(!$('#customAvatar').is(':checked')){
+                $('#customAvatarImg').val("");
+            }
 
-            return upd(data);
+            $.ajax({
+                dataType: "json",
+                url : '<c:url value="/register.json"/>',
+                type: "post",
+                async: false,
+                data: new FormData(form[0]),
+                processData: false,
+                contentType: false,
+                cache: false
+            }).done((data) => {
+                window.location.href = '<c:url value="/login"/>';
+            }).fail( (jqXHR) => {
+                if (typeof jqXHR.responseJSON === 'object' &&
+                    jqXHR.responseJSON !== null &&
+                    jqXHR.responseJSON['message'] !== undefined
+                ) {
+                    if (jqXHR.responseJSON['message'] === "ValidationFail") {
+                        jqXHR.responseJSON['message'] = undefined;
+                        updateVerifyMessages(form, jqXHR.responseJSON);
+                    } else {
+                        alertDiv.html(jqXHR.responseJSON['message']);
+                        alertDiv.removeClass("d-none");
+                    }
+                } else {
+                    alertDiv.html("<fmt:message key="generic.errors.unknownError"/>");
+                    alertDiv.removeClass("d-none");
+                }
+            });
         });
     });
 </script>

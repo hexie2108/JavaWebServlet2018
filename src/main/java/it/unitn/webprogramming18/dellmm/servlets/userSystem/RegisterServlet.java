@@ -8,8 +8,10 @@ import it.unitn.webprogramming18.dellmm.email.EmailFactory;
 import it.unitn.webprogramming18.dellmm.email.messageFactories.VerifyLinkMail;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.RegistrationValidator;
+import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 
 import javax.mail.MessagingException;
+import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -93,6 +95,8 @@ public class RegisterServlet extends HttpServlet {
 
         Part avatarImg = request.getPart(RegistrationValidator.AVATAR_IMG_KEY);
 
+        System.out.println(avatarImg.getSize());
+
         ResourceBundle bundle = it.unitn.webprogramming18.dellmm.util.i18n.getBundle(request);
 
         // Usa il validator per verifiacare la conformità
@@ -109,17 +113,36 @@ public class RegisterServlet extends HttpServlet {
                     avatarImg
                 ).entrySet().stream().collect(Collectors.toMap(
                     (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> e.getKey(),
-                    (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> bundle.getString(RegistrationValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString())
+                    (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> RegistrationValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString()
                 ));
 
         // In caso i campi non siano validi ricarica la pagina con gli errori indicati
         if (!messages.isEmpty()) {
-            request.setAttribute("messages", messages);
-            request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
+            if(request.getRequestURI().endsWith(".json")) {
+                Map<String, String> res = messages.entrySet().stream().collect(Collectors.toMap(
+                        (Map.Entry<String, String> e) -> e.getKey(),
+                        (Map.Entry<String, String> e) -> bundle.getString(e.getValue())
+                ));
+
+                res.put("message", "ValidationFail");
+
+                ServletUtility.sendJSON(request, response, 400, res);
+            } else {
+                response.sendError(
+                    400,
+                    "["+
+                        messages.entrySet()
+                                .stream()
+                                .map((Map.Entry<String, String> e) -> e.getValue())
+                                .collect(Collectors.joining(",")) +
+                    "]"
+                );
+            }
+
             return;
         }
 
-        String imageName;
+        String imageName = avatar;
 
         if (RegistrationValidator.DEFAULT_AVATARS.stream().noneMatch(avatar::equals)) {
             imageName = UUID.randomUUID().toString();
@@ -129,17 +152,14 @@ public class RegisterServlet extends HttpServlet {
                 Files.copy(fileContent, file.toPath());
             } catch (FileAlreadyExistsException ex) { // Molta sfiga
                 getServletContext().log("File \"" + imageName.toString() + "\" already exists on the server");
-                response.sendError(500,"File \"" + imageName.toString() + "\" already exists on the server");
+                ServletUtility.sendError(request, response, 500, "File collision or file already exists on server");
                 return;
             } catch (RuntimeException ex) {
-                //TODO: handle better the exception
+                ServletUtility.sendError(request, response, 500, "Impossible to upload the file");
                 getServletContext().log("impossible to upload the file", ex);
-                throw ex;
+                return;
             }
-        } else {
-            imageName = avatar;
         }
-
 
         // Genera l'utente, manda la mail di verifica e in caso visualizza gli errori
         try {
@@ -150,7 +170,7 @@ public class RegisterServlet extends HttpServlet {
                     firstPassword,
                     imageName);
 
-            HttpSession session = request.getSession();
+            HttpSession session = request.getSession(true);
             session.setAttribute("user", user);
 
             try {
@@ -172,23 +192,36 @@ public class RegisterServlet extends HttpServlet {
             }
 
 
-            // Se la registrazione ha abuto successo vai alla pagina base/default (index)
-            String contextPath = getServletContext().getContextPath();
-            if (!contextPath.endsWith("/")) {
-                contextPath += "/";
+            if (request.getRequestURI().endsWith(".json")) {
+                ServletUtility.sendJSON(request, response, 200, new HashMap<>());
+                return;
+            } else {
+                // Se la registrazione ha abuto successo vai alla pagina base/default (index)
+                String contextPath = getServletContext().getContextPath();
+                if (!contextPath.endsWith("/")) {
+                    contextPath += "/";
+                }
+
+                response.sendRedirect(response.encodeRedirectURL(contextPath));
             }
-
-            response.sendRedirect(response.encodeRedirectURL(contextPath));
-        } catch (DAOException e) {
-            if (e.getCause() instanceof SQLIntegrityConstraintViolationException) {
+        } catch (DAOException ex) {
+            if (ex.getCause() instanceof SQLIntegrityConstraintViolationException) {
                 messages.put(RegistrationValidator.EMAIL_KEY, "Email già utilizzata");
-                request.setAttribute("messages", messages);
 
-                request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
+                Map<String, String> res = messages.entrySet().stream().collect(Collectors.toMap(
+                        (Map.Entry<String, String> e) -> e.getKey(),
+                        (Map.Entry<String, String> e) -> bundle.getString(e.getValue())
+                ));
+
+                res.put("message", "ValidationFail");
+
+                ServletUtility.sendJSON(request, response, 400, res);
                 return;
             }
 
-            response.sendError(500, "Impossible register the user. The server returned: " + e.getMessage());
+            getServletContext().log("impossible to register the user", ex);
+            ServletUtility.sendError(request, response, 500, "Impossible to register the user");
+            return;
         }
     }
 }

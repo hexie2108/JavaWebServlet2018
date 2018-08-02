@@ -211,6 +211,7 @@
         <servlet-name>LogoutServlet</servlet-name>
         <url-pattern>/logout</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>RegisterServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.RegisterServlet</servlet-class>
@@ -219,6 +220,11 @@
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/register</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RegisterServlet</servlet-name>
+        <url-pattern>/register.json</url-pattern>
+    </servlet-mapping>
+
     <servlet>
         <servlet-name>ResendEmailServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.ResendEmailServlet</servlet-class>

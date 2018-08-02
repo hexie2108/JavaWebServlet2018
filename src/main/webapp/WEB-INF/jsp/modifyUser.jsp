@@ -152,7 +152,7 @@
                 ) {
                     if (jqXHR.responseJSON['message'] === "ValidationFail") {
                         jqXHR.responseJSON['message'] = undefined;
-                        updateVerifyMessages(jqXHR.responseJSON);
+                        updateVerifyMessages(form, jqXHR.responseJSON);
                     } else {
                         alertDiv.html(jqXHR.responseJSON['message']);
                         alertDiv.removeClass("d-none");
