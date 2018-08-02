@@ -24,8 +24,15 @@
                         <c:forEach var="comment" items="${listComment}">
                                 <div class="comment-item ${comment.userId == sessionScope.user.id?"my-comment":""}">
                                         <div class="comment-info">
-                                                <custom:getUserNameAndImgById userId="${comment.userId}" />
-
+                                                
+                                                <!-- get istanza user dal userid di commento-->
+                                                <custom:getUserById userId="${comment.userId}" />
+                                                <div class="user-img">
+                                                        <img class="img-fluid" src="${pageContext.request.contextPath}/${SingleUser.img}" alt="${SingleUser.name}"/>
+                                                </div>
+                                                <span>
+                                                        <i class="far fa-address-card"></i> ${SingleUser.name}
+                                                </span>
                                         </div>
                                         <div class="comment-text">
                                                 <p>
@@ -47,7 +54,7 @@
         </div>
         <div class="edit-comment">
                 <form action="${pageContext.request.contextPath}/service/comment" method="POST">
-                        <textarea name="commentText" placeholder="lasciare qualche messaggi"></textarea>
+                        <textarea name="commentText" placeholder="lasciare qualche messaggi" required="required"></textarea>
                         <input type="hidden" name="action" value="insert"/>
                         <input type="hidden" name="listId" value="${list.id}"/>
                         <input class="btn btn-info" type="submit" value="invia" />

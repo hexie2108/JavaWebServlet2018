@@ -68,7 +68,7 @@
                                 </div>
                                 <div class="list-sharing">
                                         <c:if test="${list.ownerId == sessionScope.user.id}">
-                                                <button class="btn btn-info"><i class="fas fa-share-alt"></i> condivisione</button>
+                                                <button class="btn btn-info" data-toggle="modal" data-target="#boxSharing"><i class="fas fa-share-alt"></i> condivisione</button>
                                         </c:if>
                                 </div>        
 
@@ -108,8 +108,8 @@
                                                 </div>
                                                 <div class="item-cat">
                                                         <a href="${pageContext.request.contextPath}/category?catid=${product.categoryProductId}">
-                                                                <custom:getCategoryNameById categoryId="${product.categoryProductId}">
-                                                                </custom:getCategoryNameById>
+                                                                <custom:getCategoryNameById categoryId="${product.categoryProductId}"/>
+                                                                ${categoryName}
                                                         </a>
                                                 </div>
                                                 <div class="item-logo">
@@ -146,8 +146,8 @@
                                                 </div>
                                                 <div class="item-cat">
                                                         <a href="${pageContext.request.contextPath}/category?catid=${product.categoryProductId}">
-                                                                <custom:getCategoryNameById categoryId="${product.categoryProductId}">
-                                                                </custom:getCategoryNameById>
+                                                                <custom:getCategoryNameById categoryId="${product.categoryProductId}"/>
+                                                                ${categoryName}
                                                         </a>
                                                 </div>
                                                 <div class="item-logo">
@@ -184,5 +184,5 @@
 
                 </div>               
         </div>
-
+<jsp:include page="/WEB-INF/jsp/module/floatBoxForSharing.jsp"></jsp:include>
 <jsp:include page="/WEB-INF/jsp/footer.jsp"></jsp:include>

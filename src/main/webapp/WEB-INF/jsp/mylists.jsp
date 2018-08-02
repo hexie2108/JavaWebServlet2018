@@ -73,7 +73,10 @@
                                                                         <input class="name" type="hidden" value="${product.name}" />
                                                                         <input class="logo-img" type="hidden" value="${pageContext.request.contextPath}/${product.logo}" />
                                                                         <input class="cat-link" type="hidden" value="${pageContext.request.contextPath}/category?catid=${product.categoryProductId}"/>
-                                                                        <input class="cat-name" type="hidden" value="<custom:getCategoryNameById categoryId="${product.categoryProductId}" />"/>
+                                                                        
+                                                                        <custom:getCategoryNameById categoryId="${product.categoryProductId}" />
+                                                                        <input class="cat-name" type="hidden" value="${categoryName}"/>
+                                                                        
                                                                         <input class="description" type="hidden" value="${product.description}"/>
                                                                         <input class="list-id" type="hidden" value="${list.id}"/>
 
@@ -90,12 +93,20 @@
                                                                         <input class="name" type="hidden" value="${product.name}" />
                                                                         <input class="logo-img" type="hidden" value="${pageContext.request.contextPath}/${product.logo}" />
                                                                         <input class="cat-link" type="hidden" value="${pageContext.request.contextPath}/category?catid=${product.categoryProductId}"/>
-                                                                        <input class="cat-name" type="hidden" value="<custom:getCategoryNameById categoryId="${product.categoryProductId}" />"/>
+                                                                        
+                                                                         <custom:getCategoryNameById categoryId="${product.categoryProductId}" />
+                                                                        <input class="cat-name" type="hidden" value="${categoryName}"/>
+                                                                        
                                                                         <input class="description" type="hidden" value="${product.description}"/>
                                                                         <input class="list-id" type="hidden" value="${list.id}"/>
 
                                                                 </div>
                                                         </c:forEach>
+                                                        <c:if test="${ownedListsMap.get(list).get('productsListNotBuy').size() ==0 && ownedListsMap.get(list).get('productsListBought').size()==0 }">
+                                                                <div class="item-empty">
+                                                                        <h2>la lista è ancora vuota</h2>
+                                                                </div>
+                                                        </c:if>
                                                 </div> 
                                                 <div class="list-detail-link">
                                                         <a class="btn btn-info"  href="${pageContext.request.contextPath}/mylist?listId=${list.id}"><i class="fas fa-search-plus"></i> in dettaglio</a>
@@ -169,7 +180,10 @@
                                                                         <input class="name" type="hidden" value="${product.name}" />
                                                                         <input class="logo-img" type="hidden" value="${pageContext.request.contextPath}/${product.logo}" />
                                                                         <input class="cat-link" type="hidden" value="${pageContext.request.contextPath}/category?catid=${product.categoryProductId}"/>
-                                                                        <input class="cat-name" type="hidden" value="<custom:getCategoryNameById categoryId="${product.categoryProductId}" />"/>
+                                                                        
+                                                                         <custom:getCategoryNameById categoryId="${product.categoryProductId}" />
+                                                                        <input class="cat-name" type="hidden" value="${categoryName}"/>
+                                                                        
                                                                         <input class="description" type="hidden" value="${product.description}"/>
                                                                         <input class="list-id" type="hidden" value="${list.id}"/>
 
@@ -186,13 +200,21 @@
                                                                         <input class="name" type="hidden" value="${product.name}" />
                                                                         <input class="logo-img" type="hidden" value="${pageContext.request.contextPath}/${product.logo}" />
                                                                         <input class="cat-link" type="hidden" value="${pageContext.request.contextPath}/category?catid=${product.categoryProductId}"/>
-                                                                        <input class="cat-name" type="hidden" value="<custom:getCategoryNameById categoryId="${product.categoryProductId}" />"/>
+                                                                        
+                                                                         <custom:getCategoryNameById categoryId="${product.categoryProductId}" />
+                                                                        <input class="cat-name" type="hidden" value="${categoryName}"/>
+                                                                        
                                                                         <input class="description" type="hidden" value="${product.description}"/>
                                                                         <input class="list-id" type="hidden" value="${list.id}"/>
 
 
                                                                 </div>
                                                         </c:forEach>
+                                                        <c:if test="${sharedListsMap.get(list).get('productsListNotBuy').size() ==0 && sharedListsMap.get(list).get('productsListBought').size()==0 }">
+                                                                <div class="item-empty">
+                                                                        <h2>la lista è ancora vuota</h2>
+                                                                </div>
+                                                        </c:if>
                                                 </div> 
                                                 <div class="list-detail-link">
                                                         <a class="btn btn-info" href="${pageContext.request.contextPath}/mylist?listId=${list.id}"><i class="fas fa-search-plus"></i> in dettaglio</a>

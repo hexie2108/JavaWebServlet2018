@@ -17,8 +17,8 @@
     </attribute>
   </tag>
   <tag>
-    <name>getUserNameAndImgById</name>
-    <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagGetUserNameAndImgById</tag-class>
+    <name>getUserById</name>
+    <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagGetUserById</tag-class>
     <body-content>scriptless</body-content>
     <attribute>
       <name>userId</name>
@@ -27,8 +27,6 @@
       <rtexprvalue>true</rtexprvalue>
     </attribute>
   </tag>
-
-  
   <tag>
     <name>getListCategoryNameByListCategoryId</name>
     <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagGetListCategoryNameByListCategoryId</tag-class>
@@ -45,7 +43,7 @@
     <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagPrintAllCategoryProduct</tag-class>
     <body-content>scriptless</body-content>
   </tag>
-    <tag>
+  <tag>
     <name>printAllCategoryProductForMenu</name>
     <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagPrintAllCategoryProductForMenu</tag-class>
     <body-content>scriptless</body-content>

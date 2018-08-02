@@ -21,7 +21,7 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
  *
  * @author mikuc
  */
-public class TagGetUserNameAndImgById extends SimpleTagSupport
+public class TagGetUserById extends SimpleTagSupport
 {
 
         UserDAO userDAO = new JDBCUserDAO();
@@ -40,7 +40,7 @@ public class TagGetUserNameAndImgById extends SimpleTagSupport
         @Override
         public void doTag() throws JspException, IOException
         {
-                String basePath = ((PageContext) getJspContext()).getServletContext().getContextPath();
+               // String basePath = ((PageContext) getJspContext()).getServletContext().getContextPath();
                 if (this.userId != null)
                 {
                         User user = null;
@@ -52,7 +52,11 @@ public class TagGetUserNameAndImgById extends SimpleTagSupport
                         {
                                 throw new JspException("errore durante ottenimento delle info utente nella lista di commento");
                         }
-                        getJspContext().getOut().println("<div class=\"user-img\"><img class=\"img-fluid\" src=\"" + basePath + "/" + user.getImg() + "\" alt=\" "+user.getName()+"\" /></div><span><i class=\"far fa-address-card\"></i> " + user.getName() + "</span>");
+                        
+                        //set user di commento nella richiesta
+                        ((PageContext) getJspContext()).getRequest().setAttribute("SingleUser", user);
+                        
+                        //getJspContext().getOut().println("<div class=\"user-img\"><img class=\"img-fluid\" src=\"" + basePath + "/" + user.getImg() + "\" alt=\" "+user.getName()+"\" /></div><span><i class=\"far fa-address-card\"></i> " + user.getName() + "</span>");
                 }
         }
 

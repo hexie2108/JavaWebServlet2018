@@ -26,7 +26,7 @@ public class LoggedUserOnlyFilter implements Filter
                 if (session == null || session.getAttribute("user") == null)
                 {
 
-                      /*  if (!request.getMethod().equalsIgnoreCase("GET"))
+                        /*  if (!request.getMethod().equalsIgnoreCase("GET"))
                         {
                                 //  Se la richiesta non è un get la rigettiamo immediatamente
 
@@ -34,32 +34,33 @@ public class LoggedUserOnlyFilter implements Filter
                         }
                         else
                         {*/
-                                // Se l'utente non è autenticato , facciamo un redirect alla pagina di login cercando di mantenere l'url
-                                // in nextUrl in modo da reindirizzare l'utente automaticamente a login avvenuto con successo
+                        // Se l'utente non è autenticato , facciamo un redirect alla pagina di login cercando di mantenere l'url
+                        // in nextUrl in modo da reindirizzare l'utente automaticamente a login avvenuto con successo
+                        String contextPath = request.getServletContext().getContextPath();
+                        if (!contextPath.endsWith("/"))
+                        {
+                                contextPath += "/";
+                        }
 
-                                
-                                String contextPath = request.getServletContext().getContextPath();
-                                if (!contextPath.endsWith("/"))
-                                {
-                                        contextPath += "/";
-                                }
+                        String prevUrl = request.getParameter("prevUrl");
 
-                                String prevUrl = request.getParameter("prevUrl");
+                        if (prevUrl == null)
+                        {
+                                prevUrl = contextPath;
+                        }
 
-                                if (prevUrl == null)
-                                {
-                                        prevUrl = contextPath;
-                                }
-
-                                response.sendRedirect(
-                                            contextPath + PagePathsConstants.LOGIN + "?"
-                                            + "prevUrl" + "=" + URLEncoder.encode(prevUrl, "UTF-8")
-                                            + "&" + "nextUrl" + "=" + URLEncoder.encode(request.getRequestURI(), "UTF-8")
-                                );
-                       // }
+                        response.sendRedirect(
+                                    contextPath + PagePathsConstants.LOGIN + "?"
+                                    + "prevUrl" + "=" + URLEncoder.encode(prevUrl, "UTF-8")
+                                    + "&" + "nextUrl" + "=" + URLEncoder.encode(request.getRequestURI(), "UTF-8")
+                        );
+                        // }
 
                         return;
                 }
+
+                //set la codifica della richesta
+                request.setCharacterEncoding("UTF-8");
 
                 // Se l'utente è autenticato facciamo continuare
                 chain.doFilter(req, resp);

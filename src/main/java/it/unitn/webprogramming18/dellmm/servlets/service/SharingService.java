@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author mikuc
  */
-public class CommentService extends HttpServlet
+public class SharingService extends HttpServlet
 {
 
         private PermissionDAO permissionDAO;

@@ -21,7 +21,7 @@ function setProductIdForAddInList(productId) {
         var boxAddItem = document.getElementById("boxAddItem");
         boxAddItem.getElementsByClassName("item-img")[0].setAttribute("src", image);
         boxAddItem.getElementsByClassName("item-img")[0].setAttribute("alt", name);
-        boxAddItem.getElementsByClassName("modal-title")[0].innerHTML = boxAddItem.getElementsByClassName("modal-title")[0].innerHTML + name;
+        boxAddItem.getElementsByClassName("item-name")[0].innerHTML = name;
         boxAddItem.getElementsByClassName("item-logo-img")[0].setAttribute("src", logo);
         boxAddItem.getElementsByClassName("item-cat-link")[0].setAttribute("href", categoryLink);
         boxAddItem.getElementsByClassName("item-cat-link")[0].innerHTML = categoryName;
@@ -55,7 +55,7 @@ function showProductWindowsFromList(productId, loggerUser, statusOfBuy, canYouDe
         var boxShowItem = document.getElementById("boxShowItem");
         boxShowItem.getElementsByClassName("item-img")[0].setAttribute("src", image);
         boxShowItem.getElementsByClassName("item-img")[0].setAttribute("alt", name);
-        boxShowItem.getElementsByClassName("modal-title")[0].innerHTML = boxShowItem.getElementsByClassName("modal-title")[0].innerHTML+name;
+        boxShowItem.getElementsByClassName("item-name")[0].innerHTML = name;
         boxShowItem.getElementsByClassName("item-logo-img")[0].setAttribute("src", logo);
         boxShowItem.getElementsByClassName("item-cat-link")[0].setAttribute("href", categoryLink);
         boxShowItem.getElementsByClassName("item-cat-link")[0].innerHTML = categoryName;
@@ -101,4 +101,107 @@ function checkValueOfCategoryList(categoryList) {
         } else {
                 document.getElementById("submitToChangeCategoryList").setAttribute("disabled", "disabled");
         }
+}
+
+
+
+
+/**non è utilizzato
+ * inserire il prodotto nella lista locale
+ * cookie dura 30giorni
+ * @returns  null
+ */
+
+function insertProductLocal() {
+
+        var productId = document.getElementById("productIdToAdd").value;
+        var productsOfMyList = getCookie("productsOfMyList").split(',');
+
+        var repeatItem = false;
+        for (var i = 0; i < productsOfMyList.length; i++) {
+                var c = productsOfMyList[i].trim();
+                //se ce la ripetizione
+                if (c.indexOf(productId) === 0) {
+
+                        repeatItem = true;
+                }
+        }
+        if (repeatItem === false) {
+                if (productsOfMyList=="") {
+                        productsOfMyList = productId;
+                }
+                else{
+                        productsOfMyList.push(productId);
+                        
+                }
+                setCookie("productsOfMyList", productsOfMyList, 30);
+                setCookie("result", "InsertOk", 0);
+        } else {
+                setCookie("result", "InsertFail", 0);
+        }
+
+        location.reload();
+
+}
+
+/**
+ * non è utilizzato
+ *  elimina il prodotto dalla lista locale
+ * @returns  null
+ */
+function deleteProductLocal() {
+        var productId = document.getElementById("productIdFromList").value;
+        var productsOfMyList = getCookie("productsOfMyList").split(',');
+        var deleteItem = -1;
+        for (var i = 0; i < productsOfMyList.length; i++) {
+                var c = productsOfMyList[i].trim();
+                //trovare la posizione dell'elemento da eliminare
+                if (c.indexOf(productId) === 0) {
+
+                        deleteItem = i;
+                }
+        }
+        if (deleteItem !== -1) {
+
+                productsOfMyList.splice(i, 1);
+                setCookie("productsOfMyList", productsOfMyList.join(','), 30);
+                setCookie("result", "DeleteOk", 0);
+        } else {
+                setCookie("result", "DeleteFail", 0);
+        }
+
+        location.reload();
+
+}
+
+
+
+/**
+ * set la cookie
+ * @param {type} cname nome di cookie
+ * @param {type} cvalue valore di cookie
+ * @param {type} exdays durata
+ * @returns {undefined}
+ */
+function setCookie(cname, cvalue, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        var expires = "expires=" + d.toGMTString();
+        document.cookie = cname + "=" + cvalue + "; " + expires;
+}
+/**
+ * get il valore di cookie , dato la chiave
+ * @param {type} cname la chiave
+ * @returns {String} valore di cookie associato
+ */
+function getCookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+                var c = ca[i].trim();
+                if (c.indexOf(name) === 0) {
+                        return c.substring(name.length, c.length);
+                }
+        }
+        return "";
 }

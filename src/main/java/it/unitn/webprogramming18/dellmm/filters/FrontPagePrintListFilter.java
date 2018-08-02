@@ -46,7 +46,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 
 /**
- * filtro che pre elabrora i dati della lista per utente loggato
+ * filtro che pre elabrora i dati della lista per utente loggato nella pagina home, search e categoria
  * @author mikuc
  */
 public class FrontPagePrintListFilter implements Filter
@@ -98,6 +98,8 @@ public class FrontPagePrintListFilter implements Filter
                         }
 
                 }
+                
+          
 
                 chain.doFilter(request, response);
 

@@ -17,7 +17,7 @@
 
                         <!-- box-head -->
                         <div class="modal-header">
-                                <h4 class="modal-title"><i class="fas fa-shopping-basket"></i> </h4>
+                                <h4 class="modal-title"><i class="fas fa-shopping-basket"></i> <span class="item-name"></span></h4>
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
 
@@ -27,7 +27,7 @@
                                         <img class="item-img img-fluid" alt="item-name" />
                                         <div class="item-logo">
                                                 <p class="font-weight-bold">
-                                                       <i class="far fa-bookmark"></i> logo:
+                                                        <i class="far fa-bookmark"></i> logo:
                                                 </p>
                                                 <div class="item-logo-img-box">
                                                         <img class="item-logo-img img-fluid"  alt="logo" />
@@ -49,7 +49,7 @@
                                                 </div>
                                                 <div class="item-description">
                                                         <p class="font-weight-bold">
-                                                               <i class="far fa-file-alt"></i> descrizione:
+                                                                <i class="far fa-file-alt"></i> descrizione:
                                                         </p>
                                                         <p class="item-description-text">
                                                                 la descrizione del prodotto
@@ -67,6 +67,7 @@
                                                                         <option value="default">Default list</option>
                                                                 </select>
                                                                 <div class="operation mt-3">
+
                                                                         <input id="productIdToAdd" type="hidden" name="productId" value="1"/>
                                                                         <input type="hidden" name="action" value="insert"/>
                                                                         <input class="btn btn-info d-inline-block" type="submit" value="aggiunge" />

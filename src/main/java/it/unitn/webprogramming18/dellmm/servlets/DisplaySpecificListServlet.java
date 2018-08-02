@@ -108,7 +108,7 @@ public class DisplaySpecificListServlet extends HttpServlet
                         //in caso sono proprietario
                         if (shoppingList.getOwnerId() == user.getId())
                         {
-                                generalPermissionsOnList = permissionDAO.getPermissionsOnListByListId(listId);
+                                generalPermissionsOnList = permissionDAO.getSharingPermissionsOnListByListId(listId, user.getId());
                         }
 
                 }

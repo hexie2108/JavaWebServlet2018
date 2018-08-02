@@ -10,6 +10,7 @@ import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCCategoryProductDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import java.io.IOException;
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 /**
@@ -43,7 +44,11 @@ public class TagGetCategoryNameById extends SimpleTagSupport
                         catch (DAOException ex) {
                               throw new JspException("errore durante ottenimento del nome di categoria");
                         }
-                        getJspContext().getOut().println(categoryName);
+                        
+                         //set user di commento nella richiesta
+                        ((PageContext) getJspContext()).getRequest().setAttribute("categoryName", categoryName);
+                        
+                        //getJspContext().getOut().println(categoryName);
                 }
         }
         

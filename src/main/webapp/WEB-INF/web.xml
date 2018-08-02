@@ -101,9 +101,7 @@
                 <url-pattern>/resendEmail</url-pattern>
                 <url-pattern>/alreadyLoggedIn</url-pattern>
                 <url-pattern>/mylists</url-pattern>
-                <url-pattern>/service/changeListService</url-pattern>
-                <url-pattern>/service/updateItemInListService</url-pattern>
-                <url-pattern>/service/comment</url-pattern>
+                <url-pattern>/service/</url-pattern>
                 
         </filter-mapping>
         <filter>
@@ -199,6 +197,16 @@
                 <servlet-name>CommentService</servlet-name>
                 <url-pattern>/service/comment</url-pattern>
         </servlet-mapping>
+        <servlet>
+                <servlet-name>SharingService</servlet-name>
+                <servlet-class>it.unitn.webprogramming18.dellmm.servlets.service.SharingService</servlet-class>
+        </servlet>
+        <servlet-mapping>
+                <servlet-name>SharingService</servlet-name>
+                <url-pattern>/service/sharingService</url-pattern>
+        </servlet-mapping>
+        
+        
 
   
     

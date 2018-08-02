@@ -64,13 +64,14 @@ public interface PermissionDAO extends DAO<Permission, Integer> {
     public Permission update(Permission permission) throws DAOException;
     
     /**
-     * Returns the set of permissions on a specified list
+     * Returns the set of permissions on a specified list, exclude owner
      * 
-     * @param listId
+     * @param listId id di lista
+     * @param UserId id di utente proprietario
      * @return a List containing Permission objects associated to the specified list
      * @throws DAOException if an error occurred during the action
      */
-    public List<Permission> getPermissionsOnListByListId(Integer listId) throws DAOException;
+    public List<Permission> getSharingPermissionsOnListByListId(Integer listId, Integer UserId) throws DAOException;
     
     /**
      * ATTENTION: This function must be called on known (non-owner list_alpha user, list_alpha) pairs, as for how our DB is designed
@@ -87,7 +88,7 @@ public interface PermissionDAO extends DAO<Permission, Integer> {
     
     
     /**
-     * get il numero di persone condiviso di una lista
+     * get il numero di persone condiviso di una lista , esclude proprietario
      * @param listId
      * @return il numero di persone condiviso (include anche owner stesso)
      * @throws DAOException 

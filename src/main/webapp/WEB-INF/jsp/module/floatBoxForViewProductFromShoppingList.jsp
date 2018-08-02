@@ -17,7 +17,7 @@
 
                         <!-- box-head -->
                         <div class="modal-header">
-                                <h4 class="modal-title"><i class="fas fa-shopping-basket"></i> </h4>
+                                <h4 class="modal-title"><i class="fas fa-shopping-basket"></i> <span class="item-name"></span></h4>
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
 
@@ -27,7 +27,7 @@
                                         <img class="item-img img-fluid" alt="item-name" />
                                         <div class="item-logo">
                                                 <p class="font-weight-bold">
-                                                      <i class="far fa-bookmark"></i>  logo:
+                                                        <i class="far fa-bookmark"></i>  logo:
                                                 </p>
                                                 <div class="item-logo-img-box">
                                                         <img class="item-logo-img img-fluid"  alt="logo" />
@@ -41,7 +41,7 @@
 
                                                 <div class="item-cat">
                                                         <p class="font-weight-bold">
-                                                               <i class="fas fa-store"></i> categoria:
+                                                                <i class="fas fa-store"></i> categoria:
                                                         </p>
                                                         <p>
                                                                 <a class="item-cat-link" href="#" >nome della categoria</a>
@@ -49,7 +49,7 @@
                                                 </div>
                                                 <div class="item-description">
                                                         <p class="font-weight-bold">
-                                                              <i class="far fa-file-alt"></i>  descrizione:
+                                                                <i class="far fa-file-alt"></i>  descrizione:
                                                         </p>
                                                         <p class="item-description-text">
                                                                 la descrizione del prodotto
@@ -61,15 +61,12 @@
                                         <div class="add-box">
                                                 <!-- se è un utente anonimo-->
                                                 <c:if test="${empty sessionScope.user}">
-                                                        <form action="${pageContext.request.contextPath}/service/updateItemInListUnloggedUserOnlyService" method="GET">
 
+                                                        <input class="productIdFromList" type="hidden" name="productId" value="1"/>
+                                                        <a id="deleteProductLocal" href="javascript:;" title="elimina" onclick="deleteProductLocal()">
+                                                                <i class="fa-ban"></i>
+                                                        </a>
 
-                                                                <input class="productIdFromList" type="hidden" name="productId" value="1"/>
-                                                                <input type="hidden" name="action" value="delete"/>
-                                                                <input class="btn btn-info d-inline-block" type="submit" value="elimina" />
-
-
-                                                        </form>
                                                 </c:if>       
                                                 <!-- se è un utente loggato--> 
                                                 <c:if test="${not empty sessionScope.user}">
