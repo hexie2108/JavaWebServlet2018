@@ -135,29 +135,7 @@ public class ModifyUserServlet extends HttpServlet {
                         );
 
         if (!messages.isEmpty()) {
-            if(request.getRequestURI().endsWith(".json")) {
-                ResourceBundle bundle = it.unitn.webprogramming18.dellmm.util.i18n.getBundle(request);
-
-                Map<String, String> res = messages.entrySet().stream().collect(Collectors.toMap(
-                        (Map.Entry<String, String> e) -> e.getKey(),
-                        (Map.Entry<String, String> e) -> bundle.getString(e.getValue())
-                ));
-
-                res.put("message","ValidationFail");
-
-                ServletUtility.sendJSON(request,response,400,res);
-            } else {
-                response.sendError(
-                    400,
-                    "[" +
-                        messages.entrySet()
-                                .stream()
-                                .map((Map.Entry<String, String> e) -> e.getValue())
-                                .collect(Collectors.joining(",")) +
-                    "]"
-                );
-            }
-
+            ServletUtility.sendValidationError(request, response, 400, messages);
             return;
         }
 

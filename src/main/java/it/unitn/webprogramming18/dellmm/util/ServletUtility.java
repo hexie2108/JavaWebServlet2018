@@ -7,7 +7,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public interface ServletUtility {
     static void sendJSON(HttpServletRequest request, HttpServletResponse response, int statusCode, Object json) throws IOException {
@@ -25,14 +27,38 @@ public interface ServletUtility {
     }
 
     static void sendError(HttpServletRequest request, HttpServletResponse response, int statusCode, String error) throws IOException {
-        if(request.getRequestURI().endsWith(".json")) { // Richiesta sincrona
+        if(request.getRequestURI().endsWith(".json")) {
             HashMap<String, String> obj = new HashMap<>();
             ResourceBundle bundle = it.unitn.webprogramming18.dellmm.util.i18n.getBundle(request);
             obj.put("message", bundle.getString(error));
 
             sendJSON(request,response, statusCode, obj);
-        } else { // Richiesta asincrona
-            response.sendError(statusCode, error);
+        } else {
+            response.sendError(statusCode, "[" + error + "]");
+        }
+    }
+
+    static void sendValidationError(HttpServletRequest request, HttpServletResponse response, int statusCode, Map<String, String> errMap) throws IOException {
+        if(request.getRequestURI().endsWith(".json")) {
+            ResourceBundle bundle = it.unitn.webprogramming18.dellmm.util.i18n.getBundle(request);
+
+            Map<String, String> obj = errMap.entrySet().stream().collect(Collectors.toMap(
+                    (Map.Entry<String, String> e) -> e.getKey(),
+                    (Map.Entry<String, String> e) -> bundle.getString(e.getValue())
+            ));
+
+            obj.put("message", "ValidationFail");
+
+            sendJSON(request,response, statusCode, obj);
+        } else {
+            response.sendError(
+                    statusCode,
+                    "[" +
+                        errMap.entrySet()
+                                .stream()
+                                .map((Map.Entry<String, String> e) -> e.getValue())
+                                .collect(Collectors.joining(",")) +
+                    "]");
         }
     }
 

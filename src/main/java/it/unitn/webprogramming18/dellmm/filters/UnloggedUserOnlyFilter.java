@@ -1,6 +1,7 @@
 package it.unitn.webprogramming18.dellmm.filters;
 
 import it.unitn.webprogramming18.dellmm.util.PagePathsConstants;
+import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -12,6 +13,37 @@ import java.net.URLEncoder;
 
 @WebFilter(filterName = "UnloggedUserOnlyFilter")
 public class UnloggedUserOnlyFilter implements Filter {
+
+    private void refuse(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String uri = request.getRequestURI();
+
+        if (uri.matches("^.*\\.json$") || !request.getMethod().equalsIgnoreCase("GET")) {
+            ServletUtility.sendError(request, response, 401, "generic.errors.userLogged");
+        } else {
+            // Se la richiesta è un get facciamo un redirect alla pagina che chiede all'utente se fare logout
+            // cercando di mantenere l'url  in nextUrl in modo da reindirizzare l'utente automaticamente a
+            // login avvenuto con successo
+
+            String contextPath = request.getServletContext().getContextPath();
+            if (!contextPath.endsWith("/")) {
+                contextPath += "/";
+            }
+
+            String prevUrl = request.getParameter("prevUrl");
+
+            if (prevUrl == null) {
+                prevUrl = contextPath;
+            }
+
+            response.sendRedirect(
+                    contextPath + PagePathsConstants.ALREADY_LOGGED_IN+ "?" +
+                            "prevUrl" + "=" + URLEncoder.encode(prevUrl, "UTF-8") +
+                            "&" + "nextUrl" + "=" + URLEncoder.encode(request.getRequestURI(), "UTF-8")
+            );
+        }
+    }
+
+
    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws ServletException, IOException {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) resp;
@@ -20,34 +52,7 @@ public class UnloggedUserOnlyFilter implements Filter {
 
         // Se l'utente è autenticato
         if (session != null && session.getAttribute("user") != null) {
-
-            if (!request.getMethod().equalsIgnoreCase("GET")){
-                //  Se la richiesta non è un get la rigettiamo immediatamente
-
-                response.sendError(401, "Authentication required");
-            } else {
-                // Se la richiesta è un get facciamo un redirect alla pagina che chiede all'utente se fare logout
-                // cercando di mantenere l'url  in nextUrl in modo da reindirizzare l'utente automaticamente a
-                // login avvenuto con successo
-
-                String contextPath = request.getServletContext().getContextPath();
-                if (!contextPath.endsWith("/")) {
-                    contextPath += "/";
-                }
-
-                String prevUrl = request.getParameter("prevUrl");
-
-                if (prevUrl == null) {
-                    prevUrl = contextPath;
-                }
-
-                response.sendRedirect(
-                        contextPath + PagePathsConstants.ALREADY_LOGGED_IN+ "?" +
-                                "prevUrl" + "=" + URLEncoder.encode(prevUrl, "UTF-8") +
-                                "&" + "nextUrl" + "=" + URLEncoder.encode(request.getRequestURI(), "UTF-8")
-                );
-            }
-
+            refuse(request, response);
             return;
         }
 

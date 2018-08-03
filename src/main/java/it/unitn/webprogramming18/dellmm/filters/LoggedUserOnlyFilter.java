@@ -1,6 +1,7 @@
 package it.unitn.webprogramming18.dellmm.filters;
 
 import it.unitn.webprogramming18.dellmm.util.PagePathsConstants;
+import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -8,14 +9,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.URLEncoder;
 
 @WebFilter(filterName = "LoggedUserOnlyFilter")
 public class LoggedUserOnlyFilter implements Filter {
 
     private void refuse(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String message = null;
         String uri = request.getRequestURI();
 
         // Non fare caching di errori
@@ -24,17 +23,8 @@ public class LoggedUserOnlyFilter implements Filter {
         response.setCharacterEncoding("UTF-8");
 
 
-        if (uri.matches("^.*\\.json$")) {
-            // Se l'url finisce con .json rispondo con errore in json
-            response.setContentType("application/json");
-            response.setStatus(401);
-
-            PrintWriter out = response.getWriter();
-            out.println("{\"message\": \"User must be authenticated\"}");
-        } else if (!request.getMethod().equalsIgnoreCase("GET")){
-            // Se l'url non finisce con .json e non è un get rispondo con un semplice errore
-            response.sendError(401, "User must be authenticated");
-
+        if (uri.matches("^.*\\.json$") || !request.getMethod().equalsIgnoreCase("GET")) {
+            ServletUtility.sendError(request, response, 401, "generic.errors.userNotLogged");
         } else {
             // Se l'url non finisce con .json ed è un get faccio un redirect alla pagina di login mantenendo l'url
             // richiesto in nextUrl in modo da reindirizzare l'utente automaticamente alla pagina precedentemente

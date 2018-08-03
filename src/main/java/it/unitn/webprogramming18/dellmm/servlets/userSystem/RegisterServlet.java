@@ -118,27 +118,7 @@ public class RegisterServlet extends HttpServlet {
 
         // In caso i campi non siano validi ricarica la pagina con gli errori indicati
         if (!messages.isEmpty()) {
-            if(request.getRequestURI().endsWith(".json")) {
-                Map<String, String> res = messages.entrySet().stream().collect(Collectors.toMap(
-                        (Map.Entry<String, String> e) -> e.getKey(),
-                        (Map.Entry<String, String> e) -> bundle.getString(e.getValue())
-                ));
-
-                res.put("message", "ValidationFail");
-
-                ServletUtility.sendJSON(request, response, 400, res);
-            } else {
-                response.sendError(
-                    400,
-                    "["+
-                        messages.entrySet()
-                                .stream()
-                                .map((Map.Entry<String, String> e) -> e.getValue())
-                                .collect(Collectors.joining(",")) +
-                    "]"
-                );
-            }
-
+            ServletUtility.sendValidationError(request, response, 400, messages);
             return;
         }
 
@@ -208,19 +188,12 @@ public class RegisterServlet extends HttpServlet {
             if (ex.getCause() instanceof SQLIntegrityConstraintViolationException) {
                 messages.put(RegistrationValidator.EMAIL_KEY, "Email già utilizzata");
 
-                Map<String, String> res = messages.entrySet().stream().collect(Collectors.toMap(
-                        (Map.Entry<String, String> e) -> e.getKey(),
-                        (Map.Entry<String, String> e) -> bundle.getString(e.getValue())
-                ));
-
-                res.put("message", "ValidationFail");
-
-                ServletUtility.sendJSON(request, response, 400, res);
+                ServletUtility.sendValidationError(request, response, 400, messages);
                 return;
             }
 
             getServletContext().log("impossible to register the user", ex);
-            ServletUtility.sendError(request, response, 500, "Impossible to register the user");
+            ServletUtility.sendError(request, response, 500, "Impossible to register the user"); // TODO: To i18n
             return;
         }
     }
