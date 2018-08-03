@@ -1,11 +1,9 @@
 package it.unitn.webprogramming18.dellmm.servlets;
 
-import it.unitn.webprogramming18.dellmm.db.daos.CategoryListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.CommentDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.PermissionDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ProductDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCCategoryListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCCommentDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCPermissionDAO;
@@ -34,7 +32,6 @@ public class DisplayListsServlet extends HttpServlet
 
         private ListDAO listDAO;
         private ProductDAO productDAO;
-        private CategoryListDAO categoryListDAO;
         private PermissionDAO permissionDAO;
         private CommentDAO commentDAO;
 
@@ -44,34 +41,24 @@ public class DisplayListsServlet extends HttpServlet
 
                 listDAO = new JDBCListDAO();
                 productDAO = new JDBCProductDAO();
-                categoryListDAO = new JDBCCategoryListDAO();
                 permissionDAO = new JDBCPermissionDAO();
                 commentDAO = new JDBCCommentDAO();
 
         }
 
-        /**
-         * Handles the HTTP <code>GET</code> method.
-         *
-         * @param request servlet request
-         * @param response servlet response
-         * @throws ServletException if a servlet-specific error occurs
-         * @throws IOException if an I/O error occurs
-         */
         @Override
         protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
         {
                 HttpSession session = request.getSession(false);
                 User user = (User) session.getAttribute("user");
-                
-                int userId = user.getId();
+
                 //get le liste di prodotto per ogni lista che possiede
                 List<ShoppingList> ownedLists;
                 List<ShoppingList> sharedLists;
                 try
                 {
-                        ownedLists = listDAO.getOwnedUserListsByUserId(userId);
-                        sharedLists = listDAO.getSharedWithUserListsByUserId(userId);
+                        ownedLists = listDAO.getOwnedUserListsByUserId(user.getId());
+                        sharedLists = listDAO.getSharedWithUserListsByUserId(user.getId());
                 }
                 catch (DAOException ex)
                 {
@@ -79,29 +66,34 @@ public class DisplayListsServlet extends HttpServlet
                 }
 
                 //associando ogni lista una hashmap
-                //se è una lista owner, verrà associato: la lista di prodotto, il numero di sharing, il numero di commento
-                //se è una lista condivisa , verrà associato: la lista di prodotto, il permesso su tale lista, il numero di commento
+                //se è una lista owner, verrà associato: la lista di prodotto ancora da comprare, la lista di prodotto già comprato, la lista di permesso sharing , il numero di sharing, il numero di commento
+                //se è una lista condivisa , verrà associato: la lista di prodotto ancora da comprare, la lista di prodotto già comprato, il permesso su tale lista, il numero di commento
                 HashMap<ShoppingList, HashMap<String, Object>> completeOwnedLists = new HashMap();
                 HashMap<ShoppingList, HashMap<String, Object>> completeSharedLists = new HashMap();
                 HashMap<String, Object> singleCompleteList = null;
                 List<Product> productsList = null;
 
+                //per ogni lista owner
                 for (ShoppingList shoppingList : ownedLists)
                 {
                         singleCompleteList = new HashMap();
 
                         try
                         {
-                                //get la lista di prodotto
+                                //get la lista di prodotto ancora da comprare
                                 productsList = productDAO.getProductsNotBuyInListByListId(shoppingList.getId());
                                 singleCompleteList.put("productsListNotBuy", productsList);
+
+                                //get la lista di prodotto già comprato
                                 productsList = productDAO.getProductsBoughtInListByListId(shoppingList.getId());
                                 singleCompleteList.put("productsListBought", productsList);
+
                                 //get numero di condivisione
                                 singleCompleteList.put("numberOfShared", permissionDAO.getNumberSharedByListId(shoppingList.getId()));
                                 //get numero di commento
                                 singleCompleteList.put("numberComment", commentDAO.getNumberOfCommentsByListId(shoppingList.getId()));
-                                //aggiunge map locale nella map globale
+
+                                //associando tale map locale con la lista nella map globale
                                 completeOwnedLists.put(shoppingList, singleCompleteList);
                         }
                         catch (DAOException ex)
@@ -110,25 +102,27 @@ public class DisplayListsServlet extends HttpServlet
                         }
                 }
 
+                //per ogni lista condivisa
                 for (ShoppingList shoppingList : sharedLists)
                 {
                         singleCompleteList = new HashMap();
 
                         try
                         {
-                                //get la lista di prodotto
+                                //get la lista di prodotto ancora da comprare
                                 productsList = productDAO.getProductsNotBuyInListByListId(shoppingList.getId());
                                 singleCompleteList.put("productsListNotBuy", productsList);
+
+                                //get la lista di prodotto già comprato
                                 productsList = productDAO.getProductsBoughtInListByListId(shoppingList.getId());
                                 singleCompleteList.put("productsListBought", productsList);
 
                                 //get numero di commento
                                 singleCompleteList.put("numberComment", commentDAO.getNumberOfCommentsByListId(shoppingList.getId()));
-
                                 //get l'oggetto permesso
-                                singleCompleteList.put("permission", permissionDAO.getUserPermissionOnListByIds(userId, shoppingList.getId()));
+                                singleCompleteList.put("permission", permissionDAO.getUserPermissionOnListByIds(user.getId(), shoppingList.getId()));
 
-                                //aggiunge map locale nella map globale
+                                //associando tale map locale con la lista nella map globale
                                 completeSharedLists.put(shoppingList, singleCompleteList);
                         }
                         catch (DAOException ex)
@@ -137,10 +131,12 @@ public class DisplayListsServlet extends HttpServlet
                         }
                 }
 
+                //set titolo della pagina
+                request.setAttribute("head_title", "le mie liste");
+
                 // se ha almeno una lista owner
                 if (ownedLists.size() > 0)
                 {
-
                         request.setAttribute("ownedLists", ownedLists);
                         request.setAttribute("ownedListsMap", completeOwnedLists);
                 }
@@ -150,23 +146,12 @@ public class DisplayListsServlet extends HttpServlet
                         request.setAttribute("sharedLists", sharedLists);
                         request.setAttribute("sharedListsMap", completeSharedLists);
                 }
-                //set titolo della pagina
-                request.setAttribute("head_title", "le mie liste");
 
                 //inoltra a jsp
                 request.getRequestDispatcher("/WEB-INF/jsp/mylists.jsp").forward(request, response);
 
         }
 
-        /**
-         * Returns a short description of the servlet.
-         *
-         * @return a String containing servlet description
-         */
-        @Override
-        public String getServletInfo()
-        {
-                return "Servlet for displaying user specific lists in format List -> products in it";
-        }// </editor-fold>
+
 
 }

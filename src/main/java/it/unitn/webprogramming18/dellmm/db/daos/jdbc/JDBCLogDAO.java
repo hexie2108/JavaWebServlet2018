@@ -6,7 +6,6 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.jdbc.JDBCDAO;
 import it.unitn.webprogramming18.dellmm.javaBeans.Log;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -59,6 +58,7 @@ public class JDBCLogDAO extends JDBCDAO<Log, Integer> implements LogDAO
                 return 0L;
         }
 
+        @Override
         public Integer insert(Log log) throws DAOException
         {
                 if (log == null)
@@ -233,6 +233,7 @@ public class JDBCLogDAO extends JDBCDAO<Log, Integer> implements LogDAO
                 return log;
         }
 
+        @Override
         public Log updateUserProductLogTableByIds(Integer userId, Integer productId) throws DAOException
         {
                 Log log;

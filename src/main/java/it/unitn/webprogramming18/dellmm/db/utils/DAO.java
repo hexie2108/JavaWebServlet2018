@@ -8,7 +8,6 @@ package it.unitn.webprogramming18.dellmm.db.utils;
 
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
-import java.sql.Connection;
 import java.util.List;
 
 /**

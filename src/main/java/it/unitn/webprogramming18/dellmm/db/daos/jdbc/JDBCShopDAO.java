@@ -46,6 +46,7 @@ public class JDBCShopDAO extends JDBCDAO<Shop, Integer> implements ShopDAO {
         return 0L;
     }
     
+    @Override
     public Integer insert(Shop shop) throws DAOException {
         if (shop == null) {
             throw new DAOException("shop bean is null");
@@ -135,6 +136,7 @@ public class JDBCShopDAO extends JDBCDAO<Shop, Integer> implements ShopDAO {
         return shop;
     }
 
+    @Override
     public List<Shop> getShopsByCategory(String category) throws DAOException {
         List<Shop> shopList = new ArrayList<>();
 

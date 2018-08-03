@@ -66,10 +66,10 @@ public interface ProductDAO extends DAO<Product, Integer> {
 
     
     /**
-     * recupera una lista di prodotto in base a id decrescente
+     * get la lista di prodotto pubblico in base a id decrescente
      * @param index  l'indice in cui inizia a prendere
-     * @param number numero di prodotti
-     * @return la lista di prodotto
+     * @param number quantità che vuoi ottenere
+     * @return la lista di prodotto pubblico
      * @throws DAOException 
      */
     public List<Product> getPublicProductList(Integer index, Integer number) throws DAOException;
@@ -82,11 +82,11 @@ public interface ProductDAO extends DAO<Product, Integer> {
     public Integer getCountOfPublicProduct() throws DAOException;
     
     /**
-     * recupera una lista di prodotto di una determina categoria in base a id decrescente
-     * @param catid id della categoria
+     * gel lista di prodotto di una determina categoria in base a id decrescente
+     * @param catId id della categoria
      * @param index  l'indice in cui inizia a prendere
-     * @param number numero di prodotti
-     * @return la lista di prodotto di una determinata categoria
+     * @param number quantità che vuoi ottenere
+     * @return la lista di prodotto publico di una determinata categoria
      * @throws DAOException 
      */
     public List<Product> getPublicProductListByCatId(Integer catId, Integer index, Integer number) throws DAOException;
@@ -94,7 +94,7 @@ public interface ProductDAO extends DAO<Product, Integer> {
     
     /**
      * get il numero del prodotto pubblico di una categoria specificato 
-     * @param catid id categoria
+     * @param catId id categoria
      * @return il numero del prodotto pubblico di una categoria specificato 
      * @throws DAOException 
      */
@@ -103,11 +103,11 @@ public interface ProductDAO extends DAO<Product, Integer> {
 
     
     /**
-     * dato un nome (anche incompleto), trovare i prodotti corrispondenti
+     * trovare i prodotti pubblici corrispondenti dato un nome di prodotto (anche incompleto)
      * @param name nome da ricercare
      * @param order indicare ordinamento, può essere "categoryName" o "productName"
      * @param index  l'indice in cui inizia a prendere
-     * @param number numero di prodotti
+     * @param number quantità che vuoi ottenere
      * @return la lista di prodtto corrispondente
      * @throws DAOException 
      */
@@ -124,28 +124,28 @@ public interface ProductDAO extends DAO<Product, Integer> {
  
 
     /**
-     * Get a list of all the products in a dellmm.list with specified listId
+     * get i prodotto di una lista
      *
      * @param listId
-     * @return A list of the products in a dellmm.list
+     * @return la lista di prodotto di una lista
      * @throws DAOException if an error occurred during the action.
      */
     public List<Product> getProductsInListByListId(Integer listId) throws DAOException;
     
        /**
-     * get una lista di prodotti ancora da comprare in una specifica lista di spesa
+     * get i prodotti ancora da comprare di una lista
      *
      * @param listId
-     * @return A list of the products in a dellmm.list
+     * @return la lista di prodotto ancora da comprare di una lista
      * @throws DAOException if an error occurred during the action.
      */
     public List<Product> getProductsNotBuyInListByListId(Integer listId) throws DAOException;
     
      /**
-     * get una lista di prodotti già comprato in una specifica lista di spesa
+     * get i prodotti già comprato di una lista
      *
      * @param listId
-     * @return A list of the products in a dellmm.list
+     * @return la lista di prodotto già comprato di una lista
      * @throws DAOException if an error occurred during the action.
      */
     public List<Product> getProductsBoughtInListByListId(Integer listId) throws DAOException;

@@ -60,6 +60,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
                 return 0L;
         }
 
+        @Override
         public Integer insert(Product product) throws DAOException
         {
 

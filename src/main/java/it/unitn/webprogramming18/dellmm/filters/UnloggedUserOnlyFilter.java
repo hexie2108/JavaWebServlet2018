@@ -10,7 +10,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.URLEncoder;
  
-@WebFilter(filterName = "UnloggedUserOnlyFilter")
+
 public class UnloggedUserOnlyFilter implements Filter
 {
 

@@ -1,19 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package it.unitn.webprogramming18.dellmm.db.utils;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
-import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import java.beans.PropertyVetoException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
+ * pisciana di connessione, che occupa di creare/mantenere una serie di
+ * connessioni in attivi, assegnare dao quando ci sono le richieste
  *
  * @author mikuc
  */
@@ -33,6 +27,7 @@ public class C3p0Util
         {
                 try
                 {
+                        //inizializzazione della piscina
                         ds = new ComboPooledDataSource();
 
                         ds.setDriverClass("com.mysql.jdbc.Driver");
@@ -57,13 +52,12 @@ public class C3p0Util
                 }
                 catch (PropertyVetoException ex)
                 {
-                        ex.printStackTrace();
-
+                        System.err.println("errore durante l'inizializzazione della piscina: " + ex.getMessage());
                 }
         }
 
         /**
-         * liberare intera pool
+         * distrugge la piscina
          */
         public static final void destroy()
         {
@@ -73,6 +67,12 @@ public class C3p0Util
                 }
         }
 
+        /**
+         * un metodo statico per liberare e ristituire la connessione nella
+         * piscina
+         *
+         * @param conn
+         */
         public static final void close(Connection conn)
         {
                 if (conn != null)
@@ -84,29 +84,25 @@ public class C3p0Util
                         catch (SQLException ex)
                         {
                                 System.err.println("errore durante la liberazione della connessione: " + ex.getMessage());
-                                ex.printStackTrace();
                         }
                 }
-               
+
         }
 
         /**
-         * estrare una connessione valida
-         *
-         * @return una connessione
-         * @throws SQLException
+         * assegnare una connessione valida
+         * @return l'oggetto connessione
          */
         public static final synchronized Connection getConnection()
         {
-                Connection conn=null;
+                Connection conn = null;
                 try
                 {
-                        conn= ds.getConnection();
+                        conn = ds.getConnection();
                 }
                 catch (SQLException ex)
                 {
-                        System.err.println("errore nell'assegnazione della nuova connessione: "+ex.getMessage());
-                        ex.printStackTrace();
+                        System.err.println("errore durante l'assegnazione della nuova connessione: " + ex.getMessage());
                 }
                 return conn;
 

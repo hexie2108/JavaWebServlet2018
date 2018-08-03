@@ -7,7 +7,6 @@ import it.unitn.webprogramming18.dellmm.db.utils.jdbc.JDBCDAO;
 import it.unitn.webprogramming18.dellmm.javaBeans.Notification;
 
 import java.sql.Types;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -68,6 +67,7 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
                 return 0L;
         }
 
+        @Override
         public Integer insert(Notification notification) throws DAOException
         {
                 if (notification == null)
@@ -207,6 +207,7 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
                 return notification;
         }
 
+        @Override
         public List<Notification> getNotificationsByUserId(Integer userId, Boolean read) throws DAOException
         {
                 List<Notification> notificationList = new ArrayList<>();

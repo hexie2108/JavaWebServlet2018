@@ -14,17 +14,19 @@ import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 /**
- *stampare il nome di categoria datto id
+ * Tag che get e set il nome di categoria del prodotto come l'attributo della richiesta
+ *
  * @author mikuc
  */
 public class TagGetCategoryNameById extends SimpleTagSupport
 {
-        CategoryProductDAO categoryProductDAO= new JDBCCategoryProductDAO();
-        
+
         private Integer categoryId;
-       // private StringWriter sw = new StringWriter();
+        private final CategoryProductDAO categoryProductDAO = new JDBCCategoryProductDAO();
 
         /**
+         * set valore categoryId dal attributo del tag
+         *
          * @param categoryId the categoryId to set
          */
         public void setCategoryId(int categoryId)
@@ -35,22 +37,28 @@ public class TagGetCategoryNameById extends SimpleTagSupport
         @Override
         public void doTag() throws JspException, IOException
         {
-                if(this.categoryId != null){
-                        
+                //se id categoria non è nullo
+                if (this.categoryId != null)
+                {
+
                         String categoryName;
-                        try {
+                        try
+                        {
                                 categoryName = categoryProductDAO.getByPrimaryKey(categoryId).getName();
                         }
-                        catch (DAOException ex) {
-                              throw new JspException("errore durante ottenimento del nome di categoria");
+                        catch (DAOException ex)
+                        {
+                                throw new JspException("errore durante ottenimento del nome di categoria");
                         }
-                        
-                         //set user di commento nella richiesta
+
+                        //set il nome della categoria come l'attributo della richiesta
                         ((PageContext) getJspContext()).getRequest().setAttribute("categoryName", categoryName);
-                        
-                        //getJspContext().getOut().println(categoryName);
+
+                }
+                else
+                {
+                        throw new JspException("manca il parametro id categoria per ottenere il nome di categoria");
                 }
         }
-        
-        
+
 }

@@ -15,9 +15,15 @@
          <!-- la lista di tutti categoira -->
         <div class="tag-category">
                 <h2 class="text-center"><i class="fas fa-store"></i> CATEGORIA</h2>
-                <custom:printAllCategoryProduct>
+                <div class="list-group">
+                          <custom:getAllCategoryOfProduct />
+                          <c:forEach var="category" items="${categoryProductList}">
+                                  <a class="list-group-item list-group-item-action text-center" href ="${pageContext.request.contextPath}/category?catId=${category.id}" >${category.name}</a>
+                          </c:forEach>
                         
-                </custom:printAllCategoryProduct>
+                </div>
+              
+               
         </div>
 
 

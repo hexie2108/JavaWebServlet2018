@@ -131,7 +131,10 @@
                                                                         CATEGORIA
                                                                 </a>
                                                                 <div class="dropdown-menu">
-                                                                        <custom:printAllCategoryProductForMenu/>
+                                                                        <custom:getAllCategoryOfProduct />
+                                                                        <c:forEach var="category" items="${categoryProductList}">
+                                                                                <a class="dropdown-item" href ="${pageContext.request.contextPath}/category?catId=${category.id}" >${category.name}</a>  
+                                                                        </c:forEach>
                                                                 </div>
                                                         </li>
                                                         <li class="nav-item">

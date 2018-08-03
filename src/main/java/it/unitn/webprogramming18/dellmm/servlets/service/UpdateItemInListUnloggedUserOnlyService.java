@@ -1,15 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package it.unitn.webprogramming18.dellmm.servlets.service;
 
-import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
-import it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList;
-import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,24 +10,16 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
- * i servizio per la gestione della lista in modalità anonimo
+ * servizio per aggiungere/eliminare il prodotto dalla default lista per utente anonimo
  *
  * @author mikuc
  */
 public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet
 {
 
-        /**
-         * Handles the HTTP <code>POST</code> method.
-         *
-         * @param request servlet request
-         * @param response servlet response
-         * @throws ServletException if a servlet-specific error occurs
-         * @throws IOException if an I/O error occurs
-         */
+        
         @Override
         protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
         {
@@ -46,30 +30,31 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet
         @Override
         protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
         {
+                //memorizza il risultato dell'operazione
+                String result = "";
                 //get azione che vuoi fare
-                String action = null;
-                action = request.getParameter("action");
+                String action = request.getParameter("action");
+                //se azione è nullo
                 if (action == null)
                 {
                         throw new ServletException("manca il parametro action");
                 }
-                //memorizza il risultato dell'operazione
-                String result = "";
-
+                
                 //in caso di inserimento
                 if (action.equals("insert"))
                 {
-                        //per controllare la ripetizione
+                        //variabile per controllare la ripetizione
                         boolean repeatItem = false;
 
-                        String productId = null;
-                        productId = request.getParameter("productId");
-
+                        //get id prodotto da aggiungere
+                        String productId = request.getParameter("productId");
+                        //se id prodotto è nullo
                         if (productId == null)
                         {
                                 throw new ServletException("manca il parametro  id del prodotto");
                         }
 
+                        //get la cookie della lista locale
                         Cookie cookOfList = null;
                         Cookie[] cookies = request.getCookies();
                         //se utente ha una cookie della lista locale
@@ -87,38 +72,40 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet
                         //se la lista locale non esiste oppure è vuoto
                         if (cookOfList == null || cookOfList.getValue().equals(""))
                         {
+                                //crea una nuova cookie per la lista locale, e inserisce il id prodotto da aggiungere
                                 cookOfList = new Cookie("localShoppingList", productId);
                                 cookOfList.setPath(getServletContext().getContextPath());
                                 response.addCookie(cookOfList);
                                 result = "InsertOk";
 
                         }
-                        //esiste già una lista locale non vuota
+                        //se esiste già una lista locale non vuota
                         else
                         {
-                                //controlla se esiste già tale prodotto in lista
+                                //controlla se esiste la ripetizione
+                                //trasforma string di cookie in arrayList
                                 List<String> productIdList = new ArrayList(Arrays.asList(cookOfList.getValue().split(",")));
                                 for (String string : productIdList)
                                 {
                                         if (productId.equals(string))
                                         {
-
-                                                //in caso esiste
-                                                //lanciare un messaggio sul schermo dell'utente
+                                                //in caso esiste set flag true
                                                 repeatItem = true;
 
                                         }
                                 }
+                                
                                 //se non cè la ripetizione
                                 if (!repeatItem)
                                 {
 
-                                        //altrimenti aggiungere elemento
+                                        //aggiunge id nella cookie
                                         cookOfList.setValue(cookOfList.getValue() + "," + productId);
                                         cookOfList.setPath(getServletContext().getContextPath());
                                         response.addCookie(cookOfList);
                                         result = "InsertOk";
                                 }
+                                
                                 //se cè una ripetizione
                                 else
                                 {
@@ -131,18 +118,18 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet
                 else if (action.equals("delete"))
                 {
 
-                        //per sapere l'avvenuta della eliminazione
+                        //flag per sapere l'avvenuta della eliminazione
                         boolean successDelete = false;
 
-   
-                        String productId = null;
-                        productId = request.getParameter("productId");
-
-                        if ( productId == null)
+                         //get id prodotto da eliminare
+                        String productId = request.getParameter("productId");
+                        //se id prodotto è nullo
+                        if (productId == null)
                         {
                                 throw new ServletException("manca il parametro  id del prodotto");
                         }
 
+                        //get la cookie della lista locale
                         Cookie cookOfList = null;
                         Cookie[] cookies = request.getCookies();
                         //se utente ha una cookie della lista locale
@@ -164,34 +151,41 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet
                                 result = "DeleteFail";
 
                         }
-                        //esiste già una lista locale non vuota
+                        //se esiste una lista locale non vuota
                         else
                         {
                                 //controlla se esiste tale prodotto in lista
+                                 //trasforma string di cookie in arrayList
                                 List<String> productIdList = new ArrayList(Arrays.asList(cookOfList.getValue().split(",")));
                                 for (int i = 0; i < productIdList.size(); i++)
                                 {
                                         if (productId.equals(productIdList.get(i)))
                                         {
-                                                //quando ha trovato
+                                                //quando trova, elimina tale elemento dalla arrayList
                                                 productIdList.remove(i);
+                                                //set flag true
                                                 successDelete = true;
+                                                //esce dal ciclo
                                                 i = productIdList.size();
                                         }
                                 }
+                                
                                 //se non ha trovato prodotto
                                 if (!successDelete)
                                 {
                                         result = "DeleteFail";
                                 }
+                                
                                 //se ha trovato
                                 else
                                 {
-                                         result = "DeleteOk";
+                                         
                                         //aggiorna cookie
                                         cookOfList.setValue(String.join(",", productIdList));
                                         cookOfList.setPath(getServletContext().getContextPath());
                                         response.addCookie(cookOfList);
+                                        //set il risultato
+                                        result = "DeleteOk";
                                 }
 
                         }
@@ -201,15 +195,18 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet
                 //in caso cambia la categoria della lista locale
                 else if (action.equals("changeListCategory"))
                 {
-                        String categoryList = null;
-                        categoryList = request.getParameter("categoryList");
+                        //get id categoria
+                        String categoryList = request.getParameter("categoryList");
+                        //se id è vuota
                         if (categoryList == null || categoryList.equals("-1"))
                         {
                                 throw new ServletException("manca il parametro id categoria della lista");
                         }
+                        //crea o aggiorna cookie della categoria per la lista locale
                         Cookie cookOfListCategory = new Cookie("localShoppingListCategory", categoryList);
                         cookOfListCategory.setPath(getServletContext().getContextPath());
                         response.addCookie(cookOfListCategory);
+                        //set il risultato
                         result = "ChangeListCategoryOk";
 
                 }

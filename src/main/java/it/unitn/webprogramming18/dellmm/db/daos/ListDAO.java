@@ -2,7 +2,6 @@ package it.unitn.webprogramming18.dellmm.db.daos;
 
 import it.unitn.webprogramming18.dellmm.db.utils.DAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
-import it.unitn.webprogramming18.dellmm.javaBeans.CategoryList;
 import it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList;
 import java.util.List;
 
@@ -82,7 +81,7 @@ public interface ListDAO extends DAO<ShoppingList, Integer> {
     public List<ShoppingList> getSharedWithUserListsByUserId(Integer userId) throws DAOException;
     
     /**
-     * Gets all the lists of one specified user
+     * Get tutte le liste in cui un utente ha qualche permesso (sia proprietario , sia condiviso
      * @param userId
      * @return the list of the shoppinglists
      * @throws DAOException 
@@ -90,8 +89,8 @@ public interface ListDAO extends DAO<ShoppingList, Integer> {
     public List<ShoppingList> getAllListByUserId(Integer userId) throws DAOException;
     
         /**
-     * Gets tutte le liste in cui un utente ha il permesso di aggiungere il prodotto 
-     * @param userId id utente
+     * Get tutte le liste in cui un utente ha il permesso di aggiungere il prodotto 
+     * @param userId
      * @return the list of the shoppinglists
      * @throws DAOException 
      */

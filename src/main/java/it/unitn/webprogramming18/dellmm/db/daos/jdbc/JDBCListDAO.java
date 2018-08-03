@@ -6,7 +6,6 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.jdbc.JDBCDAO;
 import it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -58,6 +57,7 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
                 return 0L;
         }
 
+        @Override
         public Integer insert(ShoppingList list) throws DAOException
         {
                 if (list == null)
@@ -195,6 +195,7 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
                 return list;
         }
 
+        @Override
         public List<ShoppingList> getOwnedUserListsByUserId(Integer userId) throws DAOException
         {
 
@@ -228,6 +229,7 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
                 return lists;
         }
 
+        @Override
         public List<ShoppingList> getSharedWithUserListsByUserId(Integer userId) throws DAOException
         {
                 List<ShoppingList> lists = new ArrayList<>();
@@ -261,6 +263,7 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
                 return lists;
         }
 
+        @Override
         public List<ShoppingList> getAllListByUserId(Integer userId) throws DAOException
         {
                 List<ShoppingList> lists = new ArrayList<>();
@@ -292,6 +295,7 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
                 return lists;
         }
 
+        @Override
         public List<ShoppingList> getAllAddableListByUserId(Integer userId) throws DAOException
         {
                 List<ShoppingList> lists = new ArrayList<>();

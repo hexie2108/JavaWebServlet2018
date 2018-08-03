@@ -35,15 +35,14 @@
                                 <form action="${pageContext.request.contextPath}/service/updateItemInListUnloggedUserOnlyService" method="GET">
                                         <label  for="type-list"  class="d-block"><i class="fas fa-sitemap"></i> Tipo della lista:</label>
                                         <select id="type-list" class="form-control custom-select w-50" name ="categoryList" onchange="checkValueOfCategoryList(this)">
-                                                <!-- se è stato assegnato una categoria di lista locale-->
-                                                <c:if test="${not empty cookie.localShoppingListCategory}">
-                                                        <custom:printAllCategoryList catoryIdOfCurrentList="${cookie.localShoppingListCategory.value}"></custom:printAllCategoryList>
-                                                </c:if>
-                                                <!-- se non è ancora stato assegnato una categoria di lista locale-->
                                                 <c:if test="${empty cookie.localShoppingListCategory}">
                                                         <option value="-1">-------</option>
-                                                        <custom:printAllCategoryList catoryIdOfCurrentList="-1"></custom:printAllCategoryList>
                                                 </c:if>
+                                                <custom:getAllCategoryOfShoppingList />
+                                                <c:forEach var="categoryOfShoppingList" items="${categoryList}">
+                                                        <option value="${categoryOfShoppingList.id}" ${not empty cookie.localShoppingListCategory && cookie.localShoppingListCategory.value == categoryOfShoppingList.id ? " selected=\"selected\"" : ""}>${categoryOfShoppingList.name}</option>
+                                                </c:forEach>
+
                                         </select>
                                         <div class="d-inline-block w-25">
                                                 <input type="hidden" name="action" value="changeListCategory"/>
@@ -109,12 +108,12 @@
                                                                 <td class="td-img">
                                                                         <!-- se è un utente anonimo-->
                                                                         <c:if test="${empty sessionScope.user}">
-                                                                                <a href="javascript:;" data-toggle="modal" data-target="#boxShowItem" onclick="showProductWindowsFromList(${product.id}, false, false,true)">
-                                                                        </c:if>
+                                                                                <a href="javascript:;" data-toggle="modal" data-target="#boxShowItem" onclick="showProductWindowsFromList(${product.id}, false, false, true)">
+                                                                                </c:if>
                                                                                 <!-- se è un utente loggato-->
-                                                                          <c:if test="${not empty sessionScope.user}">
-                                                                                   <a href="javascript:;" data-toggle="modal" data-target="#boxShowItem" onclick="showProductWindowsFromList(${product.id}, true, false,${MylistPermission.deleteObject})">
-                                                                          </c:if>
+                                                                                <c:if test="${not empty sessionScope.user}">
+                                                                                        <a href="javascript:;" data-toggle="modal" data-target="#boxShowItem" onclick="showProductWindowsFromList(${product.id}, true, false,${MylistPermission.deleteObject})">
+                                                                                        </c:if>
 
                                                                                         <img class="img" src="${pageContext.request.contextPath}/${product.img}" alt="${product.name}" />
                                                                                 </a>
@@ -125,7 +124,7 @@
                                                                         <!-- campo necessario per visuallizare il prodotto nella finestrina-->
                                                                         <input class="name" type="hidden" value="${product.name}" />
                                                                         <input class="logo-img" type="hidden" value="${pageContext.request.contextPath}/${product.logo}" />
-                                                                        <input class="cat-link" type="hidden" value="${pageContext.request.contextPath}/category?catid=${product.categoryProductId}"/>
+                                                                        <input class="cat-link" type="hidden" value="${pageContext.request.contextPath}/category?catId=${product.categoryProductId}"/>
 
                                                                         <custom:getCategoryNameById categoryId="${product.categoryProductId}" />
                                                                         <input class="cat-name" type="hidden" value="${categoryName}"/>
@@ -162,18 +161,18 @@
                                                 <c:forEach var="product" items="${productsBoughtOfMyList}">
                                                         <tr id="productIdInList-${product.id}" class="bought-item" >
                                                                 <td class="td-img">
-                                                                        
+
                                                                         <!-- se è un utente anonimo-->
                                                                         <c:if test="${empty sessionScope.user}">
-                                                                                <a href="javascript:;" data-toggle="modal" data-target="#boxShowItem" onclick="showProductWindowsFromList(${product.id}, false, true,true)">
-                                                                        </c:if>
+                                                                                <a href="javascript:;" data-toggle="modal" data-target="#boxShowItem" onclick="showProductWindowsFromList(${product.id}, false, true, true)">
+                                                                                </c:if>
                                                                                 <!-- se è un utente loggato-->
-                                                                          <c:if test="${not empty sessionScope.user}">
-                                                                                    <a href="javascript:;" data-toggle="modal" data-target="#boxShowItem" onclick="showProductWindowsFromList(${product.id}, true, true,${MylistPermission.deleteObject})">
-                                                                          </c:if>
-                                                                        
-                                                                                <img class="img" src="${pageContext.request.contextPath}/${product.img}" alt="${product.name}" />
-                                                                        </a>
+                                                                                <c:if test="${not empty sessionScope.user}">
+                                                                                        <a href="javascript:;" data-toggle="modal" data-target="#boxShowItem" onclick="showProductWindowsFromList(${product.id}, true, true,${MylistPermission.deleteObject})">
+                                                                                        </c:if>
+
+                                                                                        <img class="img" src="${pageContext.request.contextPath}/${product.img}" alt="${product.name}" />
+                                                                                </a>
                                                                 </td>
                                                                 <td class="td-name">
                                                                         <span>${product.name}</span>
@@ -181,7 +180,7 @@
                                                                         <!-- campo necessario per visuallizare il prodotto nella finestrina-->
                                                                         <input class="name" type="hidden" value="${product.name}" />
                                                                         <input class="logo-img" type="hidden" value="${pageContext.request.contextPath}/${product.logo}" />
-                                                                        <input class="cat-link" type="hidden" value="${pageContext.request.contextPath}/category?catid=${product.categoryProductId}"/>
+                                                                        <input class="cat-link" type="hidden" value="${pageContext.request.contextPath}/category?catId=${product.categoryProductId}"/>
 
                                                                         <custom:getCategoryNameById categoryId="${product.categoryProductId}" />
                                                                         <input class="cat-name" type="hidden" value="${categoryName}"/>
@@ -191,7 +190,7 @@
 
                                                                 </td>
                                                                 <td class="td-buttons">
-                                                                        
+
                                                                         <!-- se è un utente loggato-->
                                                                         <c:if test="${not empty sessionScope.user}">
                                                                                 <!-- se utente loggato può eliminare prodotto della lista-->      

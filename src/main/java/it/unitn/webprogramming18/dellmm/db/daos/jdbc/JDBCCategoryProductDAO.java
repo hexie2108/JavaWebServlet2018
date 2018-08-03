@@ -54,6 +54,7 @@ public class JDBCCategoryProductDAO extends JDBCDAO<CategoryProduct, Integer> im
                 return 0L;
         }
 
+        @Override
         public Integer insert(CategoryProduct categoryProduct) throws DAOException
         {
                 if (categoryProduct == null)

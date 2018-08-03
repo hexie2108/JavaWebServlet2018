@@ -6,7 +6,6 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.jdbc.JDBCDAO;
 import it.unitn.webprogramming18.dellmm.javaBeans.CategoryList;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -34,6 +33,7 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
                 return categoryList;
         }
 
+        @Override
         public Integer insert(CategoryList categoryList) throws DAOException
         {
                 if (categoryList == null)

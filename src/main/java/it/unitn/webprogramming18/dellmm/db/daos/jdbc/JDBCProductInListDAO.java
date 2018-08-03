@@ -6,7 +6,6 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.jdbc.JDBCDAO;
 import it.unitn.webprogramming18.dellmm.javaBeans.ProductInList;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -52,6 +51,7 @@ public class JDBCProductInListDAO extends JDBCDAO<ProductInList, Integer> implem
                 return 0L;
         }
 
+        @Override
         public Integer insert(ProductInList productInList) throws DAOException
         {
                 if (productInList == null)
@@ -184,35 +184,36 @@ public class JDBCProductInListDAO extends JDBCDAO<ProductInList, Integer> implem
         }
 
         @Override
-        public void deleteByProductIdAndListId(Integer productId, Integer listId) throws DAOException
+        public Boolean checkIsProductInListByIds(Integer productId, Integer listId) throws DAOException
         {
+
+                Boolean res = false;
+
                 if (listId == null || productId == null)
                 {
-                        throw new DAOException("parameter not valid", new IllegalArgumentException("The passed listId or  productId is null"));
+                        throw new DAOException("One or both parameters (listId, productId) are null");
                 }
-                CON = C3p0Util.getConnection();
-                try (PreparedStatement stm = CON.prepareStatement(
-                            " DELETE FROM ProductInList WHERE "
-                            + "productId = ? AND "
-                            + "listId = ? "
-                ))
-                {
-                        stm.setInt(1, productId);
-                        stm.setInt(2, listId);
 
-                        if (stm.executeUpdate() != 1)
+                CON = C3p0Util.getConnection();
+                try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM ProductInList WHERE listId = ? AND productId = ?"))
+                {
+
+                        stm.setInt(1, listId);
+                        stm.setInt(2, productId);
+                        try (ResultSet rs = stm.executeQuery())
                         {
-                                throw new DAOException("Impossible to delete the productInList");
+                                if (rs.next())
+                                {
+                                        res = true;
+                                }
                         }
                 }
                 catch (SQLException ex)
                 {
-                        throw new DAOException("Impossible to update the productInList", ex);
-                } finally
-                {
-                        C3p0Util.close(CON);
+                        throw new DAOException("Impossible to count productInList", ex);
                 }
 
+                return res;
         }
 
         @Override
@@ -252,36 +253,36 @@ public class JDBCProductInListDAO extends JDBCDAO<ProductInList, Integer> implem
 
         }
 
-        public Boolean checkIsProductInListByIds(Integer productId, Integer listId) throws DAOException
+        @Override
+        public void deleteByProductIdAndListId(Integer productId, Integer listId) throws DAOException
         {
-
-                Boolean res = false;
-
                 if (listId == null || productId == null)
                 {
-                        throw new DAOException("One or both parameters (listId, productId) are null");
+                        throw new DAOException("parameter not valid", new IllegalArgumentException("The passed listId or  productId is null"));
                 }
-
                 CON = C3p0Util.getConnection();
-                try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM ProductInList WHERE listId = ? AND productId = ?"))
+                try (PreparedStatement stm = CON.prepareStatement(
+                            " DELETE FROM ProductInList WHERE "
+                            + "productId = ? AND "
+                            + "listId = ? "
+                ))
                 {
+                        stm.setInt(1, productId);
+                        stm.setInt(2, listId);
 
-                        stm.setInt(1, listId);
-                        stm.setInt(2, productId);
-                        try (ResultSet rs = stm.executeQuery())
+                        if (stm.executeUpdate() != 1)
                         {
-                                if (rs.next())
-                                {
-                                        res = true;
-                                }
+                                throw new DAOException("Impossible to delete the productInList");
                         }
                 }
                 catch (SQLException ex)
                 {
-                        throw new DAOException("Impossible to count productInList", ex);
+                        throw new DAOException("Impossible to update the productInList", ex);
+                } finally
+                {
+                        C3p0Util.close(CON);
                 }
 
-                return res;
         }
 
 }

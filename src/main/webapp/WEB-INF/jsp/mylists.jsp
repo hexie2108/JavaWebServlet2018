@@ -47,6 +47,7 @@
                                                                         <span class="list-category">
                                                                                  <i class="fas fa-sitemap"> <b></i> categoria: </b>
                                                                                 <custom:getListCategoryNameByListCategoryId listCategoryId="${list.categoryList}"/>
+                                                                                ${categoryListName}
                                                                         </span>
                                                                         <div class="list-description">
 
@@ -72,7 +73,7 @@
                                                                         <!-- campo necessario per visuallizare il prodotto nella finestrina-->
                                                                         <input class="name" type="hidden" value="${product.name}" />
                                                                         <input class="logo-img" type="hidden" value="${pageContext.request.contextPath}/${product.logo}" />
-                                                                        <input class="cat-link" type="hidden" value="${pageContext.request.contextPath}/category?catid=${product.categoryProductId}"/>
+                                                                        <input class="cat-link" type="hidden" value="${pageContext.request.contextPath}/category?catId=${product.categoryProductId}"/>
                                                                         
                                                                         <custom:getCategoryNameById categoryId="${product.categoryProductId}" />
                                                                         <input class="cat-name" type="hidden" value="${categoryName}"/>
@@ -92,7 +93,7 @@
                                                                         <!-- campo necessario per visuallizare il prodotto nella finestrina-->
                                                                         <input class="name" type="hidden" value="${product.name}" />
                                                                         <input class="logo-img" type="hidden" value="${pageContext.request.contextPath}/${product.logo}" />
-                                                                        <input class="cat-link" type="hidden" value="${pageContext.request.contextPath}/category?catid=${product.categoryProductId}"/>
+                                                                        <input class="cat-link" type="hidden" value="${pageContext.request.contextPath}/category?catId=${product.categoryProductId}"/>
                                                                         
                                                                          <custom:getCategoryNameById categoryId="${product.categoryProductId}" />
                                                                         <input class="cat-name" type="hidden" value="${categoryName}"/>
@@ -139,6 +140,7 @@
                                                                                 <b><i class="fas fa-sitemap"></i> categoria:</b> 
                                                                                 
                                                                                         <custom:getListCategoryNameByListCategoryId listCategoryId="${list.categoryList}"/>
+                                                                                        ${categoryListName}
                                                                                 
                                                                         </span>
                                                                         <div class="list-description">
@@ -179,7 +181,7 @@
                                                                         <!-- campo necessario per visuallizare il prodotto nella finestrina-->
                                                                         <input class="name" type="hidden" value="${product.name}" />
                                                                         <input class="logo-img" type="hidden" value="${pageContext.request.contextPath}/${product.logo}" />
-                                                                        <input class="cat-link" type="hidden" value="${pageContext.request.contextPath}/category?catid=${product.categoryProductId}"/>
+                                                                        <input class="cat-link" type="hidden" value="${pageContext.request.contextPath}/category?catId=${product.categoryProductId}"/>
                                                                         
                                                                          <custom:getCategoryNameById categoryId="${product.categoryProductId}" />
                                                                         <input class="cat-name" type="hidden" value="${categoryName}"/>
@@ -199,7 +201,7 @@
                                                                         <!-- campo necessario per visuallizare il prodotto nella finestrina-->
                                                                         <input class="name" type="hidden" value="${product.name}" />
                                                                         <input class="logo-img" type="hidden" value="${pageContext.request.contextPath}/${product.logo}" />
-                                                                        <input class="cat-link" type="hidden" value="${pageContext.request.contextPath}/category?catid=${product.categoryProductId}"/>
+                                                                        <input class="cat-link" type="hidden" value="${pageContext.request.contextPath}/category?catId=${product.categoryProductId}"/>
                                                                         
                                                                          <custom:getCategoryNameById categoryId="${product.categoryProductId}" />
                                                                         <input class="cat-name" type="hidden" value="${categoryName}"/>

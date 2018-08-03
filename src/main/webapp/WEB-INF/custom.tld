@@ -39,25 +39,14 @@
     </attribute>
   </tag>
   <tag>
-    <name>printAllCategoryProduct</name>
-    <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagPrintAllCategoryProduct</tag-class>
+    <name>getAllCategoryOfProduct</name>
+    <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagGetAllCategoryOfProduct</tag-class>
     <body-content>scriptless</body-content>
   </tag>
   <tag>
-    <name>printAllCategoryProductForMenu</name>
-    <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagPrintAllCategoryProductForMenu</tag-class>
+    <name>getAllCategoryOfShoppingList</name>
+    <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagGetAllCategoryOfShoppingList</tag-class>
     <body-content>scriptless</body-content>
-  </tag>
-  <tag>
-    <name>printAllCategoryList</name>
-    <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagPrintAllCategoryList</tag-class>
-    <body-content>scriptless</body-content>
-    <attribute>
-      <name>catoryIdOfCurrentList</name>
-      <required>true</required>
-      <type>java.lang.Integer</type>
-      <rtexprvalue>true</rtexprvalue>
-    </attribute>
   </tag>
   <tag>
     <name>getElementsOfShppingListByCookie</name>

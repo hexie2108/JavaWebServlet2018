@@ -1,14 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package it.unitn.webprogramming18.dellmm.filters;
 
 import it.unitn.webprogramming18.dellmm.db.daos.ListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.PermissionDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ProductDAO;
-
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCPermissionDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCProductDAO;
@@ -17,36 +12,21 @@ import it.unitn.webprogramming18.dellmm.javaBeans.Permission;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
+
 import java.io.IOException;
-import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
-import javax.servlet.http.HttpSession;
-import javax.servlet.jsp.JspException;
 
 /**
- * filtro che pre elabrora i dati della lista per utente loggato nella pagina home, search e categoria
+ * filtro che pre elabrora i dati della lista per utente loggato nella pagina
+ * front-end , home, search e categoria
+ *
  * @author mikuc
  */
 public class FrontPagePrintListFilter implements Filter
@@ -57,16 +37,15 @@ public class FrontPagePrintListFilter implements Filter
         private PermissionDAO permissionDAO;
 
         /**
-         * Init method for this filter
-         *
+         * Inizializza le classi DAO
          * @param filterConfig
          */
         @Override
         public void init(FilterConfig filterConfig)
         {
+                productDAO = new JDBCProductDAO();
                 listDAO = new JDBCListDAO();
                 permissionDAO = new JDBCPermissionDAO();
-                productDAO = new JDBCProductDAO();
         }
 
         /**
@@ -78,36 +57,39 @@ public class FrontPagePrintListFilter implements Filter
          * @exception IOException if an input/output error occurs
          * @exception ServletException if a servlet error occurs
          */
+        @Override
         public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
         {
 
                 User user = (User) ((HttpServletRequest) request).getSession().getAttribute("user");
+
                 //se utente è loggato
                 if (user != null)
                 {
+                        //set la lista delle liste spese, aggiungibile
                         getAllAddableListByUserId(request, user.getId());
-
+                        //set la lista di tutte le liste spese, visualizzabile
                         getAllMyList(request, user.getId());
-
+                        //get la id lista preferita
                         Integer listId = (Integer) ((HttpServletRequest) request).getSession().getAttribute("myListId");
-                        //se utente ha almeno una lista 
+                        //se non è nullo
                         if (listId != null)
                         {
+                                //get e set il permesso su tale lista come attributo della richiesta
                                 getMyListPermission(request, user.getId(), listId);
+                                //get e set la lista di prodotto della lista come attributo della rihciesta
                                 getProductsOfMyList(request, listId);
                         }
 
                 }
-                
-          
 
                 chain.doFilter(request, response);
 
         }
 
         /**
-         * dato request e userId, memorizza la lista delle shopping list
-         * aggiungibile dall'utente
+         * get e set la lista delle liste spese come attributo della richiesta,
+         * in cui utente può inserire elemento nella lista,
          *
          * @param request richiesta
          * @param userId id utente
@@ -125,8 +107,8 @@ public class FrontPagePrintListFilter implements Filter
                 {
                         throw new ServletException(ex.getMessage(), ex);
                 }
-                //se possiede qualche lista con il permesso di aggiungere il prodotto
-                if (listOfShoopingList != null && listOfShoopingList.size() > 0)
+                //se possiede almeno una lista in cui utente può inserire elemento,
+                if (listOfShoopingList.size() > 0)
                 {
                         request.setAttribute("addbleLists", listOfShoopingList);
                 }
@@ -134,8 +116,45 @@ public class FrontPagePrintListFilter implements Filter
         }
 
         /**
-         * dato lista id e utente id, ritorna il permesso dell'utente sulla
-         * lista corrente lita
+         * get e set la lista delle liste spese come attributo della richiesta,
+         * in cui utente ha alcun permesso sulla lista,
+         *
+         * @param request richiesta
+         * @param userId id utente
+         * @throws javax.servlet.ServletException
+         */
+        public void getAllMyList(ServletRequest request, int userId) throws ServletException
+        {
+
+                List<ShoppingList> allMyList = null;
+                try
+                {
+                        //ottiene tutte liste dell'utente
+                        allMyList = listDAO.getAllListByUserId(userId);
+                }
+                catch (DAOException ex)
+                {
+                        throw new ServletException(ex.getMessage(), ex);
+                }
+                //se possiede qualche liste
+                if (allMyList.size() > 0)
+                {
+
+                        //memoriazza tutte le liste manipolabile
+                        request.setAttribute("allMyList", allMyList);
+
+                        //se non c'è ancora una lista preferita nella sessione
+                        if (((HttpServletRequest) request).getSession().getAttribute("myListId") == null)
+                        {
+                                //si seleziona la prima lista come preferita
+                                ((HttpServletRequest) request).getSession().setAttribute("myListId", allMyList.get(0).getId());
+                        }
+
+                }
+        }
+
+        /**
+         * get e set il permesso della lista come attributo della richiesta
          *
          * @param request
          * @param userId
@@ -161,7 +180,7 @@ public class FrontPagePrintListFilter implements Filter
         }
 
         /**
-         * datto id lista , set la lista del prodotto in richiesta
+         * get e set la lista del prodotto ancora da comrare e del prodotto già comprato della lista spesa come attributo della richiesta
          *
          * @param request richiesta
          * @param list id lista
@@ -173,58 +192,26 @@ public class FrontPagePrintListFilter implements Filter
 
                 try
                 {
-                        //combina la lista di prodotto ancora da comprare e la lista di prodotto già comprato
+                        //la lista di prodotto ancora da comprare
                         productsOfMyList = productDAO.getProductsNotBuyInListByListId(listId);
+                        //la lista di prodotto già comprato
                         productsBoughtOfMyList = productDAO.getProductsBoughtInListByListId(listId);
                 }
                 catch (DAOException ex)
                 {
                         throw new ServletException(ex.getMessage(), ex);
                 }
-                if (productsOfMyList != null && productsOfMyList.size() > 0)
+                //se ci sono i prodotto ancora da comprare
+                if (productsOfMyList.size() > 0)
                 {
                         request.setAttribute("productsOfMyList", productsOfMyList);
                 }
-                if (productsBoughtOfMyList != null && productsBoughtOfMyList.size() > 0)
+                //se ci sono i prodotto già comprato
+                if (productsBoughtOfMyList.size() > 0)
                 {
                         request.setAttribute("productsBoughtOfMyList", productsBoughtOfMyList);
                 }
 
-        }
-
-        /**
-         * get la lista di shopping lista manipolabile da utente specificato
-         *
-         * @param request richiesta
-         * @param userId id utente
-         */
-        public void getAllMyList(ServletRequest request, int userId) throws ServletException
-        {
-                List<ShoppingList> allMyList = null;
-                try
-                {
-                        //ottiene tutte liste dell'utente
-                        allMyList = listDAO.getAllListByUserId(userId);
-                }
-                catch (DAOException ex)
-                {
-                        throw new ServletException(ex.getMessage(), ex);
-                }
-                //se possiede qualche liste
-                if (allMyList != null && allMyList.size() > 0)
-                {
-
-                        //memoriazza tutte le liste manipolabile
-                        request.setAttribute("allMyList", allMyList);
-
-                        //se non è ancora selezionata una lista nella sessione, si seleziona la prima lista come default
-                        if (((HttpServletRequest) request).getSession().getAttribute("myListId") == null)
-                        {
-                                //memorizza id della prima lista come la liste corrente
-                                ((HttpServletRequest)request).getSession().setAttribute("myListId", allMyList.get(0).getId());
-                        }
-
-                }
         }
 
         /**

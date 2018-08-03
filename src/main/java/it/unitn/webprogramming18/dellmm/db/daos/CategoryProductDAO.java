@@ -55,9 +55,9 @@ public interface CategoryProductDAO extends DAO<CategoryProduct, Integer> {
     public List<CategoryProduct> getAll() throws DAOException;
 
      /**
-     * recupera una lista di categoria di prodotto in base a id decrescente
+     * get la lista di categoria di prodotto in base a id decrescente
      * @param index  l'indice in cui inizia a prendere
-     * @param number numero di categoria
+     * @param number numero che vuoi ottenere
      * @return la lista di categoria di prodotto
      * @throws DAOException 
      */

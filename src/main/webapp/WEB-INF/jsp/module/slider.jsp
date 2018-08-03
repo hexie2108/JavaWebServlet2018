@@ -21,7 +21,7 @@
         <div class="carousel-inner">
                 <c:forEach var="product" varStatus="itemStatus" items="${categoryListForSlider}" end="3">
                         <div class="carousel-item ${itemStatus.index == 0 ? "active" : "" }">
-                                <a href="${pageContext.request.contextPath}/category?catid=${product.id}">
+                                <a href="${pageContext.request.contextPath}/category?catId=${product.id}">
                                         <img  src="${pageContext.request.contextPath}/${product.img}" alt="${product.name}"/>
                                         <div class="carousel-caption">
                                                 <span >${product.name}</span>

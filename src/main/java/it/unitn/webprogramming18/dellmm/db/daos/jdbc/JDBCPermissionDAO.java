@@ -6,7 +6,6 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.jdbc.JDBCDAO;
 import it.unitn.webprogramming18.dellmm.javaBeans.Permission;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -58,6 +57,7 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
                 return 0L;
         }
 
+        @Override
         public Integer insert(Permission permission) throws DAOException
         {
                 if (permission == null)
@@ -204,20 +204,18 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
         public List<Permission> getSharingPermissionsOnListByListId(Integer listId, Integer userId) throws DAOException
         {
                 List<Permission> permissionList = new ArrayList<>();
-                
-                 if (listId == null || userId == null)
+
+                if (listId == null || userId == null)
                 {
                         throw new DAOException("parameter not valid", new IllegalArgumentException("The passed listId or userId is null"));
                 }
-                
-                
 
                 CON = C3p0Util.getConnection();
                 try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Permission WHERE Permission.listId = ? AND Permission.userId<>? "))
                 {
                         stm.setInt(1, listId);
                         stm.setInt(2, userId);
-                        
+
                         try (ResultSet rs = stm.executeQuery())
                         {
                                 while (rs.next())
@@ -237,6 +235,7 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
                 return permissionList;
         }
 
+        @Override
         public Permission getUserPermissionOnListByIds(Integer userId, Integer listId) throws DAOException
         {
                 Permission permission = null;
@@ -270,6 +269,7 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
                 return permission;
         }
 
+        @Override
         public Integer getNumberSharedByListId(Integer listId) throws DAOException
         {
 
@@ -287,8 +287,8 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
                         if (counter.next())
                         {
                                 //esclude il proprietario stesso
-                                number = counter.getInt(1)-1;
-                                
+                                number = counter.getInt(1) - 1;
+
                         }
                 }
                 catch (SQLException ex)

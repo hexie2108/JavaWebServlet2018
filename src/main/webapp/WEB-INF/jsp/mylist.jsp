@@ -39,7 +39,10 @@
                                                 <span class="list-category">
                                                         <i class="fas fa-sitemap"></i> <b>categoria: </b>
                                                 </span>
-                                                <p><custom:getListCategoryNameByListCategoryId listCategoryId="${list.categoryList}"/></p>
+                                                <p>
+                                                        <custom:getListCategoryNameByListCategoryId listCategoryId="${list.categoryList}"/>
+                                                        ${categoryListName}
+                                                </p>
                                         </div>
                                         <div class="list-description">
                                                 <i class="far fa-file-alt"></i> <b>descrizione: </b>
@@ -107,7 +110,7 @@
                                                         <span>${product.name}</span>
                                                 </div>
                                                 <div class="item-cat">
-                                                        <a href="${pageContext.request.contextPath}/category?catid=${product.categoryProductId}">
+                                                        <a href="${pageContext.request.contextPath}/category?catId=${product.categoryProductId}">
                                                                 <custom:getCategoryNameById categoryId="${product.categoryProductId}"/>
                                                                 ${categoryName}
                                                         </a>
@@ -145,7 +148,7 @@
                                                         <span>${product.name}</span>
                                                 </div>
                                                 <div class="item-cat">
-                                                        <a href="${pageContext.request.contextPath}/category?catid=${product.categoryProductId}">
+                                                        <a href="${pageContext.request.contextPath}/category?catId=${product.categoryProductId}">
                                                                 <custom:getCategoryNameById categoryId="${product.categoryProductId}"/>
                                                                 ${categoryName}
                                                         </a>

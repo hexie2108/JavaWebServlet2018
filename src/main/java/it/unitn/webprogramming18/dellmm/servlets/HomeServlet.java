@@ -5,7 +5,10 @@ import it.unitn.webprogramming18.dellmm.db.daos.ProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCCategoryProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCProductDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
+import it.unitn.webprogramming18.dellmm.javaBeans.CategoryProduct;
+import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -30,22 +33,10 @@ public class HomeServlet extends HttpServlet
                 categoryProductDAO = new JDBCCategoryProductDAO();
         }
 
-        // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-        /**
-         * Handles the HTTP <code>GET</code> method.
-         *
-         * @param request servlet request
-         * @param response servlet response
-         * @throws
-         * it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException
-         * @throws ServletException if a servlet-specific error occurs
-         * @throws IOException if an I/O error occurs
-         */
         @Override
         protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
         {
-                //set titolo della pagina
-                request.setAttribute("head_title", "Home");
+
                 //get numero di categoria per il slider
                 int numberCatForSlider = Integer.parseInt(getServletContext().getInitParameter("quantityCatForSlider"));
                 //get numero di prodotto per singola pagina
@@ -54,7 +45,6 @@ public class HomeServlet extends HttpServlet
                 int startPosition = 0;
                 //get parametro di paginazione
                 String page = request.getParameter("page");
-
                 //se non è nullo
                 if (page != null && Integer.parseInt(page) > 1)
                 {
@@ -66,23 +56,35 @@ public class HomeServlet extends HttpServlet
                         page = "1";
                 }
 
+                List<CategoryProduct> categoryListForSlider = null;
+                List<Product> productList = null;
+                int totalNumberOfPage;
+
                 try
                 {
+                        //get la lista di categoria di prodotto
+                        categoryListForSlider = categoryProductDAO.getCategoryProductList(0, numberCatForSlider);
+                        //get la lista di prodotto
+                        productList = productDAO.getPublicProductList(startPosition, numebrProductForList);
+                        //get il numero totale di pagine
+                        totalNumberOfPage = (int) Math.ceil(productDAO.getCountOfPublicProduct() * 1.0 / numebrProductForList);
 
-                        //get e set la lista di cat per slider nella richesta
-                        request.setAttribute("categoryListForSlider", categoryProductDAO.getCategoryProductList(0, numberCatForSlider));
-                        //get e set la lista di prodotto per visualizzazione nella richesta
-                        request.setAttribute("productList", productDAO.getPublicProductList(startPosition, numebrProductForList));
-                        //get e set il numero di paginazione
-                        int totalNumberOfPage = (int) Math.ceil(productDAO.getCountOfPublicProduct() * 1.0 / numebrProductForList);
-                        request.setAttribute("numberOfPageRest", (totalNumberOfPage - Integer.parseInt(page)));
-                        //set url per la paginazione
-                        request.setAttribute("basePath", request.getContextPath()+"?");
                 }
                 catch (DAOException ex)
                 {
                         throw new ServletException(ex.getMessage(), ex);
                 }
+
+                //set titolo della pagina
+                request.setAttribute("head_title", "Home");
+                //set la lista di categoria di prodotto nella richesta
+                request.setAttribute("categoryListForSlider", categoryListForSlider);
+                //set la lista di prodotto nella richesta
+                request.setAttribute("productList", productList);
+                 //set il numero di pagine resti
+                request.setAttribute("numberOfPageRest", (totalNumberOfPage - Integer.parseInt(page)));
+                //set url per la paginazione
+                request.setAttribute("basePath", request.getContextPath() + "?");
 
                 //inoltra a jsp
                 request.getRequestDispatcher("/WEB-INF/jsp/home.jsp").forward(request, response);

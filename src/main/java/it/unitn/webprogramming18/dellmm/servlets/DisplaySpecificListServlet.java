@@ -5,27 +5,22 @@
  */
 package it.unitn.webprogramming18.dellmm.servlets;
 
-import it.unitn.webprogramming18.dellmm.db.daos.CategoryListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.CommentDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.PermissionDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ProductDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCCategoryListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCCommentDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCPermissionDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCProductDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
-import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
-import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
-import it.unitn.webprogramming18.dellmm.javaBeans.CategoryList;
 import it.unitn.webprogramming18.dellmm.javaBeans.Comment;
 import it.unitn.webprogramming18.dellmm.javaBeans.Permission;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
+
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -44,7 +39,6 @@ public class DisplaySpecificListServlet extends HttpServlet
         private ListDAO listDAO;
         private ProductDAO productDAO;
         private PermissionDAO permissionDAO;
-        private CategoryListDAO categoryListDAO;
         private CommentDAO commentDAO;
 
         @Override
@@ -54,7 +48,6 @@ public class DisplaySpecificListServlet extends HttpServlet
                 listDAO = new JDBCListDAO();
                 productDAO = new JDBCProductDAO();
                 permissionDAO = new JDBCPermissionDAO();
-                categoryListDAO = new JDBCCategoryListDAO();
                 commentDAO = new JDBCCommentDAO();
 
         }
@@ -73,41 +66,49 @@ public class DisplaySpecificListServlet extends HttpServlet
                 HttpSession session = request.getSession(false);
                 User user = (User) session.getAttribute("user");
 
-                //Obtains listId from parameter on URL
+                //ottiene listid
                 String listIdInString = request.getParameter("listId");
+                //se è nullo
                 if (listIdInString == null)
                 {
                         throw new ServletException("manca il parametro id della lista");
                 }
+                //trasforma listid in intero
                 int listId = Integer.parseInt(listIdInString);
 
-                //Obtains ListBean with listId
                 ShoppingList shoppingList = null;
-                //Gets all products on list
                 List<Product> listProductsNotBuy = null;
                 List<Product> listProductsBought = null;
                 //la lista dei commenti
                 List<Comment> listComment = null;
+                //il numero di commenti
                 Integer numberOfComment = null;
-                //permesso dell'utente su tale lista
+                //permesso dell'utente attuale su tale lista
                 Permission userPermissionsOnList = null;
                 //lista di permesso su tale lista
                 List<Permission> generalPermissionsOnList = null;
                 try
                 {
+                        //get istanza della lista attuale
                         shoppingList = listDAO.getByPrimaryKey(listId);
+                        //get lista di prodotto ancora da comprare
                         listProductsNotBuy = productDAO.getProductsNotBuyInListByListId(listId);
+                        //get lista di prodtto già comprato
                         listProductsBought = productDAO.getProductsBoughtInListByListId(listId);
+                        //get lista del commento
                         listComment = commentDAO.getCommentsOnListByListId2(listId);
+                        //get numero del commento
                         numberOfComment = commentDAO.getNumberOfCommentsByListId(listId);
+                        //get il permesso dell'utente attuale su tale lista
                         userPermissionsOnList = permissionDAO.getUserPermissionOnListByIds(user.getId(), listId);
                         if (userPermissionsOnList == null)
                         {
                                 throw new ServletException("non hai nessun permesso su questa lista");
                         }
-                        //in caso sono proprietario
+                        //in caso che utente è il proprietario
                         if (shoppingList.getOwnerId() == user.getId())
                         {
+                                //get la lista di permesso su tale lista spesa
                                 generalPermissionsOnList = permissionDAO.getSharingPermissionsOnListByListId(listId, user.getId());
                         }
 
@@ -117,59 +118,44 @@ public class DisplaySpecificListServlet extends HttpServlet
                         throw new ServletException(ex.getMessage(), ex);
                 }
 
+                //set titolo della pagina
+                request.setAttribute("head_title", "lista: " + shoppingList.getName());
+                //set l'istanza lista come l'attributo della richiesta
                 request.setAttribute("list", shoppingList);
+                //set il permesso dell'utente  come l'attributo della richiesta
+                request.setAttribute("userPermissionsOnList", userPermissionsOnList);
+
+                //se lista non è vuoto
                 if (listProductsNotBuy.size() > 0)
                 {
+                        //set lista di prodotto ancora da comprare come l'attributo della richiesta
                         request.setAttribute("listProductsNotBuy", listProductsNotBuy);
                 }
+
+                //se lista non è vuoto
                 if (listProductsBought.size() > 0)
                 {
+                        //set lista di prodotto già comprato come l'attributo della richiesta
                         request.setAttribute("listProductsBought", listProductsBought);
                 }
+
+                //se lista non è vuoto
                 if (listComment.size() > 0)
                 {
+                        //set lista di commento e il numero di commento come l'attributo della richiesta
                         request.setAttribute("listComment", listComment);
                         request.setAttribute("numberOfComment", numberOfComment);
-                        
                 }
+
+                //se lista non è vuoto
                 if (generalPermissionsOnList != null)
                 {
+                        //set lista di permesso come l'attributo della richiesta
                         request.setAttribute("generalPermissionsOnList", generalPermissionsOnList);
                 }
-                if (userPermissionsOnList != null)
-                {
-                        request.setAttribute("userPermissionsOnList", userPermissionsOnList);
-                }
-                
-                //set titolo della pagina
-                request.setAttribute("head_title", "lista: "+shoppingList.getName());
 
                 request.getRequestDispatcher("/WEB-INF/jsp/mylist.jsp").forward(request, response);
         }
 
-        /**
-         * Handles the HTTP <code>POST</code> method.
-         *
-         * @param request servlet request
-         * @param response servlet response
-         * @throws ServletException if a servlet-specific error occurs
-         * @throws IOException if an I/O error occurs
-         */
-        @Override
-        protected void doPost(HttpServletRequest request, HttpServletResponse response)
-                    throws ServletException, IOException
-        {
-        }
-
-        /**
-         * Returns a short description of the servlet.
-         *
-         * @return a String containing servlet description
-         */
-        @Override
-        public String getServletInfo()
-        {
-                return "Displays comprehensive info about a list";
-        }// </editor-fold>
-
+      
 }

@@ -5,19 +5,20 @@
  */
 package it.unitn.webprogramming18.dellmm.servlets;
 
-import it.unitn.webprogramming18.dellmm.db.daos.CategoryProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ProductDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCCategoryProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCProductDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
+import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * servlet per la pagina di ricerca
  *
  * @author mikuc
  */
@@ -30,39 +31,25 @@ public class SearchServlet extends HttpServlet
         public void init() throws ServletException
         {
                 productDAO = new JDBCProductDAO();
-
         }
 
-        // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-        /**
-         * Handles the HTTP <code>GET</code> method.
-         *
-         * @param request servlet request
-         * @param response servlet response
-         * @throws
-         * it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException
-         * @throws ServletException if a servlet-specific error occurs
-         * @throws IOException if an I/O error occurs
-         */
         @Override
         protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
         {
                 //get parola ricercata
-                String searchWords = null;
-                searchWords = request.getParameter("searchWords");
+                String searchWords = request.getParameter("searchWords");
                 //se parola non esiste
                 if (searchWords == null)
+                {
+                        throw new ServletException("la parola da cercare è nullo");
+                }
+                if (searchWords.equals(""))
                 {
                         throw new ServletException("la parola da cercare è vuota");
                 }
 
-                //set titolo della pagina nella richesta
-                request.setAttribute("head_title", "Search: " + searchWords);
-                //path per la paginazione
-                
                 //get ordine richiesta
-                String order = null;
-                order = request.getParameter("order");
+                String order = request.getParameter("order");
                 //se non è vuota
                 if (order != null)
                 {
@@ -84,7 +71,6 @@ public class SearchServlet extends HttpServlet
                 int startPosition = 0;
                 //get parametro di paginazione
                 String page = request.getParameter("page");
-
                 //se non è nullo
                 if (page != null && Integer.parseInt(page) > 1)
                 {
@@ -96,20 +82,30 @@ public class SearchServlet extends HttpServlet
                         page = "1";
                 }
 
+                List<Product> productList = null;
+                int totalNumberOfPage;
+
                 try
                 {
-                        //get e set la lista di prodotto secondo la parola ricercata e ordine richiesta per visualizzazione nella richesta
-                        request.setAttribute("productList", productDAO.getPublicProductListByNameSearch(searchWords, order, startPosition, numebrProductForList));
-                        //get e set il numero di paginazione
-                        int totalNumberOfPage = (int) Math.ceil(productDAO.getCountOfPublicProductByNameSearch(searchWords) * 1.0 / numebrProductForList);
-                        request.setAttribute("numberOfPageRest", (totalNumberOfPage - Integer.parseInt(page)));
-                        //set url per la paginazione
-                        request.setAttribute("basePath", request.getContextPath()+request.getServletPath()+"?searchWords="+URLEncoder.encode(searchWords, "utf-8")+"&order="+order+"&");
+                        //get la lista di prodotto secondo la parola ricercata
+                        productList = productDAO.getPublicProductListByNameSearch(searchWords, order, startPosition, numebrProductForList);
+                        //get il numero totale di pagine
+                        totalNumberOfPage = (int) Math.ceil(productDAO.getCountOfPublicProductByNameSearch(searchWords) * 1.0 / numebrProductForList);
+
                 }
                 catch (DAOException ex)
                 {
                         throw new ServletException(ex.getMessage(), ex);
                 }
+
+                //set titolo della pagina nella richesta
+                request.setAttribute("head_title", "Search: " + searchWords);
+                //set la lista di prodotto nella richesta
+                request.setAttribute("productList", productList);
+                 //set il numero di pagine resti
+                request.setAttribute("numberOfPageRest", (totalNumberOfPage - Integer.parseInt(page)));
+                //set url per la paginazione
+                request.setAttribute("basePath", request.getContextPath() + request.getServletPath() + "?searchWords=" + URLEncoder.encode(searchWords, "utf-8") + "&order=" + order + "&");
 
                 //inoltra jsp
                 request.getRequestDispatcher("/WEB-INF/jsp/search.jsp").forward(request, response);

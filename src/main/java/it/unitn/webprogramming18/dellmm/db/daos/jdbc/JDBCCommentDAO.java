@@ -6,7 +6,6 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.jdbc.JDBCDAO;
 import it.unitn.webprogramming18.dellmm.javaBeans.Comment;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -56,6 +55,7 @@ public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements Comment
                 return 0L;
         }
 
+        @Override
         public Integer insert(Comment comment) throws DAOException
         {
                 if (comment == null)
@@ -187,6 +187,7 @@ public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements Comment
                 return comment;
         }
 
+        @Override
         public HashMap<Integer, String> getCommentsOnListByListId(String listId) throws DAOException
         {
                 HashMap<Integer, String> comments = new HashMap<>();
@@ -287,6 +288,7 @@ public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements Comment
 
         }
 
+        @Override
         public void deleteCommentById(Integer commentId) throws DAOException
         {
 

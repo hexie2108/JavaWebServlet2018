@@ -101,7 +101,10 @@
                 <url-pattern>/resendEmail</url-pattern>
                 <url-pattern>/alreadyLoggedIn</url-pattern>
                 <url-pattern>/mylists</url-pattern>
-                <url-pattern>/service/</url-pattern>
+                <url-pattern>/mylist</url-pattern>
+                <url-pattern>/service/updateItemInListService</url-pattern>
+                <url-pattern>/service/updateListService</url-pattern>
+                <url-pattern>/service/changeListService</url-pattern>
                 
         </filter-mapping>
         <filter>

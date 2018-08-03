@@ -3,14 +3,17 @@ package it.unitn.webprogramming18.dellmm.filters;
 import it.unitn.webprogramming18.dellmm.util.PagePathsConstants;
 
 import javax.servlet.*;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.URLEncoder;
 
-@WebFilter(filterName = "LoggedUserOnlyFilter")
+/**
+ * se utente non è autenticato, rindirizzarlo alla pagina login
+ * se utente è autenticato, set tutte le sue richieste in codifica UTF-8
+ * @author mikuc
+ */
 public class LoggedUserOnlyFilter implements Filter
 {
 

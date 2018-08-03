@@ -17,7 +17,7 @@
 
                         <div class="list-item-cat ${not empty categoria ?"hiddin-cat":""}">
 
-                                <a class="list-item-cat-link" href="${pageContext.request.contextPath}/category?catid=${product.categoryProductId}">
+                                <a class="list-item-cat-link" href="${pageContext.request.contextPath}/category?catId=${product.categoryProductId}">
                                         <custom:getCategoryNameById categoryId="${product.categoryProductId}"/>
                                         ${categoryName}
                                 </a>

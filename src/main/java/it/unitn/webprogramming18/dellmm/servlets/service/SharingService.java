@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * servizio per inserire e eliminare il commento
+ * servizio per inserire/modificare/eliminare il permesso condiviso
  *
  * @author mikuc
  */

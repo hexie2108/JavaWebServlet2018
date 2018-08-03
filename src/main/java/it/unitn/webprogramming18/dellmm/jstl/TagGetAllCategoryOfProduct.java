@@ -12,39 +12,38 @@ import it.unitn.webprogramming18.dellmm.javaBeans.CategoryProduct;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 /**
- *stampa tutte le categorie del prodotto solo nel home.jsp
+ * Tag che get e set tutte categorie del prodotto come l'attributo della
+ * richiesta
+ *
  * @author mikuc
  */
-public class TagPrintAllCategoryProductForMenu extends SimpleTagSupport
+public class TagGetAllCategoryOfProduct extends SimpleTagSupport
 {
 
-        CategoryProductDAO categoryProductDAO = new JDBCCategoryProductDAO();
+        private final CategoryProductDAO categoryProductDAO = new JDBCCategoryProductDAO();
 
         @Override
         public void doTag() throws JspException, IOException
         {
-                
-                List<CategoryProduct> categoryList;
+
+                List<CategoryProduct> categoryProductList;
                 try
                 {
-                        categoryList = categoryProductDAO.getAll();
+                        categoryProductList = categoryProductDAO.getAll();
                 }
                 catch (DAOException ex)
                 {
-                        throw new JspException("errore durante ottenimento la lista di categoria");
+                        throw new JspException(ex.getMessage(), ex);
                 }
-                String basePath = ((PageContext) getJspContext()).getServletContext().getContextPath();
-                JspWriter jspWriter = getJspContext().getOut();
-                for (CategoryProduct categoryProduct : categoryList)
-                {
-
-                        jspWriter.println("<a class=\"dropdown-item\" href =\"" + basePath + "/category?catid=" + categoryProduct.getId() + "\">" + categoryProduct.getName() + "</a>");
-                }
+                
+                //set la lista della categoria di prodotto nella richiesta
+                ((PageContext) getJspContext()).getRequest().setAttribute("categoryProductList", categoryProductList);
+                
+              
 
         }
 
