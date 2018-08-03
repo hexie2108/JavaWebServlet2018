@@ -16,6 +16,8 @@
 
     <link rel="stylesheet" href="<c:url value="/css/tmpToDelete/login-style.css"/>">
     <link rel="stylesheet" href="<c:url value="/css/tmpToDelete/common.css"/>">
+
+    <link rel="stylesheet" href="<c:url value="/libs/fontawesome-free-5.1.1-web/css/all.min.css"/>">
 </head>
 <body>
 <%@include file="../jspf/i18n_switcher.jsp"%>
@@ -39,7 +41,7 @@
                                type="text" name="${ForgotPasswordServlet.EMAIL_KEY}">
                     </div>
                 </div>
-                <div class="alert alert-danger d-none" id="id-alert">
+                <div class="alert alert-danger d-none" id="id-res">
                 </div>
 
                 <div class="btn-group btn-group-justified" role="group" aria-label="...">
@@ -50,38 +52,38 @@
                         <button class="btn btn-primary" type="submit"><fmt:message key="forgotPassword.label.resetPwd"/></button>
                     </div>
                 </div>
-                <script>
-                    const form = $('#form-forgot');
-                    const alertDiv = $('#id-alert');
-
-                    form.submit(function(e){
-                        e.preventDefault();
-
-                        $.ajax({
-                            dataType: "json",
-                            url : '<c:url value="/forgotPassword.json"/>',
-                            type: "post",
-                            async: false,
-                            data: form.serialize(),
-                        }).done((data) => {
-                            window.location.replace('<c:url value="/login"/>');
-                        }).fail( (jqXHR) => {
-                            alertDiv.html(
-                                (typeof jqXHR.responseJSON === 'object' &&
-                                jqXHR.responseJSON !== null &&
-                                jqXHR.responseJSON['message'] !== undefined)?
-                                    jqXHR.responseJSON['message']:
-                                    "<fmt:message key="generic.errors.unknownError"/>"
-                            );
-
-                            alertDiv.removeClass("d-none");
-                        });
-                    });
-                </script>
-
             </div>
         </form>
     </div>
 </div>
+<script src="<c:url value="/js/userValidate.js"/>"></script>
+<script>
+    $(document).ready(() => {
+        const form = $('#form-forgot');
+
+        form.submit(function(e){
+            e.preventDefault();
+
+            const resDiv = $('#id-res');
+            const url = '<c:url value="/forgotPassword.json"/>';
+
+            const unknownErrorMessage = '<fmt:message key="generic.errors.unknownError"/>';
+            const successMessage = '<fmt:message key="forgotPassword.success"/>';
+
+            formSubmit(
+                url,
+                form, {
+                    'multipart': false,
+                    'session': false,
+                    'redirectUrl': null,
+                    'unknownErrorMessage': unknownErrorMessage,
+                    'successMessage': successMessage,
+                    'resDiv': resDiv
+                }
+            )
+        });
+    })
+</script>
+
 </body>
 </html>

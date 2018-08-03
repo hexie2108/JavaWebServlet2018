@@ -31,106 +31,78 @@
         <h2 class="form-signin-heading"><fmt:message key="loggedResetPassword.label.form"/></h2>
 
         <div class="form-group row">
-            <div id="divPassword" class="col-sm-6 ${not empty requestScope.messages.get(RegistrationValidator.FIRST_PWD_KEY)?'has-error':''}">
+            <div id="divPassword" class="col-sm-6">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                     <label for="inputPassword" class="sr-only"><fmt:message key="user.label.password"/></label>
                     <input id="inputPassword" class="form-control" placeholder="<fmt:message key="user.label.password"/>" required=""
-                           type="password" name="${RegistrationValidator.FIRST_PWD_KEY}"
-                           value="">
+                           type="password" name="${RegistrationValidator.FIRST_PWD_KEY}">
                     <span id="strongPassword" class="input-group-addon"><fmt:message key="user.label.passwordScore"/>: x/x</span>
                 </div>
                 <span id="spanPassword" class="help-block">
-                    ${requestScope.messages.get(RegistrationValidator.FIRST_PWD_KEY)}
                 </span>
             </div>
         </div>
 
         <div class="form-group row">
-            <div id="divPassword2" class="col-sm-6 ${not empty requestScope.messages.get(RegistrationValidator.SECOND_PWD_KEY)?'has-error':''}">
+            <div id="divPassword2" class="col-sm-6">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                     <label for="inputPassword2" class="sr-only"><fmt:message key="user.label.repeatPassword"/></label>
                     <input id="inputPassword2" class="form-control" placeholder="<fmt:message key="user.label.repeatPassword"/>" required=""
-                           type="password" name="${RegistrationValidator.SECOND_PWD_KEY}"
-                           value="">
+                           type="password" name="${RegistrationValidator.SECOND_PWD_KEY}">
                 </div>
                 <span id="spanPassword2" class="help-block">
-                    ${requestScope.messages.get(RegistrationValidator.SECOND_PWD_KEY)}
                 </span>
             </div>
         </div>
 
-        <div class="alert alert-danger d-none" id="id-alert">
+        <div class="alert d-none" id="id-res">
         </div>
 
         <button class="btn btn-lg btn-primary btn-block" type="submit"><fmt:message key="loggedResetPassword.submit"/></button>
     </form>
 </div>
 
+<script src="<c:url value="/libs/zxcvbn/zxcvbn.js"/>"></script>
 <script src="<c:url value="/js/userValidate.js"/>"></script>
 <script>
     $(document).ready(function() {
         const url = '<c:url value="/${PagePathsConstants.VALIDATE_REGISTRATION}"/>';
+        const urlJSON ='<c:url value="/loggedResetPassword.json"/>';
         const form=$('#form-register');
         const strPwd = form.find('#strongPassword');
+        const inPwd = form.find('#inputPassword');
 
-        const alertDiv = $('#id-alert');
+        const resDiv = $('#id-res');
+        const unknownErrorMessage = '<fmt:message key="generic.errors.unknownError"/>';
+        const successMessage = '<fmt:message key="loggedResetPassword.success"/>';
 
-        /*
-
-        form.find('#inputPassword').keyup(function(){
-            strPwd.text("<fmt:message key="user.label.passwordScore"/>: " + zxcvbn(this.value).score + "/4");
+        inPwd.keyup(() => {
+            strPwd.text("<fmt:message key="user.label.passwordScore"/>: " + zxcvbn(inPwd.val()).score + "/4");
         });
 
         form.find('input').blur(function(){
-            const request = $.ajax({
-                dataType: "json",
-                url : url,
-                type: "post",
-                data: form.serialize(),
-                xhrFields: {
-                    withCredentials: true
-                }
-            });
-
-            request.done(updateVerifyMessages);
+            request_user_validation(form, false, url)
+                .done(function(d){
+                    updateVerifyMessages(form, d);
+                });
         });
-
-        */
-
 
         form.submit(function(e){
             e.preventDefault();
 
-            $.ajax({
-                dataType: "json",
-                url : "<c:url value="/loggedResetPassword.json"/>",
-                type: "post",
-                async : false,
-                data: form.serialize(),
-                xhrFields: {
-                    withCredentials: true
+            formSubmit(
+                urlJSON,
+                form, {
+                    'multipart': false,
+                    'session': true,
+                    'redirectUrl': null,
+                    'unknownErrorMessage': unknownErrorMessage,
+                    'successMessage': successMessage,
+                    'resDiv': resDiv
                 }
-            }).done(( data) => {
-                window.location.replace('<c:url value="/"/>');
-            }).fail( (jqXHR) => {
-                if (typeof jqXHR.responseJSON === 'object' &&
-                    jqXHR.responseJSON !== null &&
-                    jqXHR.responseJSON['message'] !== undefined
-                ) {
-                    if (jqXHR.responseJSON['message'] === "ValidationFail") {
-                        jqXHR.responseJSON['message'] = undefined;
-                        updateVerifyMessages(form, jqXHR.responseJSON);
-                    } else {
-                        alertDiv.html(jqXHR.responseJSON['message']);
-                        alertDiv.removeClass("d-none");
-                    }
-                } else {
-                    alertDiv.html("<fmt:message key="generic.errors.unknownError"/>");
-                    alertDiv.removeClass("d-none");
-                }
-            });
+            );
         });
     });
 </script>

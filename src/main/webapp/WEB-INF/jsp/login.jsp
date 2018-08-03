@@ -48,7 +48,7 @@
                 <input type="hidden" name="${LoginServlet.NEXT_URL_KEY}"
                        id="inputNextUrl" value="${param[LoginServlet.NEXT_URL_KEY]}">
 
-                <div class="alert alert-danger d-none" id="id-alert" style="">
+                <div class="alert d-none" id="id-res">
                 </div>
 
                 <div class="checkbox pull-left">
@@ -67,42 +67,37 @@
                 </div>
 
             </div>
-            <script>
-                const form = $('#form-signin');
-                const alertDiv = $('#id-alert');
-
-                form.submit(function(e){
-                    e.preventDefault();
-
-                    $.ajax({
-                        dataType: "json",
-                        url : '<c:url value="/login.json"/>',
-                        type: "post",
-                        async: false,
-                        data: form.serialize(),
-                        xhrFields: {
-                            withCredentials: true
-                        }
-                    }).done(( data) => {
-                        window.location.replace(data['nextUrl']);
-                    }).fail( (jqXHR) => {
-                        alertDiv.html(
-                            (typeof jqXHR.responseJSON === 'object' &&
-                            jqXHR.responseJSON !== null &&
-                            jqXHR.responseJSON['message'] !== undefined)?
-                                jqXHR.responseJSON['message']:
-                                "<fmt:message key="generic.errors.unknownError"/>"
-                        );
-
-                        alertDiv.removeClass("d-none");
-                    });
-                });
-            </script>
         </form>
         <div class="content-divider"><span class="content-divider-text"><fmt:message key="login.label.notRegistered"/></span></div>
         <a href="<c:url value="/${PagePathsConstants.REGISTER}"/>"
            class="btn btn-default" role="button" id="register-btn"><fmt:message key="login.label.register"/></a>
     </div>
 </div>
+
+<script src="<c:url value="/js/userValidate.js"/>"></script>
+<script>
+    const form = $('#form-signin');
+    const resDiv = $('#id-res');
+    const url = '<c:url value="/login.json"/>';
+
+    const unknownErrorMessage = '<fmt:message key="generic.errors.unknownError"/>';
+
+    form.submit(function(e){
+        e.preventDefault();
+
+
+        formSubmit(
+            url,
+            form, {
+                'multipart': false,
+                'session': true,
+                'redirectUrl': '<c:url value="/"/>',
+                'unknownErrorMessage': unknownErrorMessage,
+                'resDiv': resDiv
+            }
+        );
+    });
+</script>
+
 </body>
 </html>

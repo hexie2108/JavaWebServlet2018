@@ -3,7 +3,7 @@
 
 "use strict";
 
-function request_errors(form, async, url){
+function request_user_validation(form, async, url){
     return $.ajax({
         dataType: "json",
         url : url,
@@ -77,6 +77,85 @@ function add_file_errors(form, data){
 
     return data;
 }
+
+
+
+
+function formSubmit(url, form, options) {
+    function resetAlert(alert) {
+        alert.removeClass('alert-danger');
+        alert.removeClass('alert-success');
+        alert.removeClass('alert-warning');
+
+        alert.addClass("d-none");
+    }
+
+    const multipart = options['multipart'];
+    const session = options['session'];
+    const redirectUrl = options['redirectUrl'];
+    const unknownErrorMessage = options['unknownErrorMessage'];
+    const successMessage = options['successMessage'];
+    const resDiv = options['resDiv'];
+
+    const req = {
+        dataType: "json",
+        url: url,
+        type: "POST",
+        async: false,
+    };
+
+    if (multipart === true) {
+        req.data = new FormData(form[0]);
+        req.processData = false;
+        req.contentType = false;
+        req.cache = false;
+    } else {
+        req.data = form.serialize();
+    }
+
+    if (session === true) {
+        req.xhrFields = {withCredentials: true};
+    }
+
+    const rq = $.ajax(req);
+
+    form.find('[type=submit]').attr("disabled", true);
+
+    rq.done(function (data) {
+        resetAlert(resDiv);
+
+        if (redirectUrl) {
+            window.location.href = redirectUrl;
+        } else {
+            resDiv.addClass("alert-success");
+            resDiv.html(successMessage);
+            resDiv.removeClass("d-none");
+        }
+    }).fail(function (jqXHR) {
+        resetAlert(resDiv);
+
+        resDiv.addClass("alert-danger");
+
+        if (typeof jqXHR.responseJSON === 'object' &&
+            jqXHR.responseJSON !== null &&
+            jqXHR.responseJSON['message'] !== undefined
+        ) {
+            if (jqXHR.responseJSON['message'] === "ValidationFail") {
+                jqXHR.responseJSON['message'] = undefined;
+                updateVerifyMessages(form, jqXHR.responseJSON);
+            } else {
+                resDiv.html(jqXHR.responseJSON['message']);
+                resDiv.removeClass("d-none");
+            }
+        } else {
+            resDiv.html(unknownErrorMessage);
+            resDiv.removeClass("d-none");
+        }
+    }).always(function () {
+        form.find('[type=submit]').attr("disabled", false);
+    });
+}
+
 
 
 

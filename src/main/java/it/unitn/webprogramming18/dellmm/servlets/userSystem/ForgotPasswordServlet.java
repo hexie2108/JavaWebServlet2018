@@ -61,19 +61,6 @@ public class ForgotPasswordServlet extends HttpServlet {
 
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        /*
-            String prevUrl = request.getParameter(PREV_URL_KEY);
-
-            // Se prevUrl è vuoto allora usa la pagina di default(index)
-            if (prevUrl == null || prevUrl.isEmpty()) {
-                String contextPath = getServletContext().getContextPath();
-                if (!contextPath.endsWith("/")) {
-                    contextPath += "/";
-                }
-
-                prevUrl = contextPath;
-            }
-         */
         String email = request.getParameter(EMAIL_KEY);
 
         if (email == null || email.isEmpty()) {

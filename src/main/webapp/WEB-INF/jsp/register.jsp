@@ -179,7 +179,7 @@
             return updateVerifyMessages(form, add_file_errors(form, d));
         }
 
-        form.find('input').blur(function(){ request_errors(form, true, URL).done(upd); });
+        form.find('input').blur(function(){ request_user_validation(form, true, URL).done(upd); });
 
         form.submit(function(e){
             e.preventDefault();

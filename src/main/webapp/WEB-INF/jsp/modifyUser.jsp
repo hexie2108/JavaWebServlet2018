@@ -128,7 +128,7 @@
         });
 
         form.find('input').blur(() => {
-            request_errors(form, true, URL).done((d) => updateVerifyMessages(form, add_file_errors(form,d)));
+            request_user_validation(form, true, URL).done((d) => updateVerifyMessages(form, add_file_errors(form,d)));
         });
 
         form.submit(function(e){
