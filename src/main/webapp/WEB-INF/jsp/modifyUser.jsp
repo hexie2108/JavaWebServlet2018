@@ -107,6 +107,9 @@
             </span>
         </div>
 
+        <div class="alert d-none" id="id-res">
+        </div>
+
         <button class="btn btn-lg btn-primary btn-block" type="submit"><fmt:message key="modifyUser.label.submit"/></button>
     </form>
 </div>
@@ -118,14 +121,11 @@
         // Salva oggetti in modo da doverli cercare una sola volta
         const form=$('#form-register');
         const URL = '<c:url value="/${PagePathsConstants.VALIDATE_REGISTRATION}"/>';
-        const customAvatarImg = $('#customAvatarImg');
+        const urlJSON = '<c:url value="/modifyUser.json"/>';
+        const resDiv = $('#id-res');
 
-
-        form.submit(function(){
-            if(!$('#customAvatar').is(':checked')){
-                customAvatarImg.val("");
-            }
-        });
+        const unknownErrorMessage = '<fmt:message key="generic.errors.unknownError"/>';
+        const successMessage = '<fmt:message key="modifyUser.success"/>';
 
         form.find('input').blur(() => {
             request_user_validation(form, true, URL).done((d) => updateVerifyMessages(form, add_file_errors(form,d)));
@@ -134,34 +134,21 @@
         form.submit(function(e){
             e.preventDefault();
 
-            $.ajax({
-                dataType: "json",
-                url : '<c:url value="/modifyUser.json"/>',
-                type: "post",
-                async: false,
-                data: new FormData(form[0]),
-                processData: false,
-                contentType: false,
-                cache: false
-            }).done((data) => {
-                window.location.href = '<c:url value="/login"/>';
-            }).fail( (jqXHR) => {
-                if (typeof jqXHR.responseJSON === 'object' &&
-                    jqXHR.responseJSON !== null &&
-                    jqXHR.responseJSON['message'] !== undefined
-                ) {
-                    if (jqXHR.responseJSON['message'] === "ValidationFail") {
-                        jqXHR.responseJSON['message'] = undefined;
-                        updateVerifyMessages(form, jqXHR.responseJSON);
-                    } else {
-                        alertDiv.html(jqXHR.responseJSON['message']);
-                        alertDiv.removeClass("d-none");
-                    }
-                } else {
-                    alertDiv.html("<fmt:message key="generic.errors.unknownError"/>");
-                    alertDiv.removeClass("d-none");
+            if(!$('#customAvatar').is(':checked')){
+                $('#customAvatarImg').val("");
+            }
+
+            formSubmit(
+                urlJSON,
+                form, {
+                    'multipart': true,
+                    'session': false,
+                    'redirectUrl': null,
+                    'unknownErrorMessage': unknownErrorMessage,
+                    'successMessage': successMessage,
+                    'resDiv': resDiv
                 }
-            });
+            );
         });
     });
 </script>

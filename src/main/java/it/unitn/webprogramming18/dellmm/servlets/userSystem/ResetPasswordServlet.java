@@ -54,7 +54,7 @@ public class ResetPasswordServlet extends HttpServlet {
         String password = request.getParameter(PWD_KEY);
 
         if (pw_rst_id == null) {
-            ServletUtility.sendError(request,response,400,"Paramentro id mancante"); // TODO: To i18n
+            ServletUtility.sendError(request,response,400,"resetPassword.errors.missingId");
             return;
         }
 
@@ -66,12 +66,15 @@ public class ResetPasswordServlet extends HttpServlet {
         }
 
         try {
-            userDAO.changePassword(pw_rst_id, password);
+            if (!userDAO.changePassword(pw_rst_id, password)){
+                ServletUtility.sendError(request, response, 400, "resetPassword.errors.notFoundId");
+                return;
+            }
         } catch (IllegalArgumentException ex) {
-            ServletUtility.sendError(request, response, 400,"ID non valido"); // TODO: To i18n
+            ServletUtility.sendError(request, response, 400,"resetPassword.errors.invalidId");
             return;
         } catch (DAOException e) {
-            ServletUtility.sendError(request, response, 500,"Impossibile ricercare l'id richiesto"); // TODO: To i18n
+            ServletUtility.sendError(request, response, 500,"resetPassword.errors.cantChange");
             return;
         }
 

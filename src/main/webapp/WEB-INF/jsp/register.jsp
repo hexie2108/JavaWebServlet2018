@@ -158,6 +158,9 @@
             </div>
         </div>
 
+        <div class="alert d-none" id="id-res">
+        </div>
+
         <button class="btn btn-lg btn-primary btn-block" type="submit"><fmt:message key="register.label.submit"/></button>
     </form>
 </div>
@@ -170,6 +173,9 @@
         const strPwd = form.find('#strongPassword');
         const URL = '<c:url value="/${PagePathsConstants.VALIDATE_REGISTRATION}?strict="/>';
 
+        const urlJSON = '<c:url value="/register.json"/>';
+        const resDiv = $('#id-res');
+        const unknownErrorMessage = '<fmt:message key="generic.errors.unknownError"/>';
 
         form.find('#inputPassword').on("keyup", function(){
             strPwd.text("<fmt:message key="user.label.passwordScore"/>: " + zxcvbn(this.value).score + "/4");
@@ -188,34 +194,16 @@
                 $('#customAvatarImg').val("");
             }
 
-            $.ajax({
-                dataType: "json",
-                url : '<c:url value="/register.json"/>',
-                type: "post",
-                async: false,
-                data: new FormData(form[0]),
-                processData: false,
-                contentType: false,
-                cache: false
-            }).done((data) => {
-                window.location.href = '<c:url value="/login"/>';
-            }).fail( (jqXHR) => {
-                if (typeof jqXHR.responseJSON === 'object' &&
-                    jqXHR.responseJSON !== null &&
-                    jqXHR.responseJSON['message'] !== undefined
-                ) {
-                    if (jqXHR.responseJSON['message'] === "ValidationFail") {
-                        jqXHR.responseJSON['message'] = undefined;
-                        updateVerifyMessages(form, jqXHR.responseJSON);
-                    } else {
-                        alertDiv.html(jqXHR.responseJSON['message']);
-                        alertDiv.removeClass("d-none");
-                    }
-                } else {
-                    alertDiv.html("<fmt:message key="generic.errors.unknownError"/>");
-                    alertDiv.removeClass("d-none");
+            formSubmit(
+                urlJSON,
+                form, {
+                    'multipart': true,
+                    'session': true,
+                    'redirectUrl': '<c:url value="/"/>',
+                    'unknownErrorMessage': unknownErrorMessage,
+                    'resDiv': resDiv
                 }
-            });
+            );
         });
     });
 </script>

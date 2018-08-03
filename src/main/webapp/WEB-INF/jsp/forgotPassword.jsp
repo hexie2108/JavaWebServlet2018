@@ -41,7 +41,7 @@
                                type="text" name="${ForgotPasswordServlet.EMAIL_KEY}">
                     </div>
                 </div>
-                <div class="alert alert-danger d-none" id="id-res">
+                <div class="alert d-none" id="id-res">
                 </div>
 
                 <div class="btn-group btn-group-justified" role="group" aria-label="...">

@@ -180,7 +180,12 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
         return user;
     }
     
-    public void changePassword(String resetLink, String newPassword) throws DAOException {
+    public boolean changePassword(String resetLink, String newPassword) throws DAOException {
+
+        if (!resetLink.matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")) {
+            throw new IllegalArgumentException("Argument must be string rappresentation of uuid");
+        }
+
         try(PreparedStatement stm = CON.prepareStatement(
                 "UPDATE User SET resendPwdEmailLink=NULL, password=?" +
                         " WHERE resendPwdEmailLink= ?"
@@ -189,11 +194,13 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
             stm.setString(2, resetLink);
 
             if (stm.executeUpdate() != 1) {
-                throw new DAOException("Impossible update the password");
+                return false;
             }
         } catch (SQLException e) {
             throw new DAOException("Impossible to update the password");
         }
+
+        return true;
     }
 
     public int checkUserRegisteredByEmail(String email) throws DAOException {

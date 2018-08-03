@@ -76,9 +76,10 @@ public interface UserDAO extends DAO<User, Integer> {
      *
      * @param resetLink   the resetLink used(that is linked with the user)
      * @param newPassword the new password to set
+     * @return true if resetLink was found, false otherwise
      * @throws DAOException
      */
-    public void changePassword(String resetLink, String newPassword) throws DAOException;
+    public boolean changePassword(String resetLink, String newPassword) throws DAOException;
 
     /**
      * Given an email, the function checks if the user is registered in the DB,

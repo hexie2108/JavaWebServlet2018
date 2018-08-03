@@ -43,7 +43,7 @@
 
                 <input type="hidden" name="id" id="inputId" value="${param[ResetPasswordServlet.ID_KEY]}">
 
-                <div class="alert alert-danger d-none" id="id-alert">
+                <div class="alert d-none" id="id-res">
                 </div>
 
                 <div class="btn-group btn-group-justified" role="group" aria-label="...">
@@ -55,39 +55,38 @@
                         <button class="btn btn-primary" type="submit"><fmt:message key="resetPassword.label.submit"/></button>
                     </div>
                 </div>
-
-                <script>
-                    const form = $('#form-signin');
-                    const alertDiv = $('#id-alert');
-
-                    form.submit(function(e){
-                        e.preventDefault();
-
-                        $.ajax({
-                            dataType: "json",
-                            url : '<c:url value="/resetPassword.json"/>',
-                            type: "post",
-                            async: false,
-                            data: form.serialize()
-                        }).done(( data) => {
-                            window.location.replace('<c:url value="/login"/>');
-                        }).fail( (jqXHR) => {
-                            alertDiv.html(
-                                (typeof jqXHR.responseJSON === 'object' &&
-                                    jqXHR.responseJSON !== null &&
-                                    jqXHR.responseJSON['message'] !== undefined)?
-                                    jqXHR.responseJSON['message']:
-                                    "<fmt:message key="generic.errors.unknownError"/>"
-                            );
-
-                            alertDiv.removeClass("d-none");
-                        });
-                    });
-                </script>
             </div>
         </form>
     </div>
 </div>
+
+<script src="<c:url value="/js/userValidate.js"/>"></script>
+<script>
+    const form = $('#form-signin');
+
+    const resDiv = $('#id-res');
+    const unknownErrorMessage = '<fmt:message key="generic.errors.unknownError"/>';
+    const successMessage = '<fmt:message key="loggedResetPassword.success"/>';
+
+    const url = '<c:url value="/resetPassword.json"/>';
+
+    form.submit(function(e){
+        e.preventDefault();
+
+        formSubmit(
+            url,
+            form, {
+                'multipart': false,
+                'session': false,
+                'redirectUrl': null,
+                'unknownErrorMessage': unknownErrorMessage,
+                'successMessage': successMessage,
+                'resDiv': resDiv
+            }
+        )
+
+    });
+</script>
 </body>
 </html>
 
