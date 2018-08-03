@@ -42,8 +42,8 @@ public class ResetPasswordServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (request.getRequestURI().endsWith(".json")) {
-            response.sendError(400, "POST only");
+        if(request.getRequestURI().endsWith(".json")) {
+            ServletUtility.sendError(request, response, 400, "generic.errors.postOnly");
         } else {
             request.getRequestDispatcher(RESET_PASSWORD_JSP).forward(request, response);
         }

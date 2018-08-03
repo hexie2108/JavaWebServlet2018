@@ -56,7 +56,11 @@ public class ForgotPasswordServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher(FORGOT_PASSWORD_JSP).forward(request, response);
+        if(request.getRequestURI().endsWith(".json")) {
+            ServletUtility.sendError(request, response, 400, "generic.errors.postOnly");
+        } else {
+            request.getRequestDispatcher(FORGOT_PASSWORD_JSP).forward(request, response);
+        }
     }
 
 
@@ -73,12 +77,12 @@ public class ForgotPasswordServlet extends HttpServlet {
             user = userDAO.getByEmail(email);
         } catch (DAOException e) {
             e.printStackTrace();
-            ServletUtility.sendError(request, response, 500, "Impossible trovare l'utente"); // TODO: To i18n
+            ServletUtility.sendError(request, response, 500, "forgotPassword.errors.unsearchableUser");
             return;
         }
 
         if (user == null) {
-            ServletUtility.sendError(request, response, 400, "forgotPassword.error.EMAIL_NOT_REGISTERED");
+            ServletUtility.sendError(request, response, 400, "forgotPassword.errors.EMAIL_NOT_REGISTERED");
             return;
         }
 
@@ -103,10 +107,10 @@ public class ForgotPasswordServlet extends HttpServlet {
             // TODO: Da cambiare
 
         } catch (DAOException ex) {
-            ServletUtility.sendError(request, response, 500, "Impossible to create reset password link"); // TODO: To i18n
+            ServletUtility.sendError(request, response, 500, "forgotPassword.errors.unresettableLinkRst");
             return;
         } catch (MessagingException | UnsupportedEncodingException ex) {
-            ServletUtility.sendError(request, response, 500, "Impossible to send the email"); // TODO: To i18n
+            ServletUtility.sendError(request, response, 500, "forgotPassword.errors.cantSendEmail");
             return;
         }
 

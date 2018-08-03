@@ -8,7 +8,6 @@ import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.RegistrationValidator;
 import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 
-import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,7 +17,6 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 @WebServlet(name = "LoggedResetPasswordServlet")
@@ -43,7 +41,11 @@ public class LoggedResetPasswordServlet extends HttpServlet {
 
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher(LOGGED_RESET_PASSWORD).forward(request, response);
+        if(request.getRequestURI().endsWith(".json")) {
+            ServletUtility.sendError(request, response, 400, "generic.errors.postOnly");
+        } else {
+            request.getRequestDispatcher(LOGGED_RESET_PASSWORD).forward(request, response);
+        }
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -77,7 +79,7 @@ public class LoggedResetPasswordServlet extends HttpServlet {
         try {
             userDAO.update(user);
         } catch (DAOException e) {
-            ServletUtility.sendError(request, response, 500, "Impossible fare l'update");
+            ServletUtility.sendError(request, response, 500, "generic.errors.unupdatableUser");
             return;
         }
 

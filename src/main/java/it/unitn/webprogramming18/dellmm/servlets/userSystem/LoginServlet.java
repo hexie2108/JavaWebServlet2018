@@ -47,8 +47,8 @@ public class LoginServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (request.getRequestURI().endsWith(".json")) {
-            response.sendError(400, "POST only");
+        if(request.getRequestURI().endsWith(".json")) {
+            ServletUtility.sendError(request, response, 400, "generic.errors.postOnly");
         } else {
             request.getRequestDispatcher(LOGIN_JSP).forward(request, response);
         }
@@ -84,7 +84,7 @@ public class LoginServlet extends HttpServlet {
                 user = userDAO.getByEmailAndPassword(email, password);
             } catch (DAOException e) {
                 e.printStackTrace();
-                ServletUtility.sendError(request, response,500,"Impossible to get the user requested"); // TODO: To i18n
+                ServletUtility.sendError(request, response,500,"login.errors.unsearchableUser");
                 return;
             }
         }

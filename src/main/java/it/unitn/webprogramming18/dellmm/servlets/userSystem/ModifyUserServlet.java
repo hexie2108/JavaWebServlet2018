@@ -53,17 +53,21 @@ public class ModifyUserServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession();
-        User user = (User) session.getAttribute("user");
-
-        if (user.getImg().matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")) {
-            req.setAttribute(RegistrationValidator.AVATAR_KEY, "");
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if(request.getRequestURI().endsWith(".json")) {
+            ServletUtility.sendError(request, response, 400, "generic.errors.postOnly");
         } else {
-            req.setAttribute(RegistrationValidator.AVATAR_KEY, user.getImg());
-        }
+            HttpSession session = request.getSession();
+            User user = (User) session.getAttribute("user");
 
-        req.getRequestDispatcher(MODIFY_USER_JSP).forward(req, resp);
+            if (user.getImg().matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")) {
+                request.setAttribute(RegistrationValidator.AVATAR_KEY, "");
+            } else {
+                request.setAttribute(RegistrationValidator.AVATAR_KEY, user.getImg());
+            }
+
+            request.getRequestDispatcher(MODIFY_USER_JSP).forward(request, response);
+        }
     }
 
     @Override
@@ -161,11 +165,11 @@ public class ModifyUserServlet extends HttpServlet {
                     File file = new File(path.toString(), avatarName.toString());
                     Files.copy(fileContent, file.toPath());
                 } catch (FileAlreadyExistsException ex) { // Molta sfiga
-                    ServletUtility.sendError(request, response, 500, "File collison or file already exists on the server");
+                    ServletUtility.sendError(request, response, 500, "generic.errors.fileCollision");
                     getServletContext().log("File \"" + avatarName.toString() + "\" already exists on the server");
                     return;
                 } catch (RuntimeException ex) {
-                    ServletUtility.sendError(request, response, 500, "impossible to upload the file");
+                    ServletUtility.sendError(request, response, 500, "generic.errors.unuploudableFile");
                     getServletContext().log("impossible to upload the file", ex);
                     return;
                 }
@@ -189,7 +193,7 @@ public class ModifyUserServlet extends HttpServlet {
         try {
             userDAO.update(user);
         } catch (DAOException e) {
-            ServletUtility.sendError(request, response, 500, "Impossibile aggiornare l'utente");
+            ServletUtility.sendError(request, response, 500, "generic.unupdatableUser");
             return;
         }
 

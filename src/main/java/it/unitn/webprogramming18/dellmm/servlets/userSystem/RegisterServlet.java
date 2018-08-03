@@ -61,9 +61,13 @@ public class RegisterServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute(RegistrationValidator.AVATAR_KEY, RegistrationValidator.DEFAULT_AVATARS.get(0));
+        if(request.getRequestURI().endsWith(".json")) {
+            ServletUtility.sendError(request, response, 400, "generic.errors.postOnly");
+        } else {
+            request.setAttribute(RegistrationValidator.AVATAR_KEY, RegistrationValidator.DEFAULT_AVATARS.get(0));
 
-        request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
+            request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
+        }
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -132,10 +136,10 @@ public class RegisterServlet extends HttpServlet {
                 Files.copy(fileContent, file.toPath());
             } catch (FileAlreadyExistsException ex) { // Molta sfiga
                 getServletContext().log("File \"" + imageName.toString() + "\" already exists on the server");
-                ServletUtility.sendError(request, response, 500, "File collision or file already exists on server");
+                ServletUtility.sendError(request, response, 500, "generic.errors.fileCollision");
                 return;
             } catch (RuntimeException ex) {
-                ServletUtility.sendError(request, response, 500, "Impossible to upload the file");
+                ServletUtility.sendError(request, response, 500, "generic.errors.unuploudableFile");
                 getServletContext().log("impossible to upload the file", ex);
                 return;
             }
@@ -193,7 +197,7 @@ public class RegisterServlet extends HttpServlet {
             }
 
             getServletContext().log("impossible to register the user", ex);
-            ServletUtility.sendError(request, response, 500, "Impossible to register the user"); // TODO: To i18n
+            ServletUtility.sendError(request, response, 500, "generic.errors.unupdatable");
             return;
         }
     }
