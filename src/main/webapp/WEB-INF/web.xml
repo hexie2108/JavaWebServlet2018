@@ -94,11 +94,13 @@
         <url-pattern>/modifyUser.json</url-pattern>
 
         <url-pattern>/resendEmail</url-pattern>
+
         <url-pattern>/alreadyLoggedIn</url-pattern>
 
         <url-pattern>/notifications</url-pattern>
         <url-pattern>/notifications.json</url-pattern>
     </filter-mapping>
+
     <filter>
         <filter-name>UnloggedUserOnlyFilter</filter-name>
         <filter-class>it.unitn.webprogramming18.dellmm.filters.UnloggedUserOnlyFilter</filter-class>
@@ -113,10 +115,12 @@
         <url-pattern>/forgotPassword.json</url-pattern>
 
         <url-pattern>/register</url-pattern>
+        <url-pattern>/register.json</url-pattern>
 
         <url-pattern>/resetPassword</url-pattern>
         <url-pattern>/resetPassword.json</url-pattern>
     </filter-mapping>
+
     <!-- SERVLETS -->
     <servlet>
         <servlet-name>DisplaySpecificListServlet</servlet-name>
