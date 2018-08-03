@@ -11,7 +11,6 @@ import it.unitn.webprogramming18.dellmm.util.RegistrationValidator;
 import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 
 import javax.mail.MessagingException;
-import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -98,10 +97,6 @@ public class RegisterServlet extends HttpServlet {
         String avatar = request.getParameter(RegistrationValidator.AVATAR_KEY);
 
         Part avatarImg = request.getPart(RegistrationValidator.AVATAR_IMG_KEY);
-
-        System.out.println(avatarImg.getSize());
-
-        ResourceBundle bundle = it.unitn.webprogramming18.dellmm.util.i18n.getBundle(request);
 
         // Usa il validator per verifiacare la conformità
         Map<String, String> messages =
@@ -197,7 +192,7 @@ public class RegisterServlet extends HttpServlet {
             }
 
             getServletContext().log("impossible to register the user", ex);
-            ServletUtility.sendError(request, response, 500, "generic.errors.unupdatable");
+            ServletUtility.sendError(request, response, 500, "generic.errors.unupdatableUser");
             return;
         }
     }

@@ -9,7 +9,6 @@ import it.unitn.webprogramming18.dellmm.util.PagePathsConstants;
 import it.unitn.webprogramming18.dellmm.util.RegistrationValidator;
 import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 
-import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -27,7 +26,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
