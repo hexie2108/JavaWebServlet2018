@@ -1,8 +1,5 @@
 <%-- 
-    
-    Created on : 2018-7-15, 7:55:07
-    Author     : liu
-    componenti per visualizzare la finestrina di condivisione
+    la finestra di condivisione
 --%>
 
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
@@ -14,7 +11,7 @@
         <div class="modal-dialog">
                 <div class="modal-content">
 
-                        <!-- box-head -->
+                        <%-- box-head --%>
                         <div class="modal-header">
                                 <h4 class="modal-title">
                                         condividere la lista
@@ -22,13 +19,15 @@
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
 
-                        <!-- box-body -->
+                        <%-- box-body --%>
                         <div class="modal-body">
 
                                 <div class="sharing-body">
 
+                                        <%--form per creare una nuova condivisione --%>
                                         <form class="form-inline" action="${pageContext.request.contextPath}/service/sharingService" method="GET">
 
+                                                <%-- 4 checkbox di permessi --%>
                                                 <div class="custom-control custom-control-inline custom-checkbox  justify-content-start">
                                                         <input type="checkbox" class="custom-control-input" id="modifyList" name="modifyList" value="1" />
                                                         <label class="custom-control-label" title="modifica la lista" for="modifyList">
@@ -52,10 +51,11 @@
                                                         <label class="custom-control-label" title="elimina il prodotto"  for="deleteObject">
                                                                 <i class="fas fa-ban"></i> elimina il prodotto
                                                         </label>
-
                                                 </div>
 
                                                 <div class="input-group">
+
+                                                        <%-- email di utente da condividere --%>
                                                         <input class="form-control user-email" type="email" name="userEmail" placeholder="email dell'utente da condividere" required="required"/>
                                                         <div class="input-group-append">
                                                                 <input type="hidden" name="action" value="insert">
@@ -63,16 +63,29 @@
                                                                 <input class="btn btn-info" type="submit" value="condivide"/>
                                                         </div>
                                                 </div>
+
                                         </form>
+
                                 </div>
+
+                                <%-- la lista di condivisione già creata --%>                               
                                 <div class="sharing-list">
-                                        <c:if test="${generalPermissionsOnList.size()>1}">
+
+                                        <%-- se ci sono le condivisioni --%>
+                                        <c:if test="${not empty generalPermissionsOnList}">
+
+                                                <%-- stampa il numero di utente condiviso --%>
                                                 <h2>${generalPermissionsOnList.size()} utenti condivisi</h2>
+
+                                                <%-- stampa la lista di condivisione --%>                           
                                                 <c:forEach var="permission" items="${generalPermissionsOnList}">
 
-                                                        <!-- get istanza user dal userid di permesso-->
+                                                        <%-- get user bean dall'id user di permesso --%>  
                                                         <custom:getUserById userId="${permission.userId}" />
+
                                                         <div class="list-item">
+
+                                                                <%-- stampa user img e user email --%>  
                                                                 <div class="user-info">
 
                                                                         <div class="user-img">
@@ -82,9 +95,11 @@
                                                                                 <i class="fas fa-envelope"></i> ${SingleUser.email}
                                                                         </span>
                                                                 </div>
+
+                                                                <%-- stampa 4 checkbox in base il permesso --%>  
                                                                 <div class="sharing-option">
                                                                         <form class="form-inline" action="${pageContext.request.contextPath}/service/sharingService" method="GET">
-                                                                                
+
                                                                                 <div class="custom-control custom-control-inline custom-checkbox  justify-content-start">
                                                                                         <input type="checkbox" class="custom-control-input" id="modifyList+${permission.userId}" name="modifyList" value="1" ${permission.modifyList?"checked=\"checked\"":""} />
                                                                                         <label class="custom-control-label" title="modifica la lista" for="modifyList+${permission.userId}">
@@ -108,26 +123,34 @@
                                                                                         <label class="custom-control-label" title="elimina il prodotto"  for="deleteObject+${permission.userId}">
                                                                                                 <i class="fas fa-ban"></i>
                                                                                         </label>
-
                                                                                 </div>        
 
-
+                                                                                <%-- opzione per modificare o eliminare il permesso --%>                 
                                                                                 <div class="form-submit">
                                                                                         <input type="hidden" name="action" value="update">
                                                                                         <input type="hidden" name="permissionId" value="${permission.id}">
                                                                                         <input class="btn btn-info" type="submit" value="modifica" />
                                                                                         <a class="btn btn-danger" href="${pageContext.request.contextPath}/service/sharingService?action=delete&permissionId=${permission.id}">elimina</a>
                                                                                 </div>
+                                                                                
                                                                         </form>
-                                                                </div>        
+                                                                                
+                                                                </div> 
+                                                                                
                                                         </div>        
 
                                                 </c:forEach>
+                                                
                                         </c:if>
-                                        <c:if test="${generalPermissionsOnList.size()==1}">
+                                                
+                                          <%-- se non ci sono condivisioni --%>         
+                                        <c:if test="${empty generalPermissionsOnList}">
+                                                
+                                                 <%-- stampa l'avviso --%>         
                                                 <div class="item-empty">
                                                         <h4>non hai ancora fatto la condivisione</h4>
                                                 </div>
+                                                
                                         </c:if>
                                 </div>
 
@@ -137,7 +160,7 @@
 
 
 
-                        <!-- box-footer  -->
+                        <%-- box-footer  --%>
                         <div class="modal-footer">
 
                         </div>

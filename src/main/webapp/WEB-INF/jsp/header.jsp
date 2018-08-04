@@ -1,8 +1,6 @@
 <%-- 
-    Document   : header
-    Created on : 2018-7-15, 7:55:07
-    Author     : liu
-    l'intestazione comune per tutti front-page jsp
+
+    l'intestazione front-end
 --%>
 
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
@@ -12,55 +10,67 @@
 <!DOCTYPE html>
 <html> 
         <head>
-                <!--impostazione base-->
+
+                <%--impostazione base--%>
                 <meta charset="utf-8">
                 <meta http-equiv="x-ua-compatible" content="ie=edge">
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no">
-                <!--titolo della pagina-->
+
+                <%--titolo della pagina--%>
                 <title>
-                        <c:out value="${head_title}" default="non hai ancora un titolo"></c:out>
-                        </title>
-                        <!--icone del sito-->
-                        <link rel="icon" href="${pageContext.request.contextPath}/favicon.ico" type="image/vnd.microsoft.icon"> 
+                        <c:out value="${head_title}" default="non hai ancora un titolo"/>
+                </title>
+
+                <%--icone del sito--%>
+                <link rel="icon" href="${pageContext.request.contextPath}/favicon.ico" type="image/vnd.microsoft.icon"> 
                 <link rel="shortcut icon" href="${pageContext.request.contextPath}/favicon.ico" type="image/vnd.microsoft.icon"> 
 
-                <!--jquery-->
+                <%--jquery--%>
                 <script type="text/javascript" src="${pageContext.request.contextPath}/libs/jquery/jquery-3.3.1.slim.min.js"></script>
-                <!--js di bootstrap-->
+                <%--js di bootstrap--%>
                 <script type="text/javascript" src="${pageContext.request.contextPath}/libs/bootstrap/bootstrap.min.js"></script>
-                <!--js personale di sito-->
+                <%--js personale di sito--%>
                 <script type="text/javascript" src="${pageContext.request.contextPath}/js/script.js"></script>
-                <!--jQuery personale di sito-->
+                <%--jQuery personale di sito--%>
                 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jqscript.js"></script>
 
-                <!--css di bootstrap-->
+                <%--css di bootstrap--%>
                 <link rel="stylesheet" href="${pageContext.request.contextPath}/libs/bootstrap/bootstrap.min.css" type="text/css" media="all">
-                <!--css di fontawesome-->
+                <%--css di fontawesome--%>
                 <link rel="stylesheet" href="${pageContext.request.contextPath}/libs/fontAwesome/all.css" type="text/css" media="all">
-                <!--css personale di sito-->
+                <%--css personale di sito--%>
                 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css" type="text/css" media="all">
 
         </head>
 
         <body class="front-page">
+
                 <div class="container">
-                        <!-- la sezione di header-->
+
+                        <%-- la sezione di header--%>
                         <header class="header">
 
-                                <!-- barra menu top-->
+                                <%-- barra top--%>
                                 <div class="top-bar  fixed-top bg-dark ">
 
+                                        <%-- logo di sito--%>
                                         <div class="site-logo-section">
+
                                                 <a href="${pageContext.request.contextPath}" title="home">
                                                         <img class="logo d-inline" src="${pageContext.request.contextPath}/image/base/logo.png" alt="logo"/>
-                                                        <h2 class="text-white d-inline">Il nome del sito ${filter}</h2>
+                                                        <h2 class="text-white d-inline">
+                                                                Il nome del sito
+                                                        </h2>
                                                 </a>
+
                                         </div> 
 
-
+                                        <%-- menu top--%>      
                                         <div class="site-top-menu float-right">
                                                 <nav class="navbar navbar-expand-sm navbar-dark" >
                                                         <ul class="navbar-nav ">
+
+                                                                <%-- se è utente anonimo--%> 
                                                                 <c:if test="${empty sessionScope.user}">
 
                                                                         <li class="nav-item">
@@ -68,75 +78,90 @@
                                                                                         <i class="fas fa-user-plus"></i> ISCRIVERSI
                                                                                 </a>
                                                                         </li>
+
                                                                         <li class="nav-item">
                                                                                 <a class="nav-link" href="${pageContext.request.contextPath}/login">
                                                                                         <i class="fas fa-sign-in-alt"></i>   LOGIN
                                                                                 </a>
                                                                         </li>
+
                                                                 </c:if>
+
+                                                                <%-- se è utente loggato --%>           
                                                                 <c:if test="${not empty sessionScope.user}">
+
                                                                         <li class="nav-item">
                                                                                 <a class="nav-link" href="${pageContext.request.contextPath}/mylists">
                                                                                         <i class="fas fa-list"></i> MIE LISTE
                                                                                 </a>
                                                                         </li>
+
                                                                         <li class="nav-item">
                                                                                 <a class="nav-link" href="#">
                                                                                         <i class="fa fa-envelope"></i> NOTIFICA
                                                                                 </a>
                                                                         </li>
+
                                                                         <li class="nav-item">
                                                                                 <a class="nav-link" href="#">
                                                                                         <i class="fas fa-user"></i></i> PROFILO
                                                                                 </a>
                                                                         </li>
+
                                                                         <li class="nav-item">
                                                                                 <a class="nav-link" href="${pageContext.request.contextPath}/logout">
                                                                                         <i class="fas fa-sign-out-alt"></i> LOGOUT
                                                                                 </a>
                                                                         </li>
+
                                                                 </c:if>        
+
                                                         </ul>      
                                                 </nav>
                                         </div>
                                 </div>
 
-                                <!-- finestra di image top-->                       
+                                <%-- finestra di image top--%>                       
                                 <div class="top-windows ">
-
                                         <div class="search-section col">
+
+                                                <%-- form di ricerca--%> 
                                                 <form id="search-form" class="mt-5" action="${pageContext.request.contextPath}/search">
                                                         <div class="input-group mb-3">
                                                                 <input type="search" class="form-control" name="searchWords" placeholder="cerchi qualcosa?" >
                                                                 <div class="input-group-append">
                                                                         <button class="btn btn-info" onclick="document.search - form.submit()"><i class="fas fa-search"></i> CERCA</button>
-
                                                                 </div>
                                                         </div> 
                                                 </form>
+
                                         </div>
                                 </div>
 
-                                <!--menu principale-->                                                
+                                <%--menu principale--%>                                                
                                 <div class="menu-nav">
                                         <nav class="navbar navbar-expand-sm bg-info navbar-dark" >
                                                 <ul class="navbar-nav nav-justified justify-content-center w-100">
+
                                                         <li class="nav-item active">
                                                                 <a class="nav-link " href="${pageContext.request.contextPath}" title="home">
                                                                         HOME
                                                                 </a>
                                                         </li>
+
                                                         <li class="nav-item dropdown">
                                                                 <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
                                                                         CATEGORIA
                                                                 </a>
                                                                 <div class="dropdown-menu">
+                                                                        <%--get tutte le categorie di prodotto--%>        
                                                                         <custom:getAllCategoryOfProduct />
                                                                         <c:forEach var="category" items="${categoryProductList}">
                                                                                 <a class="dropdown-item" href ="${pageContext.request.contextPath}/category?catId=${category.id}" >${category.name}</a>  
                                                                         </c:forEach>
                                                                 </div>
                                                         </li>
+
                                                         <li class="nav-item">
                                                                 <a class="nav-link" href="#">
                                                                         AGGIUNGE PRODOTTO
@@ -160,8 +185,7 @@
 
                         </header>
 
-
-                        <!-- la sezione body principale-->                                                 
+                        <%-- la sezione body principale--%>                                                 
                         <section class="main-container row mb-2 mt-2 pb-1 pt-1">
 
 

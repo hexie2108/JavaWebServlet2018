@@ -1,7 +1,5 @@
 <%-- 
-    Document   : 404
-    Created on : 2018-7-17, 13:00:12
-    Author     : mikuc
+questa pagina non è ancora utilizzato
 --%>
 
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java"  isErrorPage="true"%>

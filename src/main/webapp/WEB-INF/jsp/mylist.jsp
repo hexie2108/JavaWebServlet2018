@@ -1,7 +1,4 @@
 <%-- 
-    
-    Created on : 2018-7-15, 7:55:07
-    Author     : liu
     pagina per visualizzare una lista specificata
 --%>
 
@@ -9,51 +6,73 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="custom" uri="/WEB-INF/custom.tld"%>
 
-<jsp:include page="/WEB-INF/jsp/header.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/jsp/header.jsp"/>
 
 
-        <div class="mylist-main-section col-12">
-                <div class="content">
+<div class="mylist-main-section col-12">
+        <div class="content">
 
-                        <!-- breadcrumb-->
-                        <div class="breadcrumbs">
-                                <a href="${pageContext.request.contextPath}"><i class="fas fa-home"></i></a>
+                <%-- breadcrumb--%>
+                <div class="breadcrumbs">
+                        <a href="${pageContext.request.contextPath}">
+                                <i class="fas fa-home"></i>
+                        </a>
                         <span>&gt;</span>
-                        <a href="${pageContext.request.contextPath}/mylists"><i class="fas fa-list"></i> le mie liste</a>
+                        <a href="${pageContext.request.contextPath}/mylists">
+                                <i class="fas fa-list"></i> le mie liste
+                        </a>
                         <span>&gt;</span>
-                        <span>${list.name}</span>
+                        <span>
+                                ${list.name}
+                        </span>
                 </div>
-
 
                 <div class="mylist">
                         <div class="list-left-body">
+
+                                <%-- tutte le informazione sulla lista--%>
                                 <div class="list-head">
+
+                                        <%-- img di lista--%>
                                         <div class="list-logo">
                                                 <img class="img-fluid" src="${pageContext.request.contextPath}/${list.img}" alt="logo"/>
                                         </div>
                                         <div class="list-info">
+
+                                                <%-- nome di lista--%>
                                                 <span class="list-name">
                                                         <i class="fas fa-info-circle"></i> <b>nome:</b> 
                                                 </span>
                                                 <p>${list.name}</p>
+
+                                                <%-- link di categoria di lista--%>
                                                 <span class="list-category">
                                                         <i class="fas fa-sitemap"></i> <b>categoria: </b>
                                                 </span>
                                                 <p>
-                                                        <custom:getListCategoryNameByListCategoryId listCategoryId="${list.categoryList}"/>
+                                                        <%-- get il nome della categoria--%>
+                                                        <custom:getListCategoryNameByListCategoryId listCategoryId="${list.categoryList}" />
                                                         ${categoryListName}
                                                 </p>
+
                                         </div>
+
+                                        <%-- descrizione della lista--%>
                                         <div class="list-description">
                                                 <i class="far fa-file-alt"></i> <b>descrizione: </b>
                                                 <p>${list.description}</p>
                                         </div>
+
+                                        <%-- link per update la lista--%>
                                         <div class="list-modify">
                                                 <c:if test="${list.ownerId == sessionScope.user.id}">
                                                         <a class="btn btn-info" href="#" ><i class="fas fa-edit"></i> modifica</a>
                                                 </c:if>
                                         </div>
+
                                 </div>
+
+                                <%-- stampa i permessi su questa lista--%>
                                 <div class="list-permission">
                                         <p><i class="fas fa-lock"></i> <b>permesso:</b></p>
                                         <span class="modify-list" title="modifica la lista">
@@ -69,7 +88,11 @@
                                                 <i class="fas fa-ban"></i> ${userPermissionsOnList.deleteObject?"<i class=\"fas fa-check\"></i>":"<i class=\"fas fa-times\"></i>"}
                                         </span>
                                 </div>
+
+                                <%-- buttone per visualizzare la finestra di sharing--%>        
                                 <div class="list-sharing">
+
+                                        <%-- se sei proprietario della lista--%>
                                         <c:if test="${list.ownerId == sessionScope.user.id}">
                                                 <button class="btn btn-info" data-toggle="modal" data-target="#boxSharing"><i class="fas fa-share-alt"></i> condivisione</button>
                                         </c:if>
@@ -77,8 +100,10 @@
 
                         </div>
 
+                        <%-- lista di prodotto--%>                 
                         <div class="list-right-body">
-                                <!-- intestazione della lista -->
+
+                                <%-- intestazione della lista --%>
                                 <div class="list-item">
                                         <div class="item-img">
                                                 <i class="far fa-image"></i>
@@ -100,92 +125,132 @@
                                         </div>        
                                 </div>
 
-                                <!-- prodotto ancora da comprare-->
+                                <%-- la lista del prodotto ancora da comprare--%>
                                 <c:forEach var="product" items="${listProductsNotBuy}">
+
+                                        <%-- tutte le informazioni del prodotto--%>
                                         <div class="list-item">
+
                                                 <div class="item-img">
                                                         <img class="img-fluid" src="${pageContext.request.contextPath}/${product.img}" alt="${product.name}"/>
                                                 </div>
+
                                                 <div class="item-name">
                                                         <span>${product.name}</span>
                                                 </div>
+
                                                 <div class="item-cat">
                                                         <a href="${pageContext.request.contextPath}/category?catId=${product.categoryProductId}">
+                                                                <%-- get il nome della categoiria di prodotto--%>
                                                                 <custom:getCategoryNameById categoryId="${product.categoryProductId}"/>
                                                                 ${categoryName}
                                                         </a>
                                                 </div>
+
                                                 <div class="item-logo">
                                                         <img class="img-fluid" src="${pageContext.request.contextPath}/${product.logo}" alt="logo"/>
                                                 </div>
+
                                                 <div class="item-description">
                                                         <p>
                                                                 ${product.description}
                                                         </p>
                                                 </div>
+
                                                 <div class="item-manage">
+
+                                                        <%-- link per segnare il prodotto come già comprato--%>
                                                         <a class="btn btn-info" href="${pageContext.request.contextPath}/service/updateItemInListService?action=bought&productId=${product.id}&listId=${list.id}" title="comprato">
                                                                 <i class="fas fa-check-circle"></i> comprato
                                                         </a>
-                                                        <!-- se utente ha il permesso di eliminare prodotto della lista-->      
+
+                                                        <%-- se utente ha il permesso di eliminare il prodotto dalla lista--%>      
                                                         <c:if test="${userPermissionsOnList.deleteObject == true}">
+
+                                                                <%-- link per eliminare il prodotto--%>
                                                                 <a class="btn btn-danger" href="${pageContext.request.contextPath}/service/updateItemInListService?action=delete&productId=${product.id}&listId=${list.id}" title="elimina">
                                                                         <i class="fas fa-ban"></i> elimina
                                                                 </a>
+
                                                         </c:if>
-                                                </div>        
+                                                </div>  
+
                                         </div>
+
                                 </c:forEach>
 
 
-                                <!-- prodotto già comprato -->
+                                <%-- la lista del prodotto già comprato --%>
                                 <c:forEach var="product" items="${listProductsBought}">
+
+                                        <%-- tutte le informazioni del prodotto--%>
                                         <div class="list-item item-bought">
+
                                                 <div class="item-img">
                                                         <img class="img-fluid" src="${pageContext.request.contextPath}/${product.img}" alt="${product.name}"/>
                                                 </div>
+
                                                 <div class="item-name">
                                                         <span>${product.name}</span>
                                                 </div>
+
                                                 <div class="item-cat">
                                                         <a href="${pageContext.request.contextPath}/category?catId=${product.categoryProductId}">
+                                                                <%-- get il nome della categoiria di prodotto--%>
                                                                 <custom:getCategoryNameById categoryId="${product.categoryProductId}"/>
                                                                 ${categoryName}
                                                         </a>
                                                 </div>
+
                                                 <div class="item-logo">
                                                         <img class="img-fluid" src="${pageContext.request.contextPath}/${product.logo}" alt="logo"/>
                                                 </div>
+
                                                 <div class="item-description">
                                                         <p>
                                                                 ${product.description}
                                                         </p>
                                                 </div>
+
                                                 <div class="item-manage">
 
-                                                        <!-- se utente ha il permesso di eliminare prodotto della lista-->      
+                                                        <%-- se utente ha il permesso di eliminare il prodotto dalla lista--%>      
                                                         <c:if test="${userPermissionsOnList.deleteObject == true}">
+
+                                                                <%-- link per eliminare il prodotto--%>
                                                                 <a class="btn btn-danger" href="${pageContext.request.contextPath}/service/updateItemInListService?action=delete&productId=${product.id}&listId=${list.id}" title="elimina">
                                                                         <i class="fas fa-ban"></i> elimina
                                                                 </a>
+
                                                         </c:if>
-                                                </div>        
+
+                                                </div>     
+
                                         </div>
+
                                 </c:forEach>
 
 
-
+                                <%-- se la lista non contiene nessuno prodotto--%>
                                 <c:if test="${empty listProductsNotBuy && empty listProductsBought}">
-                                        <div class="list-item item-empty"><h2>la lista è ancora vuota</h2></div>
+
+                                        <div class="list-item item-empty">
+                                                <h2>la lista è ancora vuota</h2>
+                                        </div>
+
                                 </c:if>
-                                        
-                               <jsp:include page="/WEB-INF/jsp/module/comment.jsp"></jsp:include>                      
+
+                                <%-- componente del commento--%>
+                                <jsp:include page="/WEB-INF/jsp/module/comment.jsp"/>           
+
                         </div>
+
                 </div>
 
-                              
+        </div>               
+</div>
 
-                </div>               
-        </div>
-<jsp:include page="/WEB-INF/jsp/module/floatBoxForSharing.jsp"></jsp:include>
-<jsp:include page="/WEB-INF/jsp/footer.jsp"></jsp:include>
+<%-- finestra di sharing--%>
+<jsp:include page="/WEB-INF/jsp/module/floatBoxForSharing.jsp"/>
+<%-- pié di pagina--%>
+<jsp:include page="/WEB-INF/jsp/footer.jsp"/>

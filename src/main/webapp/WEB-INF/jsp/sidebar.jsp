@@ -1,8 +1,5 @@
 <%-- 
-    
-    Created on : 2018-7-15, 7:55:07
-    Author     : liu
-    l'intestazione comune per tutti front-page jsp
+sidebar di home
 --%>
 
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
@@ -11,21 +8,30 @@
 
 
 <aside class="sidebar col-3">
-        
-         <!-- la lista di tutti categoira -->
+
         <div class="tag-category">
-                <h2 class="text-center"><i class="fas fa-store"></i> CATEGORIA</h2>
+
+                <h2 class="text-center">
+                        <i class="fas fa-store"></i> CATEGORIA
+                </h2>
+
+                <%-- la lista di tutti categoira --%>
                 <div class="list-group">
-                          <custom:getAllCategoryOfProduct />
-                          <c:forEach var="category" items="${categoryProductList}">
-                                  <a class="list-group-item list-group-item-action text-center" href ="${pageContext.request.contextPath}/category?catId=${category.id}" >${category.name}</a>
-                          </c:forEach>
-                        
+
+                        <%-- get tutte le categorie di prodotto --%>
+                        <custom:getAllCategoryOfProduct />
+
+                        <c:forEach var="category" items="${categoryProductList}">
+
+                                <a class="list-group-item list-group-item-action text-center" href ="${pageContext.request.contextPath}/category?catId=${category.id}" >
+                                        ${category.name}
+                                </a>
+
+                        </c:forEach>
+
                 </div>
-              
-               
+
         </div>
 
 
-</div>
 </aside>

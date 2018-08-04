@@ -148,7 +148,7 @@ public class DisplaySpecificListServlet extends HttpServlet
                 }
 
                 //se lista non è vuoto
-                if (generalPermissionsOnList != null)
+                if (generalPermissionsOnList != null && generalPermissionsOnList.size()>0)
                 {
                         //set lista di permesso come l'attributo della richiesta
                         request.setAttribute("generalPermissionsOnList", generalPermissionsOnList);

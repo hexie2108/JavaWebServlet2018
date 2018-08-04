@@ -2,22 +2,26 @@
     
     Created on : 2018-7-15, 7:55:07
     Author     : liu
-    componenti per avvisare il risultato dell'aggiungimento del prodotto
+    finestra per avvisare il risultato delle operazione fatte
 --%>
 
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<!-- finestrina per visualizzare il risultato dell'aggiungimento -->
-<c:if test="${not empty result}">
+<%-- se ci sono message nel attributo "result"--%>
+<c:if test="${not empty sessionScope.result}">
+
         <div class="modal fade" id="boxShowMessage">
                 <div class="modal-dialog">
                         <div class="modal-content">
 
-                                <!-- box-head -->
+                                <%-- box-head --%>
                                 <div class="modal-header">
+
                                         <h4 class="modal-title">
+
                                                 <c:choose>
+
                                                         <c:when test="${sessionScope.result == 'InsertOk'}">
                                                                 complimenti
                                                         </c:when>
@@ -43,15 +47,17 @@
                                                                 complimenti
                                                         </c:when>       
 
+                                                </c:choose> 
 
-                                                </c:choose>         
                                         </h4>
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
+
                                 </div>
 
-                                <!-- box-body -->
+                                <%-- box-body --%>
                                 <div class="modal-body">
                                         <p>
+
                                                 <c:choose>
                                                         <c:when test="${sessionScope.result  == 'InsertOk'}">
                                                                 il prodotto è stato aggiunto correttamente
@@ -78,10 +84,11 @@
                                                                 il commento è stato cancellato correttamente
                                                         </c:when>    
                                                 </c:choose>
+
                                         </p>
                                 </div>
 
-                                <!-- box-footer  -->
+                                <%-- box-footer  --%>
                                 <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">chiude</button>
                                 </div>
@@ -90,8 +97,7 @@
                 </div>
         </div>
 
-        <c:if test="${not empty sessionScope.result}">
-                <c:remove var="result" scope="session" />
-        </c:if>
+        <%-- cancella l'attributo "result" --%>
+        <c:remove var="result" scope="session" />
 
 </c:if>

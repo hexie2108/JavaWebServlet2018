@@ -5,6 +5,7 @@
   <tlib-version>1.0</tlib-version>
   <jsp-version>2.0</jsp-version>
   <short-name>tag customizzata</short-name>
+  
   <tag>
     <name>getCategoryNameById</name>
     <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagGetCategoryNameById</tag-class>
@@ -16,6 +17,7 @@
       <rtexprvalue>true</rtexprvalue>
     </attribute>
   </tag>
+  
   <tag>
     <name>getUserById</name>
     <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagGetUserById</tag-class>
@@ -27,6 +29,7 @@
       <rtexprvalue>true</rtexprvalue>
     </attribute>
   </tag>
+  
   <tag>
     <name>getListCategoryNameByListCategoryId</name>
     <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagGetListCategoryNameByListCategoryId</tag-class>
@@ -38,21 +41,25 @@
       <rtexprvalue>true</rtexprvalue>
     </attribute>
   </tag>
+  
   <tag>
     <name>getAllCategoryOfProduct</name>
     <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagGetAllCategoryOfProduct</tag-class>
     <body-content>scriptless</body-content>
   </tag>
+  
   <tag>
     <name>getAllCategoryOfShoppingList</name>
     <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagGetAllCategoryOfShoppingList</tag-class>
     <body-content>scriptless</body-content>
   </tag>
+  
   <tag>
     <name>getElementsOfShppingListByCookie</name>
     <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagGetElementsOfShoppingListByCookie</tag-class>
     <body-content>scriptless</body-content>
   </tag>
+  
   <!--
   <tag>
     <name>getProductNotBuyListByListId</name>
