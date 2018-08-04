@@ -528,6 +528,14 @@
         text-align: center;
 
 }
+.mylist .list-left-body .list-head .list-modify .btn{
+        width:100%;
+}
+
+.mylist .list-left-body .list-head .list-modify .delete{
+        margin-top: 1rem;
+}
+
 
 
 .mylist .list-left-body .list-permission {
@@ -541,6 +549,9 @@
         text-align: center;
 }
 
+.mylist .list-left-body .list-sharing .btn{
+        width: 100%;
+}
 
 
 .mylist .list-right-body {

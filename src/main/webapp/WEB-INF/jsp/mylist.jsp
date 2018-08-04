@@ -63,11 +63,17 @@
                                                 <p>${list.description}</p>
                                         </div>
 
-                                        <%-- link per update la lista--%>
+                                        <%-- link per update e eliminare la lista--%>
                                         <div class="list-modify">
-                                                <c:if test="${list.ownerId == sessionScope.user.id}">
-                                                        <a class="btn btn-info" href="#" ><i class="fas fa-edit"></i> modifica</a>
+
+                                                <c:if test="${userPermissionsOnList.modifyList}">
+                                                        <a class="modify btn btn-info" href="#" ><i class="fas fa-edit"></i> modifica</a>
                                                 </c:if>
+
+                                                <c:if test="${userPermissionsOnList.deleteList}">
+                                                        <a class="delete btn btn-danger" href="#" ><i class="fas fa-trash-alt"></i> elimina</a>
+                                                </c:if>
+
                                         </div>
 
                                 </div>
