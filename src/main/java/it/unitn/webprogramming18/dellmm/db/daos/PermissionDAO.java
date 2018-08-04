@@ -91,4 +91,13 @@ public interface PermissionDAO extends DAO<Permission, Integer> {
      * @throws DAOException 
      */
     public Integer getNumberSharedByListId (Integer listId) throws DAOException;
+    
+    
+        /**
+     * eliminare il permesso
+     * @param permissionId id permesso
+     * @throws DAOException 
+     */
+    
+    public void deletePermissionById(Integer permissionId) throws DAOException;
 }

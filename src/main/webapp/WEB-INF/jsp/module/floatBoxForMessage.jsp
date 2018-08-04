@@ -30,10 +30,10 @@
                                                         </c:when>
                                                         <c:when test="${sessionScope.result == 'DeleteOk'}">
                                                                 complimenti
-                                                        </c:when>      
+                                                        </c:when>
                                                         <c:when test="${sessionScope.result == 'DeleteFail'}">
                                                                 errore
-                                                        </c:when>       
+                                                        </c:when>
                                                         <c:when test="${sessionScope.result == 'ChangeListCategoryOk'}">
                                                                 complimenti
                                                         </c:when>
@@ -45,11 +45,21 @@
                                                         </c:when>
                                                         <c:when test="${sessionScope.result == 'commentDeleteOk'}">
                                                                 complimenti
-                                                        </c:when>       
+                                                        </c:when>
+                                                        <c:when test="${sessionScope.result == 'sharingInsertOk'}">
+                                                                complimenti
+                                                        </c:when>
+                                                        <c:when test="${sessionScope.result == 'sharingUpdateOk'}">
+                                                                complimenti
+                                                        </c:when>
+                                                        <c:when test="${sessionScope.result == 'sharingDeleteOk'}">
+                                                                complimenti
+                                                        </c:when>
 
                                                 </c:choose> 
 
                                         </h4>
+                                        
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
 
                                 </div>
@@ -67,10 +77,10 @@
                                                         </c:when>
                                                         <c:when test="${sessionScope.result == 'DeleteOk'}">
                                                                 il prodotto è stato cancellato correttamente
-                                                        </c:when>      
+                                                        </c:when>
                                                         <c:when test="${sessionScope.result == 'DeleteFail'}">
                                                                 non è possibile eliminare il prodotto specificato
-                                                        </c:when>   
+                                                        </c:when>
                                                         <c:when test="${sessionScope.result  == 'ChangeListCategoryOk'}">
                                                                 la categoria della lista è stata cambiata correttamente
                                                         </c:when>
@@ -82,7 +92,16 @@
                                                         </c:when>
                                                         <c:when test="${sessionScope.result == 'commentDeleteOk'}">
                                                                 il commento è stato cancellato correttamente
-                                                        </c:when>    
+                                                        </c:when>
+                                                        <c:when test="${sessionScope.result == 'sharingInsertOk'}">
+                                                                la condivisione è stato inserito correttamente
+                                                        </c:when>
+                                                        <c:when test="${sessionScope.result == 'sharingUpdateOk'}">
+                                                                 la condivisione è stato aggiornato correttamente
+                                                        </c:when>
+                                                        <c:when test="${sessionScope.result == 'sharingDeleteOk'}">
+                                                                 la condivisione è stato cancellato correttamente
+                                                        </c:when>
                                                 </c:choose>
 
                                         </p>

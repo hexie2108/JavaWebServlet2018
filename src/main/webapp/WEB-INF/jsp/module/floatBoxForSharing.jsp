@@ -14,7 +14,7 @@
                         <%-- box-head --%>
                         <div class="modal-header">
                                 <h4 class="modal-title">
-                                        condividere la lista
+                                        <i class="fas fa-share-alt"></i> condividere la lista
                                 </h4>
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
@@ -129,8 +129,9 @@
                                                                                 <div class="form-submit">
                                                                                         <input type="hidden" name="action" value="update">
                                                                                         <input type="hidden" name="permissionId" value="${permission.id}">
+                                                                                        <input type="hidden" name="listId" value="${list.id}">
                                                                                         <input class="btn btn-info" type="submit" value="modifica" />
-                                                                                        <a class="btn btn-danger" href="${pageContext.request.contextPath}/service/sharingService?action=delete&permissionId=${permission.id}">elimina</a>
+                                                                                        <a class="btn btn-danger" href="${pageContext.request.contextPath}/service/sharingService?action=delete&permissionId=${permission.id}&listId=${list.id}">elimina</a>
                                                                                 </div>
                                                                                 
                                                                         </form>

@@ -311,7 +311,7 @@ public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements Comment
                 }
                 catch (SQLException ex)
                 {
-                        throw new DAOException("Impossible to update the productInList", ex);
+                        throw new DAOException("Impossible to update the comment", ex);
                 } finally
                 {
                         C3p0Util.close(CON);

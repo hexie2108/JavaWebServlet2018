@@ -302,4 +302,34 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
                 return number;
 
         }
+
+        public void deletePermissionById(Integer permissionId) throws DAOException
+        {
+
+                if (permissionId == null)
+                {
+                        throw new DAOException("parameter not valid", new IllegalArgumentException("The passed permissionId is null"));
+                }
+
+                CON = C3p0Util.getConnection();
+                try (PreparedStatement stm = CON.prepareStatement(
+                            " DELETE FROM permission WHERE "
+                            + " id = ? "
+                ))
+                {
+                        stm.setInt(1, permissionId);
+                        if (stm.executeUpdate() != 1)
+                        {
+                                throw new DAOException("Impossible to delete the permission");
+                        }
+                }
+                catch (SQLException ex)
+                {
+                        throw new DAOException("Impossible to update the permission", ex);
+                } finally
+                {
+                        C3p0Util.close(CON);
+                }
+
+        }
 }
