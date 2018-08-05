@@ -47,7 +47,8 @@
                     "<fmt:message key="notifications.text.notRead"/>",
                     "<fmt:message key="notifications.label.markAsRead"/>",
                     "<c:url value="/markNotification.json"/>",
-                    true
+                    true,
+                    "<fmt:message key="generic.errors.unknownError"/>"
                 );
             }
 

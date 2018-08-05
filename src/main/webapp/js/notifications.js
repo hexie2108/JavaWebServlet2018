@@ -2,7 +2,7 @@ if(typeof jQuery === "undefined") {
     console.error("Jquery needed");
 }
 
-function markNotification(url,id, btn, empty, read, del, count){
+function markNotification(url,id, btn, empty, read, del, count, unknownErrorMessage){
 
     btn.attr("disabled", true);
 
@@ -29,22 +29,35 @@ function markNotification(url,id, btn, empty, read, del, count){
         }
 
         updateEmptyNotificationList(empty, ul)
-    }).fail(function(){
+    }).fail(function(jqXHR){
         btn.removeClass("btn-primary");
         btn.addClass("btn-danger");
 
+        const prevText = btn.html();
+
+        if (typeof jqXHR.responseJSON === 'object' &&
+            jqXHR.responseJSON !== null &&
+            jqXHR.responseJSON['message'] !== undefined
+        ) {
+            btn.html(jqXHR.responseJSON['message']);
+
+        } else {
+            btn.html(unknownErrorMessage);
+        }
+
         setTimeout(function(){
+            btn.html(prevText);
+
             btn.removeClass("btn-danger");
             btn.addClass("btn-primary");
 
             btn.attr("disabled", false);
-
         }, 2000);
     });
 
 }
 
-function createDivNotification(notification, read, notRead, mark, urlMark, empty, del, count){
+function createDivNotification(notification, read, notRead, mark, urlMark, empty, del, count, unknownError){
     const lettoSm = jQuery('<small/>', {
         text: notification.status? read: notRead
     });
@@ -69,7 +82,7 @@ function createDivNotification(notification, read, notRead, mark, urlMark, empty
         html: jQuery('<button/>', {
             class: ['btn', 'btn-primary'].join(' '),
             text: mark,
-            click: function(){markNotification(urlMark, notification.id, $(this), empty, read, del, count);},
+            click: function(){markNotification(urlMark, notification.id, $(this), empty, read, del, count, unknownError);},
             disabled: notification.status
         })
     });
@@ -93,7 +106,7 @@ function updateEmptyNotificationList(empty, list){
     }
 }
 
-function updateNotificationList(list, url, async, status, count, empty, read, notRead, mark, urlMark, del){
+function updateNotificationList(list, url, async, status, count, empty, read, notRead, mark, urlMark, del, unknownErrorMessage){
     if (status === true || status === false) {
         status = "" + status;
     } else if (status === undefined || status === null) {
@@ -111,7 +124,7 @@ function updateNotificationList(list, url, async, status, count, empty, read, no
         data: "status="+status
     }).done(function(data){
         list.empty();
-        list.append(data.map(v => createDivNotification(v, read, notRead, mark, urlMark, empty, del, count)));
+        list.append(data.map(v => createDivNotification(v, read, notRead, mark, urlMark, empty, del, count, unknownErrorMessage)));
 
         updateEmptyNotificationList(empty, list);
 

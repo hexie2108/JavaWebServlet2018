@@ -55,7 +55,8 @@
                 "<fmt:message key="notifications.text.notRead"/>",
                 "<fmt:message key="notifications.label.markAsRead"/>",
                 "<c:url value="/markNotification.json"/>",
-                false
+                false,
+                "<fmt:message key="generic.errors.unknownError"/>"
             );
             reloadBtn.prop("disabled", false);
         });
