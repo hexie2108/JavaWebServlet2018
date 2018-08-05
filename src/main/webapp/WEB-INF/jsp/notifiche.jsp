@@ -29,7 +29,6 @@
                 <small class="float-right" title="<fmt:formatDate value="${notification.date}" pattern="yyyy-MM-dd'T'HH:mm:ss'Z'" timeZone="UTC"/>"> <fmt:formatDate value="${notification.date}" type="both"/> UTC</small>
             </div>
             <div>${notification.text}</div>
-            <span class="float-right"><button class="btn btn-primary" onclick="deleteNotification(${notification.id}, this)"><fmt:message key="notifications.label.markAsRead"/></button></span>
         </li>
     </c:forEach>
 </ul>
@@ -45,11 +44,23 @@
 
         reloadBtn.click(() => {
             reloadBtn.prop("disabled", true);
-            updateNotificationList(notificationList, URL, false, null, null, emptyMessage, "<fmt:message key="notifications.text.read"/>","<fmt:message key="notifications.text.notRead"/>", "<fmt:message key="notifications.label.markAsRead"/>");
+            updateNotificationList(
+                notificationList,
+                URL,
+                false,
+                null,
+                null,
+                emptyMessage,
+                "<fmt:message key="notifications.text.read"/>",
+                "<fmt:message key="notifications.text.notRead"/>",
+                "<fmt:message key="notifications.label.markAsRead"/>",
+                "<c:url value="/markNotification.json"/>",
+                false
+            );
             reloadBtn.prop("disabled", false);
         });
 
-        //reloadBtn.trigger('click');
+        reloadBtn.trigger('click');
     })
 </script>
 </body>

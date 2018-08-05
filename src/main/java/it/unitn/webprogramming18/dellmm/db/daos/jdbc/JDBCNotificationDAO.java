@@ -126,7 +126,7 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
                         "date = ?," +
                         "text = ?," +
                         "status = ?, " +
-                        "userId = ?" +
+                        "userId = ? " +
                         "WHERE id = ?"
         )) {
 

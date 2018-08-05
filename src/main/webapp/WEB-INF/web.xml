@@ -99,6 +99,8 @@
 
         <url-pattern>/notifications</url-pattern>
         <url-pattern>/notifications.json</url-pattern>
+
+        <url-pattern>/markNotification.json</url-pattern>
     </filter-mapping>
 
     <filter>
@@ -323,6 +325,17 @@
         <servlet-name>NotificationsServletJSON</servlet-name>
         <url-pattern>/notifications.json</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>JSONMarkNotificationServlet</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.JSONMarkNotificationServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>JSONMarkNotificationServlet</servlet-name>
+        <url-pattern>/markNotification.json</url-pattern>
+    </servlet-mapping>
+
+
     <servlet>
         <servlet-name>UserValidateJS</servlet-name>
         <jsp-file>/WEB-INF/js/userValidateJS.jsp</jsp-file>

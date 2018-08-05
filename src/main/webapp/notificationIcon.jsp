@@ -35,7 +35,21 @@
             const list = $('#notificationsList');
             const notificationsEmpty = $('#notificationsEmtpy');
 
-            const update = function(){updateNotificationList(list, URL, true, false, bell, notificationsEmpty, "<fmt:message key="notifications.text.read"/>","<fmt:message key="notifications.text.notRead"/>", "<fmt:message key="notifications.label.markAsRead"/>");};
+            function update(){
+                updateNotificationList(
+                    list,
+                    URL,
+                    true,
+                    false,
+                    bell,
+                    notificationsEmpty,
+                    "<fmt:message key="notifications.text.read"/>",
+                    "<fmt:message key="notifications.text.notRead"/>",
+                    "<fmt:message key="notifications.label.markAsRead"/>",
+                    "<c:url value="/markNotification.json"/>",
+                    true
+                );
+            }
 
             update();
             setInterval(update,5000);
