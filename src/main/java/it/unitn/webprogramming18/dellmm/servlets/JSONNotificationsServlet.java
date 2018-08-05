@@ -7,6 +7,7 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.Notification;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
+import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -79,13 +80,10 @@ public class JSONNotificationsServlet extends HttpServlet {
                 notificationJSON.add(h);
             }
 
-            PrintWriter out = response.getWriter();
-            Gson gson = new Gson();
-            out.print(gson.toJson(notificationJSON));
+            ServletUtility.sendJSON(request, response, 200, notificationJSON);
         } catch (DAOException e) {
             e.printStackTrace();
-            response.sendError(500, "Impossibile ottenere le notifiche");
-            return;
+            ServletUtility.sendError(request, response, 500, "notifications.errors.unobtainableNotifications");
         }
 
     }
