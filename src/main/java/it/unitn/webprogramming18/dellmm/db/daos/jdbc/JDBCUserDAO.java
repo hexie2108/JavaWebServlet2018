@@ -295,4 +295,63 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
 
         return user;
     }
+
+    public List<User> filter(Integer id, String email, String name, String surname, Boolean isAdmin) throws DAOException {
+        List<User> userList = new ArrayList<>();
+
+        try (PreparedStatement stm = CON.prepareStatement(
+                "SELECT * FROM User WHERE " +
+                        "(? IS NULL OR id LIKE ?) AND " +
+                        "(? IS NULL OR email LIKE ?) AND " +
+                        "(? IS NULL OR name LIKE ?) AND " +
+                        "(? IS NULL OR surname LIKE ?) AND " +
+                        "(? IS NULL OR isAdmin = ?)")) {
+            if (id == null) {
+                stm.setNull(1,Types.INTEGER);
+                stm.setNull(2,Types.INTEGER);
+            } else {
+                stm.setString(1, "%" + id.toString() + "%");
+                stm.setString(2, "%" + id.toString() + "%");
+            }
+
+            if (email != null) {
+                email = "%" + email + "%";
+            }
+
+            stm.setString(3, email);
+            stm.setString(4, email);
+
+            if (name != null) {
+                name = "%" + name + "%";
+            }
+
+            stm.setString(5, name);
+            stm.setString(6, name);
+
+            if (surname != null) {
+                surname = "%" + surname + "%";
+            }
+
+            stm.setString(7, surname);
+            stm.setString(8, surname);
+
+            if(isAdmin == null) {
+                stm.setNull(9, Types.BOOLEAN);
+                stm.setNull(10, Types.BOOLEAN);
+            } else {
+                stm.setBoolean(9, isAdmin);
+                stm.setBoolean(10, isAdmin);
+            }
+
+            try (ResultSet rs = stm.executeQuery()) {
+                while (rs.next()) {
+                    userList.add(getUserFromResultSet(rs));
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get the list of user", ex);
+        }
+
+        return userList;
+    }
 }

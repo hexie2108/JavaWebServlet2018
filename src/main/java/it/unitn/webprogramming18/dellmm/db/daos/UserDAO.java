@@ -106,4 +106,16 @@ public interface UserDAO extends DAO<User, Integer> {
      * @return generated user
      */
     public User generateUser( String first_name, String last_name, String email, String password, String imageName) throws DAOException;
+
+    /**
+     *
+     * @param id integer which as string is substring of user id
+     * @param email string which is substring of user email
+     * @param name string which is substring of user name
+     * @param surname string which is substring of user surname
+     * @param isAdmin true for admin, false for regular users, null for both
+     * @return List of users that respect the conditions
+     * @throws DAOException
+     */
+    public List<User> filter(Integer id, String email, String name, String surname, Boolean isAdmin) throws DAOException;
 }

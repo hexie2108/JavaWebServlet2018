@@ -344,6 +344,16 @@
         <servlet-name>UserValidateJS</servlet-name>
         <url-pattern>/js/userValidate.js</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>UsersServlet</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.adminSystem.UsersServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UsersServlet</servlet-name>
+        <url-pattern>/admin/users</url-pattern>
+        <url-pattern>/admin/users.json</url-pattern>
+    </servlet-mapping>
 
     <!-- ERROR PAGE -->
     <error-page>
