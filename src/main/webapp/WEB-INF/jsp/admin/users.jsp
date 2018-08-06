@@ -143,11 +143,7 @@
                 }, {
                     target: 10,
                     data: null,
-                    defaultContent:
-                        '<div class="btn-group">' +
-                        '    <a class="btn btn-md btn-primary" title="<fmt:message key="users.label.modifyUser"/>"><i class="far fa-edit"></i></a>' +
-                        '    <a class="btn btn-md btn-danger" title="<fmt:message key="users.label.deleteUser"/>"><i class="fas fa-trash-alt"></i></a>' +
-                        '</div>'
+                    defaultContent: ''
                 }
             ],
             order: [[1, 'asc']],
@@ -160,6 +156,55 @@
                 );
 
                 $('td', row).eq(6).html(data.isAdmin?'<fmt:message key="users.label.true"/>':'<fmt:message key="users.label.false"/>');
+
+                $('td', row).eq(7).html(
+                    $('<div/>', {
+                        html: [
+                            $('<button/>', {
+                                class: 'btn btn-md btn-primary',
+                                title: '<fmt:message key="users.label.modifyUser"/>',
+                                html: $('<i/>',{class: 'far fa-edit'}),
+                            }),
+                            $('<button/>', {
+                                class: 'btn btn-md btn-danger',
+                                title: '<fmt:message key="users.label.deleteUser"/>',
+                                html: $('<i/>',{class: 'far fa-trash-alt'}),
+                                click: function(){
+                                    const btn = $(this);
+
+                                    btn.attr("disabled", true);
+
+                                    $.ajax({
+                                        url: '<c:url value="/admin/users.json"/>',
+                                        type: 'POST',
+                                        data: {'action': 'delete', 'id': data.id}
+                                    }).done(function(){
+                                        row.remove();
+                                    }).fail(function(jqXHR){
+                                        const prevText = btn.html();
+
+                                        if (typeof jqXHR.responseJSON === 'object' &&
+                                            jqXHR.responseJSON !== null &&
+                                            jqXHR.responseJSON['message'] !== undefined
+                                        ) {
+                                            btn.html(jqXHR.responseJSON['message']);
+
+                                        } else {
+                                            btn.html(unknownErrorMessage);
+                                        }
+
+                                        setTimeout(function(){
+                                            btn.html(prevText);
+
+                                            btn.attr("disabled", false);
+                                        }, 2000);
+                                    });
+                                }
+                            }),
+                        ]
+                    })
+                );
+
             },
             searching: false
         });
@@ -193,7 +238,7 @@
             return ul;
         }
 
-        $('#userTable tbody').on('click', 'td.details-control', function () {
+        $('#userTable > tbody').on('click','td.details-control', function () {
             const tr = $(this).closest('tr');
             const row = table.row( tr );
 
@@ -202,16 +247,16 @@
                 row.child.hide();
                 tr.removeClass('shown');
 
-                tr.find('i').removeClass("fa-minus-circle");
-                tr.find('i').addClass("fa-plus-circle");
+                tr.find('td.details-control i').removeClass("fa-minus-circle");
+                tr.find('td.details-control i').addClass("fa-plus-circle");
             }
             else {
                 // Open this row
                 row.child( format(row.data()) ).show();
                 tr.addClass('shown');
 
-                tr.find('i').removeClass("fa-plus-circle");
-                tr.find('i').addClass("fa-minus-circle");
+                tr.find('td.details-control i').removeClass("fa-plus-circle");
+                tr.find('td.details-control i').addClass("fa-minus-circle");
             }
         });
 

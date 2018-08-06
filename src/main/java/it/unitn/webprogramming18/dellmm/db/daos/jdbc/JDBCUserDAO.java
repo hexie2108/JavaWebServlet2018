@@ -354,4 +354,19 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
 
         return userList;
     }
+
+    @Override
+    public void delete(int id) throws DAOException {
+        try (PreparedStatement stm = CON.prepareStatement(
+                "DELETE FROM User WHERE id = ?"
+        )) {
+            stm.setInt(1, id);
+
+            if (stm.executeUpdate() != 1) {
+                throw new DAOException("Impossible to delete the user");
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to delete the user", ex);
+        }
+    }
 }

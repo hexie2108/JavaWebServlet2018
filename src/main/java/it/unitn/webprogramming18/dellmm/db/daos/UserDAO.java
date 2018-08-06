@@ -108,7 +108,7 @@ public interface UserDAO extends DAO<User, Integer> {
     public User generateUser( String first_name, String last_name, String email, String password, String imageName) throws DAOException;
 
     /**
-     *
+     * Filter the users
      * @param id integer which as string is substring of user id
      * @param email string which is substring of user email
      * @param name string which is substring of user name
@@ -118,4 +118,11 @@ public interface UserDAO extends DAO<User, Integer> {
      * @throws DAOException
      */
     public List<User> filter(Integer id, String email, String name, String surname, Boolean isAdmin) throws DAOException;
+
+    /**
+     * Delete user
+     * @param id user id
+     * @throws DAOException
+     */
+    public void delete(int id) throws DAOException;
 }

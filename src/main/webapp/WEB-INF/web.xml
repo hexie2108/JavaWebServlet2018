@@ -352,6 +352,14 @@
     <servlet-mapping>
         <servlet-name>UsersServlet</servlet-name>
         <url-pattern>/admin/users</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>JSONUserServlet</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.adminSystem.JSONUsersServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>JSONUserServlet</servlet-name>
         <url-pattern>/admin/users.json</url-pattern>
     </servlet-mapping>
 
