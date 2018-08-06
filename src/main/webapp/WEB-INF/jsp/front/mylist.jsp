@@ -6,7 +6,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="custom" uri="/WEB-INF/custom.tld"%>
 
-<jsp:include page="/WEB-INF/jsp/header.jsp"/>
+<jsp:include page="/WEB-INF/jsp/front/header.jsp"/>
 
 
 <div class="mylist-main-section col-12">
@@ -35,7 +35,7 @@
 
                                         <%-- img di lista--%>
                                         <div class="list-logo">
-                                                <img class="img-fluid" src="${pageContext.request.contextPath}/${list.img}" alt="logo"/>
+                                                <img class="img-fluid" src="${pageContext.request.contextPath}/image/list/${list.img}" alt="logo"/>
                                         </div>
                                         <div class="list-info">
 
@@ -49,16 +49,21 @@
                                                 <span class="list-category">
                                                         <i class="fas fa-sitemap"></i> <b>categoria: </b>
                                                 </span>
+                                                
+                                                  <%-- get il nome della categoria--%>
+                                                        <custom:getListCategoryByListCategoryId listCategoryId="${list.categoryList}" />
                                                 <p>
-                                                        <%-- get il nome della categoria--%>
-                                                        <custom:getListCategoryNameByListCategoryId listCategoryId="${list.categoryList}" />
-                                                        ${categoryListName}
+                                                        ${categoryOfList.name}
                                                 </p>
+                                                <div class="list-category-img">
+                                                        <img class="img-fluid" src="${pageContext.request.contextPath}/image/categoryList/${categoryOfList.img1}" alt="img di categoria di lista" />
+                                                </div>
+                                                
 
                                         </div>
 
                                         <%-- descrizione della lista--%>
-                                        <div class="list-description">
+                                        <div class="list-description mt-3">
                                                 <i class="far fa-file-alt"></i> <b>descrizione: </b>
                                                 <p>${list.description}</p>
                                         </div>
@@ -67,11 +72,11 @@
                                         <div class="list-modify">
 
                                                 <c:if test="${userPermissionsOnList.modifyList}">
-                                                        <a class="modify btn btn-info" href="#" ><i class="fas fa-edit"></i> modifica</a>
+                                                        <a class="modify btn btn-info" href="${pageContext.request.contextPath}/updateList?listId=${list.id}" ><i class="fas fa-edit"></i> modifica</a>
                                                 </c:if>
 
                                                 <c:if test="${userPermissionsOnList.deleteList}">
-                                                        <a class="delete btn btn-danger" href="#" ><i class="fas fa-trash-alt"></i> elimina</a>
+                                                        <a class="delete btn btn-danger" href="${pageContext.request.contextPath}/service/updateListService?action=delete&listId=${list.id}" ><i class="fas fa-trash-alt"></i> elimina</a>
                                                 </c:if>
 
                                         </div>
@@ -138,7 +143,7 @@
                                         <div class="list-item">
 
                                                 <div class="item-img">
-                                                        <img class="img-fluid" src="${pageContext.request.contextPath}/${product.img}" alt="${product.name}"/>
+                                                        <img class="img-fluid" src="${pageContext.request.contextPath}/image/product/${product.img}" alt="${product.name}"/>
                                                 </div>
 
                                                 <div class="item-name">
@@ -154,7 +159,7 @@
                                                 </div>
 
                                                 <div class="item-logo">
-                                                        <img class="img-fluid" src="${pageContext.request.contextPath}/${product.logo}" alt="logo"/>
+                                                        <img class="img-fluid" src="${pageContext.request.contextPath}/image/productLogo/${product.logo}" alt="logo"/>
                                                 </div>
 
                                                 <div class="item-description">
@@ -193,7 +198,7 @@
                                         <div class="list-item item-bought">
 
                                                 <div class="item-img">
-                                                        <img class="img-fluid" src="${pageContext.request.contextPath}/${product.img}" alt="${product.name}"/>
+                                                        <img class="img-fluid" src="${pageContext.request.contextPath}/image/product/${product.img}" alt="${product.name}"/>
                                                 </div>
 
                                                 <div class="item-name">
@@ -209,7 +214,7 @@
                                                 </div>
 
                                                 <div class="item-logo">
-                                                        <img class="img-fluid" src="${pageContext.request.contextPath}/${product.logo}" alt="logo"/>
+                                                        <img class="img-fluid" src="${pageContext.request.contextPath}/image/productLogo/${product.logo}" alt="logo"/>
                                                 </div>
 
                                                 <div class="item-description">
@@ -247,7 +252,7 @@
                                 </c:if>
 
                                 <%-- componente del commento--%>
-                                <jsp:include page="/WEB-INF/jsp/module/comment.jsp"/>           
+                                <jsp:include page="/WEB-INF/jsp/front/module/comment.jsp"/>           
 
                         </div>
 
@@ -257,6 +262,6 @@
 </div>
 
 <%-- finestra di sharing--%>
-<jsp:include page="/WEB-INF/jsp/module/floatBoxForSharing.jsp"/>
+<jsp:include page="/WEB-INF/jsp/front/module/floatBoxForSharing.jsp"/>
 <%-- pié di pagina--%>
-<jsp:include page="/WEB-INF/jsp/footer.jsp"/>
+<jsp:include page="/WEB-INF/jsp/front/footer.jsp"/>

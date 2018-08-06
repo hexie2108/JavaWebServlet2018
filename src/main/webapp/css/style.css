@@ -1,10 +1,13 @@
 /*body*/
 
 .front-page .content {
-        min-height: 500px;
+        min-height: 650px;
 }
 
-
+/*label che visualizza il nome file*/
+.custom-file-label{
+        overflow: hidden;
+}
 
 /*header.jsp----------------------------------------------------------------------------*/
 
@@ -378,6 +381,13 @@
 
 }
 
+.custom-modal .right-body .add-box button, .custom-modal .right-body .add-box a{
+        width:100%;
+        margin-bottom: 1rem;
+}
+
+
+
 
 
 /*mylists.jsp tutte le liste-------------------------------------------------------------------------------------------------*/
@@ -609,6 +619,10 @@
 
 /*comment.jsp*/
 
+.comments {
+    margin-top: 2rem;
+}
+
 .comments .list-comment .comment-item  {
         margin-bottom: 10px;
         border: 1px solid #d0d0d0;
@@ -654,21 +668,15 @@
 }
 
 
+
+
 .comments  .edit-comment {
         margin-top: 20px;
 }
-.comments .edit-comment textarea{
-        width: 100%;
-        border-radius: .25rem;
-        height: 100px;
-        border: 1px solid #d0d0d0;
-        padding: 10px;
-}
 
-.comments .edit-comment input{
-        width: 100%;
-        margin-top: 1rem;
-}
+
+
+
 
 /*floatBoxForSharing.jsp------------------------------------------------------------------------------------*/
 
@@ -753,3 +761,9 @@
         margin-top: 1rem;
 }
 
+
+/*updateList.jsp---------------------------------------------------------------------------------*/
+
+form .custom-file-input-old-image{
+        width: 15%;
+}

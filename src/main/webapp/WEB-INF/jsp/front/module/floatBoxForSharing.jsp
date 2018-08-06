@@ -34,18 +34,21 @@
                                                                 <i class="fas fa-edit"></i> modifica la lista 
                                                         </label>
                                                 </div>
-                                                <div class="custom-control custom-control-inline custom-checkbox  justify-content-start">
-                                                        <input type="checkbox" class="custom-control-input" id="deleteList" name="deleteList" value="1" />
-                                                        <label class="custom-control-label" title="elimina la lista" for="deleteList">
-                                                                <i class="fas fa-trash-alt"></i> elimina la lista
-                                                        </label>
-                                                </div>
+                                               
                                                 <div class="custom-control custom-control-inline custom-checkbox  justify-content-start">
                                                         <input type="checkbox" class="custom-control-input" id="addObject" name="addObject" value="1" />
                                                         <label class="custom-control-label" title="aggiunge il prodotto" for="addObject">
                                                                 <i class="fas fa-cart-plus"></i> aggiunge il prodotto
                                                         </label>
                                                 </div>
+                                                
+                                                 <div class="custom-control custom-control-inline custom-checkbox  justify-content-start">
+                                                        <input type="checkbox" class="custom-control-input" id="deleteList" name="deleteList" value="1" />
+                                                        <label class="custom-control-label" title="elimina la lista" for="deleteList">
+                                                                <i class="fas fa-trash-alt"></i> elimina la lista
+                                                        </label>
+                                                </div>
+                                                
                                                 <div class="custom-control custom-control-inline custom-checkbox justify-content-start" title="elimina il prodotto">
                                                         <input type="checkbox" class="custom-control-input" id="deleteObject" name="deleteObject" value="1" />
                                                         <label class="custom-control-label" title="elimina il prodotto"  for="deleteObject">
@@ -89,7 +92,7 @@
                                                                 <div class="user-info">
 
                                                                         <div class="user-img">
-                                                                                <img class="img-fluid" src="${pageContext.request.contextPath}/${SingleUser.img}" alt="${SingleUser.name}"/>
+                                                                                <img class="img-fluid" src="${pageContext.request.contextPath}/image/user/${SingleUser.img}" alt="${SingleUser.name}"/>
                                                                         </div>
                                                                         <span>
                                                                                 <i class="fas fa-envelope"></i> ${SingleUser.email}

@@ -5,7 +5,7 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<jsp:include page="/WEB-INF/jsp/header.jsp"/>
+<jsp:include page="/WEB-INF/jsp/front/header.jsp"/>
 
 
 <div class="search-main-section col-12">
@@ -50,7 +50,7 @@
                         <%-- se ci sono i prodotti corrispondenti--%>
                         <c:if test="${ not empty productList}">
 
-                                <jsp:include page="/WEB-INF/jsp/module/productList.jsp"/>
+                                <jsp:include page="/WEB-INF/jsp/front/module/productList.jsp"/>
 
                         </c:if>
 
@@ -76,6 +76,6 @@
 
 </div>
 
-<jsp:include page="/WEB-INF/jsp/module/floatBoxForShoppingList.jsp"/>
-<jsp:include page="/WEB-INF/jsp/module/floatBoxForAddProductInShoppingList.jsp"/>
-<jsp:include page="/WEB-INF/jsp/footer.jsp"/>
+<jsp:include page="/WEB-INF/jsp/front/module/floatBoxForShoppingList.jsp"/>
+<jsp:include page="/WEB-INF/jsp/front/module/floatBoxForAddProductInShoppingList.jsp"/>
+<jsp:include page="/WEB-INF/jsp/front/footer.jsp"/>

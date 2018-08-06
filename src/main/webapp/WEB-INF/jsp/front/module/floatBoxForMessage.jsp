@@ -55,11 +55,20 @@
                                                         <c:when test="${sessionScope.result == 'sharingDeleteOk'}">
                                                                 complimenti
                                                         </c:when>
+                                                        <c:when test="${sessionScope.result == 'ListInsertOk'}">
+                                                                complimenti
+                                                        </c:when>
+                                                        <c:when test="${sessionScope.result == 'ListUpdateOk'}">
+                                                                complimenti
+                                                        </c:when>
+                                                        <c:when test="${sessionScope.result == 'ListDeleteOk'}">
+                                                                complimenti
+                                                        </c:when>
 
                                                 </c:choose> 
 
                                         </h4>
-                                        
+
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
 
                                 </div>
@@ -97,10 +106,19 @@
                                                                 la condivisione è stato inserito correttamente
                                                         </c:when>
                                                         <c:when test="${sessionScope.result == 'sharingUpdateOk'}">
-                                                                 la condivisione è stato aggiornato correttamente
+                                                                la condivisione è stato aggiornato correttamente
                                                         </c:when>
                                                         <c:when test="${sessionScope.result == 'sharingDeleteOk'}">
-                                                                 la condivisione è stato cancellato correttamente
+                                                                la condivisione è stato cancellato correttamente
+                                                        </c:when>
+                                                        <c:when test="${sessionScope.result == 'ListInsertOk'}">
+                                                                la lista è stata creata correttamente
+                                                        </c:when>
+                                                        <c:when test="${sessionScope.result == 'ListUpdateOk'}">
+                                                                la lista è stata aggiornata correttamente
+                                                        </c:when>
+                                                        <c:when test="${sessionScope.result == 'ListDeleteOk'}">
+                                                                la lista è stata cancellata correttamente
                                                         </c:when>
                                                 </c:choose>
 

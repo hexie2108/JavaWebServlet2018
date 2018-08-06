@@ -1,6 +1,6 @@
-
 package it.unitn.webprogramming18.dellmm.servlets.service;
 
+import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,14 +12,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * servizio per aggiungere/eliminare il prodotto dalla default lista per utente anonimo
+ * servizio per aggiungere/eliminare il prodotto dalla default lista per utente
+ * anonimo
  *
  * @author mikuc
  */
 public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet
 {
 
-        
         @Override
         protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
         {
@@ -31,15 +31,12 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet
         protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
         {
                 //memorizza il risultato dell'operazione
-                String result = "";
+                String result = null;
                 //get azione che vuoi fare
                 String action = request.getParameter("action");
                 //se azione è nullo
-                if (action == null)
-                {
-                        throw new ServletException("manca il parametro action");
-                }
-                
+                CheckErrorUtils.isNull(action, "manca il parametro action");
+
                 //in caso di inserimento
                 if (action.equals("insert"))
                 {
@@ -49,10 +46,8 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet
                         //get id prodotto da aggiungere
                         String productId = request.getParameter("productId");
                         //se id prodotto è nullo
-                        if (productId == null)
-                        {
-                                throw new ServletException("manca il parametro  id del prodotto");
-                        }
+                        CheckErrorUtils.isNull(productId, "manca il parametro productId");
+                       
 
                         //get la cookie della lista locale
                         Cookie cookOfList = null;
@@ -94,7 +89,7 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet
 
                                         }
                                 }
-                                
+
                                 //se non cè la ripetizione
                                 if (!repeatItem)
                                 {
@@ -105,7 +100,7 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet
                                         response.addCookie(cookOfList);
                                         result = "InsertOk";
                                 }
-                                
+
                                 //se cè una ripetizione
                                 else
                                 {
@@ -121,14 +116,11 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet
                         //flag per sapere l'avvenuta della eliminazione
                         boolean successDelete = false;
 
-                         //get id prodotto da eliminare
+                        //get id prodotto da eliminare
                         String productId = request.getParameter("productId");
                         //se id prodotto è nullo
-                        if (productId == null)
-                        {
-                                throw new ServletException("manca il parametro  id del prodotto");
-                        }
-
+                        CheckErrorUtils.isNull(productId, "manca il parametro productId");
+                     
                         //get la cookie della lista locale
                         Cookie cookOfList = null;
                         Cookie[] cookies = request.getCookies();
@@ -155,7 +147,7 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet
                         else
                         {
                                 //controlla se esiste tale prodotto in lista
-                                 //trasforma string di cookie in arrayList
+                                //trasforma string di cookie in arrayList
                                 List<String> productIdList = new ArrayList(Arrays.asList(cookOfList.getValue().split(",")));
                                 for (int i = 0; i < productIdList.size(); i++)
                                 {
@@ -169,17 +161,17 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet
                                                 i = productIdList.size();
                                         }
                                 }
-                                
+
                                 //se non ha trovato prodotto
                                 if (!successDelete)
                                 {
                                         result = "DeleteFail";
                                 }
-                                
+
                                 //se ha trovato
                                 else
                                 {
-                                         
+
                                         //aggiorna cookie
                                         cookOfList.setValue(String.join(",", productIdList));
                                         cookOfList.setPath(getServletContext().getContextPath());
@@ -213,7 +205,8 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet
 
                 //ritorna alla pagina di provenienza
                 String prevUrl = request.getHeader("Referer");
-                if(prevUrl==null){
+                if (prevUrl == null)
+                {
                         prevUrl = getServletContext().getContextPath();
                 }
                 //passare lo risultato  di inserimento

@@ -16,9 +16,9 @@
                 <c:if test="${not empty numberOfComment}">
 
                         <%-- stampa il numero di commento --%>
-                        <h2>
+                        <h4>
                                 <i class="fas fa-comments"></i> ${numberOfComment} commenti
-                        </h2>
+                        </h4>
 
                         <%-- stampa la lista di commento --%> 
                         <c:forEach var="comment" items="${listComment}">
@@ -32,7 +32,7 @@
 
                                                 <%-- stampa user img --%>
                                                 <div class="user-img">
-                                                        <img class="img-fluid" src="${pageContext.request.contextPath}/${SingleUser.img}" alt="${SingleUser.name}"/>
+                                                        <img class="img-fluid" src="${pageContext.request.contextPath}/image/user/${SingleUser.img}" alt="${SingleUser.name}"/>
                                                 </div>
                                                 <%-- stampa user name --%>
                                                 <span>
@@ -51,7 +51,7 @@
                                         <%-- se utente attuale è il proprietario del commento, allora stampa la link per eliminare il commento --%>
                                         <div class="comment-delete">
                                                 <c:if test="${comment.userId == sessionScope.user.id}">
-                                                        <a class="btn btn-danger" href="${pageContext.request.contextPath}/service/comment?action=delete&commentId=${comment.id}"><i class="fas fa-trash-alt"></i> elimina</a>
+                                                        <a class="btn btn-danger" href="${pageContext.request.contextPath}/service/commentService?action=delete&commentId=${comment.id}"><i class="fas fa-trash-alt"></i> elimina</a>
                                                 </c:if>
                                         </div>      
 
@@ -65,7 +65,7 @@
                 <c:if test="${empty numberOfComment}"> 
 
                         <%-- stampa l'avviso --%>
-                        <h2> al momento, non c'è ancora il commento </h2>
+                        <h4> al momento, non c'è ancora il commento </h4>
 
                 </c:if>
 
@@ -73,11 +73,13 @@
 
         <%-- stampa il form per scrivere il commento --%>        
         <div class="edit-comment">
-                <form action="${pageContext.request.contextPath}/service/comment" method="POST">
-                        <textarea name="commentText" placeholder="lasciare qualche messaggi" required="required"></textarea>
+                <form action="${pageContext.request.contextPath}/service/commentService" method="POST">
+                        <textarea class="form-control" name="commentText" placeholder="lasciare qualche messaggi" rows="5" required="required"></textarea>
                         <input type="hidden" name="action" value="insert"/>
                         <input type="hidden" name="listId" value="${list.id}"/>
-                        <input class="btn btn-info" type="submit" value="invia" />
+                        <button class="btn btn-info w-100 mt-3" type="submit">
+                                <i class="fas fa-reply"></i> invia
+                        </button>
                 </form>
         </div>
 

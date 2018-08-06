@@ -1,4 +1,4 @@
-package it.unitn.webprogramming18.dellmm.servlets;
+package it.unitn.webprogramming18.dellmm.servlets.front;
 
 import it.unitn.webprogramming18.dellmm.db.daos.CommentDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ListDAO;
@@ -148,7 +148,7 @@ public class DisplayListsServlet extends HttpServlet
                 }
 
                 //inoltra a jsp
-                request.getRequestDispatcher("/WEB-INF/jsp/mylists.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/jsp/front/mylists.jsp").forward(request, response);
 
         }
 

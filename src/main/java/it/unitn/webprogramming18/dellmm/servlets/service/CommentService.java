@@ -8,6 +8,7 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.javaBeans.Comment;
 import it.unitn.webprogramming18.dellmm.javaBeans.Permission;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
+import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,9 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * servizio per inserire e eliminare il commento
- * utente può inserire il commento solo sulla lista che ha qualche permesso
- * utente può eliminare solo il proprio commento
+ * servizio per inserire e eliminare il commento utente può inserire il commento
+ * solo sulla lista che ha qualche permesso utente può eliminare solo il proprio
+ * commento
  *
  * @author mikuc
  */
@@ -38,15 +39,13 @@ public class CommentService extends HttpServlet
         protected void doGet(HttpServletRequest request, HttpServletResponse response)
                     throws ServletException, IOException
         {
-                
+
                 //string che memorizza il risultato dell'operazione
                 String result = null;
                 //get l'azione che vuoi fare
                 String action = request.getParameter("action");
-                if (action == null)
-                {
-                        throw new ServletException("manca il parametro action");
-                }
+                //se azione è nullo
+                CheckErrorUtils.isNull(action, "manca il parametro action");
 
                 //in caso di inserimento
                 if (action.equals("insert"))
@@ -55,11 +54,10 @@ public class CommentService extends HttpServlet
                         String listId = request.getParameter("listId");
                         //get testo di commento
                         String commentText = request.getParameter("commentText");
-                        //se manca parametro id lista o testo di commento
-                        if (listId == null || commentText == null)
-                        {
-                                throw new ServletException("manca il parametro id lista o contenuto del commento");
-                        }
+                        //se manca parametro id lista
+                        CheckErrorUtils.isNull(listId, "manca il parametro listId");
+                        //se manca testo di commento
+                        CheckErrorUtils.isNull(commentText, "manca il parametro commentText");
                         //se il  testo di commento è vuoto
                         if ("".equals(commentText))
                         {
@@ -69,32 +67,23 @@ public class CommentService extends HttpServlet
                         //get user corrente
                         User user = (User) request.getSession().getAttribute("user");
                         //get permesso dell'utente su tale lista
-                        Permission permission=null;
+                        Permission permission = null;
                         try
                         {
                                 permission = permissionDAO.getUserPermissionOnListByIds(user.getId(), Integer.parseInt(listId));
-                        }
-                        catch (DAOException ex)
-                        {
-                                throw new ServletException(ex.getMessage(), ex);
-                        }
-                        //se il permesso è  vuoto
-                        if (permission == null)
-                        {
-                                throw new ServletException("non hai nessun permesso di inserire il commento su tale lista");
-                        }
+                                //se il permesso è  vuoto
+                                CheckErrorUtils.isNull(permission, "non hai nessun permesso su tale lista");
 
-                        //crea istanza di commento
-                        Comment comment = new Comment();
-                        //set id user
-                        comment.setUserId(user.getId());
-                        //set id lista
-                        comment.setListId(Integer.parseInt(listId));
-                        //set il contenuto
-                        comment.setText(commentText);
-                        //inserisce
-                        try
-                        {
+                                //crea istanza di commento
+                                Comment comment = new Comment();
+                                //set id user
+                                comment.setUserId(user.getId());
+                                //set id lista
+                                comment.setListId(Integer.parseInt(listId));
+                                //set il contenuto
+                                comment.setText(commentText);
+                                
+                                //inserisce
                                 commentDAO.insert(comment);
                         }
                         catch (DAOException ex)
@@ -112,15 +101,12 @@ public class CommentService extends HttpServlet
                         //get id commento
                         String commentId = request.getParameter("commentId");
                         //se id commento è nullo
-                        if (commentId == null)
-                        {
-                                throw new ServletException("manca il parametro id del commento");
-                        }
+                        CheckErrorUtils.isNull(commentId, "manca il parametro commentId");
 
                         int commentUserId = 0;
                         //get user corrente
                         User user = (User) request.getSession().getAttribute("user");
-                        
+
                         try
                         {
                                 //get user id di commento
@@ -146,7 +132,7 @@ public class CommentService extends HttpServlet
                 }
                 else
                 {
-                        new ServletException("valore di action non riconosciuto");
+                        throw new ServletException("valore di action non riconosciuto");
                 }
 
                 //ritorna alla pagina di provenienza

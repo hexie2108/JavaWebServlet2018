@@ -104,4 +104,13 @@ public interface ListDAO extends DAO<ShoppingList, Integer> {
      * @throws DAOException if an error occurred during the action.
      */
     public Integer getNumberOfProductsInListByListId(Integer listId) throws DAOException;
+    
+    
+    /**
+     * elimina la lista
+     * @param listId id della lista
+     * @throws DAOException 
+     */
+    public void deleteListByListId(Integer listId) throws DAOException;
+    
 }

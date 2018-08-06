@@ -6,7 +6,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 
-<jsp:include page="/WEB-INF/jsp/header.jsp" />
+<jsp:include page="/WEB-INF/jsp/front/header.jsp" />
 
 
 
@@ -32,7 +32,7 @@
 
                 <%-- image di categoria attuale--%>     
                 <div class="category-image-section d-inline">
-                        <img class="category-logo " src="${pageContext.request.contextPath}/${categoria.img}" alt="${categoria.name}"/>
+                        <img class="category-logo " src="${pageContext.request.contextPath}/image/categoryProduct/${categoria.img}" alt="${categoria.name}"/>
                 </div>
 
                 <div class="product-list">
@@ -40,13 +40,13 @@
 
                         </div>
 
-                        <jsp:include page="/WEB-INF/jsp/module/productList.jsp"/>
+                        <jsp:include page="/WEB-INF/jsp/front/module/productList.jsp"/>
                 </div>
 
         </div>               
 </div>
 
 
-<jsp:include page="/WEB-INF/jsp/module/floatBoxForShoppingList.jsp"/>
-<jsp:include page="/WEB-INF/jsp/module/floatBoxForAddProductInShoppingList.jsp"/>
-<jsp:include page="/WEB-INF/jsp/footer.jsp"/>
+<jsp:include page="/WEB-INF/jsp/front/module/floatBoxForShoppingList.jsp"/>
+<jsp:include page="/WEB-INF/jsp/front/module/floatBoxForAddProductInShoppingList.jsp"/>
+<jsp:include page="/WEB-INF/jsp/front/footer.jsp"/>

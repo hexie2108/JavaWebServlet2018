@@ -73,8 +73,8 @@
 
                                                         <%--  link per eliminare il prodotto dalla cookie --%>
                                                         <input class="productIdFromList" type="hidden" name="productId" value="1"/>
-                                                        <a id="deleteProductLocal" href="javascript:;" title="elimina" onclick="deleteProductLocal()">
-                                                                <i class="fa-ban"></i>
+                                                        <a id="deleteProductLocal" class="btn btn-danger" href="javascript:;" title="elimina" onclick="deleteProductLocal()">
+                                                                <i class="fa fa-ban"></i> elimina
                                                         </a>
 
                                                 </c:if>       
@@ -83,42 +83,45 @@
                                                 <c:if test="${not empty sessionScope.user}">
 
                                                         <%-- form per segna il prodotto come già comprato--%> 
-                                                        <div class="formToBuy d-inline-block">
+                                                        <div class="formToBuy">
 
                                                                 <form action="${pageContext.request.contextPath}/service/updateItemInListService" method="GET">
 
                                                                         <input class="productIdFromList" type="hidden" name="productId" value="1"/>
                                                                         <input class="listIdFromList" type="hidden" name="listId" />
                                                                         <input type="hidden" name="action" value="bought"/>
-                                                                        <input class="submit-button btn btn-info " style="" type="submit" value="comprato" />
 
+                                                                        <button class="submit-button btn btn-info" type="submit">
+                                                                                <i class="fas fa-check"></i> comprato
+                                                                        </button>
                                                                 </form>
 
                                                         </div>
 
                                                         <%-- form per segna il prodotto come già comprato--%>         
-                                                        <div class="formToDelete d-inline-block">
+                                                        <div class="formToDelete">
 
                                                                 <form action="${pageContext.request.contextPath}/service/updateItemInListService" method="GET">
 
                                                                         <input class="productIdFromList" type="hidden" name="productId" value="1"/>
                                                                         <input class="listIdFromList" type="hidden" name="listId" />
                                                                         <input type="hidden" name="action" value="delete"/>
-                                                                        <input class="submit-button btn btn-danger " style="" type="submit" value="elimina" />
-
+                                                                        <button class="submit-button btn btn-danger" type="submit">
+                                                                                <i class="fa fa-ban"></i> elimina
+                                                                        </button>
                                                                 </form>
 
                                                         </div>
 
 
                                                 </c:if>  
-                                                
+
                                         </div>
-                                                
+
                                 </div>
-                                                
+
                         </div>
-                                                
+
                         <%-- box-footer  --%>
                         <div class="modal-footer">
 

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.unitn.webprogramming18.dellmm.servlets;
+package it.unitn.webprogramming18.dellmm.servlets.front;
 
 import it.unitn.webprogramming18.dellmm.db.daos.CommentDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ListDAO;
@@ -19,6 +19,7 @@ import it.unitn.webprogramming18.dellmm.javaBeans.Permission;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
+import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -68,11 +69,9 @@ public class DisplaySpecificListServlet extends HttpServlet
 
                 //ottiene listid
                 String listIdInString = request.getParameter("listId");
-                //se è nullo
-                if (listIdInString == null)
-                {
-                        throw new ServletException("manca il parametro id della lista");
-                }
+                //se listid è nullo
+                CheckErrorUtils.isNull(listIdInString, "manca il parametro listIdInString");
+              
                 //trasforma listid in intero
                 int listId = Integer.parseInt(listIdInString);
 
@@ -154,7 +153,7 @@ public class DisplaySpecificListServlet extends HttpServlet
                         request.setAttribute("generalPermissionsOnList", generalPermissionsOnList);
                 }
 
-                request.getRequestDispatcher("/WEB-INF/jsp/mylist.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/jsp/front/mylist.jsp").forward(request, response);
         }
 
       

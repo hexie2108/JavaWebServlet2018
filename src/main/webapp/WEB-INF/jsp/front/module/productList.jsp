@@ -15,7 +15,7 @@ la lista di prodotto
                 <div id="item-${product.id}" class="list-item card d-inline-flex m-2 p-2">
 
                         <%-- img di  prodotto --%>
-                        <img class="list-item-img img-fluid card-img-top" src="${pageContext.request.contextPath}/${product.img}" alt="${product.name}"/>
+                        <img class="list-item-img img-fluid card-img-top" src="${pageContext.request.contextPath}/image/product/${product.img}" alt="${product.name}"/>
 
                         <%-- link della categoria di prodotto --%>
                         <div class="list-item-cat ${not empty categoria ?"hiddin-cat":""}">
@@ -41,7 +41,7 @@ la lista di prodotto
                         <%-- logo di  prodotto --%>
                         <div class="list-item-info">       
                                 <div class="list-item-logo  d-inline-block w-50">
-                                        <img class="list-item-logo-img img-fluid" src="${pageContext.request.contextPath}/${product.logo}" alt="logo"/>
+                                        <img class="list-item-logo-img img-fluid" src="${pageContext.request.contextPath}/image/productLogo/${product.logo}" alt="logo"/>
                                 </div>
                         </div>
 
@@ -58,4 +58,4 @@ la lista di prodotto
 
 </div>
 
-<jsp:include page="/WEB-INF/jsp/module/pagination.jsp" />
+<jsp:include page="/WEB-INF/jsp/front/module/pagination.jsp" />

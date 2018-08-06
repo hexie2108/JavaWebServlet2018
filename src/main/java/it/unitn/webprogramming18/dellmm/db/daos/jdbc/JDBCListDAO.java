@@ -95,6 +95,48 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
         }
 
         @Override
+        public ShoppingList update(ShoppingList list) throws DAOException
+        {
+                if (list == null)
+                {
+                        throw new DAOException("parameter not valid", new IllegalArgumentException("The passed list is null"));
+                }
+
+                CON = C3p0Util.getConnection();
+                try (PreparedStatement stm = CON.prepareStatement(
+                            " UPDATE List SET "
+                            + " name = ?, "
+                            + " description = ?, "
+                            + " img = ?, "
+                            + " ownerId = ?, "
+                            + " categoryList = ? "
+                            + " WHERE id = ? "
+                ))
+                {
+
+                        stm.setString(1, list.getName());
+                        stm.setString(2, list.getDescription());
+                        stm.setString(3, list.getImg());
+                        stm.setInt(4, list.getOwnerId());
+                        stm.setInt(5, list.getCategoryList());
+                        stm.setInt(6, list.getId());
+                        if (stm.executeUpdate() != 1)
+                        {
+                                throw new DAOException("Impossible to update the list");
+                        }
+                }
+                catch (SQLException ex)
+                {
+                        throw new DAOException("Impossible to update the list", ex);
+                } finally
+                {
+                        C3p0Util.close(CON);
+                }
+
+                return list;
+        }
+
+        @Override
         public ShoppingList getByPrimaryKey(Integer primaryKey) throws DAOException
         {
                 ShoppingList list = null;
@@ -151,48 +193,6 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
                 }
 
                 return lists;
-        }
-
-        @Override
-        public ShoppingList update(ShoppingList list) throws DAOException
-        {
-                if (list == null)
-                {
-                        throw new DAOException("parameter not valid", new IllegalArgumentException("The passed list is null"));
-                }
-
-                CON = C3p0Util.getConnection();
-                try (PreparedStatement stm = CON.prepareStatement(
-                            "UPDATE List SET "
-                            + "name = ?,"
-                            + "description = ?,"
-                            + "img = ?"
-                            + "ownerId = ?,"
-                            + "categoryList = ?"
-                            + "WHERE id = ?"
-                ))
-                {
-
-                        stm.setString(1, list.getName());
-                        stm.setString(2, list.getDescription());
-                        stm.setString(3, list.getImg());
-                        stm.setInt(4, list.getCategoryList());
-                        stm.setInt(5, list.getOwnerId());
-                        stm.setInt(6, list.getId());
-                        if (stm.executeUpdate() != 1)
-                        {
-                                throw new DAOException("Impossible to update the list");
-                        }
-                }
-                catch (SQLException ex)
-                {
-                        throw new DAOException("Impossible to update the list", ex);
-                } finally
-                {
-                        C3p0Util.close(CON);
-                }
-
-                return list;
         }
 
         @Override
@@ -358,6 +358,35 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
                 }
 
                 return res;
+        }
+
+        public void deleteListByListId(Integer listId) throws DAOException
+        {
+
+                if (listId == null)
+                {
+                        throw new DAOException("parameter not valid", new IllegalArgumentException("The passed listId is null"));
+                }
+
+                CON = C3p0Util.getConnection();
+                try (PreparedStatement stm = CON.prepareStatement(
+                            " DELETE FROM List WHERE "
+                            + " id = ? "
+                ))
+                {
+                        stm.setInt(1, listId);
+                        if (stm.executeUpdate() != 1)
+                        {
+                                throw new DAOException("Impossible to delete the list");
+                        }
+                }
+                catch (SQLException ex)
+                {
+                        throw new DAOException("Impossible to update the list", ex);
+                } finally
+                {
+                        C3p0Util.close(CON);
+                }
         }
 
 }

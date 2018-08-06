@@ -31,8 +31,8 @@
   </tag>
   
   <tag>
-    <name>getListCategoryNameByListCategoryId</name>
-    <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagGetListCategoryNameByListCategoryId</tag-class>
+    <name>getListCategoryByListCategoryId</name>
+    <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagGetListCategoryByListCategoryId</tag-class>
     <body-content>scriptless</body-content>
     <attribute>
       <name>listCategoryId</name>

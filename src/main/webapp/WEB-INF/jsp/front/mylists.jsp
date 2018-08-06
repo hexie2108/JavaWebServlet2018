@@ -6,7 +6,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="custom" uri="/WEB-INF/custom.tld"%>
 
-<jsp:include page="/WEB-INF/jsp/header.jsp"/>
+<jsp:include page="/WEB-INF/jsp/front/header.jsp"/>
 
 
 <div class="mylists-main-section col-12">
@@ -27,7 +27,7 @@
 
                 <%-- link per creare una nuova lista--%>
                 <div class="add-list-box">
-                        <a class="btn btn-info" href=""><i class="fas fa-plus"></i> crea una nuova lista</a>
+                        <a class="btn btn-info" href="${pageContext.request.contextPath}/updateList"><i class="fas fa-plus"></i> crea una nuova lista</a>
                 </div>
 
                 <%-- se possiede almeno una lista owner --%>         
@@ -53,7 +53,7 @@
                                                         <div class="list-left-head">
 
                                                                 <div class="list-logo">
-                                                                        <img class="img-fluid" src="${pageContext.request.contextPath}/${list.img}" alt="logo"/>
+                                                                        <img class="img-fluid" src="${pageContext.request.contextPath}/image/list/${list.img}" alt="logo"/>
                                                                 </div>
 
                                                                 <div class="list-info">
@@ -65,8 +65,8 @@
                                                                         <span class="list-category">
                                                                                 <i class="fas fa-sitemap"> <b></i> categoria: </b>
                                                                                 <%-- get il nome della categoria di lista--%>
-                                                                                <custom:getListCategoryNameByListCategoryId listCategoryId="${list.categoryList}" />
-                                                                                ${categoryListName}
+                                                                                <custom:getListCategoryByListCategoryId listCategoryId="${list.categoryList}" />
+                                                                                ${categoryOfList.name}
                                                                         </span>
 
                                                                         <div class="list-description">
@@ -102,7 +102,7 @@
 
                                                                         <%-- link per visualizzare il prodotto in finestra--%>      
                                                                         <a href="javascript:;" data-toggle="modal" data-target="#boxShowItem" onclick="showProductWindowsFromList(${product.id}, true, false, true)">
-                                                                                <img class="img img-fluid" src="${pageContext.request.contextPath}/${product.img}" alt="${product.name}" />
+                                                                                <img class="img img-fluid" src="${pageContext.request.contextPath}/image/product/${product.img}" alt="${product.name}" />
                                                                         </a>
 
                                                                         <%-- campi necessari per visuallizare il prodotto nella finestrina--%>
@@ -127,7 +127,7 @@
 
                                                                         <%-- link per visualizzare il prodotto in finestra--%>      
                                                                         <a href="javascript:;" data-toggle="modal" data-target="#boxShowItem" onclick="showProductWindowsFromList(${product.id}, true, true, true)">
-                                                                                <img class="img img-fluid" src="${pageContext.request.contextPath}/${product.img}" alt="${product.name}" />
+                                                                                <img class="img img-fluid" src="${pageContext.request.contextPath}/image/product/${product.img}" alt="${product.name}" />
                                                                         </a>
 
                                                                         <%-- campi necessari per visuallizare il prodotto nella finestrina--%>
@@ -191,7 +191,7 @@
                                                         <div class="list-left-head">
 
                                                                 <div class="list-logo">
-                                                                        <img class="img-fluid" src="${pageContext.request.contextPath}/${list.img}" alt="logo"/>
+                                                                        <img class="img-fluid" src="${pageContext.request.contextPath}/image/list/${list.img}" alt="logo"/>
                                                                 </div>
 
                                                                 <div class="list-info">
@@ -203,8 +203,8 @@
                                                                         <span class="list-category">
                                                                                 <b><i class="fas fa-sitemap"></i> categoria:</b> 
                                                                                 <%-- get il nome della categoria di lista--%>
-                                                                                <custom:getListCategoryNameByListCategoryId listCategoryId="${list.categoryList}"/>
-                                                                                ${categoryListName}
+                                                                                <custom:getListCategoryByListCategoryId listCategoryId="${list.categoryList}"/>
+                                                                                ${categoryOfList.name}
 
                                                                         </span>
 
@@ -254,7 +254,7 @@
 
                                                                         <%-- link per visualizzare il prodotto in finestra--%>      
                                                                         <a href="javascript:;" data-toggle="modal" data-target="#boxShowItem" onclick="showProductWindowsFromList(${product.id}, true, false, true)">
-                                                                                <img class="img img-fluid" src="${pageContext.request.contextPath}/${product.img}" alt="${product.name}" />
+                                                                                <img class="img img-fluid" src="${pageContext.request.contextPath}/image/product/${product.img}" alt="${product.name}" />
                                                                         </a>
 
 
@@ -281,7 +281,7 @@
 
                                                                         <%-- link per visualizzare il prodotto in finestra--%>      
                                                                         <a href="javascript:;" data-toggle="modal" data-target="#boxShowItem" onclick="showProductWindowsFromList(${product.id}, true, true, true)">
-                                                                                <img class="img img-fluid" src="${pageContext.request.contextPath}/${product.img}" alt="${product.name}" />
+                                                                                <img class="img img-fluid" src="${pageContext.request.contextPath}/image/product/${product.img}" alt="${product.name}" />
                                                                         </a>
 
                                                                         <%-- campi necessari per visuallizare il prodotto nella finestrina--%>
@@ -340,4 +340,4 @@
 
 </div>
 
-<jsp:include page="/WEB-INF/jsp/footer.jsp"/>
+<jsp:include page="/WEB-INF/jsp/front/footer.jsp"/>

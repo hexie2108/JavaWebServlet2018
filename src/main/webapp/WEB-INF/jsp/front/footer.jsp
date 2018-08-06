@@ -11,8 +11,8 @@
 </section>
 
 
-<jsp:include page="/WEB-INF/jsp/module/floatBoxForViewProductFromShoppingList.jsp"/>
-<jsp:include page="/WEB-INF/jsp/module/floatBoxForMessage.jsp"/>
+<jsp:include page="/WEB-INF/jsp/front/module/floatBoxForViewProductFromShoppingList.jsp"/>
+<jsp:include page="/WEB-INF/jsp/front/module/floatBoxForMessage.jsp"/>
 
 
 <footer class="footer bg-secondary mt-5">

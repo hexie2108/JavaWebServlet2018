@@ -4,6 +4,7 @@ package it.unitn.webprogramming18.dellmm.jstl;
 import it.unitn.webprogramming18.dellmm.db.daos.CategoryListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCCategoryListDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
+import it.unitn.webprogramming18.dellmm.javaBeans.CategoryList;
 import java.io.IOException;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
@@ -14,7 +15,7 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
  *
  * @author mikuc
  */
-public class TagGetListCategoryNameByListCategoryId extends SimpleTagSupport
+public class TagGetListCategoryByListCategoryId extends SimpleTagSupport
 {
 
         private Integer listCategoryId;
@@ -35,10 +36,10 @@ public class TagGetListCategoryNameByListCategoryId extends SimpleTagSupport
                 if (this.listCategoryId != null)
                 {
 
-                        String categoryName;
+                        CategoryList categoryOfList;
                         try
                         {
-                                categoryName = categoryListDAO.getByPrimaryKey(listCategoryId).getName();
+                                categoryOfList = categoryListDAO.getByPrimaryKey(listCategoryId);
                         }
                         catch (DAOException ex)
                         {
@@ -46,7 +47,7 @@ public class TagGetListCategoryNameByListCategoryId extends SimpleTagSupport
                         }
 
                         //set il nome della categoria della lista come l'attributo della richiesta
-                        ((PageContext) getJspContext()).getRequest().setAttribute("categoryListName", categoryName);
+                        ((PageContext) getJspContext()).getRequest().setAttribute("categoryOfList", categoryOfList);
 
                 }
                 else

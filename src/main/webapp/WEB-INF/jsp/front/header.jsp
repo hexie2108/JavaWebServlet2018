@@ -128,9 +128,9 @@
                                                 <%-- form di ricerca--%> 
                                                 <form id="search-form" class="mt-5" action="${pageContext.request.contextPath}/search">
                                                         <div class="input-group mb-3">
-                                                                <input type="search" class="form-control" name="searchWords" placeholder="cerchi qualcosa?" >
+                                                                <input type="search" class="form-control" name="searchWords" placeholder="cerchi qualcosa?" required="required">
                                                                 <div class="input-group-append">
-                                                                        <button class="btn btn-info" onclick="document.search - form.submit()"><i class="fas fa-search"></i> CERCA</button>
+                                                                        <button type="submit" class="btn btn-info" ><i class="fas fa-search"></i> CERCA</button>
                                                                 </div>
                                                         </div> 
                                                 </form>

@@ -1,13 +1,16 @@
-package it.unitn.webprogramming18.dellmm.servlets;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package it.unitn.webprogramming18.dellmm.servlets.front;
 
-import it.unitn.webprogramming18.dellmm.db.daos.CategoryProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ProductDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCCategoryProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCProductDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
-import it.unitn.webprogramming18.dellmm.javaBeans.CategoryProduct;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,54 +18,55 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * servlet per la pagina di categoria
+ * servlet per la pagina di ricerca
  *
  * @author mikuc
  */
-public class CategoryServlet extends HttpServlet
+public class SearchServlet extends HttpServlet
 {
 
         private ProductDAO productDAO;
-        private CategoryProductDAO categoryProductDAO;
 
         @Override
         public void init() throws ServletException
         {
-
                 productDAO = new JDBCProductDAO();
-                categoryProductDAO = new JDBCCategoryProductDAO();
         }
 
         @Override
         protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
         {
-                //get id categoria
-                String catId = request.getParameter("catId");
-                //se id categoria non esiste
-                if (catId == null)
+                //get parola ricercata
+                String searchWords = request.getParameter("searchWords");
+                //se parola non esiste
+                if (searchWords == null)
                 {
-                        throw new ServletException("manca parametri catId");
+                        throw new ServletException("la parola da cercare è nullo");
+                }
+                if (searchWords.equals(""))
+                {
+                        throw new ServletException("la parola da cercare è vuota");
                 }
 
-                //get beans di categoria
-                CategoryProduct categoriaCorrente = null;
-                try
+                //get ordine richiesta
+                String order = request.getParameter("order");
+                //se non è vuota
+                if (order != null)
                 {
-                        categoriaCorrente = categoryProductDAO.getByPrimaryKey(Integer.parseInt(catId));
+                        //ma con valore diverso da quelli prefissati
+                        if (!order.equals("categoryName") && !order.equals("productName"))
+                        {
+                                throw new ServletException("il parametro di ordinamento non valido");
+                        }
                 }
-                catch (DAOException ex)
+                //altrimenti, assegna il valore default
+                else
                 {
-                        throw new ServletException(ex.getMessage(), ex);
-                }
-                //se beans di categoria non esiste
-                if (categoriaCorrente == null)
-                {
-                        throw new ServletException("non esiste tale categoria di prodotto");
+                        order = "productName";
                 }
 
                 //get numero di prodotto per singola pagina
-                int numebrProductForList = Integer.parseInt(getServletContext().getInitParameter("quantityItemForCategory"));
-
+                int numebrProductForList = Integer.parseInt(getServletContext().getInitParameter("quantityItemForSearch"));
                 //posizione di start di query per get lista di prodotto
                 int startPosition = 0;
                 //get parametro di paginazione
@@ -80,12 +84,13 @@ public class CategoryServlet extends HttpServlet
 
                 List<Product> productList = null;
                 int totalNumberOfPage;
+
                 try
                 {
-                        //get la lista di prodotto
-                        productList = productDAO.getPublicProductListByCatId(Integer.parseInt(catId), startPosition, numebrProductForList);
+                        //get la lista di prodotto secondo la parola ricercata
+                        productList = productDAO.getPublicProductListByNameSearch(searchWords, order, startPosition, numebrProductForList);
                         //get il numero totale di pagine
-                        totalNumberOfPage = (int) Math.ceil(productDAO.getCountOfPublicProductByCatId(Integer.parseInt(catId)) * 1.0 / numebrProductForList);
+                        totalNumberOfPage = (int) Math.ceil(productDAO.getCountOfPublicProductByNameSearch(searchWords) * 1.0 / numebrProductForList);
 
                 }
                 catch (DAOException ex)
@@ -94,18 +99,16 @@ public class CategoryServlet extends HttpServlet
                 }
 
                 //set titolo della pagina nella richesta
-                request.setAttribute("head_title", categoriaCorrente.getName());
-                //set beans di categoria corrente  nella richesta
-                request.setAttribute("categoria", categoriaCorrente);
+                request.setAttribute("head_title", "Search: " + searchWords);
                 //set la lista di prodotto nella richesta
                 request.setAttribute("productList", productList);
-                //set il numero di pagine resti
+                 //set il numero di pagine resti
                 request.setAttribute("numberOfPageRest", (totalNumberOfPage - Integer.parseInt(page)));
                 //set url per la paginazione
-                request.setAttribute("basePath", request.getContextPath() + request.getServletPath() + "?catId=" + catId + "&");
+                request.setAttribute("basePath", request.getContextPath() + request.getServletPath() + "?searchWords=" + URLEncoder.encode(searchWords, "utf-8") + "&order=" + order + "&");
 
-                //inoltra a jsp
-                request.getRequestDispatcher("/WEB-INF/jsp/category.jsp").forward(request, response);
-
+                //inoltra jsp
+                request.getRequestDispatcher("/WEB-INF/jsp/front/search.jsp").forward(request, response);
         }
+
 }

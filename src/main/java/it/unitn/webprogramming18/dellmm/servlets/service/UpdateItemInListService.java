@@ -11,6 +11,7 @@ import it.unitn.webprogramming18.dellmm.javaBeans.Log;
 import it.unitn.webprogramming18.dellmm.javaBeans.Permission;
 import it.unitn.webprogramming18.dellmm.javaBeans.ProductInList;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
+import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
 import java.io.IOException;
 import java.sql.Timestamp;
 import javax.servlet.ServletException;
@@ -76,10 +77,7 @@ public class UpdateItemInListService extends HttpServlet
                         throw new ServletException(ex.getMessage(), ex);
                 }
                 //se il permesso è  vuoto
-                if (permission == null)
-                {
-                        throw new ServletException("non hai nessun permesso su tale lista");
-                }
+                CheckErrorUtils.isNull(permission, "non hai nessun permesso su tale lista");
 
                 //in caso di inserimento
                 if (action.equals("insert"))

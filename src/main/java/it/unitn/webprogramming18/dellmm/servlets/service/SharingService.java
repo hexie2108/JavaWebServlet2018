@@ -13,6 +13,7 @@ import it.unitn.webprogramming18.dellmm.javaBeans.Comment;
 import it.unitn.webprogramming18.dellmm.javaBeans.Permission;
 import it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
+import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
@@ -53,13 +54,12 @@ public class SharingService extends HttpServlet
 
                 //get l'azione che vuoi fare
                 String action = request.getParameter("action");
+                //se azione è nullo
+                CheckErrorUtils.isNull(action, "manca il parametro action");
                 //get id lista
                 String listId = request.getParameter("listId");
-
-                if (action == null || listId == null)
-                {
-                        throw new ServletException("manca il parametro action o listId");
-                }
+                //se id lista è nullo
+                CheckErrorUtils.isNull(listId, "manca il parametro listId");
 
                 //solo il proprietario della lista può manipolare sulla condivisione
                 //quindi ogni volta deve controllare prima se utente corrente è il proprietario della lista
@@ -70,15 +70,14 @@ public class SharingService extends HttpServlet
                 {
                         //get shoppingList bean
                         shoppingList = listDAO.getByPrimaryKey(Integer.parseInt(listId));
+                        //se lista è nullo
+                        CheckErrorUtils.isNull(shoppingList, "non eiste la lista con tale id lista");
                 }
                 catch (DAOException ex)
                 {
                         throw new ServletException(ex.getMessage(), ex);
                 }
-                if (shoppingList == null)
-                {
-                        throw new ServletException("hai dato un lista id invalido");
-                }
+
                 // controllare  se utente corrente è il proprietario della lista
                 if (user.getId() != shoppingList.getOwnerId())
                 {
@@ -106,11 +105,9 @@ public class SharingService extends HttpServlet
                         {
                                 //get user beans dell'utente da condividere
                                 userToShare = userDAO.getByEmail(userEmail);
-                                //se  user beans  è  vuoto
-                                if (userToShare == null)
-                                {
-                                        throw new ServletException("non esiste l'utente con tale email");
-                                }
+                                //se  user beans  è  nullo
+                                CheckErrorUtils.isNull(userToShare, "non esiste l'utente con tale email");
+
                                 //se utente da condividere ha già un permesso su questa lista (ripetizione)
                                 if (permissionDAO.getUserPermissionOnListByIds(userToShare.getId(), Integer.parseInt(listId)) != null)
                                 {
@@ -168,25 +165,20 @@ public class SharingService extends HttpServlet
                 {
                         //get id permesso
                         String permissionId = request.getParameter("permissionId");
-                        if (permissionId == null)
-                        {
-                                throw new ServletException("manca il parametro permission Id");
-                        }
+                        //se il permissionId è  nullo
+                        CheckErrorUtils.isNull(permissionId, "manca il parametro permissionId");
 
                         //get beans di permesso 
                         Permission permission = null;
                         try
                         {
                                 permission = permissionDAO.getByPrimaryKey(Integer.parseInt(permissionId));
+                                //se il permesso è  nullo
+                                CheckErrorUtils.isNull(permissionId, "non esiste il permesso con tale id");
                         }
                         catch (DAOException ex)
                         {
                                 throw new ServletException(ex.getMessage(), ex);
-                        }
-                        //se il permesso è  nullo
-                        if (permission == null)
-                        {
-                                throw new ServletException("non esiste il permesso con tale id");
                         }
 
                         //get i permessi che vuoi modificare dai parametri
@@ -248,10 +240,9 @@ public class SharingService extends HttpServlet
 
                         //get id permesso
                         String permissionId = request.getParameter("permissionId");
-                        if (permissionId == null)
-                        {
-                                throw new ServletException("manca il parametro permission Id");
-                        }
+                        //se il permissionId è  nullo
+                        CheckErrorUtils.isNull(permissionId, "manca il parametro permissionId");
+                        
                         //elimina il permesso
                         try
                         {
@@ -270,7 +261,7 @@ public class SharingService extends HttpServlet
                 else
                 {
 
-                        new ServletException("valore di action non riconosciuto");
+                        throw new ServletException("valore di action non riconosciuto");
 
                 }
 
