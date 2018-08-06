@@ -47,7 +47,7 @@ public class UsersServlet extends HttpServlet {
             iId = id == null || id.trim().isEmpty()? null: Integer.parseInt(id);
         } catch (NumberFormatException e) {
             e.printStackTrace();
-            ServletUtility.sendError(request, response, 400, "id must be integer"); // TODO: To i18n
+            ServletUtility.sendError(request, response, 400, "users.errors.idNotInt");
             return;
         }
 
@@ -64,22 +64,19 @@ public class UsersServlet extends HttpServlet {
         }
 
         Boolean bAdmin = admin == null || admin.trim().isEmpty()? null: Boolean.parseBoolean(admin);
-
-        List<User> users;
-
-        try {
-            users = userDAO.filter(iId, email, name, surname, bAdmin);
-        } catch (DAOException e) {
-            e.printStackTrace();
-            ServletUtility.sendError(request, response, 500, "db error"); //TODO: To i18n
-            return;
-        }
-
         if (request.getRequestURI().endsWith(".json")) {
+            List<User> users;
+
+            try {
+                users = userDAO.filter(iId, email, name, surname, bAdmin);
+            } catch (DAOException e) {
+                e.printStackTrace();
+                ServletUtility.sendError(request, response, 500, "users.errors.impossibleDbFilter");
+                return;
+            }
+
             ServletUtility.sendJSON(request, response, 200, users);
         } else {
-            request.setAttribute("users", users);
-
             request.getRequestDispatcher(JSP_PAGE).forward(request, response);
         }
     }

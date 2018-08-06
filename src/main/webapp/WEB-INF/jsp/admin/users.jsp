@@ -59,18 +59,37 @@
         </tr>
         </tfoot>
     </table>
+    <div class="alert alert-danger d-none" id="id-res">
+    </div>
 </div>
 <link rel="stylesheet" type="text/css" href="<c:url value="/libs/DataTables/datatables.min.css"/>"/>
 <script src="<c:url value="/libs/DataTables/datatables.min.js"/>"></script>
 <script>
     $(document).ready( function (key, value) {
         $('#userTable > thead, tfoot').find('> tr').prepend(
-            $('<th/>',{
+            $('<th/>', {
                 text: ''
             })
         );
 
-        const table = $('#userTable').DataTable({
+        const resDiv = $('#id-res');
+        const unknownError = '<fmt:message key="generic.errors.unknownError"/>';
+
+        const table = $('#userTable').on('xhr.dt', function (e, settings, json, xhr){
+            if (json === null) {
+                const json = JSON.parse(xhr.responseText);
+                resDiv.removeClass("d-none");
+
+                if(json['message'] !== undefined && json['message'] !== null) {
+                    resDiv.html(json['message']);
+                } else {
+                    resDiv.html(unknownError);
+                }
+            } else {
+                resDiv.addClass("d-none");
+                resDiv.html("");
+            }
+        }).DataTable({
             ajax: {
                 url: '<c:url value="/admin/users.json"/>',
                 dataType: "json",
@@ -200,6 +219,8 @@
             table.ajax.reload();
             table.draw();
         });
+
+        $.fn.dataTable.ext.errMode = 'throw';
     });
 </script>
 </body>
