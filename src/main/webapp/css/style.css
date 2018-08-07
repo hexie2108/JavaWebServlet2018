@@ -60,7 +60,13 @@
         margin: 20px 0;
 }
 
+.breadcrumbs span{
+        margin: 0.25rem;
+}
 
+.breadcrumbs a{
+        text-decoration: none;
+}
 
 
 /*slider.jps----------------------------------------------------------------------------*/
@@ -398,7 +404,7 @@
 
 .mylists-main-section .add-list-box{
 
-        margin-top:  70px;
+        margin-top:  2rem;
 }
 
 .mylists-main-section .my-lists{
@@ -620,7 +626,7 @@
 /*comment.jsp*/
 
 .comments {
-    margin-top: 2rem;
+        margin-top: 2rem;
 }
 
 .comments .list-comment .comment-item  {

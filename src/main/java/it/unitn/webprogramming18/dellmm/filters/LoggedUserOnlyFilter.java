@@ -10,8 +10,9 @@ import java.io.IOException;
 import java.net.URLEncoder;
 
 /**
- * se utente non è autenticato, rindirizzarlo alla pagina login
- * se utente è autenticato, set tutte le sue richieste in codifica UTF-8
+ * se utente non è autenticato, rindirizzarlo alla pagina login se utente è
+ * autenticato, set tutte le sue richieste in codifica UTF-8
+ *
  * @author mikuc
  */
 public class LoggedUserOnlyFilter implements Filter
@@ -64,7 +65,10 @@ public class LoggedUserOnlyFilter implements Filter
 
                 //set la codifica della richesta
                 request.setCharacterEncoding("UTF-8");
-
+                //set pagina non cache 
+                response.setDateHeader("Expires", -1);
+                response.setHeader("Cache-Control", "no-cache");
+                response.setHeader("Pragme", "no-cache");
                 // Se l'utente è autenticato facciamo continuare
                 chain.doFilter(req, resp);
         }

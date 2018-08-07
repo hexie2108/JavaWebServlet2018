@@ -149,4 +149,20 @@ public interface ProductDAO extends DAO<Product, Integer> {
      * @throws DAOException if an error occurred during the action.
      */
     public List<Product> getProductsBoughtInListByListId(Integer listId) throws DAOException;
+    
+    
+    /**
+     * get tutti i prodotti privati di una lista
+     * @param listId id lista
+     * @return  lista di prodtti privati
+     */
+     public List<Product> getPrivateProductByListId(Integer listId) throws DAOException;
+    
+    
+    /**
+     * elimina il prodotto
+     * @param productId id del prodotto
+     * @throws DAOException 
+     */
+    public void deleteProductById(Integer productId) throws DAOException;
 }

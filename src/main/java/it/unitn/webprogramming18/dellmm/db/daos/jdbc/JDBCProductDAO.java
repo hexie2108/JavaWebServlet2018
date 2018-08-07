@@ -29,6 +29,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
                 product.setImg(rs.getString("img"));
                 product.setLogo(rs.getString("logo"));
                 product.setCategoryProductId(rs.getInt("categoryProductId"));
+                product.setPrivateListId(rs.getInt("privateListId"));
 
                 return product;
         }
@@ -120,7 +121,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
                             + " description =?, "
                             + " img =?, "
                             + " logo =?, "
-                            + " categoryProductId =? "
+                            + " categoryProductId =?, "
                             + " privateListId =? "
                             + " WHERE id = ? "
                 ))
@@ -433,12 +434,6 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
 
         }
 
-        
-        
-        
-        
-        
-        
         @Override
         public List<Product> getProductsInListByListId(Integer listId) throws DAOException
         {
@@ -549,5 +544,73 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
 
                 return products;
 
+        }
+
+        @Override
+        public List<Product> getPrivateProductByListId(Integer listId) throws DAOException
+        {
+
+                List<Product> products = new ArrayList<>();
+
+                if (listId == null)
+                {
+                        throw new DAOException("listId is null");
+                }
+
+                CON = C3p0Util.getConnection();
+
+                try (PreparedStatement stm = CON.prepareStatement("SELECT Product.* FROM ProductInList JOIN Product ON ProductInList.productId = Product.id "
+                            + " WHERE  ProductInList.listId = ? AND Product.privateListId IS NOT NULL"))
+                {
+                        stm.setInt(1, listId);
+
+                        try (ResultSet rs = stm.executeQuery())
+                        {
+                                while (rs.next())
+                                {
+                                        products.add(getProductFromResultSet(rs));
+                                }
+                        }
+                }
+                catch (SQLException ex)
+                {
+                        throw new DAOException("Impossible to get the list of productInList", ex);
+                } finally
+                {
+                        C3p0Util.close(CON);
+                }
+
+                return products;
+
+        }
+
+        @Override
+        public void deleteProductById(Integer productId) throws DAOException
+        {
+
+                if (productId == null)
+                {
+                        throw new DAOException("parameter not valid", new IllegalArgumentException("The passed productId is null"));
+                }
+
+                CON = C3p0Util.getConnection();
+                try (PreparedStatement stm = CON.prepareStatement(
+                            " DELETE FROM Product WHERE "
+                            + " id = ? "
+                ))
+                {
+                        stm.setInt(1, productId);
+                        if (stm.executeUpdate() != 1)
+                        {
+                                throw new DAOException("Impossible to delete the product");
+                        }
+                }
+                catch (SQLException ex)
+                {
+                        throw new DAOException("Impossible to update the product", ex);
+                } finally
+                {
+                        C3p0Util.close(CON);
+                }
         }
 }

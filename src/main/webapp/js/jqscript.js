@@ -13,7 +13,7 @@ $(document).ready(function () {
                 //get il nome di file
                   var fileName = e.target.files[0].name;
                 //sostituisce il contenuto del "custom-file-label" label
-                   $(".custom-file-label").html(fileName);
+                   $(this).next(".custom-file-label").html(fileName);
         });
 
 

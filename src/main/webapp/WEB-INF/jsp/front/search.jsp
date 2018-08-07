@@ -32,7 +32,9 @@
                 <%-- links per impostare l'ordine--%>
                 <div class="order-manage float-right">
 
-                        <span>ordina per : </span>
+                        <span>
+                                <i class="fas fa-sort-alpha-down"></i> ordina per: 
+                        </span>
                         <%-- ordinare per nome di prodotto--%>
                         <a class="btn btn-info ${param.order == "productName" || empty param.order ? "active" : "" }" href="${pageContext.request.contextPath}/search?searchWords=${param.searchWords}&order=productName">nome</a>
 
@@ -65,7 +67,9 @@
                                         </h2>
 
                                         <%-- link per creare il nuovo l'oggetto --%>
-                                        <a class="btn btn-info" href="#">inserisci tuo oggetto</a>
+                                        <a class="btn btn-info mt-3" href="${pageContext.request.contextPath}/updateProduct">
+                                                <i class="fas fa-edit"></i> inserisci il tuo oggetto
+                                        </a>
 
                                 </div>
                         </c:if>

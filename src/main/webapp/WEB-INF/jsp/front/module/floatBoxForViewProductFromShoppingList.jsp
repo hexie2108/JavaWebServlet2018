@@ -71,11 +71,17 @@
                                                 <%-- se è un utente anonimo--%>
                                                 <c:if test="${empty sessionScope.user}">
 
-                                                        <%--  link per eliminare il prodotto dalla cookie --%>
-                                                        <input class="productIdFromList" type="hidden" name="productId" value="1"/>
-                                                        <a id="deleteProductLocal" class="btn btn-danger" href="javascript:;" title="elimina" onclick="deleteProductLocal()">
-                                                                <i class="fa fa-ban"></i> elimina
-                                                        </a>
+
+                                                        <%--  form per eliminare il prodotto dalla cookie --%>
+                                                        <form action="${pageContext.request.contextPath}/service/updateItemInListUnloggedUserOnlyService" method="GET">
+
+                                                                <input class="productIdFromList" type="hidden" name="productId" value="1"/>
+                                                                <input type="hidden" name="action" value="delete"/>
+                                                                <button class="submit-button btn btn-danger" type="submit">
+                                                                        <i class="fa fa-ban"></i> elimina
+                                                                </button>
+                                                        </form>
+   
 
                                                 </c:if>       
 

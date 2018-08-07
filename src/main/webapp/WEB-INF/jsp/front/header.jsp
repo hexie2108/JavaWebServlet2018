@@ -163,7 +163,7 @@
                                                         </li>
 
                                                         <li class="nav-item">
-                                                                <a class="nav-link" href="#">
+                                                                <a class="nav-link" href="${pageContext.request.contextPath}/updateProduct">
                                                                         AGGIUNGE PRODOTTO
                                                                 </a>
                                                         </li>

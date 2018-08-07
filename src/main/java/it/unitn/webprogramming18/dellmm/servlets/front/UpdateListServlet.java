@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- *
+ *servlet della pagina per inserire/modificare la lista 
  * @author luca_morgese
  */
 public class UpdateListServlet extends HttpServlet
@@ -77,7 +77,7 @@ public class UpdateListServlet extends HttpServlet
                                 //se il permesso è  nullo
                                 CheckErrorUtils.isNull(permission, "non hai nessun permesso su tale lista");
                                 //se utente non ha il permesso di modificare la lista
-                                CheckErrorUtils.isFalse(permission.isDeleteList(), "non hai il permesso di modificare tale lista");
+                                CheckErrorUtils.isFalse(permission.isModifyList(), "non hai il permesso di modificare tale lista");
 
                         }
                         catch (DAOException ex)

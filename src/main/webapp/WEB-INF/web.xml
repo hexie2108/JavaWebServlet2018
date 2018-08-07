@@ -103,6 +103,7 @@
         <url-pattern>/home</url-pattern>
         <url-pattern>/category</url-pattern>
         <url-pattern>/search</url-pattern>
+        <url-pattern>/updateProduct</url-pattern>
     </filter-mapping>
     <filter>
         <filter-name>LoggedUserOnlyFilter</filter-name>
@@ -117,12 +118,14 @@
         <url-pattern>/mylists</url-pattern>
         <url-pattern>/mylist</url-pattern>
         <url-pattern>/updateList</url-pattern>
+        <url-pattern>/updateProduct</url-pattern>
         <url-pattern>/service/updateItemInListService</url-pattern>
         <url-pattern>/service/updateListService</url-pattern>
         <url-pattern>/service/changeListService</url-pattern>
         <url-pattern>/service/commentService</url-pattern>
         <url-pattern>/service/sharingService</url-pattern>
         <url-pattern>/service/updateListService</url-pattern>
+        <url-pattern>/service/updateProductService</url-pattern>
     </filter-mapping>
     
     
@@ -177,7 +180,14 @@
         <servlet-name>UpdateListServlet</servlet-name>
         <url-pattern>/updateList</url-pattern>
     </servlet-mapping>
-    
+        <servlet>
+        <servlet-name>UpdateProductServlet</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.front.UpdateProductServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpdateProductServlet</servlet-name>
+        <url-pattern>/updateProduct</url-pattern>
+    </servlet-mapping>
     
     
     
@@ -229,6 +239,14 @@
     <servlet-mapping>
         <servlet-name>UpdateListService</servlet-name>
         <url-pattern>/service/updateListService</url-pattern>
+    </servlet-mapping>
+       <servlet>
+        <servlet-name>UpdateProductService</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.service.UpdateProductService</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpdateProductService</servlet-name>
+        <url-pattern>/service/updateProductService</url-pattern>
     </servlet-mapping>
     
     

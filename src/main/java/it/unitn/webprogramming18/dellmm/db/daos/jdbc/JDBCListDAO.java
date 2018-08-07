@@ -360,6 +360,7 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
                 return res;
         }
 
+        @Override
         public void deleteListByListId(Integer listId) throws DAOException
         {
 

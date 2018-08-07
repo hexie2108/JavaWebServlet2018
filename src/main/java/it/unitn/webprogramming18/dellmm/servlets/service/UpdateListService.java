@@ -7,10 +7,13 @@ package it.unitn.webprogramming18.dellmm.servlets.service;
 
 import it.unitn.webprogramming18.dellmm.db.daos.ListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.PermissionDAO;
+import it.unitn.webprogramming18.dellmm.db.daos.ProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCPermissionDAO;
+import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCProductDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.javaBeans.Permission;
+import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
@@ -36,6 +39,7 @@ public class UpdateListService extends HttpServlet
 
         private ListDAO listDAO;
         private PermissionDAO permissionDAO;
+        private ProductDAO productDAO;
 
         private User user = null;
         private Permission permission = null;
@@ -50,6 +54,11 @@ public class UpdateListService extends HttpServlet
         private static final String IMAGE_BASE_PATH = "image";
         // la cartella per immagine di lista
         private static final String IMAGE_LIST = "list";
+        // la cartella per immagine di prodotto
+        private static final String IMAGE_PRODUCT = "product";
+        // la cartella per immagine di logo di prodotto
+        private static final String IMAGE_LOGO_PRODUCT = "productLogo";
+
         //le dimensioni dell'immagini
         private static final int IMAGE_WIDTH = 800;
         private static final int IMAGE_HEIGHT = 800;
@@ -57,6 +66,7 @@ public class UpdateListService extends HttpServlet
         @Override
         public void init() throws ServletException
         {
+                productDAO = new JDBCProductDAO();
                 listDAO = new JDBCListDAO();
                 permissionDAO = new JDBCPermissionDAO();
         }
@@ -103,9 +113,20 @@ public class UpdateListService extends HttpServlet
 
                                 //prima deve eliminare img di lista
                                 //set il percorso complete per salvare immagine
-                                uploadPath = request.getServletContext().getRealPath("/") + IMAGE_BASE_PATH + File.separator + IMAGE_LIST;
+                                uploadPath = request.getServletContext().getRealPath("/") + IMAGE_BASE_PATH;
+
+                                //prima deve eliminare tutti immagini e log dei prodotti privati presente in questa lista
+                                List<Product> productList = productDAO.getPrivateProductByListId(Integer.parseInt(listId));
+                                for (Product product : productList)
+                                {
+                                        //elimina file img del prodtto
+                                        FileUtils.deleteFile(uploadPath + File.separator + IMAGE_PRODUCT + File.separator + product.getImg());
+                                        //elimina file img del logo del prodtto
+                                        FileUtils.deleteFile(uploadPath + File.separator + IMAGE_LOGO_PRODUCT + File.separator + product.getLogo());
+                                }
+
                                 //elimina file img della lista
-                                FileUtils.deleteFile(uploadPath + File.separator + shoppingList.getImg());
+                                FileUtils.deleteFile(uploadPath + File.separator + IMAGE_LIST + File.separator + shoppingList.getImg());
 
                                 //elimina la lista
                                 listDAO.deleteListByListId(Integer.parseInt(listId));
@@ -130,7 +151,7 @@ public class UpdateListService extends HttpServlet
                 else
                 {
 
-                       throw new ServletException("valore di action non riconosciuto");
+                        throw new ServletException("valore di action non riconosciuto");
 
                 }
 
@@ -160,12 +181,8 @@ public class UpdateListService extends HttpServlet
                 String listName = null;
                 String listCategory = null;
                 String listDescription = null;
-                String listId = null;
                 String listImg = null;
-                FileItem fileItem = null;
-
-                //get user corrente
-                user = (User) request.getSession().getAttribute("user");
+                FileItem listImgFileItem = null;
 
                 if (items != null && items.size() > 0)
                 {
@@ -194,10 +211,10 @@ public class UpdateListService extends HttpServlet
                                                         break;
                                         }
                                 }
-                                //altrimenti sono i dati di file
-                                else
+                                //se item name uguale "listImg", allora è file img
+                                else if (item.getFieldName().equals("listImg") && !item.getString().equals(""))
                                 {
-                                        fileItem = item;
+                                        listImgFileItem = item;
                                 }
                         }
                 }
@@ -208,13 +225,18 @@ public class UpdateListService extends HttpServlet
                 CheckErrorUtils.isNull(listCategory, "manca il parametro listCategory");
                 CheckErrorUtils.isNull(listDescription, "manca il parametro listDescription");
 
+                //get user corrente
+                user = (User) request.getSession().getAttribute("user");
+
                 //in caso di inserimento 
                 if (action.equals("insert"))
                 {
+                        CheckErrorUtils.isNull(listImgFileItem, "manca il prametro file listImg");
+
                         //set il percorso complete per salvare immagine
                         uploadPath = request.getServletContext().getRealPath("/") + IMAGE_BASE_PATH + File.separator + IMAGE_LIST;
                         //salva l'immagine e get il nome salvato
-                        listImg = FileUtils.upload(fileItem, uploadPath, IMAGE_WIDTH, IMAGE_HEIGHT);
+                        listImg = FileUtils.upload(listImgFileItem, uploadPath, IMAGE_WIDTH, IMAGE_HEIGHT);
                         //crea beans di lista
                         shoppingList = new ShoppingList();
                         shoppingList.setName(listName);
@@ -223,10 +245,11 @@ public class UpdateListService extends HttpServlet
                         shoppingList.setImg(listImg);
                         shoppingList.setOwnerId(user.getId());
 
+                        int newlistId;
                         try
                         {
                                 //inserire la lista e  get id della nuova lista
-                                int newlistId = listDAO.insert(shoppingList);
+                                newlistId = listDAO.insert(shoppingList);
                                 //crea il beans di permesso su tale lista e user
                                 permission = new Permission();
                                 permission.setListId(newlistId);
@@ -245,8 +268,9 @@ public class UpdateListService extends HttpServlet
                         }
 
                         result = "ListInsertOk";
-                        //ritorna alla pagina di mylists
-                        prevUrl = getServletContext().getContextPath() + "/mylists";
+                        //ritorna alla pagina di lista appena creata
+
+                        prevUrl = getServletContext().getContextPath() + "/mylist?listId=" + newlistId;
 
                 }
 
@@ -275,7 +299,7 @@ public class UpdateListService extends HttpServlet
                                 shoppingList.setDescription(listDescription);
 
                                 //se è stato selezionato un file durante questa richiesta 
-                                if (fileItem != null && !fileItem.getName().equals(""))
+                                if (listImgFileItem != null)
                                 {
 
                                         //set il percorso complete per salvare immagine
@@ -283,7 +307,7 @@ public class UpdateListService extends HttpServlet
                                         //elimina file img vecchio
                                         FileUtils.deleteFile(uploadPath + File.separator + shoppingList.getImg());
                                         //salva l'immagine e get il nome salvato
-                                        listImg = FileUtils.upload(fileItem, uploadPath, IMAGE_WIDTH, IMAGE_HEIGHT);
+                                        listImg = FileUtils.upload(listImgFileItem, uploadPath, IMAGE_WIDTH, IMAGE_HEIGHT);
                                         //set nuovo file
                                         shoppingList.setImg(listImg);
                                 }

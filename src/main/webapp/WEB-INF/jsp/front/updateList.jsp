@@ -18,8 +18,12 @@
                                 <i class="fas fa-home"></i>
                         </a>
                         <span>&gt;</span>
+                        <a href="${pageContext.request.contextPath}/mylists">
+                                <i class="fas fa-list"></i> le mie liste
+                        </a>
+                        <span>&gt;</span>
                         <span>
-                                <i class="fas fa-edit"></i> ${head_title}: ${not empty list?list.name:""}
+                                <i class="fas fa-edit"></i> ${head_title} ${not empty list?list.name:""}
                         </span>
 
                 </div>
@@ -70,8 +74,13 @@
 
                                         <div class="custom-file mb-3">
                                                 <input  type="file" class="custom-file-input"  id="listImg" name="listImg"  accept="image/jpeg, image/png, image/gif, image/bmp" ${empty list?"required=\"required\"":""}>
-                                                <label class="custom-file-label" for="customFile">seleziona file</label>
+                                                <label class="custom-file-label" for="listImg">seleziona file</label>
                                         </div>
+
+                                </div>
+
+                                <%--parte di suggerimenti --%>
+                                <div class="form-group">
                                         <label>accetta solo file *.jpg, *.png, *.gif, *.bmp</label>
                                 </div>
 

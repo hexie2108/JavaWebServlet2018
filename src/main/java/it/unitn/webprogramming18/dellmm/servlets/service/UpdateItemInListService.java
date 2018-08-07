@@ -2,16 +2,21 @@ package it.unitn.webprogramming18.dellmm.servlets.service;
 
 import it.unitn.webprogramming18.dellmm.db.daos.LogDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.PermissionDAO;
+import it.unitn.webprogramming18.dellmm.db.daos.ProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ProductInListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCLogDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCPermissionDAO;
+import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCProductInListDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.javaBeans.Log;
 import it.unitn.webprogramming18.dellmm.javaBeans.Permission;
+import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import it.unitn.webprogramming18.dellmm.javaBeans.ProductInList;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
+import it.unitn.webprogramming18.dellmm.util.FileUtils;
+import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
 import javax.servlet.ServletException;
@@ -20,32 +25,42 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * servizio per aggiunge, elimina, segna come comprato un prodotto in una lista per utente registrato
- * 
+ * servizio per aggiunge, elimina, segna come comprato un prodotto in una lista
+ * per utente registrato
+ *
  *
  * @author mikuc
  */
 public class UpdateItemInListService extends HttpServlet
 {
 
+        //il percorso base per tutte le immagini
+        private static final String IMAGE_BASE_PATH = "image";
+        // la cartella per immagine di prodotto
+        private static final String IMAGE_PRODUCT = "product";
+        // la cartella per immagine di logo di prodotto
+        private static final String IMAGE_LOGO_PRODUCT = "productLogo";
+        
+        private ProductDAO productDAO;
         private ProductInListDAO productInListDAO;
         private LogDAO logDAO;
         private PermissionDAO permissionDAO;
-
+        
         @Override
         public void init() throws ServletException
         {
+                productDAO = new JDBCProductDAO();
                 productInListDAO = new JDBCProductInListDAO();
                 logDAO = new JDBCLogDAO();
                 permissionDAO = new JDBCPermissionDAO();
         }
-
+        
         @Override
         protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
         {
                 doGet(request, response);
         }
-
+        
         @Override
         protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
         {
@@ -57,7 +72,7 @@ public class UpdateItemInListService extends HttpServlet
                 String productId = request.getParameter("productId");
                 //get id lista
                 String listId = request.getParameter("listId");
-                
+
                 //se manca il parametro
                 if (action == null || productId == null || listId == null)
                 {
@@ -112,18 +127,37 @@ public class UpdateItemInListService extends HttpServlet
                         {
                                 throw new ServletException("non hai il permesso di inserire il prodotto a questa lista");
                         }
-
+                        
                 }
 
                 //in caso elimina un prodotto dalla lista
                 else if (action.equals("delete"))
                 {
+                        
+                        Product product = null;
+                        
                         if (permission.isDeleteObject())
                         {
                                 try
                                 {
                                         //elimina la relazione tra prodotto e la lista
                                         productInListDAO.deleteByProductIdAndListId(Integer.parseInt(productId), Integer.parseInt(listId));
+
+                                        //get beans di prodotto
+                                        product = productDAO.getByPrimaryKey(Integer.parseInt(productId));
+                                        //se product è nullo
+                                        CheckErrorUtils.isNull(product, "non eiste il prodotto con tale id");
+                                        //se il prodotto è privato
+                                        if (product.getPrivateListId() != 0)
+                                        {
+                                                //bisogna prima eliminare immagine
+                                                String uploadPath = request.getServletContext().getRealPath("/") + IMAGE_BASE_PATH;
+                                                //elimina file img e file logo del prodotto
+                                                FileUtils.deleteFile(uploadPath + File.separator + IMAGE_PRODUCT + File.separator + product.getImg());
+                                                FileUtils.deleteFile(uploadPath + File.separator + IMAGE_LOGO_PRODUCT + File.separator + product.getLogo());
+                                                //poi elimina tale prodotto
+                                                productDAO.deleteProductById(Integer.parseInt(productId));
+                                        }
                                 }
                                 catch (DAOException ex)
                                 {
@@ -143,7 +177,7 @@ public class UpdateItemInListService extends HttpServlet
                         
                         ProductInList productInList = null;
                         Log log = null;
-
+                        
                         try
                         {
                                 //aggiornare lo stato del prodotto in lista
@@ -172,14 +206,14 @@ public class UpdateItemInListService extends HttpServlet
                                         {
                                                 log.setLast2(log.getLast1());
                                         }
-                                        
+
                                         //caso del terzo aquisto
                                         else if (log.getLast3() == null)
                                         {
                                                 log.setLast3(log.getLast2());
                                                 log.setLast2(log.getLast1());
                                         }
-                                        
+
                                         //caso del quarto aquisto e in poi
                                         else
                                         {
@@ -187,18 +221,18 @@ public class UpdateItemInListService extends HttpServlet
                                                 log.setLast3(log.getLast2());
                                                 log.setLast2(log.getLast1());
                                         }
-
+                                        
                                         log.setLast1(new Timestamp(System.currentTimeMillis()));
                                         logDAO.update(log);
                                 }
-
+                                
                         }
                         catch (DAOException ex)
                         {
                                 throw new ServletException(ex.getMessage(), ex);
                         }
                         result = "BoughtOk";
-
+                        
                 }
 
                 //ritorna alla pagina di provenienza
@@ -211,5 +245,5 @@ public class UpdateItemInListService extends HttpServlet
                 request.getSession().setAttribute("result", result);
                 response.sendRedirect(response.encodeRedirectURL(prevUrl));
         }
-
+        
 }
