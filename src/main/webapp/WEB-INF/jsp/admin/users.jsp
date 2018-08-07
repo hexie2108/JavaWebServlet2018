@@ -3,6 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <%@ page import="it.unitn.webprogramming18.dellmm.util.RegistrationValidator"%>
+<%@ page import="it.unitn.webprogramming18.dellmm.util.PagePathsConstants"%>
 
 <%@ include file="../../jspf/i18n.jsp"%>
 <html>
@@ -76,15 +77,15 @@
             </div>
             <div class="modal-body">
                 <form id="modifyUserForm" method="post" enctype="multipart/form-data">
-                    <h2><fmt:message key="users.modifyUserForm.title"/></h2>
-                    <input class="form-control" type="hidden" name="id" form="filterForm" value=""/>
+                    <input class="form-control" type="hidden" name="id" value=""/>
+                    <input class="form-control" type="hidden" name="action" value="modify"/>
                     <div class="form-group row">
                         <div class="col-sm-6">
                             <label for="inputFirstName" class="sr-only"><fmt:message key="user.label.name"/></label>
                             <div class="input-group ">
                                 <div class="input-group-prepend"><i class="input-group-text fas fa-user"></i></div>
                                 <div class="input-group-prepend"><span class="input-group-text" id="roSpanFirstName"></span></div>
-                                <input id="inputFirstName" class="form-control" placeholder="<fmt:message key="user.label.name"/>" required="" autofocus=""
+                                <input id="inputFirstName" class="form-control" placeholder="<fmt:message key="user.label.name"/>" autofocus=""
                                        type="text" name="${RegistrationValidator.FIRST_NAME_KEY}" >
                                 <span id="spanFirstName"></span>
                             </div>
@@ -95,7 +96,7 @@
                             <div class="input-group">
                                 <div class="input-group-prepend"><i class="input-group-text fas fa-user"></i></div>
                                 <div class="input-group-prepend"><span class="input-group-text" id="roSpanLastName"></span></div>
-                                <input id="inputLastName" class="form-control" placeholder="<fmt:message key="user.label.surname"/>" required="" autofocus=""
+                                <input id="inputLastName" class="form-control" placeholder="<fmt:message key="user.label.surname"/>" autofocus=""
                                        type="text" name="${RegistrationValidator.LAST_NAME_KEY}">
                                 <span id="spanLastName"></span>
                             </div>
@@ -108,7 +109,7 @@
                             <div class="input-group">
                                 <div class="input-group-prepend"><i class="input-group-text fas fa-at"></i></div>
                                 <div class="input-group-prepend"><span class="input-group-text" id="roSpanEmail"></span></div>
-                                <input id="inputEmail" class="form-control" placeholder="<fmt:message key="user.label.email"/>" required="" autofocus=""
+                                <input id="inputEmail" class="form-control" placeholder="<fmt:message key="user.label.email"/>" autofocus=""
                                        type="email" name="${RegistrationValidator.EMAIL_KEY}">
                                 <span id="spanEmail"></span>
                             </div>
@@ -118,9 +119,8 @@
                             <label for="inputPassword" class="sr-only"><fmt:message key="user.label.password"/></label>
                             <div class="input-group">
                                 <div class="input-group-prepend"><i class="input-group-text fas fa-key"></i></div>
-                                <input id="inputPassword" class="form-control" placeholder="<fmt:message key="user.label.password"/>" required=""
-                                       type="password" name="${RegistrationValidator.FIRST_PWD_KEY}"
-                                       value="">
+                                <input id="inputPassword" class="form-control" placeholder="<fmt:message key="user.label.password"/>"
+                                       type="password" name="${RegistrationValidator.FIRST_PWD_KEY}" value="">
                                 <div class="input-group-append"><span class="input-group-text" id="strongPassword" ><fmt:message key="user.label.passwordScore"/>: x/x</span></div>
                                 <span id="spanPassword"></span>
                             </div>
@@ -130,14 +130,14 @@
                     <div class="form-group" id="avatarDiv">
                         <c:forEach items="${RegistrationValidator.DEFAULT_AVATARS}" var="av" varStatus="st">
                             <label>
-                                <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}"
+                                <input class="d-none img-radio" type="radio" name="${RegistrationValidator.AVATAR_KEY}"
                                        value="${av}">
                                 <img src="<c:url value="/${pageContext.servletContext.getInitParameter('avatarsFolder')}/${av}"/>" class="img-input"
                                 ><i class="far fa-check-circle img-check"></i>
                             </label>
                         </c:forEach>
                         <label>
-                            <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}" value="custom" id="customAvatar">
+                            <input class="d-none img-radio" type="radio" name="${RegistrationValidator.AVATAR_KEY}" value="custom" id="customAvatar">
                             <img src="<c:url value="/libs/fontawesome-free-5.1.1-web/svgs/regular/plus-square.svg"/>" class="img-input"
                             ><i class="far fa-check-circle img-check"></i>
                             <input id="customAvatarImg"
@@ -161,6 +161,8 @@
 </div>
 <link rel="stylesheet" type="text/css" href="<c:url value="/libs/DataTables/datatables.min.css"/>"/>
 <script src="<c:url value="/libs/DataTables/datatables.min.js"/>"></script>
+<script src="<c:url value="/js/userValidate.js"/>"></script>
+<script src="<c:url value="/libs/zxcvbn/zxcvbn.js"/>"></script>
 <script>
     $(document).ready( function (key, value) {
         $('#userTable > thead, tfoot').find('> tr').prepend(
@@ -377,17 +379,62 @@
             }
         });
 
-        $('#userTable tfoot input').on('keyup', function () {
+        $('#userTable tfoot input,select').on('keyup change', function () {
             table.ajax.reload();
             table.draw();
         });
 
         $.fn.dataTable.ext.errMode = 'throw';
 
-        $('#modifyUserModal').on("hidden.bs.modal", function() {
-            $('#modifyUserForm')[0].reset();
-            $('#customImgLabel').remove();
-        });
+        {
+            const form=$('#modifyUserForm');
+            const URL = '<c:url value="/${PagePathsConstants.VALIDATE_REGISTRATION}"/>';
+            const urlJSON = '<c:url value="/admin/users.json"/>';
+            const resDiv = $('#id-modal-res');
+            const strPwd = form.find('#strongPassword');
+
+
+            $('#modifyUserModal').on("hidden.bs.modal", function() {
+                form[0].reset();
+                $('#customImgLabel').remove();
+            });
+
+            const unknownErrorMessage = '<fmt:message key="generic.errors.unknownError"/>';
+            const successMessage = '<fmt:message key="generic.success"/>';
+
+            form.find('input').blur(() => {
+                request_user_validation(form, true, URL).done((d) => updateVerifyMessages(form, add_file_errors(form,d)));
+            });
+
+            form.find('#inputPassword').on("keyup", function(){
+                strPwd.text("<fmt:message key="user.label.passwordScore"/>: " + zxcvbn(this.value).score + "/4");
+            });
+
+            form.submit(function(e){
+                e.preventDefault();
+
+                if(!$('#customAvatar').is(':checked')){
+                    $('#customAvatarImg').val("");
+                }
+
+                formSubmit(
+                    urlJSON,
+                    form, {
+                        'multipart': true,
+                        'session': false,
+                        'redirectUrl': null,
+                        'unknownErrorMessage': unknownErrorMessage,
+                        'successMessage': successMessage,
+                        'resDiv': resDiv,
+                        'successCallback': function() {
+                            table.ajax.reload();
+                            table.draw();
+                        }
+                    }
+                );
+            });
+
+        }
     });
 </script>
 </body>

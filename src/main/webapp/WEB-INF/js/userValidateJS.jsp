@@ -98,6 +98,7 @@ function formSubmit(url, form, options) {
     const unknownErrorMessage = options['unknownErrorMessage'];
     const successMessage = options['successMessage'];
     const resDiv = options['resDiv'];
+    const successCallback = options['successCallback'];
 
     const req = {
         dataType: "json",
@@ -132,6 +133,10 @@ function formSubmit(url, form, options) {
             resDiv.addClass("alert-success");
             resDiv.html(successMessage);
             resDiv.removeClass("d-none");
+        }
+
+        if(successCallback !== undefined) {
+            successCallback();
         }
     }).fail(function (jqXHR) {
         resetAlert(resDiv);

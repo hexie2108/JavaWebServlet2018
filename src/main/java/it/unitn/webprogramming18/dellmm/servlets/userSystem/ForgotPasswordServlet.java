@@ -77,7 +77,7 @@ public class ForgotPasswordServlet extends HttpServlet {
             user = userDAO.getByEmail(email);
         } catch (DAOException e) {
             e.printStackTrace();
-            ServletUtility.sendError(request, response, 500, "forgotPassword.errors.unsearchableUser");
+            ServletUtility.sendError(request, response, 500, "generic.errors.unsearchableUser");
             return;
         }
 
