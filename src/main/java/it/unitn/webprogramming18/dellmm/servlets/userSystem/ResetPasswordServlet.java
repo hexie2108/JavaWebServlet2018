@@ -14,11 +14,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 @WebServlet(name = "ResetPasswordServlet")
 public class ResetPasswordServlet extends HttpServlet {
-    public static final String ID_KEY = "id",
-            PWD_KEY = "password";
+    public static final String ID_KEY = "id";
 
     public static final String MSG_KEY = "message";
 
@@ -50,17 +52,29 @@ public class ResetPasswordServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String pw_rst_id = request.getParameter(ID_KEY);
-        String password = request.getParameter(PWD_KEY);
+        String password = request.getParameter(RegistrationValidator.FIRST_PWD_KEY);
 
         if (pw_rst_id == null) {
             ServletUtility.sendError(request,response,400,"resetPassword.errors.missingId");
             return;
         }
 
-        RegistrationValidator.ErrorMessage error =  RegistrationValidator.validatePassword(password);
+        HashMap<String, Object> kv = new HashMap<>();
+        kv.put(RegistrationValidator.FIRST_PWD_KEY, password);
 
-        if (error != null) {
-            ServletUtility.sendError(request, response, 400, RegistrationValidator.I18N_ERROR_STRING_PREFIX + error.toString());
+        ResourceBundle bundle = it.unitn.webprogramming18.dellmm.util.i18n.getBundle(request);
+
+        Map<String, String> messages =
+                RegistrationValidator.partialValidate(userDAO, kv)
+                    .entrySet()
+                    .stream()
+                    .collect(Collectors.toMap(
+                        (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> e.getKey(),
+                        (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> RegistrationValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString()
+                    ));
+
+        if (!messages.isEmpty()) {
+            ServletUtility.sendValidationError(request, response, 400, messages);
             return;
         }
 

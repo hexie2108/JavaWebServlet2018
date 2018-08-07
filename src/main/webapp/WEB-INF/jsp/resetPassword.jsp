@@ -2,6 +2,9 @@
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="it.unitn.webprogramming18.dellmm.servlets.userSystem.ResetPasswordServlet" %>
 
+<%@ page import="it.unitn.webprogramming18.dellmm.util.RegistrationValidator" %>
+<%@ page import="it.unitn.webprogramming18.dellmm.util.PagePathsConstants" %>
+
 <%@ include file="../jspf/i18n.jsp"%>
 
 <html>
@@ -17,6 +20,8 @@
 
     <link rel="stylesheet" href="<c:url value="/css/tmpToDelete/login-style.css"/>">
     <link rel="stylesheet" href="<c:url value="/css/tmpToDelete/common.css"/>">
+
+    <link rel="stylesheet" href="<c:url value="/libs/fontawesome-free-5.1.1-web/css/all.min.css"/>" type="text/css" media="all">
 </head>
 <body>
 <%@ include file="../jspf/i18n_switcher.jsp"%>
@@ -33,11 +38,12 @@
             <div class="container-fluid">
                 <h2 class="form-signin-heading"><fmt:message key="resetPassword.title"/></h2>
                 <div class="form-group">
+                    <label for="inputPassword" class="sr-only"><fmt:message key="user.label.password"/></label>
                     <div class="input-group">
-                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                        <label for="inputPassword" class="sr-only"><fmt:message key="user.label.password"/></label>
+                        <div class="input-group-prepend"><i class="input-group-text fas fa-key"></i></div>
                         <input id="inputPassword" class="form-control" placeholder="<fmt:message key="user.label.password"/>" required="" autofocus=""
-                               type="password" name="${ResetPasswordServlet.PWD_KEY}">
+                               type="password" name="${RegistrationValidator.FIRST_PWD_KEY}">
+                        <span id="spanPassword"></span>
                     </div>
                 </div>
 
@@ -69,6 +75,14 @@
     const successMessage = '<fmt:message key="loggedResetPassword.success"/>';
 
     const url = '<c:url value="/resetPassword.json"/>';
+    const validationUrl = '<c:url value="/${PagePathsConstants.VALIDATE_REGISTRATION}"/>';
+
+    form.find('input').on('blur change',function(){
+        request_user_validation(form, false, validationUrl)
+            .done(function(d){
+                updateVerifyMessages(form, d);
+            });
+    });
 
     form.submit(function(e){
         e.preventDefault();
