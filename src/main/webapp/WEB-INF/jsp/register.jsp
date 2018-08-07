@@ -32,128 +32,99 @@
 </nav>
 <div class="container-fluid">
     <form id="form-register" method="post" enctype="multipart/form-data">
-        <h2 class="form-signin-heading"><fmt:message key="register.label.title"/></h2>
+        <h2><fmt:message key="register.label.title"/></h2>
         <div class="form-group row">
-            <div id="divFirstName" class="col-sm-6  ${not empty requestScope.messages.get(RegistrationValidator.FIRST_NAME_KEY)?'has-error':''}">
+            <div class="col-sm-6">
+                <label for="inputFirstName" class="sr-only"><fmt:message key="user.label.name"/></label>
                 <div class="input-group ">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                    <label for="inputFirstName" class="sr-only"><fmt:message key="user.label.name"/></label>
+                    <div class="input-group-prepend"><i class="input-group-text fas fa-user"></i></div>
                     <input id="inputFirstName" class="form-control" placeholder="<fmt:message key="user.label.name"/>" required="" autofocus=""
-                           type="text" name="${RegistrationValidator.FIRST_NAME_KEY}"
-                           value="${param[RegistrationValidator.FIRST_NAME_KEY]}">
+                           type="text" name="${RegistrationValidator.FIRST_NAME_KEY}" >
+                    <span id="spanFirstName"></span>
                 </div>
-                <span id="spanFirstName" class="help-block">
-                    ${requestScope.messages.get(RegistrationValidator.FIRST_NAME_KEY)}
-                </span>
             </div>
 
-            <div id="divLastName" class="col-sm-6 ${not empty requestScope.messages.get(RegistrationValidator.LAST_NAME_KEY)?'has-error':''}">
+            <div class="col-sm-6">
+                <label for="inputLastName" class="sr-only"><fmt:message key="user.label.surname"/></label>
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                    <label for="inputLastName" class="sr-only"><fmt:message key="user.label.surname"/></label>
+                    <div class="input-group-prepend"><i class="input-group-text fas fa-user"></i></div>
                     <input id="inputLastName" class="form-control" placeholder="<fmt:message key="user.label.surname"/>" required="" autofocus=""
-                           type="text" name="${RegistrationValidator.LAST_NAME_KEY}"
-                           value="${param[RegistrationValidator.LAST_NAME_KEY]}">
+                           type="text" name="${RegistrationValidator.LAST_NAME_KEY}">
+                    <span id="spanLastName"></span>
                 </div>
-                <span id="spanLastName" class="help-block">
-                    ${requestScope.messages.get(RegistrationValidator.LAST_NAME_KEY)}
-                </span>
             </div>
         </div>
 
-
         <div class="form-group row">
-            <div id="divEmail" class="col-sm-6 ${not empty requestScope.messages.get(RegistrationValidator.EMAIL_KEY)?'has-error':''}">
+            <div id="divEmail" class="col-sm-12">
+                <label for="inputEmail" class="sr-only"><fmt:message key="user.label.email"/></label>
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-                    <label for="inputEmail" class="sr-only"><fmt:message key="user.label.email"/></label>
+                    <div class="input-group-prepend"><i class="input-group-text fas fa-at"></i></div>
                     <input id="inputEmail" class="form-control" placeholder="<fmt:message key="user.label.email"/>" required="" autofocus=""
-                           type="email" name="${RegistrationValidator.EMAIL_KEY}"
-                           value="${param[RegistrationValidator.EMAIL_KEY]}">
+                           type="email" name="${RegistrationValidator.EMAIL_KEY}">
+                    <span id="spanEmail"></span>
                 </div>
-                <span id="spanEmail" class="help-block">
-                    ${requestScope.messages.get(RegistrationValidator.EMAIL_KEY)}
-                </span>
             </div>
         </div>
 
         <div class="form-group row">
-            <div id="divPassword" class="col-sm-6 ${not empty requestScope.messages.get(RegistrationValidator.FIRST_PWD_KEY)?'has-error':''}">
+            <div id="divPassword" class="col-sm-6">
+                <label for="inputPassword" class="sr-only"><fmt:message key="user.label.password"/></label>
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                    <label for="inputPassword" class="sr-only"><fmt:message key="user.label.password"/></label>
+                    <div class="input-group-prepend"><i class="input-group-text fas fa-key"></i></div>
                     <input id="inputPassword" class="form-control" placeholder="<fmt:message key="user.label.password"/>" required=""
                            type="password" name="${RegistrationValidator.FIRST_PWD_KEY}"
                            value="">
-                    <span id="strongPassword" class="input-group-addon"><fmt:message key="user.label.passwordScore"/>: x/x</span>
+                    <div class="input-group-append"><span class="input-group-text" id="strongPassword" ><fmt:message key="user.label.passwordScore"/>: x/x</span></div>
+                    <span id="spanPassword"></span>
                 </div>
-                <span id="spanPassword" class="help-block">
-                    ${requestScope.messages.get(RegistrationValidator.FIRST_PWD_KEY)}
-                </span>
             </div>
-            <div id="divPassword2" class="col-sm-6 ${not empty requestScope.messages.get(RegistrationValidator.SECOND_PWD_KEY)?'has-error':''}">
+            <div id="divPassword2" class="col-sm-6">
+                <label for="inputPassword2" class="sr-only"><fmt:message key="user.label.repeatPassword"/></label>
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                    <label for="inputPassword2" class="sr-only"><fmt:message key="user.label.repeatPassword"/></label>
+                    <span class="input-group-prepend"><i class="input-group-text fas fa-key"></i></span>
                     <input id="inputPassword2" class="form-control" placeholder="<fmt:message key="user.label.repeatPassword"/>" required=""
                            type="password" name="${RegistrationValidator.SECOND_PWD_KEY}"
                            value="">
+                    <span id="spanPassword2"></span>
                 </div>
-                <span id="spanPassword2" class="help-block">
-                    ${requestScope.messages.get(RegistrationValidator.SECOND_PWD_KEY)}
-                </span>
             </div>
         </div>
 
         <div class="form-group">
-            <div class="row">
-                <c:forEach items="${RegistrationValidator.DEFAULT_AVATARS}" var="av">
-                    <label>
-                        <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}"
-                               value="${av}" ${requestScope[RegistrationValidator.AVATAR_KEY].equals(av)?'checked':''}
-                        >
-                        <img src="<c:url value="${pageContext.servletContext.getInitParameter('avatarsFolder')}/${av}"/>" class="img-input"
-                        ><i class="far fa-check-circle img-check"></i>
-                    </label>
-                </c:forEach>
+            <c:forEach items="${RegistrationValidator.DEFAULT_AVATARS}" var="av" varStatus="st">
                 <label>
-                    <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}" value="custom" id="customAvatar"
-                           ${requestScope[RegistrationValidator.AVATAR_KEY].equals(RegistrationValidator.CUSTOM_AVATAR)?'checked':''}
-                    >
-                    <img src="<c:url value="/libs/fontawesome-free-5.1.1-web/svgs/regular/plus-square.svg"/>" class="img-input"
+                    <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}"
+                           value="${av}" ${st.first?'checked':''}>
+                    <img src="/<c:url value="${pageContext.servletContext.getInitParameter('avatarsFolder')}/${av}"/>" class="img-input"
                     ><i class="far fa-check-circle img-check"></i>
-                    <input id="customAvatarImg"
-                           type="file" name="${RegistrationValidator.AVATAR_IMG_KEY}"
-                           accept="image/*">
                 </label>
-            </div>
-            <span id="spanAvatar" class="help-block">
-                ${requestScope.messages.get(RegistrationValidator.AVATAR_KEY)}
-            </span>
-            <span id="spanAvatarImg" class="help-block">
-                ${requestScope.messages.get(RegistrationValidator.AVATAR_IMG_KEY)}
-            </span>
+            </c:forEach>
+            <label>
+                <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}" value="custom" id="customAvatar">
+                <img src="<c:url value="/libs/fontawesome-free-5.1.1-web/svgs/regular/plus-square.svg"/>" class="img-input"
+                ><i class="far fa-check-circle img-check"></i>
+                <input id="customAvatarImg"
+                       type="file" name="${RegistrationValidator.AVATAR_IMG_KEY}"
+                       accept="image/*">
+            </label>
+            <span id="spanAvatar"></span>
+            <span id="spanAvatarImg"></span>
         </div>
 
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h2 class="panel-title"><fmt:message key="register.label.privacyStatement"/></h2>
+        <div class="card mb-3">
+            <div class="card-header"><b class="card-title"><fmt:message key="register.label.privacyStatement"/></b>
             </div>
-            <div class="panel-body" id="privacyPolicy">
-                <fmt:message key="register.text.privacyStatement"/>
-            </div>
+            <div class="card-body" id="privacyPolicy"><fmt:message key="register.text.privacyStatement"/></div>
         </div>
 
         <div class="form-group row-fluid">
-            <div id="divPrivacy" class="col-sm-12 ${not empty requestScope.messages.get(RegistrationValidator.INF_PRIVACY_KEY)?'has-error':''}">
+            <div id="divPrivacy" class="col-sm-12">
                 <div class="input-group">
                     <input id="inputInfPrivacy" required=""
-                           type="checkbox" name="${RegistrationValidator.INF_PRIVACY_KEY}"
-                           value="${param[RegistrationValidator.INF_PRIVACY_KEY]}">
-                    <label for="inputInfPrivacy"><fmt:message key="register.label.privacyStatementCheckbox"/></label>
-                    <span id="spanInfPrivacy" class="help-block">
-                        ${requestScope.messages.get(RegistrationValidator.INF_PRIVACY_KEY)}
-                    </span>
+                           type="checkbox" name="${RegistrationValidator.INF_PRIVACY_KEY}">
+                    <label class="form-check-label ml-1" for="inputInfPrivacy"><fmt:message key="register.label.privacyStatementCheckbox"/></label>
+                    <span id="spanInfPrivacy" class="help-block"></span>
                 </div>
             </div>
         </div>

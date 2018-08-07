@@ -22,17 +22,19 @@ function updateVerifyMessages(form, data) {
     // Per ogni input scrivi l'eventuale errore nello span dedicato e restituisci false se ha errori, true altrimenti
     const validityInputs = inputs.map(
         function(key) {
-            const div = $("#div" + key);
+            const input = $("#input" + key);
             const span = $("#span" + key);
 
             if (data.hasOwnProperty(key)) {
-                div.addClass("has-error");
+                input.addClass("is-invalid");
+                span.addClass("invalid-feedback");
                 span.html(String(data[key]));
 
                 return false;
             }
 
-            div.removeClass("has-error");
+            input.removeClass("is-invalid");
+            span.removeClass("invalid-feedback");
             span.html("");
             return true;
         }

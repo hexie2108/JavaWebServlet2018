@@ -2,6 +2,8 @@
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
+<%@ page import="it.unitn.webprogramming18.dellmm.util.RegistrationValidator"%>
+
 <%@ include file="../../jspf/i18n.jsp"%>
 <html>
 <head>
@@ -15,6 +17,7 @@
     <link rel="stylesheet" href="<c:url value="/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css"/>">
 
     <link rel="stylesheet" href="<c:url value="/libs/fontawesome-free-5.1.1-web/css/all.min.css"/>" type="text/css" media="all">
+    <link rel="stylesheet" href="<c:url value="/css/userPages.css"/>" type="text/css" media="all">
 </head>
 <body>
 <%@ include file="../../jspf/i18n_switcher.jsp"%>
@@ -55,11 +58,105 @@
             </td>
             <td></td>
             <td></td>
-            <td><button class="btn btn-dark" type="submit" form="filterForm"><i class="fas fa-search"></i></button></td>
+            <td></td>
         </tr>
         </tfoot>
     </table>
     <div class="alert alert-danger d-none" id="id-res">
+    </div>
+</div>
+<div class="modal fade" id="modifyUserModal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel"><fmt:message key="users.label.modifyUser"/></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="<fmt:message key="generic.label.close"/>">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="modifyUserForm" method="post" enctype="multipart/form-data">
+                    <h2><fmt:message key="users.modifyUserForm.title"/></h2>
+                    <input class="form-control" type="hidden" name="id" form="filterForm" value=""/>
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            <label for="inputFirstName" class="sr-only"><fmt:message key="user.label.name"/></label>
+                            <div class="input-group ">
+                                <div class="input-group-prepend"><i class="input-group-text fas fa-user"></i></div>
+                                <div class="input-group-prepend"><span class="input-group-text" id="roSpanFirstName"></span></div>
+                                <input id="inputFirstName" class="form-control" placeholder="<fmt:message key="user.label.name"/>" required="" autofocus=""
+                                       type="text" name="${RegistrationValidator.FIRST_NAME_KEY}" >
+                                <span id="spanFirstName"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="inputLastName" class="sr-only"><fmt:message key="user.label.surname"/></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend"><i class="input-group-text fas fa-user"></i></div>
+                                <div class="input-group-prepend"><span class="input-group-text" id="roSpanLastName"></span></div>
+                                <input id="inputLastName" class="form-control" placeholder="<fmt:message key="user.label.surname"/>" required="" autofocus=""
+                                       type="text" name="${RegistrationValidator.LAST_NAME_KEY}">
+                                <span id="spanLastName"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            <label for="inputEmail" class="sr-only"><fmt:message key="user.label.email"/></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend"><i class="input-group-text fas fa-at"></i></div>
+                                <div class="input-group-prepend"><span class="input-group-text" id="roSpanEmail"></span></div>
+                                <input id="inputEmail" class="form-control" placeholder="<fmt:message key="user.label.email"/>" required="" autofocus=""
+                                       type="email" name="${RegistrationValidator.EMAIL_KEY}">
+                                <span id="spanEmail"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="inputPassword" class="sr-only"><fmt:message key="user.label.password"/></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend"><i class="input-group-text fas fa-key"></i></div>
+                                <input id="inputPassword" class="form-control" placeholder="<fmt:message key="user.label.password"/>" required=""
+                                       type="password" name="${RegistrationValidator.FIRST_PWD_KEY}"
+                                       value="">
+                                <div class="input-group-append"><span class="input-group-text" id="strongPassword" ><fmt:message key="user.label.passwordScore"/>: x/x</span></div>
+                                <span id="spanPassword"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="avatarDiv">
+                        <c:forEach items="${RegistrationValidator.DEFAULT_AVATARS}" var="av" varStatus="st">
+                            <label>
+                                <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}"
+                                       value="${av}">
+                                <img src="<c:url value="/${pageContext.servletContext.getInitParameter('avatarsFolder')}/${av}"/>" class="img-input"
+                                ><i class="far fa-check-circle img-check"></i>
+                            </label>
+                        </c:forEach>
+                        <label>
+                            <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}" value="custom" id="customAvatar">
+                            <img src="<c:url value="/libs/fontawesome-free-5.1.1-web/svgs/regular/plus-square.svg"/>" class="img-input"
+                            ><i class="far fa-check-circle img-check"></i>
+                            <input id="customAvatarImg"
+                                   type="file" name="${RegistrationValidator.AVATAR_IMG_KEY}"
+                                   accept="image/*">
+                        </label>
+                        <span id="spanAvatar"></span>
+                        <span id="spanAvatarImg"></span>
+                    </div>
+                </form>
+
+                <div class="alert d-none" id="id-modal-res">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><fmt:message key="generic.label.close"/></button>
+                <button type="submit" form="modifyUserForm" class="btn btn-primary"><fmt:message key="users.modifyUserForm.submit"/></button>
+            </div>
+        </div>
     </div>
 </div>
 <link rel="stylesheet" type="text/css" href="<c:url value="/libs/DataTables/datatables.min.css"/>"/>
@@ -164,6 +261,26 @@
                                 class: 'btn btn-md btn-primary',
                                 title: '<fmt:message key="users.label.modifyUser"/>',
                                 html: $('<i/>',{class: 'far fa-edit'}),
+                                'data-toggle': 'modal',
+                                'data-target': '#modifyUserModal',
+                                click: function(){
+                                    $('#modifyUserForm input[name="id"]').val(data.id);
+                                    $('#modifyUserForm #roSpanFirstName').html(data.name);
+                                    $('#modifyUserForm #roSpanLastName').html(data.surname);
+                                    $('#modifyUserForm #roSpanEmail').html(data.email);
+
+                                    if (/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(data.img)) {
+                                        $('#avatarDiv').prepend(
+                                            '<label id="customImgLabel">' +
+                                            '    <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}" value="" checked>' +
+                                            '    <img src="<c:url value="${pageContext.servletContext.getInitParameter('avatarsFolder')}/"/>'+ data.img +'" class="img-input"' +
+                                            '        ><i class="far fa-check-circle img-check"></i>' +
+                                            '</label>'
+                                        );
+                                    } else {
+                                        $('#modifyUserForm input[name="${RegistrationValidator.AVATAR_KEY}"][value="'+data.img+'"]').prop("checked", true);
+                                    }
+                                }
                             }),
                             $('<button/>', {
                                 class: 'btn btn-md btn-danger',
@@ -227,7 +344,7 @@
                 );
             }
 
-            if (d.resetPwdEmailLInk !== undefined) {
+            if (d.resetPwdEmailLink !== undefined) {
                 ul.append(
                     $('<li/>',{
                         html: [$('<b/>',{ text: '<fmt:message key="user.label.resetPasswordLink"/>:  '}), document.createTextNode(d.resetPwdEmailLink)]
@@ -266,6 +383,11 @@
         });
 
         $.fn.dataTable.ext.errMode = 'throw';
+
+        $('#modifyUserModal').on("hidden.bs.modal", function() {
+            $('#modifyUserForm')[0].reset();
+            $('#customImgLabel').remove();
+        });
     });
 </script>
 </body>
