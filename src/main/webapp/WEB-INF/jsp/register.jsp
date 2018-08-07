@@ -91,8 +91,8 @@
             </div>
         </div>
 
-        <div class="form-group">
-            <c:forEach items="${RegistrationValidator.DEFAULT_AVATARS}" var="av" varStatus="st">
+        <div class="form-group row">
+            <c:forEach items="${RegistrationValidator.DEFAULT_AVATARS}" var="av">
                 <label>
                     <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}"
                            value="${av}" ${st.first?'checked':''}>
@@ -108,7 +108,9 @@
                        type="file" name="${RegistrationValidator.AVATAR_IMG_KEY}"
                        accept="image/*">
             </label>
+            <div class="form-control d-none" id="inputAvatar"></div>
             <span id="spanAvatar"></span>
+            <div class="form-control d-none" id="inputAvatarImg"></div>
             <span id="spanAvatarImg"></span>
         </div>
 
@@ -124,7 +126,7 @@
                     <input id="inputInfPrivacy" required=""
                            type="checkbox" name="${RegistrationValidator.INF_PRIVACY_KEY}">
                     <label class="form-check-label ml-1" for="inputInfPrivacy"><fmt:message key="register.label.privacyStatementCheckbox"/></label>
-                    <span id="spanInfPrivacy" class="help-block"></span>
+                    <span id="spanInfPrivacy"></span>
                 </div>
             </div>
         </div>

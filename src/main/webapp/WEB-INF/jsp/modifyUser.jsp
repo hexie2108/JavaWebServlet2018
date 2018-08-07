@@ -33,64 +33,62 @@
     <form id="form-register" method="post" enctype="multipart/form-data">
         <h2 class="form-signin-heading"><fmt:message key="modifyUser.label.form"/></h2>
         <div class="form-group row">
-            <div id="divFirstName" class="col-sm-6 ">
+            <div id="divFirstName" class="col-sm-6">
+                <label for="inputFirstName" class="sr-only"><fmt:message key="user.label.name"/></label>
                 <div class="input-group ">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                    <label for="inputFirstName" class="sr-only"><fmt:message key="user.label.name"/></label>
-                    <span> ${sessionScope.user.name}</span>
+                    <div class="input-group-prepend"><i class="input-group-text fas fa-user"></i></div>
+                    <div class="input-group-prepend"><span class="input-group-text">${sessionScope.user.name}</span></div>
                     <input id="inputFirstName" class="form-control" placeholder="<fmt:message key="user.label.name"/>" autofocus=""
                            type="text" name="${RegistrationValidator.FIRST_NAME_KEY}">
+                    <span id="spanFirstName"></span>
                 </div>
-                <span id="spanFirstName" class="help-block">
-                </span>
             </div>
 
-            <div id="divLastName" class="col-sm-6 ${not empty requestScope.messages.get(RegistrationValidator.LAST_NAME_KEY)?'has-error':''}">
+            <%-- ---%>
+            <div id="divLastName" class="col-sm-6">
+                <label for="inputLastName" class="sr-only"><fmt:message key="user.label.surname"/></label>
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                    <label for="inputLastName" class="sr-only"><fmt:message key="user.label.surname"/></label>
-                    <span class="input-group-addon"> ${sessionScope.user.surname}</span>
+                    <div class="input-group-prepend"><i class="input-group-text fas fa-user"></i></div>
+                    <div class="input-group-prepend"><span class="input-group-text">${sessionScope.user.surname}</span></div>
                     <input id="inputLastName" class="form-control" placeholder="<fmt:message key="user.label.surname"/>" autofocus=""
                            type="text" name="${RegistrationValidator.LAST_NAME_KEY}">
+                    <span id="spanLastName"></span>
                 </div>
-                <span id="spanLastName" class="help-block">
-                </span>
             </div>
         </div>
 
 
         <div class="form-group row">
-            <div id="divEmail" class="col-sm-6 ${not empty requestScope.messages.get(RegistrationValidator.EMAIL_KEY)?'has-error':''}">
+            <div id="divEmail" class="col-sm-6">
+                <label for="inputEmail" class="sr-only"><fmt:message key="user.label.email"/></label>
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-                    <label for="inputEmail" class="sr-only"><fmt:message key="user.label.email"/></label>
-                    <span> ${sessionScope.user.email}</span>
+                    <div class="input-group-prepend"><i class="input-group-text fas fa-at"></i></div>
+                    <div class="input-group-prepend"><span class="input-group-text">${sessionScope.user.email}</span></div>
                     <input id="inputEmail" class="form-control" placeholder="<fmt:message key="user.label.email"/>" autofocus=""
                            type="email" name="${RegistrationValidator.EMAIL_KEY}">
+                    <span id="spanEmail"></span>
                 </div>
-                <span id="spanEmail" class="help-block">
-                </span>
             </div>
         </div>
 
-        <div class="form-group">
-            <div class="row">
+        <div class="form-group row">
+            <div class="input-group col-sm-12">
                 <c:set var="customI" value="${RegistrationValidator.DEFAULT_AVATARS.stream().noneMatch(x -> sessionScope.user.img.equals(x)).get()}" scope="page"/>
                 <c:if test="${customI}">
-                <label>
-                    <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}" value="" checked>
-                    <img src="<c:url value="${pageContext.servletContext.getInitParameter('avatarsFolder')}/${sessionScope.user.img}"/>" class="img-input"
-                    ><i class="far fa-check-circle img-check"></i>
-                </label>
+                    <label>
+                        <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}" value="" checked>
+                        <img src="<c:url value="${pageContext.servletContext.getInitParameter('avatarsFolder')}/${sessionScope.user.img}"/>" class="img-input"
+                        ><i class="far fa-check-circle img-check"></i>
+                    </label>
                 </c:if>
                 <c:forEach items="${RegistrationValidator.DEFAULT_AVATARS}" var="av">
-                <label>
-                    <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}"
-                           value="${av}" ${sessionScope.user.img.equals(av)?'checked':''}
-                    >
-                    <img src="<c:url value="${pageContext.servletContext.getInitParameter('avatarsFolder')}/${av}"/>" class="img-input"
-                    ><i class="far fa-check-circle img-check"></i>
-                </label>
+                    <label>
+                        <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}"
+                               value="${av}" ${sessionScope.user.img.equals(av)?'checked':''}
+                        >
+                        <img src="<c:url value="${pageContext.servletContext.getInitParameter('avatarsFolder')}/${av}"/>" class="img-input"
+                        ><i class="far fa-check-circle img-check"></i>
+                    </label>
                 </c:forEach>
                 <label>
                     <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}" value="custom" id="customAvatar">
@@ -100,11 +98,11 @@
                            type="file" name="${RegistrationValidator.AVATAR_IMG_KEY}"
                            accept="image/*">
                 </label>
+                <div class="form-control d-none" id="inputAvatar"></div>
+                <span id="spanAvatar"></span>
+                <div class="form-control d-none" id="inputAvatarImg"></div>
+                <span id="spanAvatarImg"></span>
             </div>
-            <span id="spanAvatar" class="help-block">
-            </span>
-            <span id="spanAvatarImg" class="help-block">
-            </span>
         </div>
 
         <div class="alert d-none" id="id-res">
@@ -127,7 +125,7 @@
         const unknownErrorMessage = '<fmt:message key="generic.errors.unknownError"/>';
         const successMessage = '<fmt:message key="modifyUser.success"/>';
 
-        form.find('input').blur(() => {
+        form.find('input,select').on('blur change', () => {
             request_user_validation(form, true, URL).done((d) => updateVerifyMessages(form, add_file_errors(form,d)));
         });
 

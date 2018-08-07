@@ -16,6 +16,8 @@
     <script src="<c:url value="/libs/jquery/jquery-3.3.1.min.js"/>"></script>
     <script src="<c:url value="/libs/bootstrap-4.1.1-dist/js/bootstrap.bundle.min.js"/>"></script>
     <link rel="stylesheet" href="<c:url value="/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css"/>">
+
+    <link rel="stylesheet" href="<c:url value="/libs/fontawesome-free-5.1.1-web/css/all.min.css"/>" type="text/css" media="all">
 </head>
 <body>
 <%@ include file="../jspf/i18n_switcher.jsp"%>
@@ -32,28 +34,26 @@
 
         <div class="form-group row">
             <div id="divPassword" class="col-sm-6">
+                <label for="inputPassword" class="sr-only"><fmt:message key="user.label.password"/></label>
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                    <label for="inputPassword" class="sr-only"><fmt:message key="user.label.password"/></label>
+                    <div class="input-group-prepend"><i class="input-group-text fas fa-key"></i></div>
                     <input id="inputPassword" class="form-control" placeholder="<fmt:message key="user.label.password"/>" required=""
                            type="password" name="${RegistrationValidator.FIRST_PWD_KEY}">
-                    <span id="strongPassword" class="input-group-addon"><fmt:message key="user.label.passwordScore"/>: x/x</span>
+                    <div class="input-group-append"><span class="input-group-text" id="strongPassword" ><fmt:message key="user.label.passwordScore"/>: x/x</span></div>
+                    <span id="spanPassword"></span>
                 </div>
-                <span id="spanPassword" class="help-block">
-                </span>
             </div>
         </div>
 
         <div class="form-group row">
             <div id="divPassword2" class="col-sm-6">
+                <label for="inputPassword2" class="sr-only"><fmt:message key="user.label.repeatPassword"/></label>
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                    <label for="inputPassword2" class="sr-only"><fmt:message key="user.label.repeatPassword"/></label>
+                    <div class="input-group-prepend"><i class="input-group-text fas fa-key"></i></div>
                     <input id="inputPassword2" class="form-control" placeholder="<fmt:message key="user.label.repeatPassword"/>" required=""
                            type="password" name="${RegistrationValidator.SECOND_PWD_KEY}">
+                    <span id="spanPassword2"></span>
                 </div>
-                <span id="spanPassword2" class="help-block">
-                </span>
             </div>
         </div>
 
