@@ -301,36 +301,24 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
 
         try (PreparedStatement stm = CON.prepareStatement(
                 "SELECT * FROM User WHERE " +
-                        "(? IS NULL OR id LIKE ?) AND " +
-                        "(? IS NULL OR email LIKE ?) AND " +
-                        "(? IS NULL OR name LIKE ?) AND " +
-                        "(? IS NULL OR surname LIKE ?) AND " +
+                        "(? IS NULL OR id LIKE CONCAT('%',TRIM(BOTH \"'\" FROM QUOTE(?)),'%')) AND " +
+                        "(? IS NULL OR email LIKE CONCAT('%',TRIM(BOTH \"'\" FROM QUOTE(?)),'%')) AND " +
+                        "(? IS NULL OR name LIKE CONCAT('%',TRIM(BOTH \"'\" FROM QUOTE(?)),'%')) AND " +
+                        "(? IS NULL OR surname LIKE CONCAT('%',TRIM(BOTH \"'\" FROM QUOTE(?)),'%')) AND " +
                         "(? IS NULL OR isAdmin = ?)")) {
             if (id == null) {
                 stm.setNull(1,Types.INTEGER);
                 stm.setNull(2,Types.INTEGER);
             } else {
-                stm.setString(1, "%" + id.toString() + "%");
-                stm.setString(2, "%" + id.toString() + "%");
-            }
-
-            if (email != null) {
-                email = "%" + email + "%";
+                stm.setString(1,id.toString());
+                stm.setString(2, id.toString());
             }
 
             stm.setString(3, email);
             stm.setString(4, email);
 
-            if (name != null) {
-                name = "%" + name + "%";
-            }
-
             stm.setString(5, name);
             stm.setString(6, name);
-
-            if (surname != null) {
-                surname = "%" + surname + "%";
-            }
 
             stm.setString(7, surname);
             stm.setString(8, surname);

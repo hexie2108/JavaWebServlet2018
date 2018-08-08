@@ -165,7 +165,7 @@
 <script src="<c:url value="/libs/zxcvbn/zxcvbn.js"/>"></script>
 <script>
     $(document).ready( function (key, value) {
-        $('#userTable > thead, tfoot').find('> tr').prepend(
+        $('#userTable').find('> thead, tfoot').find('> tr').prepend(
             $('<th/>', {
                 text: ''
             })
@@ -379,7 +379,8 @@
             }
         });
 
-        $('#userTable tfoot input,select').on('keyup change', function () {
+        $('#userTable tfoot').find('input,select').on('keyup change', function () {
+            history.replaceState(undefined, undefined, "users?" + $('#userTable tfoot').find('input,select').serialize());
             table.ajax.reload();
             table.draw();
         });
