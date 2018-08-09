@@ -1,20 +1,12 @@
 package it.unitn.webprogramming18.dellmm.servlets.userSystem;
 
-import it.unitn.webprogramming18.dellmm.db.daos.ListDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.PermissionDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.ProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.UserDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCListDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCPermissionDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCUserDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
-import it.unitn.webprogramming18.dellmm.javaBeans.Permission;
-import it.unitn.webprogramming18.dellmm.javaBeans.Product;
-import it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
+import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,9 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 @WebServlet(name = "LoginServlet")
 public class LoginServlet extends HttpServlet
@@ -43,22 +33,25 @@ public class LoginServlet extends HttpServlet
         private static final String LOGIN_JSP = "/WEB-INF/jsp/userSystem/login.jsp";
 
         private UserDAO userDAO;
-        private ProductDAO productDAO;
-        private ListDAO listDAO;
-        private PermissionDAO permissionDAO;
 
         @Override
         public void init() throws ServletException
         {
+
                 userDAO = new JDBCUserDAO();
-                listDAO = new JDBCListDAO();
-                permissionDAO = new JDBCPermissionDAO();
-                productDAO = new JDBCProductDAO();
+
         }
 
         protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
         {
-                request.getRequestDispatcher(LOGIN_JSP).forward(request, response);
+                if (request.getRequestURI().endsWith(".json"))
+                {
+                        ServletUtility.sendError(request, response, 400, "generic.errors.postOnly");
+                }
+                else
+                {
+                        request.getRequestDispatcher(LOGIN_JSP).forward(request, response);
+                }
         }
 
         protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
@@ -69,11 +62,8 @@ public class LoginServlet extends HttpServlet
                         contextPath += "/";
                 }
 
-                HttpSession session = request.getSession();
-
                 String email = request.getParameter(EMAIL_KEY);
                 String password = request.getParameter(PWD_KEY);
-                String prevUrl = request.getParameter(PREV_URL_KEY);
                 String nextUrl = request.getParameter(NEXT_URL_KEY);
 
                 if (email == null)
@@ -84,12 +74,6 @@ public class LoginServlet extends HttpServlet
                 if (password == null)
                 {
                         password = "";
-                }
-
-                // Se prevUrl altrimenti non specificato usa pagina di default(index)
-                if (prevUrl == null || prevUrl.isEmpty())
-                {
-                        prevUrl = contextPath;
                 }
 
                 // Se nextUrl altrimenti non specificato usa pagina di default(index)
@@ -109,31 +93,25 @@ public class LoginServlet extends HttpServlet
                         catch (DAOException e)
                         {
                                 e.printStackTrace();
-                                throw new ServletException("Impossible to get the user requested");
+                                ServletUtility.sendError(request, response, 500, "login.errors.unsearchableUser");
+                                return;
                         }
                 }
 
                 if (user == null)
                 {
-                        request.getRequestDispatcher(LOGIN_JSP + "?"
-                                    + PREV_URL_KEY + "=" + URLEncoder.encode(prevUrl, "utf-8")
-                                    + "&" + NEXT_URL_KEY + "=" + URLEncoder.encode(nextUrl, "utf-8")
-                                    + "&" + EMAIL_KEY + "=" + URLEncoder.encode(email, "utf-8")
-                                    + "&" + ERR_NOUSER_PWD_KEY + "=true"
-                        ).forward(request, response);
+                        ServletUtility.sendError(request, response, 400, "login.errors.wrongUsernameOrPassword");
                         return;
                 }
 
                 if (user.getVerifyEmailLink() != null)
                 {
-                        request.getRequestDispatcher(LOGIN_JSP + "?"
-                                    + PREV_URL_KEY + "=" + URLEncoder.encode(prevUrl, "utf-8")
-                                    + "&" + NEXT_URL_KEY + "=" + URLEncoder.encode(nextUrl, "utf-8")
-                                    + "&" + EMAIL_KEY + "=" + URLEncoder.encode(email, "utf-8")
-                                    + "&" + ERR_NO_VER_KEY + "=true"
-                        ).forward(request, response);
+                        ServletUtility.sendError(request, response, 400, "login.errors.noValidatedEmail");
                         return;
                 }
+
+                // Create session, set user
+                HttpSession session = request.getSession();
 
                 session.setAttribute("user", user);
 
@@ -143,7 +121,18 @@ public class LoginServlet extends HttpServlet
                         session.setMaxInactiveInterval(-1);
                 }
 
+                if (request.getRequestURI().endsWith(".json"))
+                {
+                        HashMap<String, String> res = new HashMap<>();
+                        res.put("nextUrl", response.encodeRedirectURL(nextUrl));
+                        ServletUtility.sendJSON(request, response, 200, res);
 
-                response.sendRedirect(response.encodeRedirectURL(nextUrl));
+                        return;
+                }
+                else
+                {
+                        response.sendRedirect(response.encodeRedirectURL(nextUrl));
+                        return;
+                }
         }
 }

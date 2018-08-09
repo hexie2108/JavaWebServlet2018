@@ -49,24 +49,13 @@
                                                 <input type="hidden" name="${LoginServlet.NEXT_URL_KEY}"
                                                        id="inputNextUrl" value="${param[LoginServlet.NEXT_URL_KEY]}">
 
-                                                <c:if test="${not empty param[LoginServlet.ERR_NOUSER_PWD_KEY]}">
-                                                        <div class="alert alert-danger" id="id-UP-alert">
-                                                                Username o password sbagliati
-                                                        </div>
-                                                </c:if>
-
-                                                <c:if test="${not empty param[LoginServlet.ERR_NO_VER_KEY]}">
-                                                        <div class="alert alert-danger" id="id-UP-alert">
-                                                                Devi prima verificare la tua mail attraverso il link mandato alla mail per la registrazione
-                                                        </div>
-                                                </c:if>
-
+                                                <div class="alert d-none" id="id-res">
+                                                </div>
 
                                                 <div class="checkbox pull-left">
                                                         <label><input class="noMarginTop" name="remember" type="checkbox" value="">Remember me</label>
                                                 </div>
-                                                <a id="pwdDimenticata" class="pull-right"
-                                                   href="${pageContext.servletContext.contextPath}/${PagePathsConstants.FORGOT_PASSWORD}">Password dimenticata</a>
+                                                <a id="pwdDimenticata" class="pull-right" href="${pageContext.request.contextPath}/${PagePathsConstants.FORGOT_PASSWORD}">Password dimenticata</a>
 
                                                 <div class="btn-group btn-group-justified" role="group" aria-label="...">
                                                         <div class="btn-group" role="group" id="id-annulla">
@@ -84,5 +73,31 @@
                                    class="btn btn-default" role="button" id="register-btn">Registrati</a>
                         </div>
                 </div>
+
+
+                <script src="<c:url value="/js/userValidate.js"/>"></script>
+                <script>
+                        const form = $('#form-signin');
+                        const resDiv = $('#id-res');
+                        const url = '<c:url value="/login.json"/>';
+
+                        const unknownErrorMessage = 'unknownError';
+
+                        form.submit(function (e) {
+                                e.preventDefault();
+
+
+                                formSubmit(
+                                        url,
+                                        form, {
+                                                'multipart': false,
+                                                'session': true,
+                                                'redirectUrl': '<c:url value="/"/>',
+                                                'unknownErrorMessage': unknownErrorMessage,
+                                                'resDiv': resDiv
+                                        }
+                                );
+                        });
+                </script>
         </body>
 </html>

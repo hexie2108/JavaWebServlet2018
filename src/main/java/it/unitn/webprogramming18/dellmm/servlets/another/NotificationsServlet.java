@@ -6,6 +6,7 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.Notification;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
+import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -47,7 +48,7 @@ public class NotificationsServlet extends HttpServlet {
             request.getRequestDispatcher(JSP_PAGE).forward(request, response);
         } catch (DAOException e) {
             e.printStackTrace();
-            response.sendError(500, "Impossibile ottenere le notifiche");
+            ServletUtility.sendError(request, response, 500, "notifications.errors.unobtainableNotifications");
             return;
         }
     }

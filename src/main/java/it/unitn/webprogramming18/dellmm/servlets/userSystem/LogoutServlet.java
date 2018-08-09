@@ -9,29 +9,35 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebServlet(name = "LogoutServlet")
-public class LogoutServlet extends HttpServlet {
-    public static final String NEXT_URL_KEY = "nextUrl";
+public class LogoutServlet extends HttpServlet
+{
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String nextUrl = request.getParameter(NEXT_URL_KEY);
+        public static final String NEXT_URL_KEY = "nextUrl";
 
-        if (nextUrl == null || nextUrl.isEmpty()) {
-            String contextPath = getServletContext().getContextPath();
-            if (!contextPath.endsWith("/")) {
-                contextPath += "/";
-            }
+        @Override
+        protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+        {
+                String nextUrl = request.getParameter(NEXT_URL_KEY);
 
-            nextUrl = contextPath;
+                if (nextUrl == null || nextUrl.isEmpty())
+                {
+                        String contextPath = getServletContext().getContextPath();
+                        if (!contextPath.endsWith("/"))
+                        {
+                                contextPath += "/";
+                        }
+
+                        nextUrl = contextPath;
+                }
+
+                HttpSession session = request.getSession(false);
+                if (session != null)
+                {
+                        session.invalidate();
+
+                        session = null;
+                }
+
+                response.sendRedirect(nextUrl);
         }
-
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-
-            session = null;
-        }
-
-        response.sendRedirect(nextUrl);
-    }
 }

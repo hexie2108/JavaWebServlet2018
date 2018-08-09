@@ -241,12 +241,18 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
         }
 
         @Override
-        public void changePassword(String resetLink, String newPassword) throws DAOException
+        public boolean changePassword(String resetLink, String newPassword) throws DAOException
         {
+
+                if (!resetLink.matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"))
+                {
+                        throw new IllegalArgumentException("Argument must be string rappresentation of uuid");
+                }
+
                 CON = C3p0Util.getConnection();
                 try (PreparedStatement stm = CON.prepareStatement(
-                            "UPDATE User SET resetPwdEmailLink=NULL, password=?"
-                            + " WHERE resetPwdEmailLink= ?"
+                            "UPDATE User SET resendPwdEmailLink=NULL, password=?"
+                            + " WHERE resendPwdEmailLink= ?"
                 ))
                 {
                         stm.setString(1, newPassword);
@@ -254,7 +260,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
 
                         if (stm.executeUpdate() != 1)
                         {
-                                throw new DAOException("Impossible update the password");
+                                return false;
                         }
                 }
                 catch (SQLException e)
@@ -264,6 +270,8 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
                 {
                         C3p0Util.close(CON);
                 }
+
+                return true;
         }
 
         @Override
@@ -302,7 +310,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
         }
 
         @Override
-        public User generateUser(String first_name, String last_name, String email, String password) throws DAOException
+        public User generateUser(String first_name, String last_name, String email, String password, String imageName) throws DAOException
         {
                 if (first_name == null || last_name == null || email == null || password == null)
                 {
@@ -318,18 +326,18 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
                 String verifyLink = UUID.randomUUID().toString();
 
                 boolean successo = false;
-
-                CON = C3p0Util.getConnection();
                 for (int tentativi = 0; (tentativi < 5) && (!successo); tentativi++)
                 {
                         successo = true;
 
+                        CON = C3p0Util.getConnection();
                         try
                         {
+
                                 try
                                 {
                                         PreparedStatement std = CON.prepareStatement(
-                                                    "INSERT INTO User (name, surname, email, password, img, isAdmin, verifyEmailLink, resetPwdEmailLink)"
+                                                    "INSERT INTO User (name, surname, email, password, img, isAdmin, verifyEmailLink, resendPwdEmailLink)"
                                                     + "VALUES (?,?,?,?,?,FALSE,?,NULL)",
                                                     Statement.RETURN_GENERATED_KEYS
                                         );
@@ -337,7 +345,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
                                         std.setString(2, last_name);
                                         std.setString(3, email);
                                         std.setString(4, password);
-                                        std.setString(5, "come ci organizzamo per l'immagine?"); //TODO: Organizzazione per l'immagine
+                                        std.setString(5, imageName);
                                         std.setString(6, verifyLink);
 
                                         if (std.executeUpdate() != 1)
@@ -367,15 +375,16 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
                         }
                         catch (SQLException ex)
                         {
+                                ex.printStackTrace();
                                 throw new DAOException("Impossible to create the user", ex);
+                        } finally
+                        {
+                                C3p0Util.close(CON);
                         }
-
                 }
 
-                C3p0Util.close(CON);
-
                 // Avendo fallito per 5 volte a generare uuid unici mandiamo un errore
-                // in quanto in condizioni normali �� estremamente improbabile
+                // in quanto in condizioni normali è estremamente improbabile
                 if (!successo)
                 {
                         throw new DAOException("Impossible to create the user");
@@ -387,9 +396,98 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
                 user.setSurname(last_name);
                 user.setEmail(email);
                 user.setPassword(password);
+                user.setImg(imageName);
                 user.setVerifyEmailLink(verifyLink);
                 user.setResetPwdEmailLink(null); //TODO: Convertire resendEmailLink in resetPassword?
 
                 return user;
+        }
+
+        public List<User> filter(Integer id, String email, String name, String surname, Boolean isAdmin) throws DAOException
+        {
+                List<User> userList = new ArrayList<>();
+
+                CON = C3p0Util.getConnection();
+                try (PreparedStatement stm = CON.prepareStatement(
+                            "SELECT * FROM User WHERE "
+                            + "(? IS NULL OR id LIKE CONCAT('%',TRIM(BOTH \"'\" FROM QUOTE(?)),'%')) AND "
+                            + "(? IS NULL OR email LIKE CONCAT('%',TRIM(BOTH \"'\" FROM QUOTE(?)),'%')) AND "
+                            + "(? IS NULL OR name LIKE CONCAT('%',TRIM(BOTH \"'\" FROM QUOTE(?)),'%')) AND "
+                            + "(? IS NULL OR surname LIKE CONCAT('%',TRIM(BOTH \"'\" FROM QUOTE(?)),'%')) AND "
+                            + "(? IS NULL OR isAdmin = ?)"))
+                {
+                        if (id == null)
+                        {
+                                stm.setNull(1, Types.INTEGER);
+                                stm.setNull(2, Types.INTEGER);
+                        }
+                        else
+                        {
+                                stm.setString(1, id.toString());
+                                stm.setString(2, id.toString());
+                        }
+
+                        stm.setString(3, email);
+                        stm.setString(4, email);
+
+                        stm.setString(5, name);
+                        stm.setString(6, name);
+
+                        stm.setString(7, surname);
+                        stm.setString(8, surname);
+
+                        if (isAdmin == null)
+                        {
+                                stm.setNull(9, Types.BOOLEAN);
+                                stm.setNull(10, Types.BOOLEAN);
+                        }
+                        else
+                        {
+                                stm.setBoolean(9, isAdmin);
+                                stm.setBoolean(10, isAdmin);
+                        }
+
+                        try (ResultSet rs = stm.executeQuery())
+                        {
+                                while (rs.next())
+                                {
+                                        userList.add(getUserFromResultSet(rs));
+                                }
+                        }
+                }
+                catch (SQLException ex)
+                {
+                        throw new DAOException("Impossible to get the list of user", ex);
+                } finally
+                {
+                        C3p0Util.close(CON);
+                }
+
+                return userList;
+        }
+
+        @Override
+        public void delete(int id) throws DAOException
+        {
+
+                CON = C3p0Util.getConnection();
+                try (PreparedStatement stm = CON.prepareStatement(
+                            "DELETE FROM User WHERE id = ?"
+                ))
+                {
+                        stm.setInt(1, id);
+
+                        if (stm.executeUpdate() != 1)
+                        {
+                                throw new DAOException("Impossible to delete the user");
+                        }
+                }
+                catch (SQLException ex)
+                {
+                        throw new DAOException("Impossible to delete the user", ex);
+                } finally
+                {
+                        C3p0Util.close(CON);
+                }
         }
 }
