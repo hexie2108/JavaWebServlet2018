@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.unitn.webprogramming18.dellmm.servlets.service;
+package it.unitn.webprogramming18.dellmm.servlets.front.service;
 
 import it.unitn.webprogramming18.dellmm.db.daos.ListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.PermissionDAO;
@@ -17,6 +17,7 @@ import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
+import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
 import it.unitn.webprogramming18.dellmm.util.FileUtils;
 import java.io.File;
 import java.io.IOException;
@@ -50,18 +51,7 @@ public class UpdateListService extends HttpServlet
         private String prevUrl = null;
         private String uploadPath = null;
 
-        //il percorso base per tutte le immagini
-        private static final String IMAGE_BASE_PATH = "image";
-        // la cartella per immagine di lista
-        private static final String IMAGE_LIST = "list";
-        // la cartella per immagine di prodotto
-        private static final String IMAGE_PRODUCT = "product";
-        // la cartella per immagine di logo di prodotto
-        private static final String IMAGE_LOGO_PRODUCT = "productLogo";
-
-        //le dimensioni dell'immagini
-        private static final int IMAGE_WIDTH = 800;
-        private static final int IMAGE_HEIGHT = 800;
+      
 
         @Override
         public void init() throws ServletException
@@ -113,20 +103,20 @@ public class UpdateListService extends HttpServlet
 
                                 //prima deve eliminare img di lista
                                 //set il percorso complete per salvare immagine
-                                uploadPath = request.getServletContext().getRealPath("/") + IMAGE_BASE_PATH;
+                                uploadPath = request.getServletContext().getRealPath("/") + ConstantsUtils.IMAGE_BASE_PATH;
 
                                 //prima deve eliminare tutti immagini e log dei prodotti privati presente in questa lista
                                 List<Product> productList = productDAO.getPrivateProductByListId(Integer.parseInt(listId));
                                 for (Product product : productList)
                                 {
                                         //elimina file img del prodtto
-                                        FileUtils.deleteFile(uploadPath + File.separator + IMAGE_PRODUCT + File.separator + product.getImg());
+                                        FileUtils.deleteFile(uploadPath + File.separator + ConstantsUtils.IMAGE_OF_PRODUCT + File.separator + product.getImg());
                                         //elimina file img del logo del prodtto
-                                        FileUtils.deleteFile(uploadPath + File.separator + IMAGE_LOGO_PRODUCT + File.separator + product.getLogo());
+                                        FileUtils.deleteFile(uploadPath + File.separator + ConstantsUtils.IMAGE_LOGO_OF_PRODUCT + File.separator + product.getLogo());
                                 }
 
                                 //elimina file img della lista
-                                FileUtils.deleteFile(uploadPath + File.separator + IMAGE_LIST + File.separator + shoppingList.getImg());
+                                FileUtils.deleteFile(uploadPath + File.separator + ConstantsUtils.IMAGE_OF_LIST + File.separator + shoppingList.getImg());
 
                                 //elimina la lista
                                 listDAO.deleteListByListId(Integer.parseInt(listId));
@@ -234,9 +224,9 @@ public class UpdateListService extends HttpServlet
                         CheckErrorUtils.isNull(listImgFileItem, "manca il prametro file listImg");
 
                         //set il percorso complete per salvare immagine
-                        uploadPath = request.getServletContext().getRealPath("/") + IMAGE_BASE_PATH + File.separator + IMAGE_LIST;
+                        uploadPath = request.getServletContext().getRealPath("/") + ConstantsUtils.IMAGE_BASE_PATH + File.separator + ConstantsUtils.IMAGE_OF_LIST;
                         //salva l'immagine e get il nome salvato
-                        listImg = FileUtils.upload(listImgFileItem, uploadPath, IMAGE_WIDTH, IMAGE_HEIGHT);
+                        listImg = FileUtils.upload(listImgFileItem, uploadPath, ConstantsUtils.IMAGE_OF_LIST_WIDTH, ConstantsUtils.IMAGE_OF_LIST_HEIGHT);
                         //crea beans di lista
                         shoppingList = new ShoppingList();
                         shoppingList.setName(listName);
@@ -303,11 +293,11 @@ public class UpdateListService extends HttpServlet
                                 {
 
                                         //set il percorso complete per salvare immagine
-                                        uploadPath = request.getServletContext().getRealPath("/") + IMAGE_BASE_PATH + File.separator + IMAGE_LIST;
+                                        uploadPath = request.getServletContext().getRealPath("/") + ConstantsUtils.IMAGE_BASE_PATH + File.separator + ConstantsUtils.IMAGE_OF_LIST;
                                         //elimina file img vecchio
                                         FileUtils.deleteFile(uploadPath + File.separator + shoppingList.getImg());
                                         //salva l'immagine e get il nome salvato
-                                        listImg = FileUtils.upload(listImgFileItem, uploadPath, IMAGE_WIDTH, IMAGE_HEIGHT);
+                                        listImg = FileUtils.upload(listImgFileItem, uploadPath, ConstantsUtils.IMAGE_OF_LIST_WIDTH, ConstantsUtils.IMAGE_OF_LIST_HEIGHT);
                                         //set nuovo file
                                         shoppingList.setImg(listImg);
                                 }

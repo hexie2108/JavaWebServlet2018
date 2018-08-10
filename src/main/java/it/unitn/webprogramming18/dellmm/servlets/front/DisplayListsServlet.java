@@ -12,6 +12,7 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList;
+import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -30,6 +31,8 @@ import javax.servlet.http.HttpSession;
 public class DisplayListsServlet extends HttpServlet
 {
 
+        private static final String JSP_PAGE_PATH = "/WEB-INF/jsp/front/mylists.jsp";
+        
         private ListDAO listDAO;
         private ProductDAO productDAO;
         private PermissionDAO permissionDAO;
@@ -132,7 +135,7 @@ public class DisplayListsServlet extends HttpServlet
                 }
 
                 //set titolo della pagina
-                request.setAttribute("head_title", "le mie liste");
+                request.setAttribute(ConstantsUtils.HEAD_TITLE, "le mie liste");
 
                 // se ha almeno una lista owner
                 if (ownedLists.size() > 0)
@@ -148,7 +151,7 @@ public class DisplayListsServlet extends HttpServlet
                 }
 
                 //inoltra a jsp
-                request.getRequestDispatcher("/WEB-INF/jsp/front/mylists.jsp").forward(request, response);
+                request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
 
         }
 

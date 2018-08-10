@@ -310,6 +310,40 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
         }
 
         @Override
+        public boolean checkExistenceOfEmail(String email) throws DAOException
+        {
+                boolean flag = false;
+                if (email == null)
+                {
+                        throw new DAOException("email is null");
+                }
+
+                CON = C3p0Util.getConnection();
+                try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM User WHERE  User.email = ?"))
+                {
+                        stmt.setString(1, email);
+                        ResultSet rs = stmt.executeQuery();
+                        if (rs.next())
+                        {
+                                int res = rs.getInt(1);
+                                if (res > 0)
+                                {
+                                        flag = true;
+                                }
+                        }
+                }
+                catch (SQLException ex)
+                {
+                        throw new DAOException("Impossible to return result", ex);
+                } finally
+                {
+                        C3p0Util.close(CON);
+                }
+
+                return flag;
+        }
+
+        @Override
         public User generateUser(String first_name, String last_name, String email, String password, String imageName) throws DAOException
         {
                 if (first_name == null || last_name == null || email == null || password == null)
@@ -326,11 +360,12 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
                 String verifyLink = UUID.randomUUID().toString();
 
                 boolean successo = false;
+
+                CON = C3p0Util.getConnection();
                 for (int tentativi = 0; (tentativi < 5) && (!successo); tentativi++)
                 {
                         successo = true;
 
-                        CON = C3p0Util.getConnection();
                         try
                         {
 
@@ -377,11 +412,11 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
                         {
                                 ex.printStackTrace();
                                 throw new DAOException("Impossible to create the user", ex);
-                        } finally
-                        {
-                                C3p0Util.close(CON);
                         }
+
                 }
+
+                C3p0Util.close(CON);
 
                 // Avendo fallito per 5 volte a generare uuid unici mandiamo un errore
                 // in quanto in condizioni normali è estremamente improbabile

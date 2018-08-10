@@ -6,7 +6,7 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
-import it.unitn.webprogramming18.dellmm.util.PagePathsConstants;
+import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
 import it.unitn.webprogramming18.dellmm.util.RegistrationValidator;
 import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 
@@ -243,7 +243,7 @@ public class ModifyUserServlet extends HttpServlet
                                 contextPath += "/";
                         }
 
-                        response.sendRedirect(contextPath + PagePathsConstants.MODIFY_USER);
+                        response.sendRedirect(contextPath + ConstantsUtils.MODIFY_USER);
                 }
         }
 }

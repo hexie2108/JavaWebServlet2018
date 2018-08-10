@@ -20,6 +20,7 @@ import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
+import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -36,6 +37,8 @@ import javax.servlet.http.HttpSession;
  */
 public class DisplaySpecificListServlet extends HttpServlet
 {
+
+        private static final String JSP_PAGE_PATH = "/WEB-INF/jsp/front/mylist.jsp";
 
         private ListDAO listDAO;
         private ProductDAO productDAO;
@@ -71,7 +74,7 @@ public class DisplaySpecificListServlet extends HttpServlet
                 String listIdInString = request.getParameter("listId");
                 //se listid è nullo
                 CheckErrorUtils.isNull(listIdInString, "manca il parametro listIdInString");
-              
+
                 //trasforma listid in intero
                 int listId = Integer.parseInt(listIdInString);
 
@@ -118,7 +121,7 @@ public class DisplaySpecificListServlet extends HttpServlet
                 }
 
                 //set titolo della pagina
-                request.setAttribute("head_title", "lista: " + shoppingList.getName());
+                request.setAttribute(ConstantsUtils.HEAD_TITLE, "lista: " + shoppingList.getName());
                 //set l'istanza lista come l'attributo della richiesta
                 request.setAttribute("list", shoppingList);
                 //set il permesso dell'utente  come l'attributo della richiesta
@@ -147,14 +150,13 @@ public class DisplaySpecificListServlet extends HttpServlet
                 }
 
                 //se lista non è vuoto
-                if (generalPermissionsOnList != null && generalPermissionsOnList.size()>0)
+                if (generalPermissionsOnList != null && generalPermissionsOnList.size() > 0)
                 {
                         //set lista di permesso come l'attributo della richiesta
                         request.setAttribute("generalPermissionsOnList", generalPermissionsOnList);
                 }
 
-                request.getRequestDispatcher("/WEB-INF/jsp/front/mylist.jsp").forward(request, response);
+                request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
         }
 
-      
 }

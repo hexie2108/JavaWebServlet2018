@@ -1,6 +1,6 @@
 package it.unitn.webprogramming18.dellmm.filters;
 
-import it.unitn.webprogramming18.dellmm.util.PagePathsConstants;
+import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
 import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 
 import javax.servlet.*;
@@ -80,8 +80,7 @@ public class LoggedUserOnlyFilter implements Filter
                         // memorizza url della richiesta attuale in nextUrl,  che permette utente di ritornerà a questa pagina dopo il login
                         String nextUrl = request.getRequestURI();
 
-                        response.sendRedirect(
-                                    contextPath + PagePathsConstants.LOGIN + "?"
+                        response.sendRedirect(contextPath + ConstantsUtils.LOGIN + "?"
                                     + "prevUrl" + "=" + URLEncoder.encode(prevUrl, "UTF-8")
                                     + "&" + "nextUrl" + "=" + URLEncoder.encode(nextUrl, "UTF-8")
                         );

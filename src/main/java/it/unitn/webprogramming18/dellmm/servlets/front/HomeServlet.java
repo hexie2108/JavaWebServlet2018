@@ -7,6 +7,7 @@ import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCProductDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.javaBeans.CategoryProduct;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
+import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -22,6 +23,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class HomeServlet extends HttpServlet
 {
+
+        private static final String JSP_PAGE_PATH = "/WEB-INF/jsp/front/home.jsp";
 
         private ProductDAO productDAO;
         private CategoryProductDAO categoryProductDAO;
@@ -39,9 +42,9 @@ public class HomeServlet extends HttpServlet
         {
 
                 //get numero di categoria per il slider
-                int numberCatForSlider = Integer.parseInt(getServletContext().getInitParameter("quantityCatForSlider"));
+                int numberCatForSlider = ConstantsUtils.NUMBER_CATEGORY_FOR_SLIDER;
                 //get numero di prodotto per singola pagina
-                int numebrProductForList = Integer.parseInt(getServletContext().getInitParameter("quantityItemForHome"));
+                int numebrProductForList = ConstantsUtils.NUMBER_PRODUCT_FOR_HOME;
                 //posizione di start di query per get lista di prodotto
                 int startPosition = 0;
                 //get parametro di paginazione
@@ -77,26 +80,19 @@ public class HomeServlet extends HttpServlet
                 }
 
                 //set titolo della pagina
-                request.setAttribute("head_title", "Home");
+                request.setAttribute(ConstantsUtils.HEAD_TITLE, "Home");
                 //set la lista di categoria di prodotto nella richesta
                 request.setAttribute("categoryListForSlider", categoryListForSlider);
                 //set la lista di prodotto nella richesta
-                request.setAttribute("productList", productList);
-                 //set il numero di pagine resti
-                request.setAttribute("numberOfPageRest", (totalNumberOfPage - Integer.parseInt(page)));
+                request.setAttribute(ConstantsUtils.PRODUCT_LIST, productList);
+                //set il numero di pagine resti
+                request.setAttribute(ConstantsUtils.NUMBER_OF_PAGE_REST, (totalNumberOfPage - Integer.parseInt(page)));
                 //set url per la paginazione
-                request.setAttribute("basePath", request.getContextPath() + "?");
-                
-                a(request);
+                request.setAttribute(ConstantsUtils.PATH_FOR_PAGINATION, request.getContextPath() + "?");
 
                 //inoltra a jsp
-                request.getRequestDispatcher("/WEB-INF/jsp/front/home.jsp").forward(request, response);
+                request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
 
-        }
-        
-        
-        public void a(HttpServletRequest request){
-                request.setAttribute("a", "hallo a");
         }
 
 }

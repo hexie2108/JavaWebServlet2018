@@ -26,7 +26,7 @@
                 <link rel="shortcut icon" href="${pageContext.request.contextPath}/favicon.ico" type="image/vnd.microsoft.icon"> 
 
                 <%--jquery--%>
-                <script type="text/javascript" src="${pageContext.request.contextPath}/libs/jquery/jquery-3.3.1.slim.min.js"></script>
+                <script type="text/javascript" src="${pageContext.request.contextPath}/libs/jquery/jquery-3.3.1.min.js"></script>
                 <%--js di bootstrap--%>
                 <script type="text/javascript" src="${pageContext.request.contextPath}/libs/bootstrap/bootstrap.min.js"></script>
                 <%--js personale di sito--%>
@@ -58,7 +58,7 @@
 
                                                 <a href="${pageContext.request.contextPath}" title="home">
                                                         <img class="logo d-inline" src="${pageContext.request.contextPath}/image/base/logo.png" alt="logo"/>
-                                                        <h2 class="text-white d-inline">
+                                                        <h2 class="site-title d-inline">
                                                                 Il nome del sito
                                                         </h2>
                                                 </a>
@@ -74,7 +74,7 @@
                                                                 <c:if test="${empty sessionScope.user}">
 
                                                                         <li class="nav-item">
-                                                                                <a class="nav-link" href="#">
+                                                                                <a class="nav-link" href="${pageContext.request.contextPath}/register">
                                                                                         <i class="fas fa-user-plus"></i> ISCRIVERSI
                                                                                 </a>
                                                                         </li>

@@ -6,33 +6,44 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public class i18n {
-    private static final String BUNDLE_NAME = "text";
+public class i18n
+{
 
-    public static final HashMap<String, String> SUPPORTED_LANGUAGES = new HashMap() {{
-        put("en", "English");
-        put("it", "Italiano");
-    }};
+        private static final String BUNDLE_NAME = "text";
 
-    public static ResourceBundle getBundle(HttpServletRequest request){
-        String language = request.getParameter("language");
-        HttpSession session = request.getSession(true);
+        public static final HashMap<String, String> SUPPORTED_LANGUAGES = new HashMap()
+        {
+                {
+                        put("en", "English");
+                        put("it", "Italiano");
+                }
+        };
 
-        Locale locale;
+        public static ResourceBundle getBundle(HttpServletRequest request)
+        {
+                String language = request.getParameter("language");
+                HttpSession session = request.getSession(true);
 
-        if (language != null){
-            locale = Locale.forLanguageTag(language);
-        } else if (session.getAttribute("language") != null) {
-            language = (String) session.getAttribute("language");
-            locale = Locale.forLanguageTag(language);
-        } else {
-            locale = request.getLocale();
+                Locale locale;
+
+                if (language != null)
+                {
+                        locale = Locale.forLanguageTag(language);
+                }
+                else if (session.getAttribute("language") != null)
+                {
+                        language = (String) session.getAttribute("language");
+                        locale = Locale.forLanguageTag(language);
+                }
+                else
+                {
+                        locale = request.getLocale();
+                }
+
+                session.setAttribute("language", locale.getLanguage());
+
+                ResourceBundle bundle = ResourceBundle.getBundle("text", locale);
+
+                return bundle;
         }
-
-        session.setAttribute("language", locale.getLanguage());
-
-        ResourceBundle bundle = ResourceBundle.getBundle("text", locale);
-
-        return bundle;
-    }
 }

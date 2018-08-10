@@ -1,190 +1,261 @@
+<%-- la pagina di jsp --%>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="it.unitn.webprogramming18.dellmm.util.RegistrationValidator" %>
-<%@ page import="it.unitn.webprogramming18.dellmm.util.PagePathsConstants" %>
+<%@ page import="it.unitn.webprogramming18.dellmm.util.ConstantsUtils" %>
+<%@ include file="/WEB-INF/jspf/i18n.jsp"%>
 
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Registrazione</title>
 
-    <script src="${pageContext.servletContext.contextPath}/libs/jquery/jquery-3.3.1.min.js"></script>
-    <script src="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/js/bootstrap.js"></script>
-    <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css">
-</head>
-<body>
-<nav class="navbar navbar-default navbar-static-top">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="/">Brand</a>
-        </div>
-    </div>
-</nav>
-<div class="container-fluid">
-    <form id="form-register" method="post">
-        <h2 class="form-signin-heading">Registrazione</h2>
-        <div class="form-group row">
-            <div id="divFirstName" class="col-sm-6  <c:if test='${not empty requestScope.messages.get(RegistrationValidator.FIRST_NAME_KEY)}'>has-error</c:if>">
-                <div class="input-group ">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                    <label for="inputFirstName" class="sr-only">Nome</label>
-                    <input id="inputFirstName" class="form-control" placeholder="Nome" required="" autofocus=""
-                           type="text" name="${RegistrationValidator.FIRST_NAME_KEY}"
-                           value="${param[RegistrationValidator.FIRST_NAME_KEY]}">
+<jsp:include page="/WEB-INF/jsp/userSystem/header.jsp"/>
+
+<div>
+        <form id="form-register" method="post" enctype="multipart/form-data" autocomplete="off" onsubmit="return validateForm()">
+
+                <h2 class="form-title">
+                        <i class="fas fa-user-plus"></i> <fmt:message key="register.label.title"/>
+                </h2>
+
+
+                <div class="form-group row">
+
+                        <div id="divEmail" class="col-sm-12">
+
+                                <div class="input-group">
+                                        <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                        <i class="fas fa-at"></i> 
+                                                </span>
+                                        </div>
+                                        <input id="inputEmail" class="form-control" placeholder="<fmt:message key="user.label.email"/>" required="" 
+                                               type="email" name="${RegistrationValidator.EMAIL_KEY}"  autocomplete="off"
+                                               data-toggle="popover" data-html="true" data-placement="top"  data-trigger="focus"
+                                               title="suggerimenti" data-content=" la lunghezza deve essere limitata a ${RegistrationValidator.EMAIL_MAX_LEN}" >
+
+                                        <div class="error-messages">
+                                                <p class="null">
+
+                                                </p>
+                                                <p class="max-length">
+
+                                                </p>
+                                                <p class="repeat">
+
+                                                </p>
+
+                                        </div>
+                                </div>
+                        </div>
+
                 </div>
-                <span id="spanFirstName" class="help-block">
-                    ${requestScope.messages.get(RegistrationValidator.FIRST_NAME_KEY)}
-                </span>
-            </div>
 
-            <div id="divLastName" class="col-sm-6 <c:if test='${not empty requestScope.messages.get(RegistrationValidator.LAST_NAME_KEY)}'>has-error</c:if>">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                    <label for="inputLastName" class="sr-only">Cognome</label>
-                    <input id="inputLastName" class="form-control" placeholder="Cognome" required="" autofocus=""
-                           type="text" name="${RegistrationValidator.LAST_NAME_KEY}"
-                           value="${param[RegistrationValidator.LAST_NAME_KEY]}">
+                <div class="form-group row">
+
+                        <div class="col-sm-6">
+
+                                <div class="input-group ">
+
+                                        <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                        <i class="fas fa-user"></i>
+                                                </span>
+                                        </div>
+                                        <input id="inputFirstName" class="form-control" placeholder="<fmt:message key="user.label.name"/>" required="" 
+                                               type="text" name="${RegistrationValidator.FIRST_NAME_KEY}" 
+                                               data-toggle="popover" data-html="true" data-placement="top"  data-trigger="focus"
+                                               title="suggerimenti" data-content="la lunghezza deve essere limitata a 44"
+                                               >
+                                        <span id="spanFirstName"></span>
+                                </div>
+
+                        </div>
+
+                        <div class="col-sm-6 ">
+
+                                <label for="inputLastName" class="sr-only"><fmt:message key="user.label.surname"/></label>
+                                <div class="input-group">
+                                        <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                        <i class="fas fa-user"></i>
+                                                </span>
+                                        </div>
+
+                                        <input id="inputLastName" class="form-control" placeholder="<fmt:message key="user.label.surname"/>" required="" 
+                                               type="text" name="${RegistrationValidator.LAST_NAME_KEY}"
+                                               data-toggle="popover" data-html="true" data-placement="top"  data-trigger="focus"
+                                               title="suggerimenti" data-content="la lunghezza deve essere limitata a 44"
+                                               >
+                                        <span id="spanLastName"></span>
+                                </div>
+
+                        </div>
                 </div>
-                <span id="spanLastName" class="help-block">
-                    ${requestScope.messages.get(RegistrationValidator.LAST_NAME_KEY)}
-                </span>
-            </div>
-        </div>
 
 
-        <div class="form-group row">
-            <div id="divEmail" class="col-sm-6 <c:if test='${not empty requestScope.messages.get(RegistrationValidator.EMAIL_KEY)}'>has-error</c:if>">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-                    <label for="inputEmail" class="sr-only">Email address</label>
-                    <input id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus=""
-                           type="email" name="${RegistrationValidator.EMAIL_KEY}"
-                           value="${param[RegistrationValidator.EMAIL_KEY]}">
+
+                <div class="form-group row">
+
+                        <div id="divPassword" class="col-sm-6">
+                                <label for="inputPassword" class="sr-only"><fmt:message key="user.label.password"/></label>
+                                <div class="input-group">
+                                        <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                        <i class="fas fa-key"></i>
+                                                </span>
+                                        </div>
+                                        <input id="inputPassword" class="form-control" placeholder="<fmt:message key="user.label.password"/>" required=""
+                                               type="password" name="${RegistrationValidator.FIRST_PWD_KEY}"
+                                               data-toggle="popover" data-html="true" data-placement="top"  data-trigger="focus"
+                                               title="suggerimenti" data-content="deve essere:<br/>
+                                               1. Lunga almeno 8 caratteri e al massimo 44 caratteri<br/>
+                                               2. Avere almeno 1 lettera minuscola<br/>
+                                               3. Avere almeno 1 lettera maiuscola<br/>
+                                               4. Avere almeno 1 numero<br/>
+                                               5. Avere almeno 1 simbolo<br/>"
+
+                                               value="">
+
+                                </div>
+                                <div class="progress progress-bar-div">
+                                        <div class="progress-bar progress-bar-striped progress-bar-animated"></div>
+                                </div>
+                        </div>
+
+                        <div id="divPassword2" class="col-sm-6">
+
+                                <label for="inputPassword2" class="sr-only"><fmt:message key="user.label.repeatPassword"/></label>
+                                <div class="input-group">
+                                        <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                        <i class="fas fa-key"></i>
+                                                </span>
+                                        </div>
+                                        <input id="inputPassword2" class="form-control" placeholder="<fmt:message key="user.label.repeatPassword"/>" required=""
+                                               type="password" name="${RegistrationValidator.SECOND_PWD_KEY}"
+                                               data-toggle="popover" data-html="true" data-placement="top"  data-trigger="focus"
+                                               title="suggerimenti" data-content="deve essere uguale a password appena inserito"
+                                               value="">
+
+                                </div>
+                        </div>
+
                 </div>
-                <span id="spanEmail" class="help-block">
-                    ${requestScope.messages.get(RegistrationValidator.EMAIL_KEY)}
-                </span>
-            </div>
-        </div>
 
-        <div class="form-group row">
-            <div id="divPassword" class="col-sm-6 <c:if test='${not empty requestScope.messages.get(RegistrationValidator.FIRST_PWD_KEY)}'>has-error</c:if>">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                    <label for="inputPassword" class="sr-only">Password</label>
-                    <input id="inputPassword" class="form-control" placeholder="Password" required=""
-                           type="password" name="${RegistrationValidator.FIRST_PWD_KEY}"
-                           value="">
-                    <span id="strongPassword" class="input-group-addon">Score: x/x</span>
+                <div class="form-group">
+                        <div class="">seleziona avatar:</div>
+                        <c:forEach items="${RegistrationValidator.DEFAULT_AVATARS}" var="av" varStatus="status">
+
+                                <div class="avatar-box custom-control custom-radio custom-control-inline">
+                                        <input type="radio" class="custom-control-input  img-radio default-avatar" id="avatar-${status.index}" name="${RegistrationValidator.AVATAR_KEY}" value="${av}" ${status.index==0?"checked":""} required="required" />
+                                        <label class="custom-control-label" for="avatar-${status.index}">
+                                                <img class="img-input img-fluid" src="<c:url value="/${ConstantsUtils.IMAGE_BASE_PATH}/${ConstantsUtils.IMAGE_OF_USER}/${av}"/>" />
+                                                <span class="img-check">
+                                                        <i class="far fa-check-circle "></i>
+                                                </span>
+                                        </label>
+
+                                </div>
+
+                        </c:forEach>
+
+                        <div class="avatar-box custom-control custom-radio custom-control-inline">
+                                <input type="radio" class="custom-control-input  img-radio" id="avatar-custom" name="${RegistrationValidator.AVATAR_KEY}" value="custom"  required="required" />
+                                <label class="custom-control-label" for="avatar-custom">
+                                        <img class="img-input img-fluid" src="<c:url value="/${ConstantsUtils.IMAGE_BASE_PATH}/base/custom-avatar.svg"/>" />
+                                        <span class="img-check">
+                                                <i class="far fa-check-circle "></i>
+                                        </span>
+                                </label>
+
+                        </div>
+
+
                 </div>
-                <span id="spanPassword" class="help-block">
-                    ${requestScope.messages.get(RegistrationValidator.FIRST_PWD_KEY)}
-                </span>
-            </div>
-            <div id="divPassword2" class="col-sm-6 <c:if test='${not empty requestScope.messages.get(RegistrationValidator.SECOND_PWD_KEY)}'>has-error</c:if>">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                    <label for="inputPassword2" class="sr-only">Repeat password</label>
-                    <input id="inputPassword2" class="form-control" placeholder="Repeat password" required=""
-                           type="password" name="${RegistrationValidator.SECOND_PWD_KEY}"
-                           value="">
+
+                <%--parte di immagine --%>
+                <div class="form-group custom-avatar-uploader">
+
+                        <div class=" custom-file input-group mb-3">
+                                <input type="file" class="custom-file-input"  id="customAvatarImg" name="${RegistrationValidator.AVATAR_IMG_KEY}" accept="image/*">
+                                <label class="custom-file-label" for="customAvatarImg">seleziona file</label>
+                        </div>
+
+                        <div class="form-control d-none" id="inputAvatar"></div>
+                        <span id="spanAvatar"></span>
+                        <div class="form-control d-none" id="inputAvatarImg"></div>
+                        <span id="spanAvatarImg"></span>
+
                 </div>
-                <span id="spanPassword2" class="help-block">
-                    ${requestScope.messages.get(RegistrationValidator.SECOND_PWD_KEY)}
-                </span>
-            </div>
-        </div>
 
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h2 class="panel-title">Informativa alla privacy</h2>
-            </div>
-            <div class="panel-body" id="privacyPolicy">
-                Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus
-            </div>
-        </div>
 
-        <div class="form-group row-fluid">
-            <div id="divPrivacy" class="col-sm-12 <c:if test='${not empty requestScope.messages.get(RegistrationValidator.INF_PRIVACY_KEY)}'>has-error</c:if>">
-                <div class="input-group">
-                    <input id="inputInfPrivacy" required=""
-                           type="checkbox" name="${RegistrationValidator.INF_PRIVACY_KEY}"
-                           value="${param[RegistrationValidator.INF_PRIVACY_KEY]}">Accetta l'informativa sulla privacy
-                    <label for="inputInfPrivacy" ></label>
-                    <span id="spanInfPrivacy" class="help-block">
-                        ${requestScope.messages.get(RegistrationValidator.INF_PRIVACY_KEY)}
-                    </span>
+
+                <div class="form-group row-fluid">
+
+                        <div id="divPrivacy">
+                                <div class="input-group custom-control custom-checkbox">
+                                        <input id="inputInfPrivacy" class="custom-control-input" required="required" type="checkbox" name="${RegistrationValidator.INF_PRIVACY_KEY}">
+                                        <label class="form-check-label custom-control-label ml-1" for="inputInfPrivacy">
+                                                <a href="javascript:;" data-toggle="modal" data-target="#boxShowPrivacy" >
+                                                        <fmt:message key="register.label.privacyStatementCheckbox"/>
+                                                </a>
+                                        </label>
+                                        <span id="spanInfPrivacy">
+
+                                        </span>
+                                </div>
+                        </div>
+
                 </div>
-            </div>
-        </div>
 
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-    </form>
+                <div class="alert d-none" id="id-res">
+                </div>
+
+                <button class="btn btn-lg btn-primary btn-block" type="submit">
+                        <fmt:message key="register.label.submit"/>
+                </button>
+
+        </form>
+                
 </div>
-<script src="${pageContext.servletContext.contextPath}/libs/zxcvbn/zxcvbn.js"></script>
-<script>
-    function updateVerifyMessages(data) {
-        // Prendi tutti gli <input> che ci sono nella pagina e per ognuno prendine il nome
-        const inputs = $('input').map(function(){return this.name;}).get();
-        // Per ogni input scrivi l'eventuale errore nello span dedicato e restituisci false se ha errori, true altrimenti
-        const validityInputs = inputs.map(
-            (key) => {
-                if (data.hasOwnProperty(key)) {
-                    $("#div" + key).addClass("has-error");
-                    $("#span" + key).html(String(data[key]));
-                    return false;
-                }
+<div class="util-link">
+        <a class="btn btn-info" href="<c:url value="/"/>"><i class="fas fa-home"></i> HOME</a>
+        <a class="btn btn-info" href="<c:url value="/login"/>"><i class="fas fa-sign-in-alt"></i> LOGIN</a>
+</div>               
 
-                $("#div" + key).removeClass("has-error");
-                $("#span" + key).html("");
-                return true;
-            }
-        );
 
-        // Se degli input sono false(hanno errori) allora restituisci false, altrimenti true
-        // Se false l'invio del form verrà bloccato altrimenti no
-        return validityInputs.every( v => v );
-    }
+<%-- finestra modale di privacy --%>   
+<div class="modal fade" id="boxShowPrivacy">
+        <div class="modal-dialog">
+                <div class="modal-content">
 
-    $(document).ready(function() {
-        const url = '${pageContext.servletContext.contextPath}/${PagePathsConstants.VALIDATE_REGISTRATION}?strict=';
+                        <%-- box-head --%>
+                        <div class="modal-header">
 
-        $('#inputPassword').on("keyup", function(){
-            $('#strongPassword').text("Score: " + zxcvbn(this.value).score + "/4");
-        });
+                                <h4 class="modal-title">
+                                        <fmt:message key="register.label.privacyStatement"/>
+                                </h4>
 
-        $('input').on("blur", () => {
-            const form=$('#form-register');
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
 
-            const request = $.ajax({
-                dataType: "json",
-                url : url,
-                type: "post",
-                data: form.serialize()
-            });
+                        </div>
+                        <%-- box-body --%>
+                        <div class="modal-body">
+                                <div id="privacyPolicy">
+                                        <fmt:message key="register.text.privacyStatement"/>
+                                </div>
+                        </div>
 
-            request.done(updateVerifyMessages);
-        });
+                        <%-- box-footer  --%>
+                        <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">chiude</button>
+                        </div>
 
-        $('#form-register').on("submit",function(){
-            const form=$('#form-register');
+                </div>
+        </div>
+</div>       
 
-            const request = $.ajax({
-                dataType: "json",
-                url : url,
-                type: "post",
-                async : false,
-                data: form.serialize()
-            });
+<script src="<c:url value="/libs/zxcvbn/zxcvbn.js"/>"></script>
+<script src="<c:url value="/js/userValidate.js?language=${pageContext.request.locale.getLanguage()}"/>"></script>
 
-            let data;
-            request.done(function(data2){data=data2});
 
-            return updateVerifyMessages(data);
-        });
-    });
-</script>
-</body>
-</html>
+<jsp:include page="/WEB-INF/jsp/userSystem/footer.jsp"/>

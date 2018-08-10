@@ -15,6 +15,7 @@ import it.unitn.webprogramming18.dellmm.javaBeans.CategoryProduct;
 import it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList;
 import it.unitn.webprogramming18.dellmm.javaBeans.Permission;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
+import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
@@ -33,13 +34,15 @@ import javax.servlet.http.HttpSession;
 public class UpdateProductServlet extends HttpServlet
 {
 
+        private static final String JSP_PAGE_PATH = "/WEB-INF/jsp/front/updateProduct.jsp";
+
         @Override
         protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
         {
 
                 //set titolo della pagina
-                request.setAttribute("head_title", "inserisce il prodotto");
-                request.getRequestDispatcher("/WEB-INF/jsp/front/updateProduct.jsp").forward(request, response);
+                request.setAttribute(ConstantsUtils.HEAD_TITLE, "inserisce il prodotto");
+                request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
 
         }
 

@@ -93,6 +93,14 @@ public interface UserDAO extends DAO<User, Integer>
          * retrieving.
          */
         public int checkUserRegisteredByEmail(String email) throws DAOException;
+        
+        /**
+         * controlla se email esiste già o no in DB
+         * @param email
+         * @return true se esiste già, false se non esiste
+         * @throws DAOException 
+         */
+        public boolean checkExistenceOfEmail(String email) throws DAOException;
 
         /**
          * Insert a user in the database and return a User with all the

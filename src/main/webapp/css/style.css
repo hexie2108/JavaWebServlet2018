@@ -32,13 +32,18 @@
         float: left;
         margin-left: 1%;
 }
+.front-page header .site-logo-section a{
+        color: white;
+        text-decoration: none;
+}
+
 
 .front-page header .site-logo-section .logo{
         width: 55px;
-        vertical-align: bottom;
+
 }
-.front-page header .site-logo-section h2{
-        line-height: 55px;
+.front-page header .site-logo-section .site-title{
+        vertical-align: middle;
 }
 
 .front-page header .site-top-menu{

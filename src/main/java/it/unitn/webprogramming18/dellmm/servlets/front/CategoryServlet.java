@@ -8,6 +8,7 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.javaBeans.CategoryProduct;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
+import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -22,6 +23,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class CategoryServlet extends HttpServlet
 {
+        
+        private static final String JSP_PAGE_PATH = "/WEB-INF/jsp/front/category.jsp";
 
         private ProductDAO productDAO;
         private CategoryProductDAO categoryProductDAO;
@@ -56,7 +59,7 @@ public class CategoryServlet extends HttpServlet
                 CheckErrorUtils.isNull(categoriaCorrente, "non esiste la categoria con tale id");
 
                 //get numero di prodotto per singola pagina
-                int numebrProductForList = Integer.parseInt(getServletContext().getInitParameter("quantityItemForCategory"));
+                int numebrProductForList = ConstantsUtils.NUMBER_PRODUCT_FOR_CATEGORY;
 
                 //posizione di start di query per get lista di prodotto
                 int startPosition = 0;
@@ -89,18 +92,18 @@ public class CategoryServlet extends HttpServlet
                 }
 
                 //set titolo della pagina nella richesta
-                request.setAttribute("head_title", categoriaCorrente.getName());
+                request.setAttribute(ConstantsUtils.HEAD_TITLE, categoriaCorrente.getName());
                 //set beans di categoria corrente  nella richesta
                 request.setAttribute("categoria", categoriaCorrente);
                 //set la lista di prodotto nella richesta
-                request.setAttribute("productList", productList);
+                request.setAttribute(ConstantsUtils.PRODUCT_LIST, productList);
                 //set il numero di pagine resti
-                request.setAttribute("numberOfPageRest", (totalNumberOfPage - Integer.parseInt(page)));
+                request.setAttribute(ConstantsUtils.NUMBER_OF_PAGE_REST, (totalNumberOfPage - Integer.parseInt(page)));
                 //set url per la paginazione
-                request.setAttribute("basePath", request.getContextPath() + request.getServletPath() + "?catId=" + catId + "&");
+                request.setAttribute(ConstantsUtils.PATH_FOR_PAGINATION, request.getContextPath() + request.getServletPath() + "?catId=" + catId + "&");
 
                 //inoltra a jsp
-                request.getRequestDispatcher("/WEB-INF/jsp/front/category.jsp").forward(request, response);
+                request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
 
         }
 }

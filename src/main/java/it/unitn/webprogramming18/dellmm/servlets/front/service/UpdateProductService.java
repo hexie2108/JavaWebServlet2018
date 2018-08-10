@@ -1,4 +1,4 @@
-package it.unitn.webprogramming18.dellmm.servlets.service;
+package it.unitn.webprogramming18.dellmm.servlets.front.service;
 
 import it.unitn.webprogramming18.dellmm.db.daos.ListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.PermissionDAO;
@@ -15,6 +15,7 @@ import it.unitn.webprogramming18.dellmm.javaBeans.ProductInList;
 import it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
+import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
 import it.unitn.webprogramming18.dellmm.util.FileUtils;
 import java.io.File;
 import java.io.IOException;
@@ -39,21 +40,6 @@ public class UpdateProductService extends HttpServlet
         private ProductDAO productDAO;
         private ProductInListDAO productInListDAO;
 
-        //il percorso base per tutte le immagini
-        private static final String IMAGE_BASE_PATH = "image";
-
-        // la cartella per immagine di prodotto
-        private static final String IMAGE_PRODUCT = "product";
-        // la cartella per immagine di logo di prodotto
-        private static final String IMAGE_LOGO_PRODUCT = "productLogo";
-
-        //le dimensioni dell'immagini
-        private static final int IMAGE_WIDTH = 800;
-        private static final int IMAGE_HEIGHT = 800;
-
-        //le dimensioni del logo
-        private static final int LOGO_WIDTH = 800;
-        private static final int LOGO_HEIGHT = 400;
 
         @Override
         public void init() throws ServletException
@@ -161,11 +147,11 @@ public class UpdateProductService extends HttpServlet
                 }
 
                 //set il percorso complete per salvare immagine
-                String uploadPath = request.getServletContext().getRealPath("/") + IMAGE_BASE_PATH;
+                String uploadPath = request.getServletContext().getRealPath("/") + ConstantsUtils.IMAGE_BASE_PATH;
                 //salva l'immagine di prodotto e get il nome salvato
-                prodcutImg = FileUtils.upload(prodcutImgFileItem, uploadPath + File.separator + IMAGE_PRODUCT, IMAGE_WIDTH, IMAGE_HEIGHT);
+                prodcutImg = FileUtils.upload(prodcutImgFileItem, uploadPath + File.separator + ConstantsUtils.IMAGE_OF_PRODUCT, ConstantsUtils.IMAGE_OF_PRODUCT_WIDTH, ConstantsUtils.IMAGE_OF_PRODUCT_HEIGHT);
                 //salva l'immagine di logo e get il nome salvato
-                productLogo = FileUtils.upload(prodcutLogoFileItem, uploadPath + File.separator + IMAGE_LOGO_PRODUCT, LOGO_WIDTH, LOGO_HEIGHT);
+                productLogo = FileUtils.upload(prodcutLogoFileItem, uploadPath + File.separator + ConstantsUtils.IMAGE_LOGO_OF_PRODUCT, ConstantsUtils.IMAGE_LOGO_OF_PRODUCT_WIDTH, ConstantsUtils.IMAGE_LOGO_OF_PRODUCT_HEIGHT);
 
                 //crea beans di prodotto
                 Product product = new Product();

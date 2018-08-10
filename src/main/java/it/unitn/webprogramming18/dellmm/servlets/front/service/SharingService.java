@@ -1,4 +1,4 @@
-package it.unitn.webprogramming18.dellmm.servlets.service;
+package it.unitn.webprogramming18.dellmm.servlets.front.service;
 
 import it.unitn.webprogramming18.dellmm.db.daos.CommentDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ListDAO;

@@ -14,6 +14,7 @@ import it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList;
 import it.unitn.webprogramming18.dellmm.javaBeans.Permission;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
+import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,11 +25,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- *servlet della pagina per inserire/modificare la lista 
+ * servlet della pagina per inserire/modificare la lista
+ *
  * @author luca_morgese
  */
 public class UpdateListServlet extends HttpServlet
 {
+
+        private static final String JSP_PAGE_PATH = "/WEB-INF/jsp/front/updateList.jsp";
 
         private PermissionDAO permissionDAO;
         private ListDAO listDAO;
@@ -54,7 +58,7 @@ public class UpdateListServlet extends HttpServlet
                 if (listId == null)
                 {
                         //set titolo della pagina
-                        request.setAttribute("head_title", "crea la nuova lista");
+                        request.setAttribute(ConstantsUtils.HEAD_TITLE, "crea la nuova lista");
                 }
 
                 //in caso di update della lista esistente
@@ -86,13 +90,13 @@ public class UpdateListServlet extends HttpServlet
                         }
 
                         //set titolo della pagina
-                        request.setAttribute("head_title", "aggriona la lista");
+                        request.setAttribute(ConstantsUtils.HEAD_TITLE, "aggriona la lista");
                         //set beans di shoppingList nella richiesta
                         request.setAttribute("list", shoppingList);
 
                 }
 
-                request.getRequestDispatcher("/WEB-INF/jsp/front/updateList.jsp").forward(request, response);
+                request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
         }
 
 }

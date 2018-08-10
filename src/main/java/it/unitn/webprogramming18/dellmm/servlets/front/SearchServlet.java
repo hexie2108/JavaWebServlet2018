@@ -9,6 +9,7 @@ import it.unitn.webprogramming18.dellmm.db.daos.ProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCProductDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
+import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.List;
@@ -24,6 +25,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class SearchServlet extends HttpServlet
 {
+
+        private static final String JSP_PAGE_PATH = "/WEB-INF/jsp/front/search.jsp";
 
         private ProductDAO productDAO;
 
@@ -66,7 +69,7 @@ public class SearchServlet extends HttpServlet
                 }
 
                 //get numero di prodotto per singola pagina
-                int numebrProductForList = Integer.parseInt(getServletContext().getInitParameter("quantityItemForSearch"));
+                int numebrProductForList = ConstantsUtils.NUMBER_PRODUCT_FOR_SEARCH;
                 //posizione di start di query per get lista di prodotto
                 int startPosition = 0;
                 //get parametro di paginazione
@@ -99,16 +102,16 @@ public class SearchServlet extends HttpServlet
                 }
 
                 //set titolo della pagina nella richesta
-                request.setAttribute("head_title", "Search: " + searchWords);
+                request.setAttribute(ConstantsUtils.HEAD_TITLE, "Search: " + searchWords);
                 //set la lista di prodotto nella richesta
-                request.setAttribute("productList", productList);
-                 //set il numero di pagine resti
-                request.setAttribute("numberOfPageRest", (totalNumberOfPage - Integer.parseInt(page)));
+                request.setAttribute(ConstantsUtils.PRODUCT_LIST, productList);
+                //set il numero di pagine resti
+                request.setAttribute(ConstantsUtils.NUMBER_OF_PAGE_REST, (totalNumberOfPage - Integer.parseInt(page)));
                 //set url per la paginazione
-                request.setAttribute("basePath", request.getContextPath() + request.getServletPath() + "?searchWords=" + URLEncoder.encode(searchWords, "utf-8") + "&order=" + order + "&");
+                request.setAttribute(ConstantsUtils.PATH_FOR_PAGINATION, request.getContextPath() + request.getServletPath() + "?searchWords=" + URLEncoder.encode(searchWords, "utf-8") + "&order=" + order + "&");
 
                 //inoltra jsp
-                request.getRequestDispatcher("/WEB-INF/jsp/front/search.jsp").forward(request, response);
+                request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
         }
 
 }

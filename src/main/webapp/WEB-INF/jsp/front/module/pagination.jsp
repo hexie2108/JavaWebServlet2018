@@ -18,7 +18,7 @@
 
                                 <%-- link di precedente --%>
                                 <li class="page-item page-previous">
-                                        <a class="page-link " href="${basePath}page=${param.page-1}">
+                                        <a class="page-link " href="${pathForPagination}page=${param.page-1}">
                                                 precedente
                                         </a>
                                 </li>
@@ -52,7 +52,7 @@
 
                                         <li class="page-item ${ i==0 ? "active":""}">
 
-                                                <a class="page-link " href="${basePath}page=${i+1}">
+                                                <a class="page-link " href="${pathForPagination}page=${i+1}">
                                                         ${ i+1}
                                                 </a>
 
@@ -65,7 +65,7 @@
 
                                         <li class="page-item ${ (i+1)==param.page ? "active":""}">
 
-                                                <a class="page-link " href="${basePath}page=${i+1}">
+                                                <a class="page-link " href="${pathForPagination}page=${i+1}">
                                                         ${ i+1}
                                                 </a>
                                         </li>
@@ -76,7 +76,7 @@
                                 <c:if test="${not empty param.page && param.page>2}">   
 
                                         <li class="page-item ${i==2 ? "active":""}">
-                                                <a class="page-link " href="${basePath}page=${param.page-2+i}">
+                                                <a class="page-link " href="${pathForPagination}page=${param.page-2+i}">
                                                         ${param.page-2+i}
                                                 </a>
                                         </li>
@@ -91,7 +91,7 @@
 
                                 <%-- link di successivo --%>
                                 <li class="page-item page-next">
-                                        <a class="page-link " href="${basePath}page=${empty param.page?2:param.page+1}">
+                                        <a class="page-link " href="${pathForPagination}page=${empty param.page?2:param.page+1}">
                                                 successivo
                                         </a>
                                 </li>

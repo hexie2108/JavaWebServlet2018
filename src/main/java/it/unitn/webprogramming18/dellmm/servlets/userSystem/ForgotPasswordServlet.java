@@ -7,7 +7,7 @@ import it.unitn.webprogramming18.dellmm.email.EmailFactory;
 import it.unitn.webprogramming18.dellmm.email.messageFactories.ResetPasswordMail;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.ServletUtility;
-import it.unitn.webprogramming18.dellmm.util.PagePathsConstants;
+import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
 
 import javax.mail.MessagingException;
 import javax.servlet.ServletException;
@@ -134,7 +134,7 @@ public class ForgotPasswordServlet extends HttpServlet
                                 contextPath += "/";
                         }
 
-                        response.sendRedirect(response.encodeRedirectURL(contextPath + "/" + PagePathsConstants.LOGIN));
+                        response.sendRedirect(response.encodeRedirectURL(contextPath + "/" + ConstantsUtils.LOGIN));
                 }
         }
 }
