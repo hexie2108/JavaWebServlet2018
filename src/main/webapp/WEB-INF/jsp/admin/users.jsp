@@ -261,6 +261,7 @@
 
                 $('td', row).eq(7).html(
                     $('<div/>', {
+                        class: 'btn-group',
                         html: [
                             $('<button/>', {
                                 class: 'btn btn-md btn-primary',
@@ -286,6 +287,46 @@
                                         $('#modifyUserForm input[name="${RegistrationValidator.AVATAR_KEY}"][value="'+data.img+'"]').prop("checked", true);
                                     }
                                 }
+                            }),
+                            $('<button/>', {
+                                class: 'btn btn-md btn-danger',
+                                title: data.isAdmin?'<fmt:message key="users.label.downgradeUser"/>':'<fmt:message key="users.label.upgradeUser"/>',
+                                html: data.isAdmin?'<i class="fas fa-level-down-alt"></i>':'<i class="fas fa-level-up-alt"></i>',
+                                click: function(){
+                                    const btn = $(this);
+
+                                    btn.attr("disabled", true);
+
+                                    $.ajax({
+                                        url: '<c:url value="/admin/upgradeUserToAdmin.json"/>',
+                                        type: 'POST',
+                                        data: {'email': data.email, 'admin': !data.isAdmin}
+                                    }).done(function(){
+                                        btn.html(!data.isAdmin?'<i class="fas fa-level-down-alt"></i>':'<i class="fas fa-level-up-alt"></i>');
+                                        btn.attr('title', !data.isAdmin?'<fmt:message key="users.label.downgradeUser"/>':'<fmt:message key="users.label.upgradeUser"/>');
+
+                                        btn.attr("disabled", false);
+                                    }).fail(function(jqXHR){
+                                        const prevText = btn.html();
+
+                                        if (typeof jqXHR.responseJSON === 'object' &&
+                                            jqXHR.responseJSON !== null &&
+                                            jqXHR.responseJSON['message'] !== undefined
+                                        ) {
+                                            btn.html(jqXHR.responseJSON['message']);
+
+                                        } else {
+                                            btn.html(unknownErrorMessage);
+                                        }
+
+                                        setTimeout(function(){
+                                            btn.html(prevText);
+
+                                            btn.attr("disabled", false);
+                                        }, 2000);
+                                    });
+                                }
+
                             }),
                             $('<button/>', {
                                 class: 'btn btn-md btn-danger',

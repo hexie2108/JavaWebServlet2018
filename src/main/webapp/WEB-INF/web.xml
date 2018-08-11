@@ -190,14 +190,16 @@
         <servlet-name>AddUpdateProductServlet</servlet-name>
         <url-pattern>/AddUpdateProductServlet</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>UpgradeUserToAdminServlet</servlet-name>
-        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.UpgradeUserToAdminServlet</servlet-class>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.adminSystem.UpgradeUserToAdminServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>UpgradeUserToAdminServlet</servlet-name>
-        <url-pattern>/UpgradeUserToAdminServlet</url-pattern>
+        <url-pattern>/admin/upgradeUserToAdmin.json</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>DisplayListsServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.DisplayListsServlet</servlet-class>
