@@ -19,6 +19,9 @@
 
     <link rel="stylesheet" href="<c:url value="/libs/fontawesome-free-5.1.1-web/css/all.min.css"/>" type="text/css" media="all">
     <link rel="stylesheet" href="<c:url value="/css/userPages.css"/>" type="text/css" media="all">
+
+
+    <link rel="stylesheet" href="<c:url value="/css/adminPages.css"/>" type="text/css" media="all"/>
 </head>
 <body>
 <%@ include file="../../jspf/i18n_switcher.jsp"%>
@@ -37,7 +40,7 @@
             <th><fmt:message key="user.label.isAdmin"/></th>
             <th><fmt:message key="user.label.verifyEmailLink"/></th>
             <th><fmt:message key="user.label.resetPasswordLink"/></th>
-            <th><fmt:message key="users.label.actions"/></th>
+            <th><fmt:message key="generic.label.actions"/></th>
         </tr>
         </thead>
         <tbody>
@@ -70,7 +73,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="exampleModalLabel"><fmt:message key="users.label.modifyUser"/></h4>
+                <h4 class="modal-title"><fmt:message key="users.label.modifyUser"/></h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="<fmt:message key="generic.label.close"/>">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -164,7 +167,7 @@
 <script src="<c:url value="/js/userValidate.js"/>"></script>
 <script src="<c:url value="/libs/zxcvbn/zxcvbn.js"/>"></script>
 <script>
-    $(document).ready( function (key, value) {
+    $(document).ready( function () {
         $('#userTable').find('> thead, tfoot').find('> tr').prepend(
             $('<th/>', {
                 text: ''
@@ -250,7 +253,7 @@
                 $('td', row).eq(2).html(
                     $('<img/>',{
                         src: '<c:url value="/${pageContext.servletContext.getInitParameter('avatarsFolder')}/"/>' + data.img,
-                        class: "img-responsive"
+                        class: "img-responsive img-table"
                     })
                 );
 

@@ -2,10 +2,16 @@ package it.unitn.webprogramming18.dellmm.util;
 
 import com.google.gson.Gson;
 
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -59,6 +65,37 @@ public interface ServletUtility {
                                 .map((Map.Entry<String, String> e) -> e.getValue())
                                 .collect(Collectors.joining(",")) +
                     "]");
+        }
+    }
+
+    static Path getFolder(ServletContext ctx, String parameterName) throws ServletException, IOException {
+        // Ottieni configurazione cartella avatars
+        String categoryListImgFolder = ctx.getInitParameter(parameterName);
+        if (categoryListImgFolder == null) {
+            throw new ServletException(parameterName + " folder not configured");
+        }
+
+        String realContextPath = ctx.getRealPath(File.separator);
+        if (!realContextPath.endsWith("/")) {
+            realContextPath += "/";
+        }
+
+        Path path = Paths.get(realContextPath + categoryListImgFolder);
+
+        if (!Files.exists(path)) {
+            Files.createDirectories(path);
+        }
+
+        return path;
+    }
+
+    static void deleteFile(Path path, String toDeleteImg, ServletContext ctx) {
+        Path toDelete = Paths.get(path.toString(), toDeleteImg);
+        try {
+            Files.delete(toDelete);
+        } catch (IOException e) {
+            // If we can't delete the old image we just log and continue
+            ctx.log("File " + toDelete.toString() + " cannot be delete");
         }
     }
 }

@@ -71,7 +71,7 @@ public class RegistrationValidator {
         AVATAR_IMG_NOT_IMG,
     }
 
-    // --- Funzioni di validazione
+    // --- Funzioni di validazioneTypeError
     private static boolean validateEmailFormat(String email) {
         boolean ris = false;
         try {

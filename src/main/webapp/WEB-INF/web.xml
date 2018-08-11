@@ -362,6 +362,25 @@
         <servlet-name>JSONUserServlet</servlet-name>
         <url-pattern>/admin/users.json</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>CategoryListsServlet</servlet-name>
+        <jsp-file>/WEB-INF/jsp/admin/categoryLists.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CategoryListsServlet</servlet-name>
+        <url-pattern>/admin/categoryLists</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>JSONCategoryListsServlet</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.adminSystem.JSONCategoryListsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>JSONCategoryListsServlet</servlet-name>
+        <url-pattern>/admin/categoryLists.json</url-pattern>
+    </servlet-mapping>
+
 
     <!-- ERROR PAGE -->
     <error-page>
