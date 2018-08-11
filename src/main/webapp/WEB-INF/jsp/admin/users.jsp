@@ -168,16 +168,22 @@
 <script src="<c:url value="/libs/zxcvbn/zxcvbn.js"/>"></script>
 <script>
     $(document).ready( function () {
-        $('#userTable').find('> thead, tfoot').find('> tr').prepend(
+        const tableDiv = $('#userTable');
+
+        const resDiv = $('#id-res');
+        const unknownError = '<fmt:message key="generic.errors.unknownError"/>';
+
+        const modifyUserModal = $('#modifyUserModal');
+        const modifyUserForm = modifyUserModal.find('#modifyUserForm');
+
+        tableDiv.find('> thead, tfoot').find('> tr').prepend(
             $('<th/>', {
                 text: ''
             })
         );
 
-        const resDiv = $('#id-res');
-        const unknownError = '<fmt:message key="generic.errors.unknownError"/>';
 
-        const table = $('#userTable').on('xhr.dt', function (e, settings, json, xhr){
+        tableDiv.on('xhr.dt', function (e, settings, json, xhr){
             if (json === null) {
                 const json = JSON.parse(xhr.responseText);
                 resDiv.removeClass("d-none");
@@ -191,14 +197,125 @@
                 resDiv.addClass("d-none");
                 resDiv.html("");
             }
-        }).DataTable({
+        });
+
+        function ajaxButton(url, data, btn, successCallback) {
+            btn.attr("disabled", true);
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data:data
+            }).done(function(){
+                successCallback();
+            }).fail(function(jqXHR){
+                const prevText = btn.html();
+
+                if (typeof jqXHR.responseJSON === 'object' &&
+                    jqXHR.responseJSON !== null &&
+                    jqXHR.responseJSON['message'] !== undefined
+                ) {
+                    btn.html(jqXHR.responseJSON['message']);
+
+                } else {
+                    btn.html(unknownErrorMessage);
+                }
+
+                setTimeout(function(){
+                    btn.html(prevText);
+
+                    btn.attr("disabled", false);
+                }, 2000);
+            });
+        }
+
+
+        function formatRow(row, data, index) {
+            const imgAvatar = $('<img/>',{
+                src: '<c:url value="/${pageContext.servletContext.getInitParameter('avatarsFolder')}/"/>' + data.img,
+                class: "img-responsive img-table"
+            });
+
+            const admin = data.isAdmin?'<fmt:message key="users.label.true"/>':'<fmt:message key="users.label.false"/>';
+
+            const modifyUserButton = $('<button/>', {
+                class: 'btn btn-md btn-primary',
+                title: '<fmt:message key="users.label.modifyUser"/>',
+                html: '<i class="far fa-edit"></i>',
+                'data-toggle': 'modal',
+                'data-target': '#modifyUserModal',
+                click: function(){
+                    modifyUserForm.find('input[name="id"]').val(data.id);
+                    modifyUserForm.find('#roSpanFirstName').html(data.name);
+                    modifyUserForm.find('#roSpanLastName').html(data.surname);
+                    modifyUserForm.find('#roSpanEmail').html(data.email);
+
+                    if (/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(data.img)) {
+                        modifyUserForm.find('#avatarDiv').prepend(
+                            '<label id="customImgLabel">' +
+                            '    <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}" value="" checked>' +
+                            '    <img src="<c:url value="${pageContext.servletContext.getInitParameter('avatarsFolder')}/"/>'+ data.img +'" class="img-input"' +
+                            '        ><i class="far fa-check-circle img-check"></i>' +
+                            '</label>'
+                        );
+                    } else {
+                        modifyUserForm.find('input[name="${RegistrationValidator.AVATAR_KEY}"][value="'+data.img+'"]').prop("checked", true);
+                    }
+                }
+            });
+
+            const upgradeUserButton = $('<button/>', {
+                class: 'btn btn-md btn-danger',
+                title: data.isAdmin?'<fmt:message key="users.label.downgradeUser"/>':'<fmt:message key="users.label.upgradeUser"/>',
+                html: data.isAdmin?'<i class="fas fa-level-down-alt"></i>':'<i class="fas fa-level-up-alt"></i>',
+                click: function(){
+                     ajaxButton(
+                        '<c:url value="/admin/upgradeUserToAdmin.json"/>',
+                        {'email': data.email, 'admin': !data.isAdmin},
+                        $(this),
+                        (btn) => {
+                            table.ajax.reload();
+                            table.draw();
+                        }
+                    )
+                }
+            });
+
+            const deleteUser = $('<button/>', {
+                class: 'btn btn-md btn-danger',
+                title: '<fmt:message key="users.label.deleteUser"/>',
+                html: $('<i/>',{class: 'far fa-trash-alt'}),
+                click: function(){
+                    ajaxButton(
+                        '<c:url value="/admin/users.json"/>',
+                        {'action': 'delete', 'id': data.id},
+                        $(this),
+                        (btn) => row.remove())
+                }
+            });
+
+
+            $('td', row).eq(2).html(imgAvatar);
+            $('td', row).eq(6).html(admin);
+
+            $('td', row).eq(7).html(
+                $('<div/>', {
+                    class: 'btn-group',
+                    html: [ modifyUserButton, upgradeUserButton, deleteUser ]
+                })
+            );
+
+        }
+
+
+        const table = tableDiv.DataTable({
             ajax: {
                 url: '<c:url value="/admin/users.json"/>',
                 dataType: "json",
                 type: "get",
                 cache: "false",
                 data: function(d) {
-                    return $('#filterForm').serialize();
+                    return tableDiv.find('#filterForm').serialize();
                 },
                 dataSrc: ''
             },
@@ -249,126 +366,7 @@
                 }
             ],
             order: [[1, 'asc']],
-            createdRow: function(row, data, index) {
-                $('td', row).eq(2).html(
-                    $('<img/>',{
-                        src: '<c:url value="/${pageContext.servletContext.getInitParameter('avatarsFolder')}/"/>' + data.img,
-                        class: "img-responsive img-table"
-                    })
-                );
-
-                $('td', row).eq(6).html(data.isAdmin?'<fmt:message key="users.label.true"/>':'<fmt:message key="users.label.false"/>');
-
-                $('td', row).eq(7).html(
-                    $('<div/>', {
-                        class: 'btn-group',
-                        html: [
-                            $('<button/>', {
-                                class: 'btn btn-md btn-primary',
-                                title: '<fmt:message key="users.label.modifyUser"/>',
-                                html: $('<i/>',{class: 'far fa-edit'}),
-                                'data-toggle': 'modal',
-                                'data-target': '#modifyUserModal',
-                                click: function(){
-                                    $('#modifyUserForm input[name="id"]').val(data.id);
-                                    $('#modifyUserForm #roSpanFirstName').html(data.name);
-                                    $('#modifyUserForm #roSpanLastName').html(data.surname);
-                                    $('#modifyUserForm #roSpanEmail').html(data.email);
-
-                                    if (/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(data.img)) {
-                                        $('#avatarDiv').prepend(
-                                            '<label id="customImgLabel">' +
-                                            '    <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}" value="" checked>' +
-                                            '    <img src="<c:url value="${pageContext.servletContext.getInitParameter('avatarsFolder')}/"/>'+ data.img +'" class="img-input"' +
-                                            '        ><i class="far fa-check-circle img-check"></i>' +
-                                            '</label>'
-                                        );
-                                    } else {
-                                        $('#modifyUserForm input[name="${RegistrationValidator.AVATAR_KEY}"][value="'+data.img+'"]').prop("checked", true);
-                                    }
-                                }
-                            }),
-                            $('<button/>', {
-                                class: 'btn btn-md btn-danger',
-                                title: data.isAdmin?'<fmt:message key="users.label.downgradeUser"/>':'<fmt:message key="users.label.upgradeUser"/>',
-                                html: data.isAdmin?'<i class="fas fa-level-down-alt"></i>':'<i class="fas fa-level-up-alt"></i>',
-                                click: function(){
-                                    const btn = $(this);
-
-                                    btn.attr("disabled", true);
-
-                                    $.ajax({
-                                        url: '<c:url value="/admin/upgradeUserToAdmin.json"/>',
-                                        type: 'POST',
-                                        data: {'email': data.email, 'admin': !data.isAdmin}
-                                    }).done(function(){
-                                        btn.html(!data.isAdmin?'<i class="fas fa-level-down-alt"></i>':'<i class="fas fa-level-up-alt"></i>');
-                                        btn.attr('title', !data.isAdmin?'<fmt:message key="users.label.downgradeUser"/>':'<fmt:message key="users.label.upgradeUser"/>');
-
-                                        btn.attr("disabled", false);
-                                    }).fail(function(jqXHR){
-                                        const prevText = btn.html();
-
-                                        if (typeof jqXHR.responseJSON === 'object' &&
-                                            jqXHR.responseJSON !== null &&
-                                            jqXHR.responseJSON['message'] !== undefined
-                                        ) {
-                                            btn.html(jqXHR.responseJSON['message']);
-
-                                        } else {
-                                            btn.html(unknownErrorMessage);
-                                        }
-
-                                        setTimeout(function(){
-                                            btn.html(prevText);
-
-                                            btn.attr("disabled", false);
-                                        }, 2000);
-                                    });
-                                }
-
-                            }),
-                            $('<button/>', {
-                                class: 'btn btn-md btn-danger',
-                                title: '<fmt:message key="users.label.deleteUser"/>',
-                                html: $('<i/>',{class: 'far fa-trash-alt'}),
-                                click: function(){
-                                    const btn = $(this);
-
-                                    btn.attr("disabled", true);
-
-                                    $.ajax({
-                                        url: '<c:url value="/admin/users.json"/>',
-                                        type: 'POST',
-                                        data: {'action': 'delete', 'id': data.id}
-                                    }).done(function(){
-                                        row.remove();
-                                    }).fail(function(jqXHR){
-                                        const prevText = btn.html();
-
-                                        if (typeof jqXHR.responseJSON === 'object' &&
-                                            jqXHR.responseJSON !== null &&
-                                            jqXHR.responseJSON['message'] !== undefined
-                                        ) {
-                                            btn.html(jqXHR.responseJSON['message']);
-
-                                        } else {
-                                            btn.html(unknownErrorMessage);
-                                        }
-
-                                        setTimeout(function(){
-                                            btn.html(prevText);
-
-                                            btn.attr("disabled", false);
-                                        }, 2000);
-                                    });
-                                }
-                            }),
-                        ]
-                    })
-                );
-
-            },
+            createdRow: formatRow,
             searching: false
         });
 
@@ -401,7 +399,7 @@
             return ul;
         }
 
-        $('#userTable > tbody').on('click','td.details-control', function () {
+        tableDiv.find('> tbody').on('click','td.details-control', function () {
             const tr = $(this).closest('tr');
             const row = table.row( tr );
 
@@ -423,7 +421,7 @@
             }
         });
 
-        $('#userTable tfoot').find('input,select').on('keyup change', function () {
+        tableDiv.find('tfoot').find('input,select').on('keyup change', function () {
             history.replaceState(undefined, undefined, "users?" + $('#userTable tfoot').find('input,select').serialize());
             table.ajax.reload();
             table.draw();
@@ -432,30 +430,29 @@
         $.fn.dataTable.ext.errMode = 'throw';
 
         {
-            const form=$('#modifyUserForm');
             const URL = '<c:url value="/${PagePathsConstants.VALIDATE_REGISTRATION}"/>';
             const urlJSON = '<c:url value="/admin/users.json"/>';
+
             const resDiv = $('#id-modal-res');
-            const strPwd = form.find('#strongPassword');
-
-
-            $('#modifyUserModal').on("hidden.bs.modal", function() {
-                form[0].reset();
-                $('#customImgLabel').remove();
-            });
+            const strPwd = modifyUserForm.find('#strongPassword');
 
             const unknownErrorMessage = '<fmt:message key="generic.errors.unknownError"/>';
             const successMessage = '<fmt:message key="generic.success"/>';
 
-            form.find('input').blur(() => {
-                request_user_validation(form, true, URL).done((d) => updateVerifyMessages(form, add_file_errors(form,d)));
+            modifyUserModal.on("hidden.bs.modal", function() {
+                modifyUserForm[0].reset();
+                $('#customImgLabel').remove();
             });
 
-            form.find('#inputPassword').on("keyup", function(){
+            modifyUserForm.find('input').blur(() => {
+                request_user_validation(modifyUserForm, true, URL).done((d) => updateVerifyMessages(modifyUserForm, add_file_errors(modifyUserForm,d)));
+            });
+
+            modifyUserForm.find('#inputPassword').on("keyup", function(){
                 strPwd.text("<fmt:message key="user.label.passwordScore"/>: " + zxcvbn(this.value).score + "/4");
             });
 
-            form.submit(function(e){
+            modifyUserForm.submit(function(e){
                 e.preventDefault();
 
                 if(!$('#customAvatar').is(':checked')){
@@ -464,7 +461,7 @@
 
                 formSubmit(
                     urlJSON,
-                    form, {
+                    modifyUserForm, {
                         'multipart': true,
                         'session': false,
                         'redirectUrl': null,
@@ -474,11 +471,11 @@
                         'successCallback': function() {
                             table.ajax.reload();
                             table.draw();
+                            modifyUserModal.modal('toggle');
                         }
                     }
                 );
             });
-
         }
     });
 </script>
