@@ -62,7 +62,7 @@ public class CheckExistenceOfEmailService extends HttpServlet
                 {
                         throw new ServletException(ex.getMessage(), ex);
                 }
-               // response.setContentType("text/html;charset=UTF-8");
+               response.setContentType("text/plain; charset=utf-8");
                 response.getWriter().print(esistence ? "1" : "0");
                 
         }

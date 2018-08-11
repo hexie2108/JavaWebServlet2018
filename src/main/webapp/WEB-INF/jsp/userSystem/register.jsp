@@ -10,82 +10,108 @@
 <jsp:include page="/WEB-INF/jsp/userSystem/header.jsp"/>
 
 <div>
-        <form id="form-register" method="post" enctype="multipart/form-data" autocomplete="off" onsubmit="return validateForm()">
+        <form id="form-register" name="form-register" method="post" enctype="multipart/form-data" autocomplete="off" onsubmit="return validateForm()">
 
                 <h2 class="form-title">
                         <i class="fas fa-user-plus"></i> <fmt:message key="register.label.title"/>
                 </h2>
 
 
-                <div class="form-group row">
+                <div class="form-group row ">
 
-                        <div id="divEmail" class="col-sm-12">
+                        <div id="divEmail" class="email-group col-sm-12">
 
                                 <div class="input-group">
                                         <div class="input-group-prepend">
-                                                <span class="input-group-text">
+                                                <span class="input-group-text input-box">
                                                         <i class="fas fa-at"></i> 
                                                 </span>
                                         </div>
-                                        <input id="inputEmail" class="form-control" placeholder="<fmt:message key="user.label.email"/>" required="" 
+                                        <input id="inputEmail" class="form-control input-box" placeholder="<fmt:message key="user.label.email"/>" required="" 
                                                type="email" name="${RegistrationValidator.EMAIL_KEY}"  autocomplete="off"
                                                data-toggle="popover" data-html="true" data-placement="top"  data-trigger="focus"
                                                title="suggerimenti" data-content=" la lunghezza deve essere limitata a ${RegistrationValidator.EMAIL_MAX_LEN}" >
 
-                                        <div class="error-messages">
-                                                <p class="null">
 
-                                                </p>
-                                                <p class="max-length">
+                                </div>
 
-                                                </p>
-                                                <p class="repeat">
+                                <div class="error-messages error-email">
+                                        <p class="null">
+                                                <i class="fas fa-exclamation-triangle"></i>  <fmt:message key="validateUser.errors.EMAIL_MISSING"/>
+                                        </p>
+                                        <p class="max-length">
+                                                <i class="fas fa-exclamation-triangle"></i> <fmt:message key="validateUser.errors.EMAIL_TOO_LONG"/>
+                                        </p>
+                                        <p class="invalid">
+                                                <i class="fas fa-exclamation-triangle"></i> <fmt:message key="validateUser.errors.EMAIL_NOT_VALID"/>
+                                        </p>
+                                        <p class="repeat">
+                                                <i class="fas fa-exclamation-triangle"></i> <fmt:message key="validateUser.errors.EMAIL_ALREADY_USED"/>
+                                        </p>
 
-                                                </p>
-
-                                        </div>
                                 </div>
                         </div>
 
                 </div>
 
-                <div class="form-group row">
+                <div class="form-group row ">
 
-                        <div class="col-sm-6">
+                        <div class="first-name-group col-sm-6 ">
 
                                 <div class="input-group ">
 
                                         <div class="input-group-prepend">
-                                                <span class="input-group-text">
+                                                <span class="input-group-text input-box">
                                                         <i class="fas fa-user"></i>
                                                 </span>
                                         </div>
-                                        <input id="inputFirstName" class="form-control" placeholder="<fmt:message key="user.label.name"/>" required="" 
+                                        <input id="inputFirstName" class="form-control input-box" placeholder="<fmt:message key="user.label.name"/>" required="" 
                                                type="text" name="${RegistrationValidator.FIRST_NAME_KEY}" 
                                                data-toggle="popover" data-html="true" data-placement="top"  data-trigger="focus"
                                                title="suggerimenti" data-content="la lunghezza deve essere limitata a 44"
                                                >
-                                        <span id="spanFirstName"></span>
+
+                                </div>
+                                <div class="error-messages error-first-name">
+
+                                        <p class="null">
+                                                <i class="fas fa-exclamation-triangle"></i>   <fmt:message key="validateUser.errors.FIRST_NAME_MISSING"/>
+                                        </p>
+                                        <p class="max-length">
+                                                <i class="fas fa-exclamation-triangle"></i> <fmt:message key="validateUser.errors.FIRST_NAME_TOO_LONG"/>
+                                        </p>
+
                                 </div>
 
                         </div>
 
-                        <div class="col-sm-6 ">
+                        <div class="last-name-group col-sm-6 ">
 
                                 <label for="inputLastName" class="sr-only"><fmt:message key="user.label.surname"/></label>
                                 <div class="input-group">
                                         <div class="input-group-prepend">
-                                                <span class="input-group-text">
+                                                <span class="input-group-text input-box">
                                                         <i class="fas fa-user"></i>
                                                 </span>
                                         </div>
 
-                                        <input id="inputLastName" class="form-control" placeholder="<fmt:message key="user.label.surname"/>" required="" 
+                                        <input id="inputLastName" class="form-control input-box" placeholder="<fmt:message key="user.label.surname"/>" required="" 
                                                type="text" name="${RegistrationValidator.LAST_NAME_KEY}"
                                                data-toggle="popover" data-html="true" data-placement="top"  data-trigger="focus"
                                                title="suggerimenti" data-content="la lunghezza deve essere limitata a 44"
                                                >
-                                        <span id="spanLastName"></span>
+
+                                </div>
+
+                                <div class="error-messages error-last-name">
+
+                                        <p class="null">
+                                                <i class="fas fa-exclamation-triangle"></i>  <fmt:message key="validateUser.errors.LAST_NAME_MISSING"/>
+                                        </p>
+                                        <p class="max-length">
+                                                <i class="fas fa-exclamation-triangle"></i> <fmt:message key="validateUser.errors.LAST_NAME_TOO_LONG"/>
+                                        </p>
+
                                 </div>
 
                         </div>
@@ -95,15 +121,15 @@
 
                 <div class="form-group row">
 
-                        <div id="divPassword" class="col-sm-6">
+                        <div id="divPassword" class="password-group col-sm-6">
                                 <label for="inputPassword" class="sr-only"><fmt:message key="user.label.password"/></label>
                                 <div class="input-group">
                                         <div class="input-group-prepend">
-                                                <span class="input-group-text">
+                                                <span class="input-group-text input-box">
                                                         <i class="fas fa-key"></i>
                                                 </span>
                                         </div>
-                                        <input id="inputPassword" class="form-control" placeholder="<fmt:message key="user.label.password"/>" required=""
+                                        <input id="inputPassword" class="form-control input-box" placeholder="<fmt:message key="user.label.password"/>" required=""
                                                type="password" name="${RegistrationValidator.FIRST_PWD_KEY}"
                                                data-toggle="popover" data-html="true" data-placement="top"  data-trigger="focus"
                                                title="suggerimenti" data-content="deve essere:<br/>
@@ -116,57 +142,98 @@
                                                value="">
 
                                 </div>
+
                                 <div class="progress progress-bar-div">
                                         <div class="progress-bar progress-bar-striped progress-bar-animated"></div>
                                 </div>
+
+                                <div class="error-messages error-password">
+
+                                        <p class="null">
+                                                <i class="fas fa-exclamation-triangle"></i> <fmt:message key="validateUser.errors.PASSWORD_MISSING"/>
+                                        </p>
+                                        <p class="max-length">
+                                                <i class="fas fa-exclamation-triangle"></i> <fmt:message key="validateUser.errors.PASSWORD_TOO_LONG"/>
+                                        </p>
+                                        <p class="min-length">
+                                                <i class="fas fa-exclamation-triangle"></i> <fmt:message key="validateUser.errors.PASSWORD_TOO_SHORT"/>
+                                        </p>
+                                        <p class="invalid">
+                                                <i class="fas fa-exclamation-triangle"></i>  <fmt:message key="validateUser.errors.PASSWORD_NOT_VALID"/>
+                                        </p>
+
+                                </div>          
+
+
                         </div>
 
-                        <div id="divPassword2" class="col-sm-6">
+                        <div id="divPassword2" class="password2-group col-sm-6">
 
                                 <label for="inputPassword2" class="sr-only"><fmt:message key="user.label.repeatPassword"/></label>
                                 <div class="input-group">
                                         <div class="input-group-prepend">
-                                                <span class="input-group-text">
+                                                <span class="input-group-text input-box">
                                                         <i class="fas fa-key"></i>
                                                 </span>
                                         </div>
-                                        <input id="inputPassword2" class="form-control" placeholder="<fmt:message key="user.label.repeatPassword"/>" required=""
+                                        <input id="inputPassword2" class="input-box form-control" placeholder="<fmt:message key="user.label.repeatPassword"/>" required=""
                                                type="password" name="${RegistrationValidator.SECOND_PWD_KEY}"
                                                data-toggle="popover" data-html="true" data-placement="top"  data-trigger="focus"
                                                title="suggerimenti" data-content="deve essere uguale a password appena inserito"
                                                value="">
 
                                 </div>
+                                <div class="error-messages error-password2">
+
+                                        <p class="null">
+                                                <i class="fas fa-exclamation-triangle"></i>   <fmt:message key="validateUser.errors.PASSWORD2_MISSING"/>
+                                        </p>
+                                        <p class="no-equal">
+                                                <i class="fas fa-exclamation-triangle"></i>  <fmt:message key="validateUser.errors.PASSWORD2_NOT_SAME"/>
+                                        </p>
+
+                                </div>
                         </div>
 
                 </div>
 
-                <div class="form-group">
+                <div class="avatar-group form-group">
                         <div class="">seleziona avatar:</div>
-                        <c:forEach items="${RegistrationValidator.DEFAULT_AVATARS}" var="av" varStatus="status">
+                        <div class="">
+                                <c:forEach items="${RegistrationValidator.DEFAULT_AVATARS}" var="av" varStatus="status">
+
+                                        <div class="avatar-box custom-control custom-radio custom-control-inline">
+                                                <input type="radio" class="custom-control-input  img-radio default-avatar" id="avatar-${status.index}" name="${RegistrationValidator.AVATAR_KEY}" value="${av}" ${status.index==0?"checked":""} required="required" />
+                                                <label class="custom-control-label" for="avatar-${status.index}">
+                                                        <img class="img-input img-fluid" src="<c:url value="/${ConstantsUtils.IMAGE_BASE_PATH}/${ConstantsUtils.IMAGE_OF_USER}/${av}"/>" />
+                                                        <span class="img-check">
+                                                                <i class="far fa-check-circle "></i>
+                                                        </span>
+                                                </label>
+
+                                        </div>
+
+                                </c:forEach>
 
                                 <div class="avatar-box custom-control custom-radio custom-control-inline">
-                                        <input type="radio" class="custom-control-input  img-radio default-avatar" id="avatar-${status.index}" name="${RegistrationValidator.AVATAR_KEY}" value="${av}" ${status.index==0?"checked":""} required="required" />
-                                        <label class="custom-control-label" for="avatar-${status.index}">
-                                                <img class="img-input img-fluid" src="<c:url value="/${ConstantsUtils.IMAGE_BASE_PATH}/${ConstantsUtils.IMAGE_OF_USER}/${av}"/>" />
+                                        <input type="radio" class="custom-control-input  img-radio" id="avatar-custom" name="${RegistrationValidator.AVATAR_KEY}" value="custom"  required="required" />
+                                        <label class="custom-control-label" for="avatar-custom">
+                                                <img class="img-input img-fluid" src="<c:url value="/${ConstantsUtils.IMAGE_BASE_PATH}/base/custom-avatar.svg"/>" />
                                                 <span class="img-check">
                                                         <i class="far fa-check-circle "></i>
                                                 </span>
                                         </label>
 
                                 </div>
+                        </div>
+                        <div class="error-messages error-avatar">
 
-                        </c:forEach>
-
-                        <div class="avatar-box custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input  img-radio" id="avatar-custom" name="${RegistrationValidator.AVATAR_KEY}" value="custom"  required="required" />
-                                <label class="custom-control-label" for="avatar-custom">
-                                        <img class="img-input img-fluid" src="<c:url value="/${ConstantsUtils.IMAGE_BASE_PATH}/base/custom-avatar.svg"/>" />
-                                        <span class="img-check">
-                                                <i class="far fa-check-circle "></i>
-                                        </span>
-                                </label>
-
+                                <p class="null">
+                                        <i class="fas fa-exclamation-triangle"></i> <fmt:message key="validateUser.errors.AVATAR_MISSING"/>
+                                </p>
+                                <p class="invalid">
+                                        <i class="fas fa-exclamation-triangle"></i> <fmt:message key="validateUser.errors.AVATAR_NOT_VALID"/>
+                                </p>
                         </div>
 
 
@@ -176,33 +243,53 @@
                 <div class="form-group custom-avatar-uploader">
 
                         <div class=" custom-file input-group mb-3">
-                                <input type="file" class="custom-file-input"  id="customAvatarImg" name="${RegistrationValidator.AVATAR_IMG_KEY}" accept="image/*">
-                                <label class="custom-file-label" for="customAvatarImg">seleziona file</label>
+
+                                <input type="file" class="custom-file-input"  id="customAvatarImg" name="${RegistrationValidator.AVATAR_IMG_KEY}" accept="image/jpeg, image/png, image/gif, image/bmp">
+                                <label class="custom-file-label input-box" for="customAvatarImg">seleziona file</label>
+                                <%-- serve per ripristinare il segnaposto --%>
+                                <label class="custom-file-label-origin d-none">seleziona file</label>
                         </div>
 
-                        <div class="form-control d-none" id="inputAvatar"></div>
-                        <span id="spanAvatar"></span>
-                        <div class="form-control d-none" id="inputAvatarImg"></div>
-                        <span id="spanAvatarImg"></span>
+                        <%--parte di suggerimenti --%>
+                        <div class="form-group">
+                                <label>accetta solo file *.jpg, *.png, *.gif, *.bmp</label>
+                        </div>
+
+                        <div class="error-messages error-custom-avatar-img">
+
+                                <p class="null">
+                                        <i class="fas fa-exclamation-triangle"></i>  <fmt:message key="validateUser.errors.AVATAR_IMG_MISSING"/>
+                                </p>
+                                <p class="max-length">
+                                        <i class="fas fa-exclamation-triangle"></i> <fmt:message key="validateUser.errors.AVATAR_IMG_TOO_BIG"/>
+                                </p>
+                                <p class="min-length">
+                                        <i class="fas fa-exclamation-triangle"></i> <fmt:message key="validateUser.errors.AVATAR_IMG_ZERO_DIM"/>
+                                </p>
+                                <p class="invalid">
+                                        <i class="fas fa-exclamation-triangle"></i>  <fmt:message key="validateUser.errors.AVATAR_IMG_NOT_IMG"/>
+                                </p>
+
+                        </div>
+
 
                 </div>
 
 
-
+                <%-- accetare privacy non è obbligatoria alla registrazione--%>
                 <div class="form-group row-fluid">
 
                         <div id="divPrivacy">
                                 <div class="input-group custom-control custom-checkbox">
-                                        <input id="inputInfPrivacy" class="custom-control-input" required="required" type="checkbox" name="${RegistrationValidator.INF_PRIVACY_KEY}">
+                                        <input id="inputInfPrivacy" class="custom-control-input"  type="checkbox" name="${RegistrationValidator.INF_PRIVACY_KEY}" >
                                         <label class="form-check-label custom-control-label ml-1" for="inputInfPrivacy">
                                                 <a href="javascript:;" data-toggle="modal" data-target="#boxShowPrivacy" >
                                                         <fmt:message key="register.label.privacyStatementCheckbox"/>
                                                 </a>
                                         </label>
-                                        <span id="spanInfPrivacy">
 
-                                        </span>
                                 </div>
+
                         </div>
 
                 </div>
@@ -214,8 +301,9 @@
                         <fmt:message key="register.label.submit"/>
                 </button>
 
+
         </form>
-                
+
 </div>
 <div class="util-link">
         <a class="btn btn-info" href="<c:url value="/"/>"><i class="fas fa-home"></i> HOME</a>
