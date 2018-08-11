@@ -21,7 +21,6 @@ public class NotificationsServlet extends HttpServlet {
     private final static String JSP_PAGE = "/WEB-INF/jsp/notifiche.jsp";
 
 
-
     private NotificationDAO notificationDAO = null;
 
     @Override

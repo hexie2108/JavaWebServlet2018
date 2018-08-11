@@ -52,7 +52,7 @@ public class ValidateUserServlet extends HttpServlet {
 
         // Usa il validator per verificare la conformità(in caso di strict controllo anche campi non inviati altrimenti no
         HashMap<String, Object> kv = new HashMap<>();
-        if(request.getParameter("strict") != null) {
+        if (request.getParameter("strict") != null) {
             kv.put(RegistrationValidator.FIRST_NAME_KEY, firstName);
             kv.put(RegistrationValidator.LAST_NAME_KEY, lastName);
             kv.put(RegistrationValidator.EMAIL_KEY, email);

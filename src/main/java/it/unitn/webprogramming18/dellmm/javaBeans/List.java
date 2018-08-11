@@ -73,7 +73,7 @@ public class List {
     public void setImg(String img) {
         this.img = img;
     }
-    
+
     /**
      * @return the ownerId
      */
@@ -87,7 +87,7 @@ public class List {
     public void setOwnerId(int ownerId) {
         this.ownerId = ownerId;
     }
-    
+
     /**
      * @return the categoryList
      */

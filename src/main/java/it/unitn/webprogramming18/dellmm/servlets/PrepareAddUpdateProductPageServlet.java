@@ -11,6 +11,7 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.CategoryProduct;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
+
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -19,13 +20,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- *
  * @author luca_morgese
  */
 public class PrepareAddUpdateProductPageServlet extends HttpServlet {
 
     private CategoryProductDAO categoryProductDAO;
-    
+
     @Override
     public void init() throws ServletException {
         DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
@@ -43,10 +43,10 @@ public class PrepareAddUpdateProductPageServlet extends HttpServlet {
     /**
      * Handles the HTTP <code>GET</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -55,25 +55,25 @@ public class PrepareAddUpdateProductPageServlet extends HttpServlet {
         if (session == null || user == null) {
             //request.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(request, response);
         } else {
-            
+
             //Check on permission to modify list if a modify action has been selected
             //Assumed existing request parameters set by front end servlet-invoking jsp are being used
             //Could be done using only listId, without flags, but they could come in handy in certain contexts.
             Boolean modify = Boolean.valueOf(request.getParameter("modifyProductFlag"));
             Boolean create = Boolean.valueOf(request.getParameter("createProductFlag"));
-            
+
             Integer listId = Integer.valueOf(request.getParameter("listId"));
-            
+
             if (!user.isIsAdmin()) {
                 //it means a std user is accessing AddUpdateProductPage
                 //So a std user cannot modify a product, and can access products only via "add product to list" action
                 if (listId == null || modify == true) {
                     //Only admins can modify products
-                    request.getRequestDispatcher("/WEB-INF/jsp/nonAuthorizedActionErrorPage").forward(request, response);  
+                    request.getRequestDispatcher("/WEB-INF/jsp/nonAuthorizedActionErrorPage").forward(request, response);
                 }
             }
             //End check
-            
+
             //Gets the list of all CategoryList
             java.util.List<CategoryProduct> productCategories;
             try {
@@ -82,7 +82,7 @@ public class PrepareAddUpdateProductPageServlet extends HttpServlet {
                 ex.printStackTrace();
                 throw new ServletException("Impossible to get the product categories");
             }
-            
+
             request.setAttribute("productCategories", productCategories);
             request.getRequestDispatcher("/WEB-INF/jsp/addUpdateProduct.jsp").forward(request, response);
         }
@@ -91,10 +91,10 @@ public class PrepareAddUpdateProductPageServlet extends HttpServlet {
     /**
      * Handles the HTTP <code>POST</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -103,6 +103,7 @@ public class PrepareAddUpdateProductPageServlet extends HttpServlet {
 
     /**
      * Returns a short description of the servlet.
+     *
      * @return a String containing servlet description
      */
     @Override

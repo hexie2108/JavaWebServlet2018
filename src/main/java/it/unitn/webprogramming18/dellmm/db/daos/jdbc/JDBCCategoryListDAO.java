@@ -30,7 +30,7 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
         return categoryList;
     }
 
-    
+
     public Integer insert(CategoryList categoryList) throws DAOException {
         if (categoryList == null) {
             throw new DAOException("categoryList bean is null");
@@ -42,21 +42,21 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
             stm.setString(3, categoryList.getImg1());
             stm.setString(4, categoryList.getImg2());
             stm.setString(5, categoryList.getImg3());
-            
+
 
             stm.executeUpdate();
-            
+
             ResultSet rs = stm.getGeneratedKeys();
             if (rs.next()) {
                 categoryList.setId(rs.getInt(1));
             }
-            
+
             return categoryList.getId();
         } catch (SQLException ex) {
             throw new DAOException("Impossible to insert the new categoryList", ex);
         }
     }
-    
+
     @Override
     public Long getCount() throws DAOException {
         try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM CategoryList")) {
@@ -130,7 +130,7 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
             stm.setString(4, categoryList.getImg2());
             stm.setString(5, categoryList.getImg3());
             stm.setInt(6, categoryList.getId());
-            
+
             if (stm.executeUpdate() != 1) {
                 throw new DAOException("Impossible to update the categoryList");
             }
@@ -153,9 +153,9 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
         )) {
             if (id == null) {
                 stm.setNull(1, Types.INTEGER);
-                stm.setNull(2,Types.INTEGER);
+                stm.setNull(2, Types.INTEGER);
             } else {
-                stm.setString(1,id.toString());
+                stm.setString(1, id.toString());
                 stm.setString(2, id.toString());
             }
 

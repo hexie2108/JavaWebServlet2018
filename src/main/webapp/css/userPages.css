@@ -6,7 +6,7 @@
     display: none;
 }
 
-.img-radio:checked ~ .img-check{
+.img-radio:checked ~ .img-check {
     visibility: visible;
 }
 

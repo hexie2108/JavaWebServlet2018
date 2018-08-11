@@ -17,11 +17,11 @@ public interface ProductDAO extends DAO<Product, Integer> {
      */
     @Override
     public Long getCount() throws DAOException;
-    
+
     /**
      * Persists the new product passed as parameter
      * to the storage system.
-     * 
+     *
      * @param product the new product to insert as entry
      * @return the id of the new persisted record.
      * @throws DAOException if an error occurred during the persist action.

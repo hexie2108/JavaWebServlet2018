@@ -2,10 +2,12 @@
 
 function updateVerifyMessages(form, data) {
     // Prendi tutti gli <input> che ci sono nella pagina e per ognuno prendine il nome
-    const inputs = form.find('input,textarea,select').map(function(){return this.name;}).get();
+    const inputs = form.find('input,textarea,select').map(function () {
+        return this.name;
+    }).get();
     // Per ogni input scrivi l'eventuale errore nello span dedicato e restituisci false se ha errori, true altrimenti
     const validityInputs = inputs.map(
-        function(key) {
+        function (key) {
             const input = form.find("#input" + key);
             const span = form.find("#span" + key);
 
@@ -26,7 +28,7 @@ function updateVerifyMessages(form, data) {
 
     // Se degli input sono false(hanno errori) allora restituisci false, altrimenti true
     // Se false l'invio del form verrà bloccato altrimenti no
-    return validityInputs.every( v => v );
+    return validityInputs.every(v => v);
 }
 
 function formSubmit(url, form, options) {
@@ -75,13 +77,13 @@ function formSubmit(url, form, options) {
 
         if (redirectUrl) {
             window.location.href = redirectUrl;
-        } else if(successMessage) {
+        } else if (successMessage) {
             resDiv.addClass("alert-success");
             resDiv.html(successMessage);
             resDiv.removeClass("d-none");
         }
 
-        if(successCallback !== undefined) {
+        if (successCallback !== undefined) {
             successCallback();
         }
     }).fail(function (jqXHR) {

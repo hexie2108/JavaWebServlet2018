@@ -56,7 +56,7 @@ public class ForgotPasswordServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if(request.getRequestURI().endsWith(".json")) {
+        if (request.getRequestURI().endsWith(".json")) {
             ServletUtility.sendError(request, response, 400, "generic.errors.postOnly");
         } else {
             request.getRequestDispatcher(FORGOT_PASSWORD_JSP).forward(request, response);
@@ -68,7 +68,7 @@ public class ForgotPasswordServlet extends HttpServlet {
         String email = request.getParameter(EMAIL_KEY);
 
         if (email == null || email.isEmpty()) {
-            ServletUtility.sendError(request, response, 400,"validateUser.errors.EMAIL_MISSING");
+            ServletUtility.sendError(request, response, 400, "validateUser.errors.EMAIL_MISSING");
             return;
         }
         User user;
@@ -114,8 +114,8 @@ public class ForgotPasswordServlet extends HttpServlet {
             return;
         }
 
-        if (request.getRequestURI().endsWith(".json")){
-            ServletUtility.sendJSON(request,response, 200, new HashMap<>());
+        if (request.getRequestURI().endsWith(".json")) {
+            ServletUtility.sendJSON(request, response, 200, new HashMap<>());
         } else {
             String contextPath = getServletContext().getContextPath();
             if (!contextPath.endsWith("/")) {

@@ -179,18 +179,18 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
 
         return user;
     }
-    
+
     public boolean changePassword(String resetLink, String newPassword) throws DAOException {
 
         if (!resetLink.matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")) {
             throw new IllegalArgumentException("Argument must be string rappresentation of uuid");
         }
 
-        try(PreparedStatement stm = CON.prepareStatement(
+        try (PreparedStatement stm = CON.prepareStatement(
                 "UPDATE User SET resendPwdEmailLink=NULL, password=?" +
                         " WHERE resendPwdEmailLink= ?"
-        )){
-            stm.setString(1, newPassword );
+        )) {
+            stm.setString(1, newPassword);
             stm.setString(2, resetLink);
 
             if (stm.executeUpdate() != 1) {
@@ -225,27 +225,26 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
     }
 
     public User generateUser(String first_name, String last_name, String email, String password, String imageName) throws DAOException {
-        if(first_name == null || last_name == null || email == null || password == null) {
+        if (first_name == null || last_name == null || email == null || password == null) {
             throw new DAOException(
-                "parameter not valid",
-                new IllegalArgumentException(
-                    "The passed email, password, last name or first name is null"
-                )
+                    "parameter not valid",
+                    new IllegalArgumentException(
+                            "The passed email, password, last name or first name is null"
+                    )
             );
         }
 
-        int userId=0;
+        int userId = 0;
         String verifyLink = UUID.randomUUID().toString();
 
-        boolean successo=false;
-        for(int tentativi=0; (tentativi<5)&&(!successo); tentativi++) {
+        boolean successo = false;
+        for (int tentativi = 0; (tentativi < 5) && (!successo); tentativi++) {
             successo = true;
-            try{
-                try
-                {
+            try {
+                try {
                     PreparedStatement std = CON.prepareStatement(
                             "INSERT INTO User (name, surname, email, password, img, isAdmin, verifyEmailLink, resendPwdEmailLink)" +
-                            "VALUES (?,?,?,?,?,FALSE,?,NULL)",
+                                    "VALUES (?,?,?,?,?,FALSE,?,NULL)",
                             Statement.RETURN_GENERATED_KEYS
                     );
                     std.setString(1, first_name);
@@ -253,14 +252,14 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
                     std.setString(3, email);
                     std.setString(4, password);
                     std.setString(5, imageName);
-                    std.setString(6,verifyLink);
+                    std.setString(6, verifyLink);
 
                     if (std.executeUpdate() != 1) {
                         throw new DAOException("Impossible to insert the user");
                     }
 
-                    try(ResultSet rs = std.getGeneratedKeys()){
-                        if(rs.next()) {
+                    try (ResultSet rs = std.getGeneratedKeys()) {
+                        if (rs.next()) {
                             userId = rs.getInt(1);
                         }
                     }
@@ -279,11 +278,11 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
 
         // Avendo fallito per 5 volte a generare uuid unici mandiamo un errore
         // in quanto in condizioni normali è estremamente improbabile
-        if(!successo) {
+        if (!successo) {
             throw new DAOException("Impossible to create the user");
         }
 
-        User user=new User();
+        User user = new User();
         user.setId(userId);
         user.setName(first_name);
         user.setSurname(last_name);
@@ -307,10 +306,10 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
                         "(? IS NULL OR surname LIKE CONCAT('%',TRIM(BOTH \"'\" FROM QUOTE(?)),'%')) AND " +
                         "(? IS NULL OR isAdmin = ?)")) {
             if (id == null) {
-                stm.setNull(1,Types.INTEGER);
-                stm.setNull(2,Types.INTEGER);
+                stm.setNull(1, Types.INTEGER);
+                stm.setNull(2, Types.INTEGER);
             } else {
-                stm.setString(1,id.toString());
+                stm.setString(1, id.toString());
                 stm.setString(2, id.toString());
             }
 
@@ -323,7 +322,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
             stm.setString(7, surname);
             stm.setString(8, surname);
 
-            if(isAdmin == null) {
+            if (isAdmin == null) {
                 stm.setNull(9, Types.BOOLEAN);
                 stm.setNull(10, Types.BOOLEAN);
             } else {

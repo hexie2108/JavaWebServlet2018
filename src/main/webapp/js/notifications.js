@@ -1,18 +1,18 @@
-if(typeof jQuery === "undefined") {
+if (typeof jQuery === "undefined") {
     console.error("Jquery needed");
 }
 
-function markNotification(url,id, btn, empty, read, del, count, unknownErrorMessage){
+function markNotification(url, id, btn, empty, read, del, count, unknownErrorMessage) {
 
     btn.attr("disabled", true);
 
     $.ajax({
         dataType: "json",
-        url : url,
+        url: url,
         type: "get",
         async: true,
         data: {'id': id}
-    }).done(function(data) {
+    }).done(function (data) {
         const li = btn.closest('li');
         const ul = li.closest('ul');
 
@@ -22,14 +22,14 @@ function markNotification(url,id, btn, empty, read, del, count, unknownErrorMess
         if (del) {
             li.remove();
 
-            if(count !== null && count !== undefined) {
-                count.html(" " + Number(count.html())-1);
+            if (count !== null && count !== undefined) {
+                count.html(" " + Number(count.html()) - 1);
 
             }
         }
 
         updateEmptyNotificationList(empty, ul)
-    }).fail(function(jqXHR){
+    }).fail(function (jqXHR) {
         btn.removeClass("btn-primary");
         btn.addClass("btn-danger");
 
@@ -45,7 +45,7 @@ function markNotification(url,id, btn, empty, read, del, count, unknownErrorMess
             btn.html(unknownErrorMessage);
         }
 
-        setTimeout(function(){
+        setTimeout(function () {
             btn.html(prevText);
 
             btn.removeClass("btn-danger");
@@ -57,9 +57,9 @@ function markNotification(url,id, btn, empty, read, del, count, unknownErrorMess
 
 }
 
-function createDivNotification(notification, read, notRead, mark, urlMark, empty, del, count, unknownError){
+function createDivNotification(notification, read, notRead, mark, urlMark, empty, del, count, unknownError) {
     const lettoSm = jQuery('<small/>', {
-        text: notification.status? read: notRead
+        text: notification.status ? read : notRead
     });
 
     const dateSm = jQuery('<small/>', {
@@ -69,7 +69,7 @@ function createDivNotification(notification, read, notRead, mark, urlMark, empty
     });
 
     const header = jQuery('<div/>', {
-        class: ["d-flex","w-100","justify-content-between"].join(' '),
+        class: ["d-flex", "w-100", "justify-content-between"].join(' '),
         html: [lettoSm, dateSm]
     });
 
@@ -82,7 +82,9 @@ function createDivNotification(notification, read, notRead, mark, urlMark, empty
         html: jQuery('<button/>', {
             class: ['btn', 'btn-primary'].join(' '),
             text: mark,
-            click: function(){markNotification(urlMark, notification.id, $(this), empty, read, del, count, unknownError);},
+            click: function () {
+                markNotification(urlMark, notification.id, $(this), empty, read, del, count, unknownError);
+            },
             disabled: notification.status
         })
     });
@@ -94,9 +96,9 @@ function createDivNotification(notification, read, notRead, mark, urlMark, empty
     });
 }
 
-function updateEmptyNotificationList(empty, list){
+function updateEmptyNotificationList(empty, list) {
     if (empty !== null && empty !== undefined) {
-        if(list.children().length > 0) {
+        if (list.children().length > 0) {
             list.show();
             empty.hide();
         } else {
@@ -106,7 +108,7 @@ function updateEmptyNotificationList(empty, list){
     }
 }
 
-function updateNotificationList(list, url, async, status, count, empty, read, notRead, mark, urlMark, del, unknownErrorMessage){
+function updateNotificationList(list, url, async, status, count, empty, read, notRead, mark, urlMark, del, unknownErrorMessage) {
     if (status === true || status === false) {
         status = "" + status;
     } else if (status === undefined || status === null) {
@@ -118,20 +120,20 @@ function updateNotificationList(list, url, async, status, count, empty, read, no
 
     const request = $.ajax({
         dataType: "json",
-        url : url,
+        url: url,
         type: "get",
         async: async,
-        data: "status="+status
-    }).done(function(data){
+        data: "status=" + status
+    }).done(function (data) {
         list.empty();
         list.append(data.map(v => createDivNotification(v, read, notRead, mark, urlMark, empty, del, count, unknownErrorMessage)));
 
         updateEmptyNotificationList(empty, list);
 
-        if(count !== null && count !== undefined) {
-            count.html(" "+ data.length);
+        if (count !== null && count !== undefined) {
+            count.html(" " + data.length);
         }
-    }).fail(function(){
+    }).fail(function () {
         // Fail silently
     });
 }

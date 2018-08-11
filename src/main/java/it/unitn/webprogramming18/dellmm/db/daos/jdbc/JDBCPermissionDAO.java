@@ -48,13 +48,13 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
 
         return 0L;
     }
-    
+
     public Integer insert(Permission permission) throws DAOException {
         if (permission == null) {
             throw new DAOException("permission bean is null");
         }
-        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO Permission (addObject, deleteObject, modifyList, deleteList, listId, userId) VALUES (?,?,?,?,?,?)", 
-                                                                Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO Permission (addObject, deleteObject, modifyList, deleteList, listId, userId) VALUES (?,?,?,?,?,?)",
+                Statement.RETURN_GENERATED_KEYS)) {
 
             stm.setBoolean(1, permission.isAddObject());
             stm.setBoolean(2, permission.isDeleteList());
@@ -62,15 +62,15 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
             stm.setBoolean(4, permission.isDeleteList());
             stm.setInt(5, permission.getListId());
             stm.setInt(6, permission.getUserId());
-            
+
 
             stm.executeUpdate();
-            
+
             ResultSet rs = stm.getGeneratedKeys();
             if (rs.next()) {
                 permission.setId(rs.getInt(1));
             }
-            
+
             return permission.getId();
         } catch (SQLException ex) {
             throw new DAOException("Impossible to insert the new permission", ex);
@@ -151,8 +151,8 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
 
     @Override
     public List<Permission> getPermissionsOnListByListId(Integer listId) throws DAOException {
-        List<Permission> permissionList = new ArrayList<>();        
-        
+        List<Permission> permissionList = new ArrayList<>();
+
         try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Permission WHERE Permission.listId = ?")) {
             stm.setInt(1, listId);
             try (ResultSet rs = stm.executeQuery()) {
@@ -166,7 +166,7 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
 
         return permissionList;
     }
-    
+
     public Permission getUserPermissionOnListByIds(Integer userId, Integer listId) throws DAOException {
         Permission permission = null;
         if (userId == null || listId == null) {
@@ -175,7 +175,7 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
         try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Permission WHERE userId = ? AND listId = ?")) {
             stm.setInt(1, userId);
             stm.setInt(2, listId);
-            
+
             try (ResultSet rs = stm.executeQuery()) {
                 if (rs.next()) {
                     permission = getPermissionFromResultSet(rs);

@@ -36,7 +36,7 @@ public class UnloggedUserOnlyFilter implements Filter {
             }
 
             response.sendRedirect(
-                    contextPath + PagePathsConstants.ALREADY_LOGGED_IN+ "?" +
+                    contextPath + PagePathsConstants.ALREADY_LOGGED_IN + "?" +
                             "prevUrl" + "=" + URLEncoder.encode(prevUrl, "UTF-8") +
                             "&" + "nextUrl" + "=" + URLEncoder.encode(request.getRequestURI(), "UTF-8")
             );
@@ -44,7 +44,7 @@ public class UnloggedUserOnlyFilter implements Filter {
     }
 
 
-   public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws ServletException, IOException {
+    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws ServletException, IOException {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) resp;
 

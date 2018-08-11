@@ -47,7 +47,7 @@ public class JDBCListDAO extends JDBCDAO<List, Integer> implements ListDAO {
 
         return 0L;
     }
-    
+
     public Integer insert(List list) throws DAOException {
         if (list == null) {
             throw new DAOException("list bean is null");
@@ -61,12 +61,12 @@ public class JDBCListDAO extends JDBCDAO<List, Integer> implements ListDAO {
             stm.setInt(5, list.getCategoryList());
 
             stm.executeUpdate();
-            
+
             ResultSet rs = stm.getGeneratedKeys();
             if (rs.next()) {
                 list.setId(rs.getInt(1));
             }
-            
+
             return list.getId();
         } catch (SQLException ex) {
             throw new DAOException("Impossible to insert the new list", ex);
@@ -126,7 +126,7 @@ public class JDBCListDAO extends JDBCDAO<List, Integer> implements ListDAO {
                         "WHERE id = ?"
         )) {
 
-            stm.setString(1, list.getName());            
+            stm.setString(1, list.getName());
             stm.setString(2, list.getDescription());
             stm.setString(3, list.getImg());
             stm.setInt(4, list.getCategoryList());
@@ -186,12 +186,12 @@ public class JDBCListDAO extends JDBCDAO<List, Integer> implements ListDAO {
     @Override
     public Integer getNumberOfProductsInListByListId(Integer listId) throws DAOException {
         Integer res = null;
-        if(listId == null) {
+        if (listId == null) {
             throw new DAOException("listId is null");
         }
         try (PreparedStatement stm = CON.prepareStatement("SELECT COUNT(*) FROM List JOIN ProductInList"
-                                                        + "ON List.id = ProductInList.listId"
-                                                        + "WHERE List.id = ?")) {
+                + "ON List.id = ProductInList.listId"
+                + "WHERE List.id = ?")) {
             stm.setInt(1, listId);
             ResultSet counter = stm.executeQuery();
             if (counter.next()) {

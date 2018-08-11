@@ -56,7 +56,7 @@ public interface UserDAO extends DAO<User, Integer> {
     /**
      * Return the user with the email specified
      *
-     * @param email    the email of the user to return
+     * @param email the email of the user to return
      * @return The user requested
      * @throws DAOException
      */
@@ -73,7 +73,6 @@ public interface UserDAO extends DAO<User, Integer> {
     public User getByEmailAndPassword(String email, String password) throws DAOException;
 
     /**
-     *
      * @param resetLink   the resetLink used(that is linked with the user)
      * @param newPassword the new password to set
      * @return true if resetLink was found, false otherwise
@@ -98,20 +97,22 @@ public interface UserDAO extends DAO<User, Integer> {
 
     /**
      * Insert a user in the database and return a User with all the fields(specified and automatically generated)
+     *
      * @param first_name user's first name
-     * @param last_name user's surname
-     * @param email the email address of the user
-     * @param password password of the user
-     * @param imageName name of the (file) image
+     * @param last_name  user's surname
+     * @param email      the email address of the user
+     * @param password   password of the user
+     * @param imageName  name of the (file) image
      * @return generated user
      */
-    public User generateUser( String first_name, String last_name, String email, String password, String imageName) throws DAOException;
+    public User generateUser(String first_name, String last_name, String email, String password, String imageName) throws DAOException;
 
     /**
      * Filter the users
-     * @param id integer which as string is substring of user id
-     * @param email string which is substring of user email
-     * @param name string which is substring of user name
+     *
+     * @param id      integer which as string is substring of user id
+     * @param email   string which is substring of user email
+     * @param name    string which is substring of user name
      * @param surname string which is substring of user surname
      * @param isAdmin true for admin, false for regular users, null for both
      * @return List of users that respect the conditions
@@ -121,6 +122,7 @@ public interface UserDAO extends DAO<User, Integer> {
 
     /**
      * Delete user
+     *
      * @param id user id
      * @throws DAOException
      */

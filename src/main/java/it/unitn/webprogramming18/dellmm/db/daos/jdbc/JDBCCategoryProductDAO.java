@@ -45,8 +45,8 @@ public class JDBCCategoryProductDAO extends JDBCDAO<CategoryProduct, Integer> im
 
         return 0L;
     }
-    
-   public Integer insert(CategoryProduct categoryProduct) throws DAOException {
+
+    public Integer insert(CategoryProduct categoryProduct) throws DAOException {
         if (categoryProduct == null) {
             throw new DAOException("categoryProduct bean is null");
         }
@@ -57,17 +57,17 @@ public class JDBCCategoryProductDAO extends JDBCDAO<CategoryProduct, Integer> im
             stm.setString(3, categoryProduct.getImg());
 
             stm.executeUpdate();
-            
+
             ResultSet rs = stm.getGeneratedKeys();
             if (rs.next()) {
                 categoryProduct.setId(rs.getInt(1));
             }
-            
+
             return categoryProduct.getId();
         } catch (SQLException ex) {
             throw new DAOException("Impossible to insert the new categoryProduct", ex);
         }
-   }
+    }
 
     @Override
     public CategoryProduct getByPrimaryKey(Integer primaryKey) throws DAOException {

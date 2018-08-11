@@ -47,13 +47,13 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
 
         return 0L;
     }
-    
+
     public Integer insert(Product product) throws DAOException {
         if (product == null) {
             throw new DAOException("product bean is null");
         }
-        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO Product (name, description, img, logo, categoryProductId, privateListId) VALUES (?,?,?,?,?,?)", 
-                                                                Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO Product (name, description, img, logo, categoryProductId, privateListId) VALUES (?,?,?,?,?,?)",
+                Statement.RETURN_GENERATED_KEYS)) {
 
             stm.setString(1, product.getName());
             stm.setString(2, product.getDescription());
@@ -61,14 +61,14 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
             stm.setString(4, product.getLogo());
             stm.setInt(5, product.getCategoryProductId());
             stm.setInt(6, product.getPrivateListId());
-            
+
             stm.executeUpdate();
-            
+
             ResultSet rs = stm.getGeneratedKeys();
             if (rs.next()) {
                 product.setId(rs.getInt(1));
             }
-            
+
             return product.getId();
         } catch (SQLException ex) {
             throw new DAOException("Impossible to insert the new product", ex);

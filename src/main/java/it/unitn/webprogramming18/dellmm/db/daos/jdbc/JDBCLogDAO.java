@@ -54,8 +54,8 @@ public class JDBCLogDAO extends JDBCDAO<Log, Integer> implements LogDAO {
         if (log == null) {
             throw new DAOException("log bean is null");
         }
-        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO Log (productId, userId, last1, last2, last3, last4) VALUES (?,?,?,?,?,?)", 
-                                                                Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO Log (productId, userId, last1, last2, last3, last4) VALUES (?,?,?,?,?,?)",
+                Statement.RETURN_GENERATED_KEYS)) {
 
             stm.setInt(1, log.getProductId());
             stm.setInt(2, log.getUserId());
@@ -65,18 +65,18 @@ public class JDBCLogDAO extends JDBCDAO<Log, Integer> implements LogDAO {
             stm.setTimestamp(6, log.getLast4());
 
             stm.executeUpdate();
-            
+
             ResultSet rs = stm.getGeneratedKeys();
             if (rs.next()) {
                 log.setId(rs.getInt(1));
             }
-            
+
             return log.getId();
         } catch (SQLException ex) {
             throw new DAOException("Impossible to insert the new log", ex);
         }
     }
-    
+
     @Override
     public Log getByPrimaryKey(Integer primaryKey) throws DAOException {
         Log log = null;
@@ -167,7 +167,7 @@ public class JDBCLogDAO extends JDBCDAO<Log, Integer> implements LogDAO {
 
         return log;
     }
-    
+
     public Log updateUserProductLogTableByIds(Integer userId, Integer productId) throws DAOException {
         Log log;
         if (userId == null || productId == null) {
@@ -178,21 +178,21 @@ public class JDBCLogDAO extends JDBCDAO<Log, Integer> implements LogDAO {
             stm.setInt(1, userId);
             stm.setInt(2, productId);
             try (ResultSet rs = stm.executeQuery()) {
-                
+
                 //Entry exists
                 if (rs.next()) {
                     log = getLogFromResultSet(rs);
-                    
+
                     //last1 surely not null
                     if (log.getLast2() == null) {
                         log.setLast2(timestamp);
                         log = update(log);
                         return log;
-                    } else if(log.getLast3() == null) {
+                    } else if (log.getLast3() == null) {
                         log.setLast3(timestamp);
                         log = update(log);
                         return log;
-                    } else if(log.getLast4() == null) {
+                    } else if (log.getLast4() == null) {
                         log.setLast4(timestamp);
                         log = update(log);
                         return log;
@@ -205,8 +205,8 @@ public class JDBCLogDAO extends JDBCDAO<Log, Integer> implements LogDAO {
                         log = update(log);
                         return log;
                     }
-                    
-                //Entry does not exist
+
+                    //Entry does not exist
                 } else {
                     log = new Log();
                     Timestamp nullts = null;

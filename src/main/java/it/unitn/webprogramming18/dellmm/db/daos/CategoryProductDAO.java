@@ -21,7 +21,7 @@ public interface CategoryProductDAO extends DAO<CategoryProduct, Integer> {
     /**
      * Persists the new categoryProduct passed as parameter
      * to the storage system.
-     * 
+     *
      * @param categoryProduct the new categoryProduct to insert as entry
      * @return the id of the new persisted record.
      * @throws DAOException if an error occurred during the persist action.

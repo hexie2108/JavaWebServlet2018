@@ -52,13 +52,13 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
 
         return 0L;
     }
-    
+
     public Integer insert(Notification notification) throws DAOException {
         if (notification == null) {
             throw new DAOException("notification bean is null");
         }
-        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO Notification (date, text, status, userId) VALUES (?,?,?,?)", 
-                                                                Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO Notification (date, text, status, userId) VALUES (?,?,?,?)",
+                Statement.RETURN_GENERATED_KEYS)) {
 
             stm.setTimestamp(1, notification.getDate());
             stm.setString(2, notification.getText());
@@ -66,12 +66,12 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
             stm.setInt(4, notification.getUserId());
 
             stm.executeUpdate();
-            
+
             ResultSet rs = stm.getGeneratedKeys();
             if (rs.next()) {
                 notification.setId(rs.getInt(1));
             }
-            
+
             return notification.getId();
         } catch (SQLException ex) {
             throw new DAOException("Impossible to insert the new notification", ex);
@@ -152,11 +152,11 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
         }
         try (PreparedStatement stm = CON.prepareStatement(
                 "SELECT Notification.* FROM " +
-                    "Notification JOIN User ON  User.id = Notification.userId " +
-                    "WHERE  User.id = ? AND  (? IS NULL OR Notification.status = ?) " +
-                    "ORDER BY Notification.date DESC")) {
+                        "Notification JOIN User ON  User.id = Notification.userId " +
+                        "WHERE  User.id = ? AND  (? IS NULL OR Notification.status = ?) " +
+                        "ORDER BY Notification.date DESC")) {
             stm.setInt(1, userId);
-            if(read == null) {
+            if (read == null) {
                 stm.setNull(2, Types.BOOLEAN);
                 stm.setBoolean(3, false); // Dummy data
             } else {

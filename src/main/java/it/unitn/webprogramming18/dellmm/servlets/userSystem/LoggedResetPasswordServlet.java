@@ -41,7 +41,7 @@ public class LoggedResetPasswordServlet extends HttpServlet {
 
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if(request.getRequestURI().endsWith(".json")) {
+        if (request.getRequestURI().endsWith(".json")) {
             ServletUtility.sendError(request, response, 400, "generic.errors.postOnly");
         } else {
             request.getRequestDispatcher(LOGGED_RESET_PASSWORD).forward(request, response);
@@ -58,13 +58,13 @@ public class LoggedResetPasswordServlet extends HttpServlet {
 
         Map<String, String> messages =
                 RegistrationValidator.partialValidate(null, kv)
-                    .entrySet()
-                    .stream()
-                    .collect(Collectors.toMap(
-                        (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> e.getKey(),
-                        (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> RegistrationValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString()
-                    )
-                );
+                        .entrySet()
+                        .stream()
+                        .collect(Collectors.toMap(
+                                (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> e.getKey(),
+                                (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> RegistrationValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString()
+                                )
+                        );
 
         if (!messages.isEmpty()) {
             ServletUtility.sendValidationError(request, response, 400, messages);
@@ -83,7 +83,7 @@ public class LoggedResetPasswordServlet extends HttpServlet {
             return;
         }
 
-        if(request.getRequestURI().endsWith(".json")) {
+        if (request.getRequestURI().endsWith(".json")) {
             ServletUtility.sendJSON(request, response, 200, new HashMap<>());
         } else {
             String contextPath = getServletContext().getContextPath();

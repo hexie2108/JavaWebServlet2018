@@ -52,7 +52,7 @@ public class ModifyUserServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if(request.getRequestURI().endsWith(".json")) {
+        if (request.getRequestURI().endsWith(".json")) {
             ServletUtility.sendError(request, response, 400, "generic.errors.postOnly");
         } else {
             HttpSession session = request.getSession();
@@ -96,7 +96,7 @@ public class ModifyUserServlet extends HttpServlet {
         Part avatarImg = request.getPart(RegistrationValidator.AVATAR_IMG_KEY);
 
         HttpSession session = request.getSession(false);
-        User user = (User)session.getAttribute("user");
+        User user = (User) session.getAttribute("user");
 
         HashMap<String, Object> kv = new HashMap<>();
 
@@ -156,7 +156,7 @@ public class ModifyUserServlet extends HttpServlet {
         if (!avatar.isEmpty()) {
             String avatarName = avatar;
 
-            if(avatar.equals(RegistrationValidator.CUSTOM_AVATAR)) {
+            if (avatar.equals(RegistrationValidator.CUSTOM_AVATAR)) {
                 avatarName = UUID.randomUUID().toString();
 
                 try (InputStream fileContent = avatarImg.getInputStream()) {
@@ -177,7 +177,7 @@ public class ModifyUserServlet extends HttpServlet {
 
             user.setImg(avatarName);
 
-            if (RegistrationValidator.DEFAULT_AVATARS.stream().noneMatch(oldImg::equals) ) {
+            if (RegistrationValidator.DEFAULT_AVATARS.stream().noneMatch(oldImg::equals)) {
                 Path toDelete = Paths.get(path.toString(), oldImg);
                 try {
                     Files.delete(toDelete);

@@ -41,7 +41,7 @@ public class JSONMarkNotificationServlet extends HttpServlet {
         try {
             Notification notification = notificationDAO.getByPrimaryKey(Integer.parseInt(id));
 
-            if(notification == null) {
+            if (notification == null) {
                 ServletUtility.sendError(request, response, 400, "markNotification.errors.notFound");
                 return;
             }

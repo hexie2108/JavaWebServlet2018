@@ -60,7 +60,7 @@ public class RegisterServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if(request.getRequestURI().endsWith(".json")) {
+        if (request.getRequestURI().endsWith(".json")) {
             ServletUtility.sendError(request, response, 400, "generic.errors.postOnly");
         } else {
             request.setAttribute(RegistrationValidator.AVATAR_KEY, RegistrationValidator.DEFAULT_AVATARS.get(0));
@@ -101,18 +101,18 @@ public class RegisterServlet extends HttpServlet {
         // Usa il validator per verifiacare la conformità
         Map<String, String> messages =
                 RegistrationValidator.createValidationMessages(
-                    userDAO,
-                    firstName,
-                    lastName,
-                    email,
-                    firstPassword,
-                    secondPassword,
-                    infPrivacy,
-                    avatar,
-                    avatarImg
+                        userDAO,
+                        firstName,
+                        lastName,
+                        email,
+                        firstPassword,
+                        secondPassword,
+                        infPrivacy,
+                        avatar,
+                        avatarImg
                 ).entrySet().stream().collect(Collectors.toMap(
-                    (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> e.getKey(),
-                    (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> RegistrationValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString()
+                        (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> e.getKey(),
+                        (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> RegistrationValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString()
                 ));
 
         // In caso i campi non siano validi ricarica la pagina con gli errori indicati

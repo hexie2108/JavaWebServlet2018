@@ -11,7 +11,7 @@ import javax.mail.internet.MimeMultipart;
 public class ResetPasswordMail {
     public static Multipart createMessage(User user) throws MessagingException {
         String mail_message =
-                "Segui questo link "+user.getResetPwdEmailLink()+" per reimpostare la tua password"; //TODO: Fare messaggio decente
+                "Segui questo link " + user.getResetPwdEmailLink() + " per reimpostare la tua password"; //TODO: Fare messaggio decente
 
         StringBuilder htmlMessageBuilder = new StringBuilder();
         mail_message = mail_message.replace(" ", "&nbsp;");

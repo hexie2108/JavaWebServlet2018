@@ -46,7 +46,7 @@ public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements Comment
 
         return 0L;
     }
-    
+
     public Integer insert(Comment comment) throws DAOException {
         if (comment == null) {
             throw new DAOException("comment bean is null");
@@ -58,12 +58,12 @@ public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements Comment
             stm.setString(3, comment.getText());
 
             stm.executeUpdate();
-            
+
             ResultSet rs = stm.getGeneratedKeys();
             if (rs.next()) {
                 comment.setId(rs.getInt(1));
             }
-            
+
             return comment.getId();
         } catch (SQLException ex) {
             throw new DAOException("Impossible to insert the new comment", ex);

@@ -43,7 +43,7 @@ public class ResetPasswordServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if(request.getRequestURI().endsWith(".json")) {
+        if (request.getRequestURI().endsWith(".json")) {
             ServletUtility.sendError(request, response, 400, "generic.errors.postOnly");
         } else {
             request.getRequestDispatcher(RESET_PASSWORD_JSP).forward(request, response);
@@ -55,7 +55,7 @@ public class ResetPasswordServlet extends HttpServlet {
         String password = request.getParameter(RegistrationValidator.FIRST_PWD_KEY);
 
         if (pw_rst_id == null) {
-            ServletUtility.sendError(request,response,400,"resetPassword.errors.missingId");
+            ServletUtility.sendError(request, response, 400, "resetPassword.errors.missingId");
             return;
         }
 
@@ -66,12 +66,12 @@ public class ResetPasswordServlet extends HttpServlet {
 
         Map<String, String> messages =
                 RegistrationValidator.partialValidate(userDAO, kv)
-                    .entrySet()
-                    .stream()
-                    .collect(Collectors.toMap(
-                        (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> e.getKey(),
-                        (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> RegistrationValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString()
-                    ));
+                        .entrySet()
+                        .stream()
+                        .collect(Collectors.toMap(
+                                (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> e.getKey(),
+                                (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> RegistrationValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString()
+                        ));
 
         if (!messages.isEmpty()) {
             ServletUtility.sendValidationError(request, response, 400, messages);
@@ -79,15 +79,15 @@ public class ResetPasswordServlet extends HttpServlet {
         }
 
         try {
-            if (!userDAO.changePassword(pw_rst_id, password)){
+            if (!userDAO.changePassword(pw_rst_id, password)) {
                 ServletUtility.sendError(request, response, 400, "resetPassword.errors.notFoundId");
                 return;
             }
         } catch (IllegalArgumentException ex) {
-            ServletUtility.sendError(request, response, 400,"resetPassword.errors.invalidId");
+            ServletUtility.sendError(request, response, 400, "resetPassword.errors.invalidId");
             return;
         } catch (DAOException e) {
-            ServletUtility.sendError(request, response, 500,"resetPassword.errors.cantChange");
+            ServletUtility.sendError(request, response, 500, "resetPassword.errors.cantChange");
             return;
         }
 

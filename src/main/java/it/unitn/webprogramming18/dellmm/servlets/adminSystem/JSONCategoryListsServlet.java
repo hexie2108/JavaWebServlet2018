@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 public class JSONCategoryListsServlet extends HttpServlet {
     private CategoryListDAO categoryListDAO = null;
 
-    private String subImg(HttpServletRequest request, HttpServletResponse response, Path path, String prevImg, Part newImg ) throws IOException {
+    private String subImg(HttpServletRequest request, HttpServletResponse response, Path path, String prevImg, Part newImg) throws IOException {
         String newImgName = UUID.randomUUID().toString();
 
         try (InputStream fileContent = newImg.getInputStream()) {
@@ -60,14 +60,14 @@ public class JSONCategoryListsServlet extends HttpServlet {
     private void modifyCategoryList(
             HttpServletRequest request,
             HttpServletResponse response
-        ) throws ServletException, IOException {
-        Path path = ServletUtility.getFolder(getServletContext(),"categoryListImgsFolder");
+    ) throws ServletException, IOException {
+        Path path = ServletUtility.getFolder(getServletContext(), "categoryListImgsFolder");
 
         Integer id;
 
-        try{
+        try {
             String sId = request.getParameter("id");
-            id = sId == null? null : Integer.parseInt(sId);
+            id = sId == null ? null : Integer.parseInt(sId);
         } catch (NumberFormatException e) {
             ServletUtility.sendError(request, response, 400, "categoryLists.errors.idNotInt");
             return;
@@ -127,7 +127,7 @@ public class JSONCategoryListsServlet extends HttpServlet {
         }
 
         CategoryList categoryList;
-        try{
+        try {
             categoryList = categoryListDAO.getByPrimaryKey(id);
         } catch (DAOException e) {
             ServletUtility.sendError(request, response, 400, "categoryLists.errors.impossibleSearchDb");
@@ -189,9 +189,9 @@ public class JSONCategoryListsServlet extends HttpServlet {
     private void deleteCategoryList(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Integer id;
 
-        try{
+        try {
             String sId = request.getParameter("id");
-            id = sId == null? null : Integer.parseInt(sId);
+            id = sId == null ? null : Integer.parseInt(sId);
         } catch (NumberFormatException e) {
             ServletUtility.sendError(request, response, 400, "categoryLists.errors.idNotInt");
             return;
@@ -200,7 +200,7 @@ public class JSONCategoryListsServlet extends HttpServlet {
         try {
             categoryListDAO.delete(id);
         } catch (DAOException e) {
-            if(e.getCause() instanceof SQLIntegrityConstraintViolationException) {
+            if (e.getCause() instanceof SQLIntegrityConstraintViolationException) {
                 ServletUtility.sendError(request, response, 500, "categoryList.errors.otherListDepend");
                 return;
             }
@@ -214,7 +214,7 @@ public class JSONCategoryListsServlet extends HttpServlet {
     }
 
     private void createCategoryList(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        Path path = ServletUtility.getFolder(getServletContext(),"categoryListImgsFolder");
+        Path path = ServletUtility.getFolder(getServletContext(), "categoryListImgsFolder");
 
         String name = request.getParameter(CategoryListValidator.NAME_KEY);
         String description = request.getParameter(CategoryListValidator.DESCRIPTION_KEY);
@@ -248,7 +248,7 @@ public class JSONCategoryListsServlet extends HttpServlet {
         if (img2 != null && img2.getSize() != 0) {
             System.out.println(img2.getSize());
             sImg2 = subImg(request, response, path, null, img2);
-            if(sImg2 == null) {
+            if (sImg2 == null) {
                 return;
             }
         }
@@ -257,7 +257,7 @@ public class JSONCategoryListsServlet extends HttpServlet {
         if (img3 != null && img3.getSize() != 0) {
             System.out.println(img3.getSize());
             sImg3 = subImg(request, response, path, null, img3);
-            if(sImg3 == null) {
+            if (sImg3 == null) {
                 return;
             }
         }
@@ -327,15 +327,15 @@ public class JSONCategoryListsServlet extends HttpServlet {
         String description = request.getParameter("description");
 
         Integer iId;
-        try{
-            iId = id == null || id.trim().isEmpty()? null: Integer.parseInt(id);
+        try {
+            iId = id == null || id.trim().isEmpty() ? null : Integer.parseInt(id);
         } catch (NumberFormatException e) {
             e.printStackTrace();
             ServletUtility.sendError(request, response, 400, "categoryLists.errors.idNotInt");
             return;
         }
 
-        if(name != null && name.trim().isEmpty()) {
+        if (name != null && name.trim().isEmpty()) {
             name = null;
         }
 

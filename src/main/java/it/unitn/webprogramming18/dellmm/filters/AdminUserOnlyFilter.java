@@ -30,8 +30,8 @@ public class AdminUserOnlyFilter implements Filter {
 
         boolean authorized =
                 session != null &&
-                session.getAttribute("user") != null &&
-                ((User) session.getAttribute("user")).isIsAdmin();
+                        session.getAttribute("user") != null &&
+                        ((User) session.getAttribute("user")).isIsAdmin();
 
         System.out.println(authorized);
 

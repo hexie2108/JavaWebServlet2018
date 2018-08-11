@@ -16,6 +16,7 @@ import it.unitn.webprogramming18.dellmm.javaBeans.CategoryList;
 import it.unitn.webprogramming18.dellmm.javaBeans.Permission;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- *
  * @author luca_morgese
  */
 public class DisplaySpecificListServlet extends HttpServlet {
@@ -35,7 +35,7 @@ public class DisplaySpecificListServlet extends HttpServlet {
     private ProductDAO productDAO;
     private PermissionDAO permissionDAO;
     private CategoryListDAO categoryListDAO;
-    
+
     @Override
     public void init() throws ServletException {
         DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
@@ -57,10 +57,10 @@ public class DisplaySpecificListServlet extends HttpServlet {
     /**
      * Handles the HTTP <code>GET</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -69,10 +69,10 @@ public class DisplaySpecificListServlet extends HttpServlet {
         if (session == null || user == null) {
             //request.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(request, response);
         } else {
-            
+
             //Obtains listId from parameter on URL
             int listId = Integer.parseInt(request.getParameter("listId"));
-            
+
             //Obtains ListBean with listId
             it.unitn.webprogramming18.dellmm.javaBeans.List list = new it.unitn.webprogramming18.dellmm.javaBeans.List();
             try {
@@ -81,7 +81,7 @@ public class DisplaySpecificListServlet extends HttpServlet {
                 ex.printStackTrace();
                 throw new ServletException("Impossible to get the list with specified ID");
             }
-            
+
             //Gets all products on list
             List<Product> products = new ArrayList();
             try {
@@ -90,14 +90,14 @@ public class DisplaySpecificListServlet extends HttpServlet {
                 ex.printStackTrace();
                 throw new ServletException("Impossible to get list products");
             }
-            
+
             //Gets set of permissions associated to the list,
             //and user's permissions on list if user is not owner
             List<Permission> generalPermissionsOnList = new ArrayList();
             Permission userPermissionsOnList = new Permission();
             try {
                 generalPermissionsOnList = permissionDAO.getPermissionsOnListByListId(listId);
-                
+
                 //If user is not owner of the list being visualized, its permissions are set as attribute
                 //In order to filter actions on list
                 if (list.getOwnerId() != user.getId()) {
@@ -107,7 +107,7 @@ public class DisplaySpecificListServlet extends HttpServlet {
                 ex.printStackTrace();
                 throw new ServletException("Impossible to get permissions set of list");
             }
-            
+
             //Gets the category object of the list
             CategoryList categoryList;
             try {
@@ -116,13 +116,13 @@ public class DisplaySpecificListServlet extends HttpServlet {
                 ex.printStackTrace();
                 throw new ServletException("Impossible to get list category");
             }
-            
+
             request.setAttribute("list", list);
             request.setAttribute("products", products);
             request.setAttribute("generalPermissionsOnList", generalPermissionsOnList);
             request.setAttribute("userPermissionsOnList", userPermissionsOnList);
             request.setAttribute("categoryList", categoryList);
-            
+
             request.getRequestDispatcher("/WEB-INF/jsp/yourList").forward(request, response);
         }
     }
@@ -130,10 +130,10 @@ public class DisplaySpecificListServlet extends HttpServlet {
     /**
      * Handles the HTTP <code>POST</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
