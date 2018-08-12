@@ -13,6 +13,8 @@ import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import it.unitn.webprogramming18.dellmm.javaBeans.ProductInList;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
+import it.unitn.webprogramming18.dellmm.util.ServletUtility;
+import it.unitn.webprogramming18.dellmm.util.i18n;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,6 +22,7 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ResourceBundle;
 import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -85,7 +88,7 @@ public class AddUpdateProductServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
         
-// Ottieni configurazione cartella immagini
+        // Ottieni configurazione cartella immagini
         String productImgsFolder = getServletContext().getInitParameter("productImgsFolder");
         if (productImgsFolder == null) {
             throw new ServletException("productImgs folder not configured");
@@ -108,6 +111,9 @@ public class AddUpdateProductServlet extends HttpServlet {
         if (session == null || user == null) {
             //request.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(request, response);
         } else {
+            
+            //i18n language
+            ResourceBundle languageBundle = i18n.getBundle(request);
             
             //ProductId, listId null or not null values drive flow of casistics
             Integer listId = Integer.valueOf(request.getParameter("listId"));
@@ -145,14 +151,14 @@ public class AddUpdateProductServlet extends HttpServlet {
 
 
                 if (filePart1 == null || filePart2 == null) {
-                    response.sendError(400, "No image selected for product");
+                    ServletUtility.sendError(request, response, 400, "servlet.errors.noImg");
                     return;
                 } else if(filePart1.getSize() == 0 || filePart1.getSize() == 0){
-                    response.sendError(400, "Image has zero size");
+                    ServletUtility.sendError(request, response, 400, "servlet.errors.imgZeroSize");
                     return;
                 } else if(filePart1.getSize() > 15 * 1000000
                         ||filePart2.getSize() > 15 * 1000000){ // Non permettere dimensioni superiori ai ~15MB
-                    response.sendError(400, "One or more images have size > 15MB");
+                    ServletUtility.sendError(request, response, 400, "servlet.errors.imgOverSize");
                     return;
                 } else {
                     uuidImg = UUID.randomUUID().toString();
@@ -169,10 +175,10 @@ public class AddUpdateProductServlet extends HttpServlet {
     
 
                     } catch (FileAlreadyExistsException ex) { // Molta sfiga
-                        getServletContext().log("One or more of the files you added already exist on the server");
+                        getServletContext().log(languageBundle.getString("servlet.errors.alreadyExistingFiles"));
                     } catch (RuntimeException ex) {
                         //TODO: handle the exception
-                        getServletContext().log("impossible to upload the file", ex);
+                        getServletContext().log(languageBundle.getString("servlet.errors.unaploadableFile"), ex);
                     }
                 }
 
@@ -208,7 +214,7 @@ public class AddUpdateProductServlet extends HttpServlet {
                     
                 } catch (DAOException ex) {
                     ex.printStackTrace();
-                    throw new ServletException("Impossible to add new private product");
+                    throw new ServletException(languageBundle.getString("servlet.errors.addPrivateProductFailed"));
                 }
             
                 
@@ -239,14 +245,14 @@ public class AddUpdateProductServlet extends HttpServlet {
 
 
                 if (filePart1 == null || filePart2 == null) {
-                    response.sendError(400, "No image selected for product");
+                    ServletUtility.sendError(request, response, 400, "servlet.errors.noImg");
                     return;
                 } else if(filePart1.getSize() == 0 || filePart1.getSize() == 0){
-                    response.sendError(400, "Image has zero size");
+                    ServletUtility.sendError(request, response, 400, "servlet.errors.imgZeroSize");
                     return;
                 } else if(filePart1.getSize() > 15 * 1000000
                         ||filePart2.getSize() > 15 * 1000000){ // Non permettere dimensioni superiori ai ~15MB
-                    response.sendError(400, "One or more images have size > 15MB");
+                    ServletUtility.sendError(request, response, 400, "servlet.errors.imgOverSize");
                     return;
                 } else {
                     uuidImg = UUID.randomUUID().toString();
@@ -263,10 +269,10 @@ public class AddUpdateProductServlet extends HttpServlet {
     
 
                     } catch (FileAlreadyExistsException ex) { // Molta sfiga
-                        getServletContext().log("One or more of the files you added already exist on the server");
+                        getServletContext().log(languageBundle.getString("servlet.errors.alreadyExistingFiles"));
                     } catch (RuntimeException ex) {
                         //TODO: handle the exception
-                        getServletContext().log("impossible to upload the file", ex);
+                        getServletContext().log(languageBundle.getString("servlet.errors.unaploadableFile"), ex);
                     }
                 }
 
@@ -327,7 +333,7 @@ public class AddUpdateProductServlet extends HttpServlet {
                     
                 } catch (DAOException ex) {
                     ex.printStackTrace();
-                    throw new ServletException("Impossible to add new, or modify a, product");
+                    throw new ServletException(languageBundle.getString("servlet.errors.addUpdateFailed"));
                 }
             }
             

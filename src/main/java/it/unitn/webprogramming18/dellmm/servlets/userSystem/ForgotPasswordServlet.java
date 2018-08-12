@@ -9,6 +9,7 @@ import it.unitn.webprogramming18.dellmm.email.messageFactories.ResetPasswordMail
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 import it.unitn.webprogramming18.dellmm.util.PagePathsConstants;
+import it.unitn.webprogramming18.dellmm.util.i18n;
 
 import javax.mail.MessagingException;
 import javax.servlet.ServletException;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
+import java.util.ResourceBundle;
 import java.util.UUID;
 
 @WebServlet(name = "ForgotPasswordServlet")
@@ -96,11 +98,19 @@ public class ForgotPasswordServlet extends HttpServlet {
             userDAO.update(user);
 
             // TODO: Risettare user?
-
+            
+            //I18nEmail-----------------------------------------
+            i18n i18nUtil = new i18n();
+            ResourceBundle languageBundle = i18n.getBundle(request);
+            
+            String emailSubject = languageBundle.getString("emailText.label.resetPwdEmailSubject");
+            
+            //--------------------------------------------------
+            
             emailFactory.sendMail(
                     "Reset Password",
-                    "Reset Password",
-                    ResetPasswordMail.createMessage(user),
+                    emailSubject,
+                    ResetPasswordMail.createMessage(user, languageBundle),
                     "registrazioneprogettowebprog@gmail.com"
             );
             // Per permetterci nel mentre di non creare account mail false per verificare gli account

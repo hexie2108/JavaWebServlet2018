@@ -11,6 +11,8 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.CategoryList;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
+import it.unitn.webprogramming18.dellmm.util.ServletUtility;
+import it.unitn.webprogramming18.dellmm.util.i18n;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,6 +20,7 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ResourceBundle;
 import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -86,6 +89,9 @@ public class AddUpdateCategoryListServlet extends HttpServlet {
             //request.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(request, response);
         } else {
             
+            //i18n language
+            ResourceBundle languageBundle = i18n.getBundle(request);
+            
             //Being null or not null defines if occurring action is of "modify catList" or "create catList"
             Integer categoryListId = null;
             categoryListId = Integer.valueOf(request.getParameter("categoryListId"));
@@ -117,15 +123,15 @@ public class AddUpdateCategoryListServlet extends HttpServlet {
             Part filePart3 = request.getPart(SPECIFIC_FORM_PART3_NAME);
             
             if (filePart1 == null) {
-                response.sendError(400, "No image selected for category list");
+                ServletUtility.sendError(request, response, 400, "servlet.errors.noImg");
                 return;
             } else if(filePart1.getSize() == 0){
-                response.sendError(400, "Image has zero size");
+                ServletUtility.sendError(request, response, 400, "servlet.errors.imgZeroSize");
                 return;
             } else if(filePart1.getSize() > 15 * 1000000
                     ||filePart2.getSize() > 15 * 1000000
                     ||filePart3.getSize() > 15 * 1000000){ // Non permettere dimensioni superiori ai ~15MB
-                response.sendError(400, "One or more images have size > 15MB");
+                ServletUtility.sendError(request, response, 400, "servlet.errors.imgOverSize");
                 return;
             } else {
                 uuidImg1 = UUID.randomUUID().toString();
@@ -154,10 +160,10 @@ public class AddUpdateCategoryListServlet extends HttpServlet {
                     }      
                     
                 } catch (FileAlreadyExistsException ex) { // Molta sfiga
-                    getServletContext().log("One or more of the files you added already exist on the server");
+                    getServletContext().log(languageBundle.getString("servlet.errors.alreadyExistingFiles"));
                 } catch (RuntimeException ex) {
                     //TODO: handle the exception
-                    getServletContext().log("impossible to upload the file", ex);
+                    getServletContext().log(languageBundle.getString("servlet.errors.unaploadableFile"), ex);
                 }
             }
             
@@ -181,7 +187,7 @@ public class AddUpdateCategoryListServlet extends HttpServlet {
                 
             } catch (DAOException ex) {
                 ex.printStackTrace();
-                throw new ServletException("Impossible to update or create new list category");
+                throw new ServletException(languageBundle.getString("servlet.errors.addUpdateFailed"));
             }
             
             response.sendRedirect("/WEB-INF/jsp/yourHome.jsp");

@@ -11,6 +11,8 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.List;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
+import it.unitn.webprogramming18.dellmm.util.ServletUtility;
+import it.unitn.webprogramming18.dellmm.util.i18n;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,6 +20,7 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ResourceBundle;
 import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -85,6 +88,9 @@ public class AddUpdateListServlet extends HttpServlet {
             //request.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(request, response);
         } else {
             
+            //i18n language
+            ResourceBundle languageBundle = i18n.getBundle(request);
+            
             Integer listId = null;
             listId = Integer.valueOf(request.getParameter("listId"));
             
@@ -103,13 +109,13 @@ public class AddUpdateListServlet extends HttpServlet {
             Part filePart = request.getPart(SPECIFIC_FORM_PART_NAME);
             
             if (filePart == null) {
-                response.sendError(400, "No image selected for list");
+                ServletUtility.sendError(request, response, 400, "servlet.errors.noImg");
                 return;
             } else if(filePart.getSize() == 0){
-                response.sendError(400, "Image has zero size");
+                ServletUtility.sendError(request, response, 400, "servlet.errors.imgZeroSize");
                 return;
             } else if(filePart.getSize() > 15 * 1000000){ // Non permettere dimensioni superiori ai ~15MB
-                response.sendError(400, "Image has size > 15MB");
+                ServletUtility.sendError(request, response, 400, "servlet.errors.imgOverSize");
                 return;
             } else {
                 uuidImg = UUID.randomUUID().toString();
@@ -120,10 +126,10 @@ public class AddUpdateListServlet extends HttpServlet {
                     Files.copy(fileContent, file.toPath());
                     
                 } catch (FileAlreadyExistsException ex) { // Molta sfiga
-                    getServletContext().log("File \"" + uuidImg.toString() + "\" already exists on the server");
+                    getServletContext().log(languageBundle.getString("servlet.errors.alreadyExistingFiles") + ": " + uuidImg.toString());
                 } catch (RuntimeException ex) {
                     //TODO: handle the exception
-                    getServletContext().log("impossible to upload the file", ex);
+                    getServletContext().log(languageBundle.getString("servlet.errors.unaploadableFile"), ex);
                 }
             }
             
@@ -156,7 +162,7 @@ public class AddUpdateListServlet extends HttpServlet {
                 }
             } catch (DAOException ex) {
                 ex.printStackTrace();
-                throw new ServletException("Impossible to update or create new list");
+                throw new ServletException(languageBundle.getString("servlet.errors.addUpdateFailed"));
             }
             
             response.sendRedirect("/WEB-INF/jsp/yourHome.jsp");
