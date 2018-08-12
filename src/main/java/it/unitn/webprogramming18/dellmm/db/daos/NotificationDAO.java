@@ -17,11 +17,11 @@ public interface NotificationDAO extends DAO<Notification, Integer> {
      */
     @Override
     public Long getCount() throws DAOException;
-    
+
     /**
      * Persists the new notification passed as parameter
      * to the storage system.
-     * 
+     *
      * @param notification the new notification to insert as entry
      * @return the id of the new persisted record.
      * @throws DAOException if an error occurred during the persist action.
@@ -67,7 +67,7 @@ public interface NotificationDAO extends DAO<Notification, Integer> {
      * Get all the unread notifications for a specified user
      *
      * @param userId The id of the notifications' user
-     * @param read null if both read and unread notifications, true for read notification, false for unread notifications
+     * @param read   null if both read and unread notifications, true for read notification, false for unread notifications
      * @return the list of all the notifications the specified user has not already read
      * @throws DAOException if an error occurred during the action.
      */

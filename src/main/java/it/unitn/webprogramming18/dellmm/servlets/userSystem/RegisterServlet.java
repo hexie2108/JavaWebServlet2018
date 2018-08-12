@@ -9,7 +9,9 @@ import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
 import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
 import it.unitn.webprogramming18.dellmm.util.FileUtils;
+
 import static it.unitn.webprogramming18.dellmm.util.FileUtils.isValidFileExtension;
+
 import it.unitn.webprogramming18.dellmm.util.RegistrationValidator;
 import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 
@@ -33,23 +35,21 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class RegisterServlet extends HttpServlet
-{
+public class RegisterServlet extends HttpServlet {
 
-        private static final String JSP_PAGE_PATH = "/WEB-INF/jsp/userSystem/register.jsp";
+    private static final String JSP_PAGE_PATH = "/WEB-INF/jsp/userSystem/register.jsp";
 
-        /**
-         * get occupa la visualizzazione della form
-         */
-        @Override
-        protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-        {
+    /**
+     * get occupa la visualizzazione della form
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-                //set il primo avatar come default
-                request.setAttribute(ConstantsUtils.HEAD_TITLE, "registrazione");
-                //inoltra a jsp
-                request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
+        //set il primo avatar come default
+        request.setAttribute(ConstantsUtils.HEAD_TITLE, "registrazione");
+        //inoltra a jsp
+        request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
 
-        }
+    }
 
 }

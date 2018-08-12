@@ -11,6 +11,7 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.CategoryList;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,14 +28,13 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
 /**
- *
  * @author luca_morgese
  */
 public class AddUpdateCategoryListServlet extends HttpServlet {
 
 
     private CategoryListDAO categoryListDAO;
-    
+
     @Override
     public void init() throws ServletException {
         DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
@@ -48,20 +48,20 @@ public class AddUpdateCategoryListServlet extends HttpServlet {
             throw new ServletException("Impossible to get ListDAO for user storage system", ex);
         }
     }
-    
+
 
     /**
      * Handles the HTTP <code>POST</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
-        
+
+
         // Ottieni configurazione cartella immagini
         String categoryListImgsFolder = getServletContext().getInitParameter("categoryListImgsFolder");
         if (categoryListImgsFolder == null) {
@@ -78,28 +78,28 @@ public class AddUpdateCategoryListServlet extends HttpServlet {
         if (!Files.exists(path)) {
             Files.createDirectories(path);
         }
-        
-        
+
+
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute("user");
         if (session == null || user == null) {
             //request.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(request, response);
         } else {
-            
+
             //Being null or not null defines if occurring action is of "modify catList" or "create catList"
             Integer categoryListId = null;
             categoryListId = Integer.valueOf(request.getParameter("categoryListId"));
-            
+
             String name = request.getParameter("name");
             String description = request.getParameter("description");
-            
+
             //String img1 = request.getParameter("img1");
             //String img2 = request.getParameter("img2");
             //String img3 = request.getParameter("img3");
-            
-            
+
+
             //IMGS
-            
+
             String uuidImg1 = null;
             String uuidImg2 = null;
             String uuidImg3 = null;
@@ -107,29 +107,29 @@ public class AddUpdateCategoryListServlet extends HttpServlet {
             //PART PARAMETER TO BE DEFINED
             String SPECIFIC_FORM_PART1_NAME = null;
             Part filePart1 = request.getPart(SPECIFIC_FORM_PART1_NAME);
-            
+
             //PART PARAMETER TO BE DEFINED
             String SPECIFIC_FORM_PART2_NAME = null;
             Part filePart2 = request.getPart(SPECIFIC_FORM_PART2_NAME);
-            
+
             //PART PARAMETER TO BE DEFINED
             String SPECIFIC_FORM_PART3_NAME = null;
             Part filePart3 = request.getPart(SPECIFIC_FORM_PART3_NAME);
-            
+
             if (filePart1 == null) {
                 response.sendError(400, "No image selected for category list");
                 return;
-            } else if(filePart1.getSize() == 0){
+            } else if (filePart1.getSize() == 0) {
                 response.sendError(400, "Image has zero size");
                 return;
-            } else if(filePart1.getSize() > 15 * 1000000
-                    ||filePart2.getSize() > 15 * 1000000
-                    ||filePart3.getSize() > 15 * 1000000){ // Non permettere dimensioni superiori ai ~15MB
+            } else if (filePart1.getSize() > 15 * 1000000
+                    || filePart2.getSize() > 15 * 1000000
+                    || filePart3.getSize() > 15 * 1000000) { // Non permettere dimensioni superiori ai ~15MB
                 response.sendError(400, "One or more images have size > 15MB");
                 return;
             } else {
                 uuidImg1 = UUID.randomUUID().toString();
-                
+
                 if (filePart2 != null) {
                     uuidImg2 = UUID.randomUUID().toString();
                 }
@@ -141,7 +141,7 @@ public class AddUpdateCategoryListServlet extends HttpServlet {
                     File file1 = new File(path.toString(), uuidImg1.toString());
                     System.out.println(file1.toPath());
                     Files.copy(fileContent, file1.toPath());
-                    
+
                     if (filePart2 != null) {
                         File file2 = new File(path.toString(), uuidImg2.toString());
                         System.out.println(file2.toPath());
@@ -151,8 +151,8 @@ public class AddUpdateCategoryListServlet extends HttpServlet {
                         File file3 = new File(path.toString(), uuidImg3.toString());
                         System.out.println(file3.toPath());
                         Files.copy(fileContent, file3.toPath());
-                    }      
-                    
+                    }
+
                 } catch (FileAlreadyExistsException ex) { // Molta sfiga
                     getServletContext().log("One or more of the files you added already exist on the server");
                 } catch (RuntimeException ex) {
@@ -160,8 +160,8 @@ public class AddUpdateCategoryListServlet extends HttpServlet {
                     getServletContext().log("impossible to upload the file", ex);
                 }
             }
-            
-            
+
+
             try {
                 CategoryList categoryList = new CategoryList();
 
@@ -178,12 +178,12 @@ public class AddUpdateCategoryListServlet extends HttpServlet {
                 } else {
                     categoryListDAO.update(categoryList);
                 }
-                
+
             } catch (DAOException ex) {
                 ex.printStackTrace();
                 throw new ServletException("Impossible to update or create new list category");
             }
-            
+
             response.sendRedirect("/WEB-INF/jsp/yourHome.jsp");
         }
     }

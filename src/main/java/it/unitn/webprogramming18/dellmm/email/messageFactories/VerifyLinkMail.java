@@ -11,8 +11,8 @@ import javax.mail.internet.MimeMultipart;
 public class VerifyLinkMail {
     public static Multipart createMessage(User user) throws MessagingException {
         String mail_message =
-            "Grazie "+user.getName()+" "+user.getSurname()+" per esserti registrato a "+"Nomexyz\n"+
-            "Clicca su "+user.getVerifyEmailLink()+" per verificare la tua mail.";
+                "Grazie " + user.getName() + " " + user.getSurname() + " per esserti registrato a " + "Nomexyz\n" +
+                        "Clicca su " + user.getVerifyEmailLink() + " per verificare la tua mail.";
 
         StringBuilder htmlMessageBuilder = new StringBuilder();
         mail_message = mail_message.replace(" ", "&nbsp;");

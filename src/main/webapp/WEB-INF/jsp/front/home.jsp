@@ -11,27 +11,27 @@
 
 <div class="main-section col-9">
 
-        <div class="content">
-                <%-- componente slider --%>
-                <jsp:include page="/WEB-INF/jsp/front/module/slider.jsp" />
-                
-                <div class="product-list">
-                        
-                        <div class="product-list-head">
-                                <h1 class="list-title">
-                                        i prodotti  ${a}
-                                </h1>
-                        </div>
-                        
-                        <%-- lista di prodotto --%>
-                        <jsp:include page="/WEB-INF/jsp/front/module/productList.jsp"/>
-                        
-                </div>
-                        
-        </div>    
-                        
+    <div class="content">
+        <%-- componente slider --%>
+        <jsp:include page="/WEB-INF/jsp/front/module/slider.jsp"/>
+
+        <div class="product-list">
+
+            <div class="product-list-head">
+                <h1 class="list-title">
+                    i prodotti ${a}
+                </h1>
+            </div>
+
+            <%-- lista di prodotto --%>
+            <jsp:include page="/WEB-INF/jsp/front/module/productList.jsp"/>
+
+        </div>
+
+    </div>
+
 </div>
-                        
+
 <%-- sidebar --%>
 <jsp:include page="/WEB-INF/jsp/front/sidebar.jsp"/>
 <%-- finestra laterale di lista spesa --%>

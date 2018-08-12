@@ -7,7 +7,6 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 
-
 </section>
 
 
@@ -16,11 +15,11 @@
 
 
 <footer class="footer bg-secondary mt-5">
-        
-        <div class="author-info">
-                @progettoWeb2018
-        </div>
-        
+
+    <div class="author-info">
+        @progettoWeb2018
+    </div>
+
 </footer>
 </div>
 </body>

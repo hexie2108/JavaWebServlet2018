@@ -56,27 +56,27 @@ public class JSONUsersServlet extends HttpServlet {
         String admin = request.getParameter("admin");
 
         Integer iId;
-        try{
-            iId = id == null || id.trim().isEmpty()? null: Integer.parseInt(id);
+        try {
+            iId = id == null || id.trim().isEmpty() ? null : Integer.parseInt(id);
         } catch (NumberFormatException e) {
             e.printStackTrace();
             ServletUtility.sendError(request, response, 400, "users.errors.idNotInt");
             return;
         }
 
-        if(email != null && email.trim().isEmpty()) {
+        if (email != null && email.trim().isEmpty()) {
             email = null;
         }
 
-        if(name != null && name.trim().isEmpty()) {
+        if (name != null && name.trim().isEmpty()) {
             name = null;
         }
 
-        if(surname != null && surname.trim().isEmpty()) {
+        if (surname != null && surname.trim().isEmpty()) {
             surname = null;
         }
 
-        Boolean bAdmin = admin == null || admin.trim().isEmpty()? null: Boolean.parseBoolean(admin);
+        Boolean bAdmin = admin == null || admin.trim().isEmpty() ? null : Boolean.parseBoolean(admin);
 
 
         try {
@@ -101,7 +101,7 @@ public class JSONUsersServlet extends HttpServlet {
         }
 
         int iId;
-        try{
+        try {
             iId = Integer.parseInt(id);
         } catch (NumberFormatException e) {
             e.printStackTrace();
@@ -216,7 +216,7 @@ public class JSONUsersServlet extends HttpServlet {
             if (!avatar.isEmpty()) {
                 String avatarName = avatar;
 
-                if(avatar.equals(RegistrationValidator.CUSTOM_AVATAR)) {
+                if (avatar.equals(RegistrationValidator.CUSTOM_AVATAR)) {
                     avatarName = UUID.randomUUID().toString();
 
                     try (InputStream fileContent = avatarImg.getInputStream()) {
@@ -237,7 +237,7 @@ public class JSONUsersServlet extends HttpServlet {
 
                 user.setImg(avatarName);
 
-                if (RegistrationValidator.DEFAULT_AVATARS.stream().noneMatch(oldImg::equals) ) {
+                if (RegistrationValidator.DEFAULT_AVATARS.stream().noneMatch(oldImg::equals)) {
                     Path toDelete = Paths.get(path.toString(), oldImg);
                     try {
                         Files.delete(toDelete);

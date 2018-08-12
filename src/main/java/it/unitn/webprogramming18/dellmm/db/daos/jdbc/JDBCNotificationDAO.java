@@ -20,230 +20,181 @@ import java.util.TimeZone;
 /**
  * The JDBC implementation of the {@link NotificationDAO} interface.
  */
-public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implements NotificationDAO
-{
+public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implements NotificationDAO {
 
-        private Calendar cal = Calendar.getInstance();
+    private Calendar cal = Calendar.getInstance();
 
-        public JDBCNotificationDAO()
-        {
+    public JDBCNotificationDAO() {
 
-                cal.setTimeZone(TimeZone.getTimeZone("UTC"));
+        cal.setTimeZone(TimeZone.getTimeZone("UTC"));
+    }
+
+    private Notification getNotificationFromResultSet(ResultSet rs) throws SQLException {
+        Notification notification = new Notification();
+
+        notification.setId(rs.getInt("id"));
+        notification.setDate(rs.getTimestamp("date", cal));
+        notification.setText(rs.getString("text"));
+        notification.setStatus(rs.getBoolean("status"));
+        notification.setUserId(rs.getInt("userId"));
+
+        return notification;
+    }
+
+    @Override
+    public Long getCount() throws DAOException {
+
+        CON = C3p0Util.getConnection();
+        try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM Notification")) {
+            ResultSet counter = stmt.executeQuery();
+            if (counter.next()) {
+                return counter.getLong(1);
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to count notification", ex);
+        } finally {
+            C3p0Util.close(CON);
         }
 
-        private Notification getNotificationFromResultSet(ResultSet rs) throws SQLException
-        {
-                Notification notification = new Notification();
+        return 0L;
+    }
 
-                notification.setId(rs.getInt("id"));
-                notification.setDate(rs.getTimestamp("date", cal));
-                notification.setText(rs.getString("text"));
-                notification.setStatus(rs.getBoolean("status"));
-                notification.setUserId(rs.getInt("userId"));
+    public Integer insert(Notification notification) throws DAOException {
+        if (notification == null) {
+            throw new DAOException("notification bean is null");
+        }
+        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO Notification (date, text, status, userId) VALUES (?,?,?,?)",
+                Statement.RETURN_GENERATED_KEYS)) {
 
-                return notification;
+            stm.setTimestamp(1, notification.getDate());
+            stm.setString(2, notification.getText());
+            stm.setBoolean(3, notification.isStatus());
+            stm.setInt(4, notification.getUserId());
+
+            stm.executeUpdate();
+
+            ResultSet rs = stm.getGeneratedKeys();
+            if (rs.next()) {
+                notification.setId(rs.getInt(1));
+            }
+
+            return notification.getId();
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to insert the new notification", ex);
+        } finally {
+            C3p0Util.close(CON);
+        }
+    }
+
+    @Override
+    public Notification getByPrimaryKey(Integer primaryKey) throws DAOException {
+        Notification notification = null;
+        if (primaryKey == null) {
+            throw new DAOException("primaryKey is null");
         }
 
-        @Override
-        public Long getCount() throws DAOException
-        {
-
-                CON = C3p0Util.getConnection();
-                try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM Notification"))
-                {
-                        ResultSet counter = stmt.executeQuery();
-                        if (counter.next())
-                        {
-                                return counter.getLong(1);
-                        }
+        CON = C3p0Util.getConnection();
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Notification WHERE id = ?")) {
+            stm.setInt(1, primaryKey);
+            try (ResultSet rs = stm.executeQuery()) {
+                if (rs.next()) {
+                    notification = getNotificationFromResultSet(rs);
                 }
-                catch (SQLException ex)
-                {
-                        throw new DAOException("Impossible to count notification", ex);
-                } finally
-                {
-                        C3p0Util.close(CON);
-                }
-
-                return 0L;
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get the notification for the passed primary key", ex);
+        } finally {
+            C3p0Util.close(CON);
         }
 
-        public Integer insert(Notification notification) throws DAOException
-        {
-                if (notification == null)
-                {
-                        throw new DAOException("notification bean is null");
+        return notification;
+    }
+
+    @Override
+    public List<Notification> getAll() throws DAOException {
+        List<Notification> notificationList = new ArrayList<>();
+
+        CON = C3p0Util.getConnection();
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Notification")) {
+            try (ResultSet rs = stm.executeQuery()) {
+                while (rs.next()) {
+                    notificationList.add(getNotificationFromResultSet(rs));
                 }
-                try (PreparedStatement stm = CON.prepareStatement("INSERT INTO Notification (date, text, status, userId) VALUES (?,?,?,?)",
-                            Statement.RETURN_GENERATED_KEYS))
-                {
-
-                        stm.setTimestamp(1, notification.getDate());
-                        stm.setString(2, notification.getText());
-                        stm.setBoolean(3, notification.isStatus());
-                        stm.setInt(4, notification.getUserId());
-
-                        stm.executeUpdate();
-
-                        ResultSet rs = stm.getGeneratedKeys();
-                        if (rs.next())
-                        {
-                                notification.setId(rs.getInt(1));
-                        }
-
-                        return notification.getId();
-                }
-                catch (SQLException ex)
-                {
-                        throw new DAOException("Impossible to insert the new notification", ex);
-                } finally
-                {
-                        C3p0Util.close(CON);
-                }
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get the list of notification", ex);
+        } finally {
+            C3p0Util.close(CON);
         }
 
-        @Override
-        public Notification getByPrimaryKey(Integer primaryKey) throws DAOException
-        {
-                Notification notification = null;
-                if (primaryKey == null)
-                {
-                        throw new DAOException("primaryKey is null");
-                }
+        return notificationList;
+    }
 
-                CON = C3p0Util.getConnection();
-                try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Notification WHERE id = ?"))
-                {
-                        stm.setInt(1, primaryKey);
-                        try (ResultSet rs = stm.executeQuery())
-                        {
-                                if (rs.next())
-                                {
-                                        notification = getNotificationFromResultSet(rs);
-                                }
-                        }
-                }
-                catch (SQLException ex)
-                {
-                        throw new DAOException("Impossible to get the notification for the passed primary key", ex);
-                } finally
-                {
-                        C3p0Util.close(CON);
-                }
-
-                return notification;
+    @Override
+    public Notification update(Notification notification) throws DAOException {
+        if (notification == null) {
+            throw new DAOException("parameter not valid", new IllegalArgumentException("The passed notification is null"));
         }
 
-        @Override
-        public List<Notification> getAll() throws DAOException
-        {
-                List<Notification> notificationList = new ArrayList<>();
+        CON = C3p0Util.getConnection();
+        try (PreparedStatement stm = CON.prepareStatement(
+                "UPDATE Notification SET "
+                        + "date = ?,"
+                        + "text = ?,"
+                        + "status = ?, "
+                        + "userId = ? "
+                        + "WHERE id = ?"
+        )) {
 
-                CON = C3p0Util.getConnection();
-                try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Notification"))
-                {
-                        try (ResultSet rs = stm.executeQuery())
-                        {
-                                while (rs.next())
-                                {
-                                        notificationList.add(getNotificationFromResultSet(rs));
-                                }
-                        }
-                }
-                catch (SQLException ex)
-                {
-                        throw new DAOException("Impossible to get the list of notification", ex);
-                } finally
-                {
-                        C3p0Util.close(CON);
-                }
-
-                return notificationList;
+            stm.setTimestamp(1, notification.getDate());
+            stm.setString(2, notification.getText());
+            stm.setBoolean(3, notification.isStatus());
+            stm.setInt(4, notification.getUserId());
+            stm.setInt(5, notification.getId());
+            if (stm.executeUpdate() != 1) {
+                throw new DAOException("Impossible to update the notification");
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to update the notification", ex);
+        } finally {
+            C3p0Util.close(CON);
         }
 
-        @Override
-        public Notification update(Notification notification) throws DAOException
-        {
-                if (notification == null)
-                {
-                        throw new DAOException("parameter not valid", new IllegalArgumentException("The passed notification is null"));
-                }
+        return notification;
+    }
 
-                CON = C3p0Util.getConnection();
-                try (PreparedStatement stm = CON.prepareStatement(
-                            "UPDATE Notification SET "
-                            + "date = ?,"
-                            + "text = ?,"
-                            + "status = ?, "
-                            + "userId = ? "
-                            + "WHERE id = ?"
-                ))
-                {
-
-                        stm.setTimestamp(1, notification.getDate());
-                        stm.setString(2, notification.getText());
-                        stm.setBoolean(3, notification.isStatus());
-                        stm.setInt(4, notification.getUserId());
-                        stm.setInt(5, notification.getId());
-                        if (stm.executeUpdate() != 1)
-                        {
-                                throw new DAOException("Impossible to update the notification");
-                        }
-                }
-                catch (SQLException ex)
-                {
-                        throw new DAOException("Impossible to update the notification", ex);
-                } finally
-                {
-                        C3p0Util.close(CON);
-                }
-
-                return notification;
+    public List<Notification> getNotificationsByUserId(Integer userId, Boolean read) throws DAOException {
+        List<Notification> notificationList = new ArrayList<>();
+        if (userId == null) {
+            throw new DAOException("primaryKey is null");
         }
 
-        public List<Notification> getNotificationsByUserId(Integer userId, Boolean read) throws DAOException
-        {
-                List<Notification> notificationList = new ArrayList<>();
-                if (userId == null)
-                {
-                        throw new DAOException("primaryKey is null");
-                }
+        CON = C3p0Util.getConnection();
+        try (PreparedStatement stm = CON.prepareStatement(
+                "SELECT Notification.* FROM "
+                        + "Notification JOIN User ON  User.id = Notification.userId "
+                        + "WHERE  User.id = ? AND  (? IS NULL OR Notification.status = ?) "
+                        + "ORDER BY Notification.date DESC")) {
+            stm.setInt(1, userId);
+            if (read == null) {
+                stm.setNull(2, Types.BOOLEAN);
+                stm.setBoolean(3, false); // Dummy data
+            } else {
+                stm.setBoolean(2, read);
+                stm.setBoolean(3, read);
+            }
 
-                CON = C3p0Util.getConnection();
-                try (PreparedStatement stm = CON.prepareStatement(
-                            "SELECT Notification.* FROM "
-                            + "Notification JOIN User ON  User.id = Notification.userId "
-                            + "WHERE  User.id = ? AND  (? IS NULL OR Notification.status = ?) "
-                            + "ORDER BY Notification.date DESC"))
-                {
-                        stm.setInt(1, userId);
-                        if (read == null)
-                        {
-                                stm.setNull(2, Types.BOOLEAN);
-                                stm.setBoolean(3, false); // Dummy data
-                        }
-                        else
-                        {
-                                stm.setBoolean(2, read);
-                                stm.setBoolean(3, read);
-                        }
-
-                        try (ResultSet rs = stm.executeQuery())
-                        {
-                                while (rs.next())
-                                {
-                                        notificationList.add(getNotificationFromResultSet(rs));
-                                }
-                        }
+            try (ResultSet rs = stm.executeQuery()) {
+                while (rs.next()) {
+                    notificationList.add(getNotificationFromResultSet(rs));
                 }
-                catch (SQLException ex)
-                {
-                        throw new DAOException("Impossible to get the list of notification", ex);
-                } finally
-                {
-                        C3p0Util.close(CON);
-                }
-
-                return notificationList;
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get the list of notification", ex);
+        } finally {
+            C3p0Util.close(CON);
         }
+
+        return notificationList;
+    }
 }

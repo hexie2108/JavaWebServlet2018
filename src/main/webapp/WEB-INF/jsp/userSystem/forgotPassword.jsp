@@ -1,8 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="it.unitn.webprogramming18.dellmm.servlets.userSystem.ForgotPasswordServlet" %>
 
-<%@include file="../jspf/i18n.jsp"%>
+<%@include file="../jspf/i18n.jsp" %>
 <html>
 <head>
     <meta charset="utf-8">
@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="<c:url value="/libs/fontawesome-free-5.1.1-web/css/all.min.css"/>">
 </head>
 <body>
-<%@include file="../jspf/i18n_switcher.jsp"%>
+<%@include file="../jspf/i18n_switcher.jsp" %>
 <nav class="navbar navbar-default navbar-static-top">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -46,10 +46,12 @@
 
                 <div class="btn-group btn-group-justified" role="group" aria-label="...">
                     <div class="btn-group" role="group" id="id-annulla">
-                        <a href="${param[ForgotPasswordServlet.PREV_URL_KEY]}" class="btn btn-default" role="button"><fmt:message key="login.label.cancel"/></a>
+                        <a href="${param[ForgotPasswordServlet.PREV_URL_KEY]}" class="btn btn-default"
+                           role="button"><fmt:message key="login.label.cancel"/></a>
                     </div>
                     <div class="btn-group" role="group" id="id-accedi">
-                        <button class="btn btn-primary" type="submit"><fmt:message key="forgotPassword.label.resetPwd"/></button>
+                        <button class="btn btn-primary" type="submit"><fmt:message
+                                key="forgotPassword.label.resetPwd"/></button>
                     </div>
                 </div>
             </div>
@@ -61,7 +63,7 @@
     $(document).ready(() => {
         const form = $('#form-forgot');
 
-        form.submit(function(e){
+        form.submit(function (e) {
             e.preventDefault();
 
             const resDiv = $('#id-res');

@@ -106,7 +106,7 @@ public class Product implements Serializable {
     public void setCategoryProductId(int categoryProductId) {
         this.categoryProductId = categoryProductId;
     }
-    
+
     /**
      * @return the privateListId
      */

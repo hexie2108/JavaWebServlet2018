@@ -57,10 +57,10 @@ public class JSONNotificationsServlet extends HttpServlet {
         Boolean filter = null;
         String strFilter = request.getParameter("status");
 
-        if(strFilter != null) {
-            if(strFilter.equalsIgnoreCase("true")){
+        if (strFilter != null) {
+            if (strFilter.equalsIgnoreCase("true")) {
                 filter = true;
-            } else if(strFilter.equalsIgnoreCase("false")){
+            } else if (strFilter.equalsIgnoreCase("false")) {
                 filter = false;
             }
         }
@@ -70,7 +70,7 @@ public class JSONNotificationsServlet extends HttpServlet {
 
             List<Notification> notificationList = notificationDAO.getNotificationsByUserId(user.getId(), filter);
 
-            for (Notification notification: notificationList) {
+            for (Notification notification : notificationList) {
                 HashMap<String, java.io.Serializable> h = new HashMap<>();
                 h.put("id", notification.getId());
                 h.put("date", df.format(notification.getDate()));

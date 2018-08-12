@@ -9,6 +9,7 @@ import it.unitn.webprogramming18.dellmm.javaBeans.CategoryProduct;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
 import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
+
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -21,89 +22,77 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author mikuc
  */
-public class CategoryServlet extends HttpServlet
-{
-        
-        private static final String JSP_PAGE_PATH = "/WEB-INF/jsp/front/category.jsp";
+public class CategoryServlet extends HttpServlet {
 
-        private ProductDAO productDAO;
-        private CategoryProductDAO categoryProductDAO;
+    private static final String JSP_PAGE_PATH = "/WEB-INF/jsp/front/category.jsp";
 
-        @Override
-        public void init() throws ServletException
-        {
+    private ProductDAO productDAO;
+    private CategoryProductDAO categoryProductDAO;
 
-                productDAO = new JDBCProductDAO();
-                categoryProductDAO = new JDBCCategoryProductDAO();
+    @Override
+    public void init() throws ServletException {
+
+        productDAO = new JDBCProductDAO();
+        categoryProductDAO = new JDBCCategoryProductDAO();
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        //get id categoria
+        String catId = request.getParameter("catId");
+        //se id categoria non esiste
+        CheckErrorUtils.isNull(catId, "manca il parametro catId");
+
+        //get beans di categoria
+        CategoryProduct categoriaCorrente = null;
+        try {
+            categoriaCorrente = categoryProductDAO.getByPrimaryKey(Integer.parseInt(catId));
+        } catch (DAOException ex) {
+            throw new ServletException(ex.getMessage(), ex);
+        }
+        //se beans di categoria non esiste
+        CheckErrorUtils.isNull(categoriaCorrente, "non esiste la categoria con tale id");
+
+        //get numero di prodotto per singola pagina
+        int numebrProductForList = ConstantsUtils.NUMBER_PRODUCT_FOR_CATEGORY;
+
+        //posizione di start di query per get lista di prodotto
+        int startPosition = 0;
+        //get parametro di paginazione
+        String page = request.getParameter("page");
+        //se non è nullo
+        if (page != null && Integer.parseInt(page) > 1) {
+            //aggiorna la posizione di start di query
+            startPosition = (Integer.parseInt(page) - 1) * numebrProductForList;
+        } else {
+            page = "1";
         }
 
-        @Override
-        protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
-        {
-                //get id categoria
-                String catId = request.getParameter("catId");
-                //se id categoria non esiste
-                CheckErrorUtils.isNull(catId, "manca il parametro catId");
+        List<Product> productList = null;
+        int totalNumberOfPage;
+        try {
+            //get la lista di prodotto
+            productList = productDAO.getPublicProductListByCatId(Integer.parseInt(catId), startPosition, numebrProductForList);
+            //get il numero totale di pagine
+            totalNumberOfPage = (int) Math.ceil(productDAO.getCountOfPublicProductByCatId(Integer.parseInt(catId)) * 1.0 / numebrProductForList);
 
-                //get beans di categoria
-                CategoryProduct categoriaCorrente = null;
-                try
-                {
-                        categoriaCorrente = categoryProductDAO.getByPrimaryKey(Integer.parseInt(catId));
-                }
-                catch (DAOException ex)
-                {
-                        throw new ServletException(ex.getMessage(), ex);
-                }
-                //se beans di categoria non esiste
-                CheckErrorUtils.isNull(categoriaCorrente, "non esiste la categoria con tale id");
-
-                //get numero di prodotto per singola pagina
-                int numebrProductForList = ConstantsUtils.NUMBER_PRODUCT_FOR_CATEGORY;
-
-                //posizione di start di query per get lista di prodotto
-                int startPosition = 0;
-                //get parametro di paginazione
-                String page = request.getParameter("page");
-                //se non è nullo
-                if (page != null && Integer.parseInt(page) > 1)
-                {
-                        //aggiorna la posizione di start di query
-                        startPosition = (Integer.parseInt(page) - 1) * numebrProductForList;
-                }
-                else
-                {
-                        page = "1";
-                }
-
-                List<Product> productList = null;
-                int totalNumberOfPage;
-                try
-                {
-                        //get la lista di prodotto
-                        productList = productDAO.getPublicProductListByCatId(Integer.parseInt(catId), startPosition, numebrProductForList);
-                        //get il numero totale di pagine
-                        totalNumberOfPage = (int) Math.ceil(productDAO.getCountOfPublicProductByCatId(Integer.parseInt(catId)) * 1.0 / numebrProductForList);
-
-                }
-                catch (DAOException ex)
-                {
-                        throw new ServletException(ex.getMessage(), ex);
-                }
-
-                //set titolo della pagina nella richesta
-                request.setAttribute(ConstantsUtils.HEAD_TITLE, categoriaCorrente.getName());
-                //set beans di categoria corrente  nella richesta
-                request.setAttribute("categoria", categoriaCorrente);
-                //set la lista di prodotto nella richesta
-                request.setAttribute(ConstantsUtils.PRODUCT_LIST, productList);
-                //set il numero di pagine resti
-                request.setAttribute(ConstantsUtils.NUMBER_OF_PAGE_REST, (totalNumberOfPage - Integer.parseInt(page)));
-                //set url per la paginazione
-                request.setAttribute(ConstantsUtils.PATH_FOR_PAGINATION, request.getContextPath() + request.getServletPath() + "?catId=" + catId + "&");
-
-                //inoltra a jsp
-                request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
-
+        } catch (DAOException ex) {
+            throw new ServletException(ex.getMessage(), ex);
         }
+
+        //set titolo della pagina nella richesta
+        request.setAttribute(ConstantsUtils.HEAD_TITLE, categoriaCorrente.getName());
+        //set beans di categoria corrente  nella richesta
+        request.setAttribute("categoria", categoriaCorrente);
+        //set la lista di prodotto nella richesta
+        request.setAttribute(ConstantsUtils.PRODUCT_LIST, productList);
+        //set il numero di pagine resti
+        request.setAttribute(ConstantsUtils.NUMBER_OF_PAGE_REST, (totalNumberOfPage - Integer.parseInt(page)));
+        //set url per la paginazione
+        request.setAttribute(ConstantsUtils.PATH_FOR_PAGINATION, request.getContextPath() + request.getServletPath() + "?catId=" + catId + "&");
+
+        //inoltra a jsp
+        request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
+
+    }
 }

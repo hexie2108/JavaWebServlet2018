@@ -13,87 +13,77 @@ import java.net.URLEncoder;
 /**
  * se utente non è loggato e ha fatto una richiesta di JSON oppure POST
  * rindirizza alla pagina 401
- *
+ * <p>
  * se utente non è loggato e ha fatto una richiesta GET, rindirizza alla pagina
  * di Login.
  */
-public class LoggedUserOnlyFilter implements Filter
-{
+public class LoggedUserOnlyFilter implements Filter {
 
-        @Override
-        public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws ServletException, IOException
-        {
+    @Override
+    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws ServletException, IOException {
 
-                HttpServletRequest request = (HttpServletRequest) req;
-                HttpServletResponse response = (HttpServletResponse) resp;
+        HttpServletRequest request = (HttpServletRequest) req;
+        HttpServletResponse response = (HttpServletResponse) resp;
 
-                // Non fare caching
-                response.setHeader("Cache-Control", "no-cache");
-                response.setHeader("Pragma", "no-cache");
-                response.setDateHeader("Expires", -1);
-                response.setCharacterEncoding("UTF-8");
+        // Non fare caching
+        response.setHeader("Cache-Control", "no-cache");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", -1);
+        response.setCharacterEncoding("UTF-8");
 
-                //get la sessione
-                HttpSession session = request.getSession(false);
+        //get la sessione
+        HttpSession session = request.getSession(false);
 
-                // Se non esiste la sessione oppure l'utente non è autenticato
-                if (session == null || session.getAttribute("user") == null)
-                {
-                        refuse(request, response);
-                        return;
-                }
-
-                // Se l'utente è autenticato facciamo continuare
-                chain.doFilter(req, resp);
+        // Se non esiste la sessione oppure l'utente non è autenticato
+        if (session == null || session.getAttribute("user") == null) {
+            refuse(request, response);
+            return;
         }
 
-        private void refuse(HttpServletRequest request, HttpServletResponse response) throws IOException
-        {
-                //get la parte di url esclude dominio es: /index.jsp
-                String uri = request.getRequestURI();
+        // Se l'utente è autenticato facciamo continuare
+        chain.doFilter(req, resp);
+    }
 
-                //se nel url contiene parola JSON oppure il metodo di richiesta non è get
-                if (uri.matches("^.*\\.json$") || !request.getMethod().equalsIgnoreCase("GET"))
-                {
-                        ServletUtility.sendError(request, response, 401, "generic.errors.userNotLogged");
-                }
+    private void refuse(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        //get la parte di url esclude dominio es: /index.jsp
+        String uri = request.getRequestURI();
 
-                // Se l'url non finisce con .json ed è un get 
-                else
-                {
-                        //faccio un redirect alla pagina di login mantenendo l'url
-
-                        // richiesta a login avvenuto con successo
-                        //get il percorso base
-                        String contextPath = request.getServletContext().getContextPath();
-                        if (!contextPath.endsWith("/"))
-                        {
-                                contextPath += "/";
-                        }
-
-                        String prevUrl = request.getParameter("prevUrl");
-                        if (prevUrl == null)
-                        {
-                                prevUrl = contextPath;
-                        }
-
-                        // memorizza url della richiesta attuale in nextUrl,  che permette utente di ritornerà a questa pagina dopo il login
-                        String nextUrl = request.getRequestURI();
-
-                        response.sendRedirect(contextPath + ConstantsUtils.LOGIN + "?"
-                                    + "prevUrl" + "=" + URLEncoder.encode(prevUrl, "UTF-8")
-                                    + "&" + "nextUrl" + "=" + URLEncoder.encode(nextUrl, "UTF-8")
-                        );
-                }
+        //se nel url contiene parola JSON oppure il metodo di richiesta non è get
+        if (uri.matches("^.*\\.json$") || !request.getMethod().equalsIgnoreCase("GET")) {
+            ServletUtility.sendError(request, response, 401, "generic.errors.userNotLogged");
         }
 
-        @Override
-        public void init(FilterConfig config) throws ServletException
-        {
-        }
+        // Se l'url non finisce con .json ed è un get
+        else {
+            //faccio un redirect alla pagina di login mantenendo l'url
 
-        @Override
-        public void destroy()
-        {
+            // richiesta a login avvenuto con successo
+            //get il percorso base
+            String contextPath = request.getServletContext().getContextPath();
+            if (!contextPath.endsWith("/")) {
+                contextPath += "/";
+            }
+
+            String prevUrl = request.getParameter("prevUrl");
+            if (prevUrl == null) {
+                prevUrl = contextPath;
+            }
+
+            // memorizza url della richiesta attuale in nextUrl,  che permette utente di ritornerà a questa pagina dopo il login
+            String nextUrl = request.getRequestURI();
+
+            response.sendRedirect(contextPath + ConstantsUtils.LOGIN + "?"
+                    + "prevUrl" + "=" + URLEncoder.encode(prevUrl, "UTF-8")
+                    + "&" + "nextUrl" + "=" + URLEncoder.encode(nextUrl, "UTF-8")
+            );
         }
+    }
+
+    @Override
+    public void init(FilterConfig config) throws ServletException {
+    }
+
+    @Override
+    public void destroy() {
+    }
 }

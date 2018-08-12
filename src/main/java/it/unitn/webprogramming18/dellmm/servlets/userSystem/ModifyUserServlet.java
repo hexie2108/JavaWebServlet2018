@@ -30,220 +30,173 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class ModifyUserServlet extends HttpServlet
-{
+public class ModifyUserServlet extends HttpServlet {
 
-        private static final String MODIFY_USER_JSP = "/WEB-INF/jsp/userSystem/modifyUser.jsp";
+    private static final String MODIFY_USER_JSP = "/WEB-INF/jsp/userSystem/modifyUser.jsp";
 
-        private UserDAO userDAO;
+    private UserDAO userDAO;
 
-        @Override
-        public void init() throws ServletException
-        {
+    @Override
+    public void init() throws ServletException {
 
-                userDAO = new JDBCUserDAO();
+        userDAO = new JDBCUserDAO();
 
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (request.getRequestURI().endsWith(".json")) {
+            ServletUtility.sendError(request, response, 400, "generic.errors.postOnly");
+        } else {
+            HttpSession session = request.getSession();
+            User user = (User) session.getAttribute("user");
+
+            if (user.getImg().matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")) {
+                request.setAttribute(RegistrationValidator.AVATAR_KEY, "");
+            } else {
+                request.setAttribute(RegistrationValidator.AVATAR_KEY, user.getImg());
+            }
+
+            request.getRequestDispatcher(MODIFY_USER_JSP).forward(request, response);
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Ottieni configurazione cartella avatars
+        String avatarsFolder = getServletContext().getInitParameter("avatarsFolder");
+        if (avatarsFolder == null) {
+            throw new ServletException("Avatars folder not configured");
         }
 
-        @Override
-        protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-        {
-                if (request.getRequestURI().endsWith(".json"))
-                {
-                        ServletUtility.sendError(request, response, 400, "generic.errors.postOnly");
-                }
-                else
-                {
-                        HttpSession session = request.getSession();
-                        User user = (User) session.getAttribute("user");
-
-                        if (user.getImg().matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"))
-                        {
-                                request.setAttribute(RegistrationValidator.AVATAR_KEY, "");
-                        }
-                        else
-                        {
-                                request.setAttribute(RegistrationValidator.AVATAR_KEY, user.getImg());
-                        }
-
-                        request.getRequestDispatcher(MODIFY_USER_JSP).forward(request, response);
-                }
+        String realContextPath = request.getServletContext().getRealPath(File.separator);
+        if (!realContextPath.endsWith("/")) {
+            realContextPath += "/";
         }
 
-        @Override
-        protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-        {
-                // Ottieni configurazione cartella avatars
-                String avatarsFolder = getServletContext().getInitParameter("avatarsFolder");
-                if (avatarsFolder == null)
-                {
-                        throw new ServletException("Avatars folder not configured");
-                }
+        Path path = Paths.get(realContextPath + avatarsFolder);
 
-                String realContextPath = request.getServletContext().getRealPath(File.separator);
-                if (!realContextPath.endsWith("/"))
-                {
-                        realContextPath += "/";
-                }
-
-                Path path = Paths.get(realContextPath + avatarsFolder);
-
-                if (!Files.exists(path))
-                {
-                        Files.createDirectories(path);
-                }
-
-                // Ottieni tutti i parametri
-                String firstName = request.getParameter(RegistrationValidator.FIRST_NAME_KEY);
-                String lastName = request.getParameter(RegistrationValidator.LAST_NAME_KEY);
-                String email = request.getParameter(RegistrationValidator.EMAIL_KEY);
-                String avatar = request.getParameter(RegistrationValidator.AVATAR_KEY);
-
-                Part avatarImg = request.getPart(RegistrationValidator.AVATAR_IMG_KEY);
-
-                HttpSession session = request.getSession(false);
-                User user = (User) session.getAttribute("user");
-
-                HashMap<String, Object> kv = new HashMap<>();
-
-                if (firstName != null && !firstName.isEmpty())
-                {
-                        kv.put(RegistrationValidator.FIRST_NAME_KEY, firstName);
-                }
-                else
-                {
-                        firstName = "";
-                }
-
-                if (lastName != null && !lastName.isEmpty())
-                {
-                        kv.put(RegistrationValidator.LAST_NAME_KEY, lastName);
-                }
-                else
-                {
-                        lastName = "";
-                }
-
-                if (email != null && !email.isEmpty())
-                {
-                        kv.put(RegistrationValidator.EMAIL_KEY, email);
-                }
-                else
-                {
-                        email = "";
-                }
-
-                if (avatar != null && !avatar.isEmpty())
-                {
-                        kv.put(RegistrationValidator.AVATAR_KEY, avatar);
-                        kv.put(RegistrationValidator.AVATAR_IMG_KEY, avatarImg);
-                }
-                else
-                {
-                        avatar = "";
-                }
-
-                // Usa il validator per verifiacare la conformità
-                Map<String, String> messages
-                            = RegistrationValidator.partialValidate(userDAO, kv)
-                                        .entrySet()
-                                        .stream()
-                                        .collect(Collectors.toMap(
-                                                    (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> e.getKey(),
-                                                    (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> RegistrationValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString()
-                                        )
-                                        );
-
-                if (!messages.isEmpty())
-                {
-                        ServletUtility.sendValidationError(request, response, 400, messages);
-                        return;
-                }
-
-                if (!firstName.isEmpty())
-                {
-                        user.setName(firstName);
-                }
-
-                if (!lastName.isEmpty())
-                {
-                        user.setSurname(lastName);
-                }
-
-                if (!email.isEmpty())
-                {
-                        user.setEmail(email);
-                }
-
-                if (!avatar.isEmpty())
-                {
-                        String avatarName = avatar;
-
-                        if (avatar.equals(RegistrationValidator.CUSTOM_AVATAR))
-                        {
-                                avatarName = UUID.randomUUID().toString();
-
-                                try (InputStream fileContent = avatarImg.getInputStream())
-                                {
-                                        File file = new File(path.toString(), avatarName.toString());
-                                        Files.copy(fileContent, file.toPath());
-                                }
-                                catch (FileAlreadyExistsException ex)
-                                { // Molta sfiga
-                                        ServletUtility.sendError(request, response, 500, "generic.errors.fileCollision");
-                                        getServletContext().log("File \"" + avatarName.toString() + "\" already exists on the server");
-                                        return;
-                                }
-                                catch (RuntimeException ex)
-                                {
-                                        ServletUtility.sendError(request, response, 500, "generic.errors.unuploudableFile");
-                                        getServletContext().log("impossible to upload the file", ex);
-                                        return;
-                                }
-                        }
-
-                        String oldImg = user.getImg();
-
-                        user.setImg(avatarName);
-
-                        if (RegistrationValidator.DEFAULT_AVATARS.stream().noneMatch(oldImg::equals))
-                        {
-                                Path toDelete = Paths.get(path.toString(), oldImg);
-                                try
-                                {
-                                        Files.delete(toDelete);
-                                }
-                                catch (IOException e)
-                                {
-                                        // If we can't delete the old image we just log and continue
-                                        getServletContext().log("File " + toDelete.toString() + " cannot be delete");
-                                }
-                        }
-                }
-
-                try
-                {
-                        userDAO.update(user);
-                }
-                catch (DAOException e)
-                {
-                        ServletUtility.sendError(request, response, 500, "generic.unupdatableUser");
-                        return;
-                }
-
-                if (request.getRequestURI().endsWith(".json"))
-                {
-                        ServletUtility.sendJSON(request, response, 200, new HashMap<>());
-                }
-                else
-                {
-                        String contextPath = getServletContext().getContextPath();
-                        if (!contextPath.endsWith("/"))
-                        {
-                                contextPath += "/";
-                        }
-
-                        response.sendRedirect(contextPath + ConstantsUtils.MODIFY_USER);
-                }
+        if (!Files.exists(path)) {
+            Files.createDirectories(path);
         }
+
+        // Ottieni tutti i parametri
+        String firstName = request.getParameter(RegistrationValidator.FIRST_NAME_KEY);
+        String lastName = request.getParameter(RegistrationValidator.LAST_NAME_KEY);
+        String email = request.getParameter(RegistrationValidator.EMAIL_KEY);
+        String avatar = request.getParameter(RegistrationValidator.AVATAR_KEY);
+
+        Part avatarImg = request.getPart(RegistrationValidator.AVATAR_IMG_KEY);
+
+        HttpSession session = request.getSession(false);
+        User user = (User) session.getAttribute("user");
+
+        HashMap<String, Object> kv = new HashMap<>();
+
+        if (firstName != null && !firstName.isEmpty()) {
+            kv.put(RegistrationValidator.FIRST_NAME_KEY, firstName);
+        } else {
+            firstName = "";
+        }
+
+        if (lastName != null && !lastName.isEmpty()) {
+            kv.put(RegistrationValidator.LAST_NAME_KEY, lastName);
+        } else {
+            lastName = "";
+        }
+
+        if (email != null && !email.isEmpty()) {
+            kv.put(RegistrationValidator.EMAIL_KEY, email);
+        } else {
+            email = "";
+        }
+
+        if (avatar != null && !avatar.isEmpty()) {
+            kv.put(RegistrationValidator.AVATAR_KEY, avatar);
+            kv.put(RegistrationValidator.AVATAR_IMG_KEY, avatarImg);
+        } else {
+            avatar = "";
+        }
+
+        // Usa il validator per verifiacare la conformità
+        Map<String, String> messages
+                = RegistrationValidator.partialValidate(userDAO, kv)
+                .entrySet()
+                .stream()
+                .collect(Collectors.toMap(
+                        (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> e.getKey(),
+                        (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> RegistrationValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString()
+                        )
+                );
+
+        if (!messages.isEmpty()) {
+            ServletUtility.sendValidationError(request, response, 400, messages);
+            return;
+        }
+
+        if (!firstName.isEmpty()) {
+            user.setName(firstName);
+        }
+
+        if (!lastName.isEmpty()) {
+            user.setSurname(lastName);
+        }
+
+        if (!email.isEmpty()) {
+            user.setEmail(email);
+        }
+
+        if (!avatar.isEmpty()) {
+            String avatarName = avatar;
+
+            if (avatar.equals(RegistrationValidator.CUSTOM_AVATAR)) {
+                avatarName = UUID.randomUUID().toString();
+
+                try (InputStream fileContent = avatarImg.getInputStream()) {
+                    File file = new File(path.toString(), avatarName.toString());
+                    Files.copy(fileContent, file.toPath());
+                } catch (FileAlreadyExistsException ex) { // Molta sfiga
+                    ServletUtility.sendError(request, response, 500, "generic.errors.fileCollision");
+                    getServletContext().log("File \"" + avatarName.toString() + "\" already exists on the server");
+                    return;
+                } catch (RuntimeException ex) {
+                    ServletUtility.sendError(request, response, 500, "generic.errors.unuploudableFile");
+                    getServletContext().log("impossible to upload the file", ex);
+                    return;
+                }
+            }
+
+            String oldImg = user.getImg();
+
+            user.setImg(avatarName);
+
+            if (RegistrationValidator.DEFAULT_AVATARS.stream().noneMatch(oldImg::equals)) {
+                Path toDelete = Paths.get(path.toString(), oldImg);
+                try {
+                    Files.delete(toDelete);
+                } catch (IOException e) {
+                    // If we can't delete the old image we just log and continue
+                    getServletContext().log("File " + toDelete.toString() + " cannot be delete");
+                }
+            }
+        }
+
+        try {
+            userDAO.update(user);
+        } catch (DAOException e) {
+            ServletUtility.sendError(request, response, 500, "generic.unupdatableUser");
+            return;
+        }
+
+        if (request.getRequestURI().endsWith(".json")) {
+            ServletUtility.sendJSON(request, response, 200, new HashMap<>());
+        } else {
+            String contextPath = getServletContext().getContextPath();
+            if (!contextPath.endsWith("/")) {
+                contextPath += "/";
+            }
+
+            response.sendRedirect(contextPath + ConstantsUtils.MODIFY_USER);
+        }
+    }
 }

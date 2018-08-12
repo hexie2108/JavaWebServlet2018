@@ -3,7 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page import="it.unitn.webprogramming18.dellmm.util.ConstantsUtils" %>
 
-<%@include file="../jspf/i18n.jsp"%>
+<%@include file="../jspf/i18n.jsp" %>
 <html>
 <head>
     <meta charset="utf-8">
@@ -13,10 +13,11 @@
 
     <link rel="stylesheet" href="<c:url value="/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css"/>">
     <script src="<c:url value="/libs/jquery/jquery-3.3.1.min.js"/>" crossorigin="anonymous"></script>
-    <script src="<c:url value="/libs/bootstrap-4.1.1-dist/js/bootstrap.bundle.min.js"/>" crossorigin="anonymous"></script>
+    <script src="<c:url value="/libs/bootstrap-4.1.1-dist/js/bootstrap.bundle.min.js"/>"
+            crossorigin="anonymous"></script>
 </head>
 <body>
-<%@include file="../jspf/i18n_switcher.jsp"%>
+<%@include file="../jspf/i18n_switcher.jsp" %>
 <button id="reloadBtn"><fmt:message key="notifications.label.refreshNotifications"/></button>
 <ul id="notificationsList" class="list-group">
     <c:forEach items="${notifications}" var="notification">
@@ -26,16 +27,20 @@
                     <c:if test="${notification.status}"><fmt:message key="notifications.label.read"/></c:if>
                     <c:if test="${not notification.status}"><fmt:message key="notifications.label.unread"/></c:if>
                 </small>
-                <small class="float-right" title="<fmt:formatDate value="${notification.date}" pattern="yyyy-MM-dd'T'HH:mm:ss'Z'" timeZone="UTC"/>"> <fmt:formatDate value="${notification.date}" type="both"/> UTC</small>
+                <small class="float-right"
+                       title="<fmt:formatDate value="${notification.date}" pattern="yyyy-MM-dd'T'HH:mm:ss'Z'" timeZone="UTC"/>">
+                    <fmt:formatDate value="${notification.date}" type="both"/> UTC
+                </small>
             </div>
             <div>${notification.text}</div>
         </li>
     </c:forEach>
 </ul>
-<div id="notificationsEmtpy" class="p-2 ${not notifications.isEmpty()?'d-none':''}"><fmt:message key="notifications.label.noNotifications"/></div>
+<div id="notificationsEmtpy" class="p-2 ${not notifications.isEmpty()?'d-none':''}"><fmt:message
+        key="notifications.label.noNotifications"/></div>
 <script src="<c:url value="/js/notifications.js"/>" crossorigin="anonymous"></script>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         const URL = "<c:url value="/${ConstantsUtils.NOTIFICATIONS_JSON}"/>";
 
         const notificationList = $('#notificationsList');

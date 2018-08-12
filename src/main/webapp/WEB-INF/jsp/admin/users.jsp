@@ -1,11 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<%@ page import="it.unitn.webprogramming18.dellmm.util.RegistrationValidator"%>
-<%@ page import="it.unitn.webprogramming18.dellmm.util.ConstantsUtils"%>
+<%@ page import="it.unitn.webprogramming18.dellmm.util.RegistrationValidator" %>
+<%@ page import="it.unitn.webprogramming18.dellmm.util.ConstantsUtils" %>
 
-<%@ include file="../../jspf/i18n.jsp"%>
+<%@ include file="../../jspf/i18n.jsp" %>
 <html>
 <head>
     <meta charset="utf-8">
@@ -17,11 +17,12 @@
     <script src="<c:url value="/libs/bootstrap-4.1.1-dist/js/bootstrap.bundle.min.js"/>"></script>
     <link rel="stylesheet" href="<c:url value="/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css"/>">
 
-    <link rel="stylesheet" href="<c:url value="/libs/fontawesome-free-5.1.1-web/css/all.min.css"/>" type="text/css" media="all">
+    <link rel="stylesheet" href="<c:url value="/libs/fontawesome-free-5.1.1-web/css/all.min.css"/>" type="text/css"
+          media="all">
     <link rel="stylesheet" href="<c:url value="/css/userPages.css"/>" type="text/css" media="all">
 </head>
 <body>
-<%@ include file="../../jspf/i18n_switcher.jsp"%>
+<%@ include file="../../jspf/i18n_switcher.jsp" %>
 
 <form method="GET" id="filterForm"></form>
 <div class="table-responsive">
@@ -44,17 +45,21 @@
         </tbody>
         <tfoot>
         <tr>
-            <td><input class="form-control" size="6" type="number" name="id" form="filterForm" value="${param['id']}"/></td>
+            <td><input class="form-control" size="6" type="number" name="id" form="filterForm" value="${param['id']}"/>
+            </td>
             <td></td>
             <td><input class="form-control" type="text" name="name" form="filterForm" value="${param['name']}"/></td>
-            <td><input class="form-control" type="text" name="surname" form="filterForm" value="${param['surname']}"/></td>
+            <td><input class="form-control" type="text" name="surname" form="filterForm" value="${param['surname']}"/>
+            </td>
             <td><input class="form-control" type="text" name="email" form="filterForm" value="${param['email']}"/></td>
             <td></td>
             <td>
                 <select name="admin" form="filterForm">
                     <option value="" ${param['admin'].equals("")?'selected':''}>--</option>
-                    <option value="true" ${param['admin'].equals("true")?'selected':''}><fmt:message key="users.label.true"/></option>
-                    <option value="false" ${param['admin'].equals("false")?'selected':''}><fmt:message key="users.label.false"/></option>
+                    <option value="true" ${param['admin'].equals("true")?'selected':''}><fmt:message
+                            key="users.label.true"/></option>
+                    <option value="false" ${param['admin'].equals("false")?'selected':''}><fmt:message
+                            key="users.label.false"/></option>
                 </select>
             </td>
             <td></td>
@@ -71,7 +76,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="exampleModalLabel"><fmt:message key="users.label.modifyUser"/></h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="<fmt:message key="generic.label.close"/>">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="<fmt:message key="generic.label.close"/>">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -84,9 +90,11 @@
                             <label for="inputFirstName" class="sr-only"><fmt:message key="user.label.name"/></label>
                             <div class="input-group ">
                                 <div class="input-group-prepend"><i class="input-group-text fas fa-user"></i></div>
-                                <div class="input-group-prepend"><span class="input-group-text" id="roSpanFirstName"></span></div>
-                                <input id="inputFirstName" class="form-control" placeholder="<fmt:message key="user.label.name"/>" autofocus=""
-                                       type="text" name="${RegistrationValidator.FIRST_NAME_KEY}" >
+                                <div class="input-group-prepend"><span class="input-group-text"
+                                                                       id="roSpanFirstName"></span></div>
+                                <input id="inputFirstName" class="form-control"
+                                       placeholder="<fmt:message key="user.label.name"/>" autofocus=""
+                                       type="text" name="${RegistrationValidator.FIRST_NAME_KEY}">
                                 <span id="spanFirstName"></span>
                             </div>
                         </div>
@@ -95,8 +103,10 @@
                             <label for="inputLastName" class="sr-only"><fmt:message key="user.label.surname"/></label>
                             <div class="input-group">
                                 <div class="input-group-prepend"><i class="input-group-text fas fa-user"></i></div>
-                                <div class="input-group-prepend"><span class="input-group-text" id="roSpanLastName"></span></div>
-                                <input id="inputLastName" class="form-control" placeholder="<fmt:message key="user.label.surname"/>" autofocus=""
+                                <div class="input-group-prepend"><span class="input-group-text"
+                                                                       id="roSpanLastName"></span></div>
+                                <input id="inputLastName" class="form-control"
+                                       placeholder="<fmt:message key="user.label.surname"/>" autofocus=""
                                        type="text" name="${RegistrationValidator.LAST_NAME_KEY}">
                                 <span id="spanLastName"></span>
                             </div>
@@ -108,8 +118,10 @@
                             <label for="inputEmail" class="sr-only"><fmt:message key="user.label.email"/></label>
                             <div class="input-group">
                                 <div class="input-group-prepend"><i class="input-group-text fas fa-at"></i></div>
-                                <div class="input-group-prepend"><span class="input-group-text" id="roSpanEmail"></span></div>
-                                <input id="inputEmail" class="form-control" placeholder="<fmt:message key="user.label.email"/>" autofocus=""
+                                <div class="input-group-prepend"><span class="input-group-text" id="roSpanEmail"></span>
+                                </div>
+                                <input id="inputEmail" class="form-control"
+                                       placeholder="<fmt:message key="user.label.email"/>" autofocus=""
                                        type="email" name="${RegistrationValidator.EMAIL_KEY}">
                                 <span id="spanEmail"></span>
                             </div>
@@ -119,9 +131,12 @@
                             <label for="inputPassword" class="sr-only"><fmt:message key="user.label.password"/></label>
                             <div class="input-group">
                                 <div class="input-group-prepend"><i class="input-group-text fas fa-key"></i></div>
-                                <input id="inputPassword" class="form-control" placeholder="<fmt:message key="user.label.password"/>"
+                                <input id="inputPassword" class="form-control"
+                                       placeholder="<fmt:message key="user.label.password"/>"
                                        type="password" name="${RegistrationValidator.FIRST_PWD_KEY}" value="">
-                                <div class="input-group-append"><span class="input-group-text" id="strongPassword" ><fmt:message key="user.label.passwordScore"/>: x/x</span></div>
+                                <div class="input-group-append"><span class="input-group-text"
+                                                                      id="strongPassword"><fmt:message
+                                        key="user.label.passwordScore"/>: x/x</span></div>
                                 <span id="spanPassword"></span>
                             </div>
                         </div>
@@ -132,13 +147,16 @@
                             <label>
                                 <input class="d-none img-radio" type="radio" name="${RegistrationValidator.AVATAR_KEY}"
                                        value="${av}">
-                                <img src="<c:url value="/${pageContext.servletContext.getInitParameter('avatarsFolder')}/${av}"/>" class="img-input"
+                                <img src="<c:url value="/${pageContext.servletContext.getInitParameter('avatarsFolder')}/${av}"/>"
+                                     class="img-input"
                                 ><i class="far fa-check-circle img-check"></i>
                             </label>
                         </c:forEach>
                         <label>
-                            <input class="d-none img-radio" type="radio" name="${RegistrationValidator.AVATAR_KEY}" value="custom" id="customAvatar">
-                            <img src="<c:url value="/libs/fontawesome-free-5.1.1-web/svgs/regular/plus-square.svg"/>" class="img-input"
+                            <input class="d-none img-radio" type="radio" name="${RegistrationValidator.AVATAR_KEY}"
+                                   value="custom" id="customAvatar">
+                            <img src="<c:url value="/libs/fontawesome-free-5.1.1-web/svgs/regular/plus-square.svg"/>"
+                                 class="img-input"
                             ><i class="far fa-check-circle img-check"></i>
                             <input id="customAvatarImg"
                                    type="file" name="${RegistrationValidator.AVATAR_IMG_KEY}"
@@ -153,8 +171,10 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><fmt:message key="generic.label.close"/></button>
-                <button type="submit" form="modifyUserForm" class="btn btn-primary"><fmt:message key="users.modifyUserForm.submit"/></button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><fmt:message
+                        key="generic.label.close"/></button>
+                <button type="submit" form="modifyUserForm" class="btn btn-primary"><fmt:message
+                        key="users.modifyUserForm.submit"/></button>
             </div>
         </div>
     </div>
@@ -164,7 +184,7 @@
 <script src="<c:url value="/js/userValidate.js"/>"></script>
 <script src="<c:url value="/libs/zxcvbn/zxcvbn.js"/>"></script>
 <script>
-    $(document).ready( function (key, value) {
+    $(document).ready(function (key, value) {
         $('#userTable').find('> thead, tfoot').find('> tr').prepend(
             $('<th/>', {
                 text: ''
@@ -174,12 +194,12 @@
         const resDiv = $('#id-res');
         const unknownError = '<fmt:message key="generic.errors.unknownError"/>';
 
-        const table = $('#userTable').on('xhr.dt', function (e, settings, json, xhr){
+        const table = $('#userTable').on('xhr.dt', function (e, settings, json, xhr) {
             if (json === null) {
                 const json = JSON.parse(xhr.responseText);
                 resDiv.removeClass("d-none");
 
-                if(json['message'] !== undefined && json['message'] !== null) {
+                if (json['message'] !== undefined && json['message'] !== null) {
                     resDiv.html(json['message']);
                 } else {
                     resDiv.html(unknownError);
@@ -194,7 +214,7 @@
                 dataType: "json",
                 type: "get",
                 cache: "false",
-                data: function(d) {
+                data: function (d) {
                     return $('#filterForm').serialize();
                 },
                 dataSrc: ''
@@ -246,15 +266,15 @@
                 }
             ],
             order: [[1, 'asc']],
-            createdRow: function(row, data, index) {
+            createdRow: function (row, data, index) {
                 $('td', row).eq(2).html(
-                    $('<img/>',{
+                    $('<img/>', {
                         src: '<c:url value="/${pageContext.servletContext.getInitParameter('avatarsFolder')}/"/>' + data.img,
                         class: "img-responsive"
                     })
                 );
 
-                $('td', row).eq(6).html(data.isAdmin?'<fmt:message key="users.label.true"/>':'<fmt:message key="users.label.false"/>');
+                $('td', row).eq(6).html(data.isAdmin ? '<fmt:message key="users.label.true"/>' : '<fmt:message key="users.label.false"/>');
 
                 $('td', row).eq(7).html(
                     $('<div/>', {
@@ -262,10 +282,10 @@
                             $('<button/>', {
                                 class: 'btn btn-md btn-primary',
                                 title: '<fmt:message key="users.label.modifyUser"/>',
-                                html: $('<i/>',{class: 'far fa-edit'}),
+                                html: $('<i/>', {class: 'far fa-edit'}),
                                 'data-toggle': 'modal',
                                 'data-target': '#modifyUserModal',
-                                click: function(){
+                                click: function () {
                                     $('#modifyUserForm input[name="id"]').val(data.id);
                                     $('#modifyUserForm #roSpanFirstName').html(data.name);
                                     $('#modifyUserForm #roSpanLastName').html(data.surname);
@@ -275,20 +295,20 @@
                                         $('#avatarDiv').prepend(
                                             '<label id="customImgLabel">' +
                                             '    <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}" value="" checked>' +
-                                            '    <img src="<c:url value="${pageContext.servletContext.getInitParameter('avatarsFolder')}/"/>'+ data.img +'" class="img-input"' +
+                                            '    <img src="<c:url value="${pageContext.servletContext.getInitParameter('avatarsFolder')}/"/>' + data.img + '" class="img-input"' +
                                             '        ><i class="far fa-check-circle img-check"></i>' +
                                             '</label>'
                                         );
                                     } else {
-                                        $('#modifyUserForm input[name="${RegistrationValidator.AVATAR_KEY}"][value="'+data.img+'"]').prop("checked", true);
+                                        $('#modifyUserForm input[name="${RegistrationValidator.AVATAR_KEY}"][value="' + data.img + '"]').prop("checked", true);
                                     }
                                 }
                             }),
                             $('<button/>', {
                                 class: 'btn btn-md btn-danger',
                                 title: '<fmt:message key="users.label.deleteUser"/>',
-                                html: $('<i/>',{class: 'far fa-trash-alt'}),
-                                click: function(){
+                                html: $('<i/>', {class: 'far fa-trash-alt'}),
+                                click: function () {
                                     const btn = $(this);
 
                                     btn.attr("disabled", true);
@@ -297,9 +317,9 @@
                                         url: '<c:url value="/admin/users.json"/>',
                                         type: 'POST',
                                         data: {'action': 'delete', 'id': data.id}
-                                    }).done(function(){
+                                    }).done(function () {
                                         row.remove();
-                                    }).fail(function(jqXHR){
+                                    }).fail(function (jqXHR) {
                                         const prevText = btn.html();
 
                                         if (typeof jqXHR.responseJSON === 'object' &&
@@ -312,7 +332,7 @@
                                             btn.html(unknownErrorMessage);
                                         }
 
-                                        setTimeout(function(){
+                                        setTimeout(function () {
                                             btn.html(prevText);
 
                                             btn.attr("disabled", false);
@@ -328,28 +348,28 @@
             searching: false
         });
 
-        function format ( d ) {
+        function format(d) {
             const ul = $('<ul/>', {
                 class: 'list-unstyled',
                 html: [
-                    $('<li/>',{
-                        html: [$('<b/>',{ text: '<fmt:message key="user.label.password"/>: '}), document.createTextNode(d.password)]
+                    $('<li/>', {
+                        html: [$('<b/>', {text: '<fmt:message key="user.label.password"/>: '}), document.createTextNode(d.password)]
                     })
                 ]
             });
 
             if (d.verifyEmailLink !== undefined) {
                 ul.append(
-                    $('<li/>',{
-                        html: [$('<b/>',{ text: '<fmt:message key="user.label.verifyEmailLink"/>:  '}), document.createTextNode(d.verifyEmailLink)]
+                    $('<li/>', {
+                        html: [$('<b/>', {text: '<fmt:message key="user.label.verifyEmailLink"/>:  '}), document.createTextNode(d.verifyEmailLink)]
                     })
                 );
             }
 
             if (d.resetPwdEmailLink !== undefined) {
                 ul.append(
-                    $('<li/>',{
-                        html: [$('<b/>',{ text: '<fmt:message key="user.label.resetPasswordLink"/>:  '}), document.createTextNode(d.resetPwdEmailLink)]
+                    $('<li/>', {
+                        html: [$('<b/>', {text: '<fmt:message key="user.label.resetPasswordLink"/>:  '}), document.createTextNode(d.resetPwdEmailLink)]
                     })
                 )
             }
@@ -357,11 +377,11 @@
             return ul;
         }
 
-        $('#userTable > tbody').on('click','td.details-control', function () {
+        $('#userTable > tbody').on('click', 'td.details-control', function () {
             const tr = $(this).closest('tr');
-            const row = table.row( tr );
+            const row = table.row(tr);
 
-            if ( row.child.isShown() ) {
+            if (row.child.isShown()) {
                 // This row is already open - close it
                 row.child.hide();
                 tr.removeClass('shown');
@@ -371,7 +391,7 @@
             }
             else {
                 // Open this row
-                row.child( format(row.data()) ).show();
+                row.child(format(row.data())).show();
                 tr.addClass('shown');
 
                 tr.find('td.details-control i').removeClass("fa-plus-circle");
@@ -388,14 +408,14 @@
         $.fn.dataTable.ext.errMode = 'throw';
 
         {
-            const form=$('#modifyUserForm');
+            const form = $('#modifyUserForm');
             const URL = '<c:url value="/${ConstantsUtils.VALIDATE_REGISTRATION}"/>';
             const urlJSON = '<c:url value="/admin/users.json"/>';
             const resDiv = $('#id-modal-res');
             const strPwd = form.find('#strongPassword');
 
 
-            $('#modifyUserModal').on("hidden.bs.modal", function() {
+            $('#modifyUserModal').on("hidden.bs.modal", function () {
                 form[0].reset();
                 $('#customImgLabel').remove();
             });
@@ -404,17 +424,17 @@
             const successMessage = '<fmt:message key="generic.success"/>';
 
             form.find('input').blur(() => {
-                request_user_validation(form, true, URL).done((d) => updateVerifyMessages(form, add_file_errors(form,d)));
+                request_user_validation(form, true, URL).done((d) => updateVerifyMessages(form, add_file_errors(form, d)));
             });
 
-            form.find('#inputPassword').on("keyup", function(){
+            form.find('#inputPassword').on("keyup", function () {
                 strPwd.text("<fmt:message key="user.label.passwordScore"/>: " + zxcvbn(this.value).score + "/4");
             });
 
-            form.submit(function(e){
+            form.submit(function (e) {
                 e.preventDefault();
 
-                if(!$('#customAvatar').is(':checked')){
+                if (!$('#customAvatar').is(':checked')) {
                     $('#customAvatarImg').val("");
                 }
 
@@ -427,7 +447,7 @@
                         'unknownErrorMessage': unknownErrorMessage,
                         'successMessage': successMessage,
                         'resDiv': resDiv,
-                        'successCallback': function() {
+                        'successCallback': function () {
                             table.ajax.reload();
                             table.draw();
                         }
