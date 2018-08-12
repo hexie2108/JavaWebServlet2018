@@ -30,10 +30,12 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
 
     @Override
     public Integer insert(CategoryList categoryList) throws DAOException {
-        // TODO: Convert c3p0
         if (categoryList == null) {
             throw new DAOException("categoryList bean is null");
         }
+
+        CON = C3p0Util.getConnection();
+
         try (PreparedStatement stm = CON.prepareStatement("INSERT INTO CategoryList (name, description, img1, img2, img3) VALUES (?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
 
             stm.setString(1, categoryList.getName());
@@ -52,12 +54,15 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
             return categoryList.getId();
         } catch (SQLException ex) {
             throw new DAOException("Impossible to insert the new categoryList", ex);
+        } finally {
+            C3p0Util.close(CON);
         }
     }
 
     @Override
     public Long getCount() throws DAOException {
         CON = C3p0Util.getConnection();
+
         try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM CategoryList")) {
             ResultSet counter = stmt.executeQuery();
             if (counter.next()) {
@@ -154,7 +159,7 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
 
     @Override
     public List<CategoryList> filter(Integer id, String name, String description) throws DAOException {
-        // TODO: Convert c3p0
+        CON = C3p0Util.getConnection();
 
         List<CategoryList> categoryLists = new ArrayList<>();
 
@@ -185,6 +190,8 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
             }
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the list of categoryList", ex);
+        } finally {
+            C3p0Util.close(CON);
         }
 
         return categoryLists;
@@ -192,6 +199,8 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
 
     @Override
     public void delete(Integer id) throws DAOException {
+        CON = C3p0Util.getConnection();
+
         try (PreparedStatement stm = CON.prepareStatement(
                 "DELETE FROM CategoryList WHERE id = ?"
         )) {
@@ -202,7 +211,8 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
             }
         } catch (SQLException ex) {
             throw new DAOException("Impossible to delete the categoryList", ex);
+        } finally {
+            C3p0Util.close(CON);
         }
-
     }
 }

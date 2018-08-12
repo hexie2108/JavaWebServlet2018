@@ -34,7 +34,8 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
 
     @Override
     public List<Permission> getPermissionsOnListByListId(Integer listId) throws DAOException {
-        // TODO: Change to c3p0
+        CON = C3p0Util.getConnection();
+
         List<Permission> permissionList = new ArrayList<>();
 
         try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Permission WHERE Permission.listId = ?")) {
@@ -46,6 +47,8 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
             }
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the list of permission for specified list", ex);
+        } finally {
+            C3p0Util.close(CON);
         }
 
         return permissionList;
