@@ -1,5 +1,6 @@
-package it.unitn.webprogramming18.dellmm.servlets;
+package it.unitn.webprogramming18.dellmm.servlets.another;
 
+import com.google.gson.Gson;
 import it.unitn.webprogramming18.dellmm.db.daos.NotificationDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
@@ -14,12 +15,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
-@WebServlet(name = "NotificationsServlet")
-public class NotificationsServlet extends HttpServlet {
-    private final static String JSP_PAGE = "/WEB-INF/jsp/userSystem/notifiche.jsp";
-
+@WebServlet(name = "JSONNotificationsServlet")
+public class JSONNotificationsServlet extends HttpServlet {
 
     private NotificationDAO notificationDAO = null;
 
@@ -37,18 +42,49 @@ public class NotificationsServlet extends HttpServlet {
         }
     }
 
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setHeader("Cache-Control", "no-cache");
+        response.setHeader("Pragma", "no-cache");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
+
         User user = (User) request.getSession().getAttribute("user");
 
-        try {
-            List<Notification> notificationList = notificationDAO.getNotificationsByUserId(user.getId(), null);
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        df.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-            request.setAttribute("notifications", notificationList);
-            request.getRequestDispatcher(JSP_PAGE).forward(request, response);
+        Boolean filter = null;
+        String strFilter = request.getParameter("status");
+
+        if (strFilter != null) {
+            if (strFilter.equalsIgnoreCase("true")) {
+                filter = true;
+            } else if (strFilter.equalsIgnoreCase("false")) {
+                filter = false;
+            }
+        }
+
+        try {
+            List<HashMap<String, java.io.Serializable>> notificationJSON = new ArrayList<>();
+
+            List<Notification> notificationList = notificationDAO.getNotificationsByUserId(user.getId(), filter);
+
+            for (Notification notification : notificationList) {
+                HashMap<String, java.io.Serializable> h = new HashMap<>();
+                h.put("id", notification.getId());
+                h.put("date", df.format(notification.getDate()));
+                h.put("text", notification.getText());
+                h.put("status", notification.isStatus());
+
+                notificationJSON.add(h);
+            }
+
+            ServletUtility.sendJSON(request, response, 200, notificationJSON);
         } catch (DAOException e) {
             e.printStackTrace();
             ServletUtility.sendError(request, response, 500, "notifications.errors.unobtainableNotifications");
-            return;
         }
+
     }
 }

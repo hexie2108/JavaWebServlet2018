@@ -332,7 +332,7 @@
     -->
     <servlet>
         <servlet-name>AddUpdateCategoryListServlet</servlet-name>
-        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.AddUpdateCategoryListServlet</servlet-class>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.another.AddUpdateCategoryListServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>AddUpdateCategoryListServlet</servlet-name>
@@ -340,7 +340,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>AddUpdateCategoryProductServlet</servlet-name>
-        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.AddUpdateCategoryProductServlet</servlet-class>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.another.AddUpdateCategoryProductServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>AddUpdateCategoryProductServlet</servlet-name>
@@ -511,7 +511,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>NotificationsServlet</servlet-name>
-        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.NotificationsServlet</servlet-class>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.another.NotificationsServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>NotificationsServlet</servlet-name>
@@ -519,7 +519,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>NotificationsServletJSON</servlet-name>
-        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.JSONNotificationsServlet</servlet-class>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.another.JSONNotificationsServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>NotificationsServletJSON</servlet-name>
@@ -528,7 +528,7 @@
 
     <servlet>
         <servlet-name>JSONMarkNotificationServlet</servlet-name>
-        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.JSONMarkNotificationServlet</servlet-class>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.another.JSONMarkNotificationServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>JSONMarkNotificationServlet</servlet-name>

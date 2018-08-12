@@ -1,4 +1,4 @@
-package it.unitn.webprogramming18.dellmm.servlets;
+package it.unitn.webprogramming18.dellmm.servlets.another;
 
 import it.unitn.webprogramming18.dellmm.db.daos.NotificationDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
