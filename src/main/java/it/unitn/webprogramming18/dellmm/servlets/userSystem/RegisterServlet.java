@@ -9,6 +9,7 @@ import it.unitn.webprogramming18.dellmm.email.messageFactories.VerifyLinkMail;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.RegistrationValidator;
 import it.unitn.webprogramming18.dellmm.util.ServletUtility;
+import it.unitn.webprogramming18.dellmm.util.i18n;
 
 import javax.mail.MessagingException;
 import javax.servlet.ServletException;
@@ -152,11 +153,19 @@ public class RegisterServlet extends HttpServlet {
             HttpSession session = request.getSession(true);
             session.setAttribute("user", user);
 
+        //I18nEmail-----------------------------------------
+        ResourceBundle languageBundle = i18n.getBundle(request);
+        //--------------------------------------------------
+            
             try {
+            //I18nEmail-----------------------------------------            
+            String emailSubject = languageBundle.getString("emailText.label.registerEmailSubject");
+            //--------------------------------------------------
+            
                 emailFactory.sendMail(
                         "Registration",
-                        "Registration",
-                        VerifyLinkMail.createMessage(user),
+                        emailSubject,
+                        VerifyLinkMail.createMessage(user, languageBundle),
                         "registrazioneprogettowebprog@gmail.com"
                 ); // Per ora le mandiamo a noi stessi per evitare casini
             } catch (MessagingException | UnsupportedEncodingException ex) {
@@ -165,8 +174,12 @@ public class RegisterServlet extends HttpServlet {
                 if (errorList == null) {
                     errorList = new ArrayList<>();
                 }
+                
+                //I18nEmail-----------------------------------------
+                errorList.add(languageBundle.getString("forgotPassword.errors.cantSendEmail"));
+                //--------------------------------------------------
 
-                errorList.add("Impossible to send the email. Please check the email in user's settings and click resend");
+                //errorList.add("Impossible to send the email. Please check the email in user's settings and click resend");
                 session.setAttribute("errors", new ArrayList<String>());
             }
 
