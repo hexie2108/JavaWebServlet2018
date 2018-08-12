@@ -1,14 +1,12 @@
 package it.unitn.webprogramming18.dellmm.servlets.userSystem;
 
-import it.unitn.webprogramming18.dellmm.db.daos.JDBCUserDAO;
+import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCUserDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
-import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
-import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.email.EmailFactory;
 import it.unitn.webprogramming18.dellmm.email.messageFactories.ResetPasswordMail;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.ServletUtility;
-import it.unitn.webprogramming18.dellmm.util.PagePathsConstants;
+import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
 
 import javax.mail.MessagingException;
 import javax.servlet.ServletException;
@@ -33,7 +31,7 @@ public class ForgotPasswordServlet extends HttpServlet {
 
     private static final String FORGOT_PASSWORD_JSP = "/WEB-INF/jsp/userSystem/forgotPassword.jsp";
 
-    private UserDAO userDAO;
+    private JDBCUserDAO userDAO;
     private EmailFactory emailFactory;
 
     @Override
@@ -113,7 +111,7 @@ public class ForgotPasswordServlet extends HttpServlet {
                 contextPath += "/";
             }
 
-            response.sendRedirect(response.encodeRedirectURL(contextPath + "/" + PagePathsConstants.LOGIN));
+            response.sendRedirect(response.encodeRedirectURL(contextPath + "/" + ConstantsUtils.LOGIN));
         }
     }
 }

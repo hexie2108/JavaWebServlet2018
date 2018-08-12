@@ -46,29 +46,6 @@ public class JDBCCategoryProductDAO extends JDBCDAO<CategoryProduct, Integer> im
         return 0L;
     }
 
-    public Integer insert(CategoryProduct categoryProduct) throws DAOException {
-        if (categoryProduct == null) {
-            throw new DAOException("categoryProduct bean is null");
-        }
-        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO CategoryProduct (name, description, img) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
-
-            stm.setString(1, categoryProduct.getName());
-            stm.setString(2, categoryProduct.getDescription());
-            stm.setString(3, categoryProduct.getImg());
-
-            stm.executeUpdate();
-
-            ResultSet rs = stm.getGeneratedKeys();
-            if (rs.next()) {
-                categoryProduct.setId(rs.getInt(1));
-            }
-
-            return categoryProduct.getId();
-        } catch (SQLException ex) {
-            throw new DAOException("Impossible to insert the new categoryProduct", ex);
-        }
-    }
-
     @Override
     public Integer insert(CategoryProduct categoryProduct) throws DAOException {
         if (categoryProduct == null) {
@@ -152,7 +129,7 @@ public class JDBCCategoryProductDAO extends JDBCDAO<CategoryProduct, Integer> im
 
         CON = C3p0Util.getConnection();
 
-        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Categoryproduct ORDER BY id DESC LIMIT ?,?")) {
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM CategoryProduct ORDER BY id DESC LIMIT ?,?")) {
             stm.setInt(1, index);
             stm.setInt(2, number);
             try (ResultSet rs = stm.executeQuery()) {

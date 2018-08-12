@@ -1,10 +1,8 @@
 package it.unitn.webprogramming18.dellmm.servlets.front.service;
 
-import it.unitn.webprogramming18.dellmm.db.daos.ListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.PermissionDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ProductInListDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCPermissionDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCProductInListDAO;
@@ -12,7 +10,6 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.javaBeans.Permission;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import it.unitn.webprogramming18.dellmm.javaBeans.ProductInList;
-import it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
 import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;

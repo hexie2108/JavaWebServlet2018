@@ -33,6 +33,25 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
     }
 
     @Override
+    public List<Permission> getPermissionsOnListByListId(Integer listId) throws DAOException {
+        // TODO: Change to c3p0
+        List<Permission> permissionList = new ArrayList<>();
+
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Permission WHERE Permission.listId = ?")) {
+            stm.setInt(1, listId);
+            try (ResultSet rs = stm.executeQuery()) {
+                while (rs.next()) {
+                    permissionList.add(getPermissionFromResultSet(rs));
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get the list of permission for specified list", ex);
+        }
+
+        return permissionList;
+    }
+
+    @Override
     public Long getCount() throws DAOException {
         CON = C3p0Util.getConnection();
         try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM Permission")) {
@@ -243,6 +262,7 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
 
     }
 
+    @Override
     public void deletePermissionById(Integer permissionId) throws DAOException {
 
         if (permissionId == null) {
@@ -251,7 +271,7 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
 
         CON = C3p0Util.getConnection();
         try (PreparedStatement stm = CON.prepareStatement(
-                " DELETE FROM permission WHERE "
+                " DELETE FROM Permission WHERE "
                         + " id = ? "
         )) {
             stm.setInt(1, permissionId);

@@ -28,17 +28,6 @@ public interface ProductDAO extends DAO<Product, Integer> {
      */
     public Integer insert(Product product) throws DAOException;
 
-
-    /**
-     * Update the product passed as parameter and returns it.
-     *
-     * @param product the product used to update the persistence system.
-     * @return the updated product.
-     * @throws DAOException if an error occurred during the action.
-     */
-    @Override
-    public Product update(Product product) throws DAOException;
-
     /**
      * Returns the {@link Product product} with the primary key equals to the one
      * passed as parameter.

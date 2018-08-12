@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="it.unitn.webprogramming18.dellmm.servlets.userSystem.ForgotPasswordServlet" %>
 
-<%@include file="../jspf/i18n.jsp" %>
+<%@include file="../../jspf/i18n.jsp" %>
 <html>
 <head>
     <meta charset="utf-8">
@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="<c:url value="/libs/fontawesome-free-5.1.1-web/css/all.min.css"/>">
 </head>
 <body>
-<%@include file="../jspf/i18n_switcher.jsp" %>
+<%@include file="../../jspf/i18n_switcher.jsp" %>
 <nav class="navbar navbar-default navbar-static-top">
     <div class="container-fluid">
         <div class="navbar-header">

@@ -5,27 +5,13 @@
  */
 package it.unitn.webprogramming18.dellmm.servlets.front;
 
-import it.unitn.webprogramming18.dellmm.db.daos.CategoryProductDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.ListDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.PermissionDAO;
-import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
-import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
-import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
-import it.unitn.webprogramming18.dellmm.javaBeans.CategoryProduct;
-import it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList;
-import it.unitn.webprogramming18.dellmm.javaBeans.Permission;
-import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  * servlet della pagina per inserire il prodotto privato

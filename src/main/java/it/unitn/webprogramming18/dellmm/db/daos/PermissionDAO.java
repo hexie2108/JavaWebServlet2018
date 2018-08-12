@@ -102,4 +102,12 @@ public interface PermissionDAO extends DAO<Permission, Integer> {
      */
 
     public void deletePermissionById(Integer permissionId) throws DAOException;
-}
+
+    /**
+     * Returns the set of permissions on a specified list
+     *
+     * @param listId
+     * @return a List containing Permission objects associated to the specified list
+     * @throws DAOException if an error occurred during the action
+     */
+public List<Permission> getPermissionsOnListByListId(Integer listId) throws DAOException;}

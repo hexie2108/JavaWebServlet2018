@@ -1,7 +1,6 @@
 package it.unitn.webprogramming18.dellmm.util;
 
 public class ConstantsUtils {
-
     public static final String VALIDATE_REGISTRATION = "validateUser",
             REGISTER = "register",
             LOGOUT = "logout",

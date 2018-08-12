@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="it.unitn.webprogramming18.dellmm.util.RegistrationValidator" %>
-<%@ page import="it.unitn.webprogramming18.dellmm.util.PagePathsConstants" %>
+<%@ page import="it.unitn.webprogramming18.dellmm.util.ConstantsUtils" %>
 
 <%@ include file="../jspf/i18n.jsp" %>
 
@@ -155,7 +155,7 @@
         // Salva oggetti in modo da doverli cercare una sola volta
         const form = $('#form-register');
         const strPwd = form.find('#strongPassword');
-        const URL = '<c:url value="/${PagePathsConstants.VALIDATE_REGISTRATION}?strict="/>';
+        const URL = '<c:url value="/${ConstantsUtils.VALIDATE_REGISTRATION}?strict="/>';
 
         const urlJSON = '<c:url value="/register.json"/>';
         const resDiv = $('#id-res');

@@ -1,7 +1,6 @@
 package it.unitn.webprogramming18.dellmm.filters;
 
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
-import it.unitn.webprogramming18.dellmm.util.PagePathsConstants;
 import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 
 import javax.servlet.*;

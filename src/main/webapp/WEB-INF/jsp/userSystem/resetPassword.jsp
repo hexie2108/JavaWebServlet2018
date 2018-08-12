@@ -5,7 +5,7 @@
 <%@ page import="it.unitn.webprogramming18.dellmm.util.RegistrationValidator" %>
 <%@ page import="it.unitn.webprogramming18.dellmm.util.ConstantsUtils" %>
 
-<%@ include file="../jspf/i18n.jsp" %>
+<%@ include file="../../jspf/i18n.jsp" %>
 
 <html>
 <head>
@@ -25,7 +25,7 @@
           media="all">
 </head>
 <body>
-<%@ include file="../jspf/i18n_switcher.jsp" %>
+<%@ include file="../../jspf/i18n_switcher.jsp" %>
 <nav class="navbar navbar-default navbar-static-top">
     <div class="container-fluid">
         <div class="navbar-header">

@@ -74,7 +74,7 @@ public class DisplaySpecificListServlet extends HttpServlet {
             int listId = Integer.parseInt(request.getParameter("listId"));
 
             //Obtains ListBean with listId
-            it.unitn.webprogramming18.dellmm.javaBeans.List list = new it.unitn.webprogramming18.dellmm.javaBeans.List();
+            it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList list = new it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList();
             try {
                 list = listDAO.getByPrimaryKey(listId);
             } catch (DAOException ex) {

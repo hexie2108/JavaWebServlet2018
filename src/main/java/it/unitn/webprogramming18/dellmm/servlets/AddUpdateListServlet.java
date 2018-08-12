@@ -9,7 +9,7 @@ import it.unitn.webprogramming18.dellmm.db.daos.ListDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
-import it.unitn.webprogramming18.dellmm.javaBeans.List;
+import it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 
 import java.io.File;
@@ -129,7 +129,7 @@ public class AddUpdateListServlet extends HttpServlet {
 
             try {
                 //List bean, NOT a java.util.List
-                List list = new List();
+                ShoppingList list = new ShoppingList();
 
                 list.setId(listId);
 
@@ -147,7 +147,7 @@ public class AddUpdateListServlet extends HttpServlet {
                 } else {
                     //List is being modified, listId is != null
                     //ownerId is the same as the one prior to the modification
-                    List prevList = listDAO.getByPrimaryKey(listId);
+                    ShoppingList prevList = listDAO.getByPrimaryKey(listId);
                     list.setOwnerId(prevList.getOwnerId());
                     listDAO.update(list);
                 }

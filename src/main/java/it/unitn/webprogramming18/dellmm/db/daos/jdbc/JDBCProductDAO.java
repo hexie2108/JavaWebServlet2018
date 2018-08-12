@@ -33,6 +33,42 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
     }
 
     @Override
+    public List<Product> getProductsInListByListId(Integer listId) throws DAOException
+    {
+        List<Product> products = new ArrayList<>();
+
+        if (listId == null)
+        {
+            throw new DAOException("listId is null");
+        }
+
+        CON = C3p0Util.getConnection();
+
+        try (PreparedStatement stm = CON.prepareStatement("SELECT Product.* FROM ProductInList JOIN Product ON ProductInList.productId = Product.id "
+                + " WHERE  ProductInList.listId = ?"))
+        {
+            stm.setInt(1, listId);
+
+            try (ResultSet rs = stm.executeQuery())
+            {
+                while (rs.next())
+                {
+                    products.add(getProductFromResultSet(rs));
+                }
+            }
+        }
+        catch (SQLException ex)
+        {
+            throw new DAOException("Impossible to get the list of productInList", ex);
+        } finally
+        {
+            C3p0Util.close(CON);
+        }
+
+        return products;
+    }
+
+    @Override
     public Long getCount() throws DAOException {
 
         CON = C3p0Util.getConnection();
@@ -295,7 +331,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
 
         String sql = null;
         if (order.equals("categoryName")) {
-            sql = "SELECT P.* FROM Product P, Categoryproduct C WHERE P.categoryProductId=C.id AND P.name LIKE ? AND P.privateListId IS NULL ORDER BY C.name ASC  LIMIT ?,?";
+            sql = "SELECT P.* FROM Product P, CategoryProduct C WHERE P.categoryProductId=C.id AND P.name LIKE ? AND P.privateListId IS NULL ORDER BY C.name ASC  LIMIT ?,?";
 
         } else {
             sql = "SELECT * FROM Product WHERE name LIKE ? AND privateListId IS NULL ORDER BY name ASC  LIMIT ?,?";
@@ -321,49 +357,39 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
 
     @Override
     public Integer getCountOfPublicProductByNameSearch(String name) throws DAOException {
-
         Integer number = null;
 
-        if (name == null) {
+        if (name == null)
+        {
             throw new DAOException("parameter not valid", new IllegalArgumentException("The passed parameters is not valid"));
-            CON = C3p0Util.getConnection();
-            //try-with-resource, libera risorse in ogni caso
-            try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM Product WHERE name LIKE ? AND privateListId IS NULL")) {
-                stmt.setString(1, "%" + name + "%");
-                ResultSet counter = stmt.executeQuery();
-                if (counter.next()) {
-                    number = counter.getInt(1);
+        }
 
-                    throw new DAOException("Impossible to count product of search", ex);
-                } finally{
-                    C3p0Util.close(CON);
-                    return number;
-                }
-                @Override
+        CON = C3p0Util.getConnection();
+
+        //try-with-resource, libera risorse in ogni caso
+        try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM Product WHERE name LIKE ? AND privateListId IS NULL"))
+        {
+            stmt.setString(1, "%" + name + "%");
+            ResultSet counter = stmt.executeQuery();
+            if (counter.next())
+            {
+                number = counter.getInt(1);
             }
 
-            CON = C3p0Util.getConnection();
+        }
+        catch (SQLException ex)
+        {
+            throw new DAOException("Impossible to count product of search", ex);
+        } finally
+        {
+            C3p0Util.close(CON);
+        }
 
-            try (PreparedStatement stm = CON.prepareStatement("SELECT Product.* FROM ProductInList JOIN Product ON ProductInList.productId = Product.id "
-                    + " WHERE  ProductInList.listId = ?")) {
-
-                try (ResultSet rs = stm.executeQuery()) {
-                    while (rs.next()) {
-                        products.add(getProductFromResultSet(rs));
-                    }
-                }
-            } catch (SQLException ex) {
-                throw new DAOException("Impossible to get the list of productInList", ex);
-            } finally {
-                C3p0Util.close(CON);
-            }
-
-            return products;
+        return number;
         }
 
         @Override
         public List<Product> getProductsNotBuyInListByListId (Integer listId) throws DAOException {
-
             List<Product> products = new ArrayList<>();
 
             if (listId == null) {
@@ -373,9 +399,21 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
             CON = C3p0Util.getConnection();
 
             try (PreparedStatement stm = CON.prepareStatement("SELECT Product.* FROM ProductInList JOIN Product ON ProductInList.productId = Product.id "
-                    + " WHERE  ProductInList.listId = ? AND ProductInList.status = \"0\"")) {
+                    + " WHERE  ProductInList.listId = ? AND ProductInList.status = \"0\""))
+            {
                 stm.setInt(1, listId);
 
+                try (ResultSet rs = stm.executeQuery())
+                {
+                    while (rs.next())
+                    {
+                        products.add(getProductFromResultSet(rs));
+                    }
+                }
+            }
+            catch (SQLException ex)
+            {
+                throw new DAOException("Impossible to get the list of productInList", ex);
             } finally {
                 C3p0Util.close(CON);
             }

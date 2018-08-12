@@ -6,10 +6,7 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.jdbc.JDBCDAO;
 import it.unitn.webprogramming18.dellmm.javaBeans.CategoryList;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -130,8 +127,8 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
                 "UPDATE CategoryList SET "
                         + "name = ?,"
                         + "description = ?,"
-                        + "img1 = ? "
-                        + "img2 = ? "
+                        + "img1 = ?, "
+                        + "img2 = ?, "
                         + "img3 = ? "
                         + "WHERE id = ?"
         )) {

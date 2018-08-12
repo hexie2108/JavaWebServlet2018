@@ -9,7 +9,6 @@ import it.unitn.webprogramming18.dellmm.javaBeans.CategoryProduct;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;

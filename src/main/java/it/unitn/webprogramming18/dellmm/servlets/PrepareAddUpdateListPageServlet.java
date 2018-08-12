@@ -12,8 +12,8 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.CategoryList;
-import it.unitn.webprogramming18.dellmm.javaBeans.List;
 import it.unitn.webprogramming18.dellmm.javaBeans.Permission;
+import it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 
 import java.io.IOException;
@@ -79,7 +79,7 @@ public class PrepareAddUpdateListPageServlet extends HttpServlet {
             //If there's a listId parameter it should mean a modify action has been choosen
             if (listId != null) {
                 //List bean
-                List list = new List();
+                ShoppingList list = new ShoppingList();
                 try {
                     list = listDAO.getByPrimaryKey(listId);
                 } catch (DAOException ex) {

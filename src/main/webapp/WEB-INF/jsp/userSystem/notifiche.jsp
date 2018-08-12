@@ -3,7 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page import="it.unitn.webprogramming18.dellmm.util.ConstantsUtils" %>
 
-<%@include file="../jspf/i18n.jsp" %>
+<%@include file="../../jspf/i18n.jsp" %>
 <html>
 <head>
     <meta charset="utf-8">
@@ -17,7 +17,7 @@
             crossorigin="anonymous"></script>
 </head>
 <body>
-<%@include file="../jspf/i18n_switcher.jsp" %>
+<%@include file="../../jspf/i18n_switcher.jsp" %>
 <button id="reloadBtn"><fmt:message key="notifications.label.refreshNotifications"/></button>
 <ul id="notificationsList" class="list-group">
     <c:forEach items="${notifications}" var="notification">

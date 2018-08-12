@@ -3,7 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <%@ page import="it.unitn.webprogramming18.dellmm.util.RegistrationValidator" %>
-<%@ page import="it.unitn.webprogramming18.dellmm.util.PagePathsConstants" %>
+<%@ page import="it.unitn.webprogramming18.dellmm.util.ConstantsUtils" %>
 
 <%@ include file="../../jspf/i18n.jsp" %>
 <html>

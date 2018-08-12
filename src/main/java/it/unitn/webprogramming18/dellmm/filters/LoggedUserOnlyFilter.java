@@ -1,6 +1,6 @@
 package it.unitn.webprogramming18.dellmm.filters;
 
-import it.unitn.webprogramming18.dellmm.util.PagePathsConstants;
+import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
 import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 
 import javax.servlet.*;
@@ -49,7 +49,7 @@ public class LoggedUserOnlyFilter implements Filter {
             }
 
             response.sendRedirect(
-                    contextPath + PagePathsConstants.LOGIN + "?" +
+                    contextPath + ConstantsUtils.LOGIN + "?" +
                             "prevUrl" + "=" + URLEncoder.encode(prevUrl, "UTF-8") +
                             "&" + "nextUrl" + "=" + URLEncoder.encode(request.getRequestURI(), "UTF-8")
             );

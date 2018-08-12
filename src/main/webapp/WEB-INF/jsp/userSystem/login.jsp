@@ -3,7 +3,7 @@
 <%@ page import="it.unitn.webprogramming18.dellmm.servlets.userSystem.LoginServlet" %>
 <%@ page import="it.unitn.webprogramming18.dellmm.util.ConstantsUtils" %>
 
-<%@include file="../jspf/i18n.jsp" %>
+<%@include file="../../jspf/i18n.jsp" %>
 <html>
 <head>
     <meta charset="utf-8">
@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="<c:url value="/css/tmpToDelete/common.css"/>">
 </head>
 <body>
-<%@include file="../jspf/i18n_switcher.jsp" %>
+<%@include file="../../jspf/i18n_switcher.jsp" %>
 <div class="container-fluid" id="div-signin">
     <div id="div-inner">
         <form id="form-signin" method="post">

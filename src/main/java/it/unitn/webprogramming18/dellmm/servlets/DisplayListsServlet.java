@@ -66,8 +66,8 @@ public class DisplayListsServlet extends HttpServlet {
         } else {
 
             int userId = user.getId();
-            java.util.List<it.unitn.webprogramming18.dellmm.javaBeans.List> ownedLists;
-            java.util.List<it.unitn.webprogramming18.dellmm.javaBeans.List> sharedLists;
+            java.util.List<it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList> ownedLists;
+            java.util.List<it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList> sharedLists;
 
             //Gets all lists
             try {
@@ -80,10 +80,10 @@ public class DisplayListsServlet extends HttpServlet {
 
             //For each owned list, gets its products and puts both in a vector <List, Product>
             //Structure: HashMap<listBean, List<productBean>>
-            HashMap<it.unitn.webprogramming18.dellmm.javaBeans.List, java.util.List<Product>> completeOwnedLists
-                    = (HashMap<it.unitn.webprogramming18.dellmm.javaBeans.List, java.util.List<Product>>) new HashMap();
+            HashMap<it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList, java.util.List<Product>> completeOwnedLists
+                    = (HashMap<it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList, java.util.List<Product>>) new HashMap();
 
-            for (it.unitn.webprogramming18.dellmm.javaBeans.List l : ownedLists) {
+            for (it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList l : ownedLists) {
                 java.util.List<Product> products = new ArrayList();
                 try {
                     products = productDAO.getProductsInListByListId(l.getId());
@@ -97,10 +97,10 @@ public class DisplayListsServlet extends HttpServlet {
 
             //Does the exact same thing with shared with user lists
             //Structure: HashMap<listBean, List<productBean>>
-            HashMap<it.unitn.webprogramming18.dellmm.javaBeans.List, java.util.List<Product>> completeSharedLists
-                    = (HashMap<it.unitn.webprogramming18.dellmm.javaBeans.List, java.util.List<Product>>) new HashMap();
+            HashMap<it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList, java.util.List<Product>> completeSharedLists
+                    = (HashMap<it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList, java.util.List<Product>>) new HashMap();
 
-            for (it.unitn.webprogramming18.dellmm.javaBeans.List l : sharedLists) {
+            for (it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList l : sharedLists) {
                 java.util.List<Product> products = new ArrayList();
                 try {
                     products = productDAO.getProductsInListByListId(l.getId());

@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ page import="it.unitn.webprogramming18.dellmm.util.PagePathsConstants" %>
+<%@ page import="it.unitn.webprogramming18.dellmm.util.ConstantsUtils" %>
 
 <html>
 <head>
@@ -21,7 +21,7 @@
     <div class="dropdown">
         <a class="btn dropdown-toggle" data-toggle="dropdown" type="button" id="notificationsMenu"
            aria-haspopup="true" aria-expanded="false"
-           href="<c:url value="/${PagePathsConstants.NOTIFICATIONS}"/>">
+           href="<c:url value="/${ConstantsUtils.NOTIFICATIONS}"/>">
             <i class="far fa-bell"></i>
         </a>
         <div class="dropdown-menu pt-0 pb-0" aria-labelledby="notificationsMenu">
@@ -32,7 +32,7 @@
         <script src="<c:url value="/js/notifications.js"/>" crossorigin="anonymous"></script>
         <script>
             $(document).ready(function () {
-                const URL = "<c:url value="/${PagePathsConstants.NOTIFICATIONS_JSON}"/>";
+                const URL = "<c:url value="/${ConstantsUtils.NOTIFICATIONS_JSON}"/>";
 
                 const bell = $('#notificationsMenu > i');
                 const list = $('#notificationsList');

@@ -18,7 +18,7 @@ import java.util.List;
 
 @WebServlet(name = "NotificationsServlet")
 public class NotificationsServlet extends HttpServlet {
-    private final static String JSP_PAGE = "/WEB-INF/jsp/notifiche.jsp";
+    private final static String JSP_PAGE = "/WEB-INF/jsp/userSystem/notifiche.jsp";
 
 
     private NotificationDAO notificationDAO = null;
