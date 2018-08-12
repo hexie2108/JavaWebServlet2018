@@ -11,6 +11,13 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.URLEncoder;
 
+/**
+ * se utente è loggato e ha fatto una richiesta di JSON oppure POST rindirizza
+ * alla pagina 401
+ * <p>
+ * se utente è loggato e ha fatto una richiesta GET, rindirizza alla pagina di
+ * Login.
+ */
 @WebFilter(filterName = "UnloggedUserOnlyFilter")
 public class UnloggedUserOnlyFilter implements Filter {
 
@@ -35,6 +42,7 @@ public class UnloggedUserOnlyFilter implements Filter {
                 prevUrl = contextPath;
             }
 
+            // memorizza url della richiesta attuale in nextUrl,  che permette utente di ritornerà a questa pagina dopo il login
             response.sendRedirect(
                     contextPath + PagePathsConstants.ALREADY_LOGGED_IN + "?" +
                             "prevUrl" + "=" + URLEncoder.encode(prevUrl, "UTF-8") +

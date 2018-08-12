@@ -9,8 +9,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import javax.mail.internet.AddressException;
 
+/**
+ * validatore della registrazione
+ */
 public class RegistrationValidator {
+
     public static final String FIRST_NAME_KEY = "FirstName",
             LAST_NAME_KEY = "LastName",
             INF_PRIVACY_KEY = "InfPrivacy",
@@ -21,6 +26,8 @@ public class RegistrationValidator {
             AVATAR_IMG_KEY = "AvatarImg";
     public static final int MAX_LEN_FILE = 15 * 1000000,
             MIN_LEN_FILE = 0;
+
+    //array di avatar default
     public static final List<String> DEFAULT_AVATARS = Collections.unmodifiableList(Arrays.asList(
             "user.svg",
             "user-astronaut.svg",
@@ -43,6 +50,12 @@ public class RegistrationValidator {
             PWD_MIN_SYMBOL = 1;
 
     // --- Funzioni di validazioneTypeError
+    /**
+     * verifica il formatto dell'email sia valido
+     *
+     * @param email String di email da verificare
+     * @return true valido | false non valido
+     */
     private static boolean validateEmailFormat(String email) {
         boolean ris = false;
         try {
@@ -55,6 +68,45 @@ public class RegistrationValidator {
         return ris;
     }
 
+    // --- Funzioni di validazione
+
+    /**
+     * verifica che non ci sia la ripetizione dell'email in DB
+     *
+     * @param email   String di email da verificare
+     * @param userDAO DAO per accedere tabella utente in DB
+     * @return null se valido, altrimenti ErrorMessage
+     */
+    public static ErrorMessage validateEmail(String email, UserDAO userDAO) {
+        if (email == null || email.isEmpty()) {
+            return ErrorMessage.EMAIL_MISSING;
+        }
+
+        if (email.length() > EMAIL_MAX_LEN) {
+            return ErrorMessage.EMAIL_TOO_LONG;
+        }
+
+        if (!validateEmailFormat(email)) { // Controllo che la mail abbia un formato valido
+            return ErrorMessage.EMAIL_NOT_VALID;
+        } else {
+            try {
+                if (userDAO != null && userDAO.checkUserRegisteredByEmail(email) != 0) {
+                    return ErrorMessage.EMAIL_ALREADY_USED;
+                }
+            } catch (DAOException ignored) {
+                // If the check doesn't work postpone to real registration
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * verifica se il firstName sia valido
+     *
+     * @param firstName String da verificare
+     * @return null se valido, altrimenti ErrorMessage
+     */
     public static ErrorMessage validateFirstName(String firstName) {
         if (firstName == null || firstName.isEmpty()) {
             return ErrorMessage.FIRST_NAME_MISSING;
@@ -67,6 +119,12 @@ public class RegistrationValidator {
         return null;
     }
 
+    /**
+     * verifica se il lastName sia valido
+     *
+     * @param lastName String da verificare
+     * @return null se valido, altrimenti ErrorMessage
+     */
     public static ErrorMessage validateLastName(String lastName) {
         if (lastName == null || lastName.isEmpty()) {
             return ErrorMessage.LAST_NAME_MISSING;
@@ -79,11 +137,16 @@ public class RegistrationValidator {
         return null;
     }
 
+    /**
+     * verifica se la password sia valido
+     *
+     * @param password String da verificare
+     * @return null se valido, altrimenti ErrorMessage
+     */
     public static ErrorMessage validatePassword(String password) {
         if (password == null || password.isEmpty()) {
             return ErrorMessage.PASSWORD_MISSING;
         }
-
 
         if (password.length() > PWD_MAX_LEN) {
             return ErrorMessage.PASSWORD_TOO_LONG;
@@ -116,11 +179,19 @@ public class RegistrationValidator {
         return null;
     }
 
+    /**
+     * verifica se la ripetizione di password sia valida e sia uguale al
+     * password
+     *
+     * @param firstPassword  password principale
+     * @param secondPassword ripetizione di password
+     * @return null se valido, altrimenti ErrorMessage
+     */
     public static ErrorMessage validateSecondPassword(String firstPassword, String secondPassword) {
-        if (firstPassword == null ||
-                secondPassword == null ||
-                firstPassword.isEmpty() ||
-                secondPassword.isEmpty()) {
+        if (firstPassword == null
+                || secondPassword == null
+                || firstPassword.isEmpty()
+                || secondPassword.isEmpty()) {
             return ErrorMessage.PASSWORD2_MISSING;
         }
 
@@ -135,30 +206,12 @@ public class RegistrationValidator {
         return null;
     }
 
-    public static ErrorMessage validateEmail(String email, UserDAO userDAO) {
-        if (email == null || email.isEmpty()) {
-            return ErrorMessage.EMAIL_MISSING;
-        }
-
-        if (email.length() > EMAIL_MAX_LEN) {
-            return ErrorMessage.EMAIL_TOO_LONG;
-        }
-
-        if (!validateEmailFormat(email)) { // Controllo che la mail abbia un formato valido
-            return ErrorMessage.EMAIL_NOT_VALID;
-        } else {
-            try {
-                if (userDAO != null && userDAO.checkUserRegisteredByEmail(email) != 0) {
-                    return ErrorMessage.EMAIL_ALREADY_USED;
-                }
-            } catch (DAOException ignored) {
-                // If the check doesn't work postpone to real registration
-            }
-        }
-
-        return null;
-    }
-
+    /**
+     * verifica se l'utente ha accettato la privacy
+     *
+     * @param infPrivacy valore di input da form
+     * @return null se ok, altrimenti ErrorMessage
+     */
     public static ErrorMessage validateInfPrivacy(String infPrivacy) {
         if (infPrivacy == null) { // Controlla che sia stata accettata l'informativa alla privacy
             return ErrorMessage.INF_PRIVACY_MISSING;
@@ -167,6 +220,12 @@ public class RegistrationValidator {
         return null;
     }
 
+    /**
+     * verifica se l'avatar selezionato dall' utente sia valido
+     *
+     * @param avatar String di avatar
+     * @return null se valido, altrimenti ErrorMessage
+     */
     public static ErrorMessage validateAvatar(String avatar) {
         // Se avatar è custom allora controllo il file, se nessun controllo segnala errori esco immediatamente
         if (avatar == null || avatar.isEmpty()) {
@@ -181,6 +240,12 @@ public class RegistrationValidator {
         return null;
     }
 
+    /**
+     * verifica la grandezza e il percorso dell'immagine sia valido
+     *
+     * @param filePart
+     * @return
+     */
     public static ErrorMessage validateAvatarImg(Part filePart) {
         if (filePart == null) {
             return ErrorMessage.AVATAR_IMG_MISSING;
@@ -195,6 +260,13 @@ public class RegistrationValidator {
         return null;
     }
 
+    /**
+     * filtrare e convalidare hashMap della registrazione
+     *
+     * @param userDAO DAO per accedere tabella utente
+     * @param kv      hashMap della registrazione da filtrare
+     * @return
+     */
     public static HashMap<String, ErrorMessage> partialValidate(
             UserDAO userDAO,
             HashMap<String, Object> kv
@@ -277,6 +349,21 @@ public class RegistrationValidator {
         return messages;
     }
 
+    /**
+     * crea un hashMap per memorizzare tutti i dati della registrazione
+     *
+     * @param userDAO
+     * @param firstName
+     * @param lastName
+     * @param email
+     * @param firstPassword
+     * @param secondPassword
+     * @param infPrivacy
+     * @param avatar
+     * @param avatarImg
+     * @return
+     */
+
     public static HashMap<String, ErrorMessage> createValidationMessages(
             UserDAO userDAO,
             String firstName,
@@ -301,6 +388,7 @@ public class RegistrationValidator {
         return partialValidate(userDAO, kv);
     }
 
+    //enumerazione di errore
     public enum ErrorMessage {
         FIRST_NAME_MISSING,
         FIRST_NAME_TOO_LONG,

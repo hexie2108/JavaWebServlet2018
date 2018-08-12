@@ -13,29 +13,25 @@ import java.sql.Connection;
 import java.util.HashMap;
 
 /**
- * This is the base DAO class all concrete DAO using JDBC technology
- * must extend.
+ * il classe astratto di DAO per JDBC, da estendere
  *
- * @param <ENTITY_CLASS>      the class of the entities the db handle.
- * @param <PRIMARY_KEY_CLASS> the class of the primary key of the entity the
- *                            db handle.
- * @author Stefano Chirico
- * @since 1.0.170417
+ * @param <ENTITY_CLASS>      tipo di entità/classe bean da gestire.
+ * @param <PRIMARY_KEY_CLASS> tipo della chiave primaria di entità/tabella da gestire
+ * @author Stefano Chirico &lt;stefano dot chirico at unitn dot it&gt;
+ * @since 2017.04.17
  */
 public abstract class JDBCDAO<ENTITY_CLASS, PRIMARY_KEY_CLASS> implements DAO<ENTITY_CLASS, PRIMARY_KEY_CLASS> {
-    /**
-     * The JDBC {@link Connection} used to access the persistence system.
-     */
-    protected final Connection CON;
-    /**
-     * The list of other DAOs this DAO can interact with.
-     */
+
+    // HashMap di altre classi DAOs che possono interagire con questo DAO
     protected final HashMap<Class, DAO> FRIEND_DAOS;
+    // il puntatore di connessione {@link Connection} da usare per accedere al database
+    protected Connection CON;
 
     /**
-     * The base constructor for all the JDBC DAOs.
+     * il costruttore base di JDBC DAO salva la connessione da usare per
+     * accedere al database
      *
-     * @param con the internal {@code Connection}.
+     * @param con ottine la connesione {@code Connection}.
      * @author Stefano Chirico
      * @since 1.0.170417
      */
@@ -46,15 +42,22 @@ public abstract class JDBCDAO<ENTITY_CLASS, PRIMARY_KEY_CLASS> implements DAO<EN
     }
 
     /**
-     * If this DAO can interact with it, then returns the DAO of class passed
-     * as parameter.
+     * costruttore vuoto , non serve più associare una connessione fissa
+     */
+    protected JDBCDAO() {
+        FRIEND_DAOS = new HashMap<>();
+    }
+
+    /**
+     * se questo DAO può interagire con il classe DAO passato, allora
+     * restituisce il DAO della classe passato
      *
-     * @param <DAO_CLASS> the class name of the DAO that can interact with this
-     *                    DAO.
-     * @param daoClass    the class of the DAO that can interact with this DAO.
-     * @return the instance of the DAO or null if no DAO of the type passed as
-     * parameter can interact with this DAO.
-     * @throws DAOFactoryException if an error occurred.
+     * @param <DAO_CLASS> il tipo di classe del DAO che può interagire con
+     *                    questo DAO.
+     * @param daoClass    il nome classe del DAO che può interagire con questo DAO.
+     * @return l'istanza di DAO o null se tipo del DAO passato non può
+     * interagire con questo DAO
+     * @throws DAOFactoryException se c'è un errore.
      * @author Stefano Chirico
      * @since 1.0.170417
      */
@@ -62,4 +65,6 @@ public abstract class JDBCDAO<ENTITY_CLASS, PRIMARY_KEY_CLASS> implements DAO<EN
     public <DAO_CLASS extends DAO> DAO_CLASS getDAO(Class<DAO_CLASS> daoClass) throws DAOFactoryException {
         return (DAO_CLASS) FRIEND_DAOS.get(daoClass);
     }
+
+
 }

@@ -71,6 +71,31 @@ public class JDBCShopDAO extends JDBCDAO<Shop, Integer> implements ShopDAO {
     }
 
     @Override
+    public Integer insert(Shop shop) throws DAOException {
+        if (shop == null) {
+            throw new DAOException("shop bean is null");
+        }
+        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO Shop (lat, lng, category) VALUES (?,?,?)",
+                Statement.RETURN_GENERATED_KEYS)) {
+
+            stm.setDouble(1, shop.getLat());
+            stm.setDouble(2, shop.getLng());
+            stm.setInt(3, shop.getCategory());
+
+            stm.executeUpdate();
+
+            ResultSet rs = stm.getGeneratedKeys();
+            if (rs.next()) {
+                shop.setId(rs.getInt(1));
+            }
+
+            return shop.getId();
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to insert the new shop", ex);
+        }
+    }
+
+    @Override
     public Shop getByPrimaryKey(Integer primaryKey) throws DAOException {
         Shop shop = null;
         if (primaryKey == null) {
@@ -135,6 +160,7 @@ public class JDBCShopDAO extends JDBCDAO<Shop, Integer> implements ShopDAO {
         return shop;
     }
 
+    @Override
     public List<Shop> getShopsByCategory(String category) throws DAOException {
         List<Shop> shopList = new ArrayList<>();
 

@@ -1,6 +1,6 @@
 package it.unitn.webprogramming18.dellmm.servlets.userSystem;
 
-import it.unitn.webprogramming18.dellmm.db.daos.UserDAO;
+import it.unitn.webprogramming18.dellmm.db.daos.JDBCUserDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
@@ -31,23 +31,15 @@ public class ForgotPasswordServlet extends HttpServlet {
             ERR_GEN_RST_LINK_KEY = "error_gen_rst_link",
             ERR_SEND_MAIL = "error_send_email";
 
-    private static final String FORGOT_PASSWORD_JSP = "/WEB-INF/jsp/forgotPassword.jsp";
+    private static final String FORGOT_PASSWORD_JSP = "/WEB-INF/jsp/userSystem/forgotPassword.jsp";
 
     private UserDAO userDAO;
     private EmailFactory emailFactory;
 
     @Override
     public void init() throws ServletException {
-        DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
-        if (daoFactory == null) {
-            throw new ServletException("Impossible to get db factory for user storage system");
-        }
 
-        try {
-            userDAO = daoFactory.getDAO(UserDAO.class);
-        } catch (DAOFactoryException ex) {
-            throw new ServletException("Impossible to get db factory for user storage system", ex);
-        }
+        userDAO = new JDBCUserDAO();
 
         emailFactory = (EmailFactory) super.getServletContext().getAttribute("emailFactory");
         if (emailFactory == null) {
@@ -55,6 +47,7 @@ public class ForgotPasswordServlet extends HttpServlet {
         }
     }
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (request.getRequestURI().endsWith(".json")) {
             ServletUtility.sendError(request, response, 400, "generic.errors.postOnly");
@@ -62,7 +55,6 @@ public class ForgotPasswordServlet extends HttpServlet {
             request.getRequestDispatcher(FORGOT_PASSWORD_JSP).forward(request, response);
         }
     }
-
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String email = request.getParameter(EMAIL_KEY);
@@ -96,7 +88,6 @@ public class ForgotPasswordServlet extends HttpServlet {
             userDAO.update(user);
 
             // TODO: Risettare user?
-
             emailFactory.sendMail(
                     "Reset Password",
                     "Reset Password",

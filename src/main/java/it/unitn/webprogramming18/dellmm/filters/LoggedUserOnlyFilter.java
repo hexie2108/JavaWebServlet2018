@@ -11,6 +11,13 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.URLEncoder;
 
+/**
+ * se utente non è loggato e ha fatto una richiesta di JSON oppure POST
+ * rindirizza alla pagina 401
+ * <p>
+ * se utente non è loggato e ha fatto una richiesta GET, rindirizza alla pagina
+ * di Login.
+ */
 @WebFilter(filterName = "LoggedUserOnlyFilter")
 public class LoggedUserOnlyFilter implements Filter {
 

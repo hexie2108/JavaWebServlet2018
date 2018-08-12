@@ -12,79 +12,78 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import java.util.List;
 
 /**
- * The basic DAO interface that all DAOs must implement.
+ * L'interfaccia più base da implementare per ogni DAO
  *
- * @param <ENTITY_CLASS> the class of the entity to handle.
- * @param <PRIMARY_KEY>  the class of the primary key of the entity the DAO
- *                       handle.
+ * @param <ENTITY_CLASS> tipo di entità/classe bean da gestire.
+ * @param <PRIMARY_KEY>  tipo della chiave primaria di entità/tabella da gestire
  * @author Stefano Chirico &lt;stefano dot chirico at unitn dot it&gt;
  * @since 2017.04.17
  */
 public interface DAO<ENTITY_CLASS, PRIMARY_KEY> {
 
     /**
-     * Returns the number of records of {@code ENTITY_CLASS} stored on the
-     * persistence system of the application.
+     * Ritorna il numero totale di records della entità/tabella
+     * {@code ENTITY_CLASS} nella database
      *
-     * @return the number of records present into the storage system.
-     * @throws DAOException if an error occurred during the information
-     *                      retrieving.
+     * @return il numero totale di records.
+     * @throws DAOException se si è verificato un errore durante il recupero
+     *                      dell'informazione
      * @author Stefano Chirico
      * @since 1.0.170417
      */
     public Long getCount() throws DAOException;
 
     /**
-     * Returns the {@code ENTITY_CLASS} instance of the storage system record
-     * with the primary key equals to the one passed as parameter.
+     * recupera una istanza {@code ENTITY_CLASS} dal database attraverso il
+     * chiave primaria passata
      *
-     * @param primaryKey the primary key used to obtain the entity instance.
-     * @return the {@code ENTITY_CLASS} instance of the storage system record
-     * with the primary key equals to the one passed as parameter or
-     * {@code null} if no entities with that primary key is present into the
-     * storage system.
-     * @throws DAOException if an error occurred during the information
-     *                      retrieving.
+     * @param primaryKey ID da passare per ottere l'istanza
+     * @return l'istanza {@code ENTITY_CLASS} ricercata oppure {@code null} se
+     * non ha trovato
+     * @throws DAOException se si è verificato un errore durante il recupero
+     *                      dell'informazione retrieving.
      * @author Stefano Chirico
      * @since 1.0.170417
      */
     public ENTITY_CLASS getByPrimaryKey(PRIMARY_KEY primaryKey) throws DAOException;
 
     /**
-     * Returns the list of all the valid entities of type {@code ENTITY_CLASS}
-     * stored by the storage system.
+     * Restituisce la lista di tutte le entità di tipo {@code ENTITY_CLASS}
      *
-     * @return the list of all the valid entities of type {@code ENTITY_CLASS}.
-     * @throws DAOException if an error occurred during the information
-     *                      retrieving.
+     * @return la lista di tutte le entità di tipo {@code ENTITY_CLASS}.
+     * @throws DAOException se si è verificato un errore durante il recupero
+     *                      dell'informazione retrieving.
      * @author Stefano Chirico
      * @since 1.0.170417
      */
     public List<ENTITY_CLASS> getAll() throws DAOException;
 
     /**
-     * Update the entity passed as parameter and returns it.
+     * Aggiorna l'entità passata nel database
      *
-     * @param entity the entity used to update the persistence system.
-     * @return the updated entity.
-     * @throws DAOException if an error occurred during the action.
+     * @param entity l'entità che vuole aggiornare
+     * @return l'entità aggiornato
+     * @throws DAOException se si è verificato un errore durante il recupero
+     *                      dell'informazione
      * @author Stefano Chirico
      * @since 1.0.170418
      */
     public ENTITY_CLASS update(ENTITY_CLASS entity) throws DAOException;
 
     /**
-     * If this DAO can interact with it, then returns the DAO of class passed as
-     * parameter.
+     * se questo DAO può interagire con il classe DAO passato, allora
+     * restituisce il DAO della classe passato
      *
-     * @param <DAO_CLASS> the class name of the DAO that can interact with this
-     *                    DAO.
-     * @param daoClass    the class of the DAO that can interact with this DAO.
-     * @return the instance of the DAO or null if no DAO of the type passed as
-     * parameter can interact with this DAO.
-     * @throws DAOFactoryException if an error occurred.
+     * @param <DAO_CLASS> il tipo di classe del DAO che può interagire con
+     *                    questo DAO.
+     * @param daoClass    il nome classe del DAO che può interagire con questo DAO.
+     * @return l'istanza di DAO o null se tipo del DAO passato non può
+     * interagire con questo DAO
+     * @throws DAOFactoryException se c'è un errore.
      * @author Stefano Chirico
      * @since 1.0.170417
      */
     public <DAO_CLASS extends DAO> DAO_CLASS getDAO(Class<DAO_CLASS> daoClass) throws DAOFactoryException;
+
+
 }

@@ -1,12 +1,17 @@
 package it.unitn.webprogramming18.dellmm.servlets.userSystem;
 
 import it.unitn.webprogramming18.dellmm.db.daos.UserDAO;
+import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCUserDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
-import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
-import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.email.EmailFactory;
 import it.unitn.webprogramming18.dellmm.email.messageFactories.VerifyLinkMail;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
+import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
+import it.unitn.webprogramming18.dellmm.util.PageConstantsUtils;
+import it.unitn.webprogramming18.dellmm.util.FileUtils;
+
+import static it.unitn.webprogramming18.dellmm.util.FileUtils.isValidFileExtension;
+
 import it.unitn.webprogramming18.dellmm.util.RegistrationValidator;
 import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 
@@ -27,6 +32,7 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -34,7 +40,7 @@ import java.util.stream.Collectors;
 @WebServlet(name = "RegisterServlet")
 @MultipartConfig
 public class RegisterServlet extends HttpServlet {
-    private static final String JSP_PAGE_PATH = "/WEB-INF/jsp/register.jsp";
+    private static final String JSP_PAGE_PATH = "/WEB-INF/jsp/userSystem/register.jsp";
 
     private UserDAO userDAO;
     private EmailFactory emailFactory;

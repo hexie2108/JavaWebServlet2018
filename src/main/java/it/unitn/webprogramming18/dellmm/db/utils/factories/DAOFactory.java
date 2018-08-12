@@ -9,18 +9,20 @@ package it.unitn.webprogramming18.dellmm.db.utils.factories;
 import it.unitn.webprogramming18.dellmm.db.utils.DAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 
+import java.sql.Connection;
 
 /**
- * This interface must be implemented by all the concrete {@code DAOFactor(y)}
- * ies.
+ * L'interfaccia più base da implementare per ogni fabbrica di DAO
+ * {@code DAOFactor(y)}
  *
  * @author Stefano Chirico &lt;stefano dot chirico at unitn dot it&gt;
  * @since 2017.04.17
  */
 public interface DAOFactory {
 
+
     /**
-     * Shutdowns the access to the storage system.
+     * chiudere la connessione
      *
      * @author Stefano Chirico
      * @since 1.0.170417

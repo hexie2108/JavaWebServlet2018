@@ -67,6 +67,37 @@
         <param-name>smtpPassword</param-name>
         <param-value>xeecaoS5tood3bee</param-value>
     </context-param>
+    <!-- quantià di item nelle varie pagine-->
+    <context-param>
+        <description>quantià categoria per slider</description>
+        <param-name>quantityCatForSlider</param-name>
+        <param-value>4</param-value>
+    </context-param>
+    <context-param>
+        <description>quantià di item per home</description>
+        <param-name>quantityItemForHome</param-name>
+        <param-value>12</param-value>
+    </context-param>
+    <context-param>
+        <description>quantià di item per categoria</description>
+        <param-name>quantityItemForCategory</param-name>
+        <param-value>9</param-value>
+    </context-param>
+    <context-param>
+        <description>quantià di item per la ricerca</description>
+        <param-name>quantityItemForSearch</param-name>
+        <param-value>9</param-value>
+    </context-param>
+    <!-- pagina di index -->
+    <welcome-file-list>
+        <welcome-file>home</welcome-file>
+    </welcome-file-list>
+    <!-- pagina di errore
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/jsp/error/404.jsp</location>
+    </error-page>
+    -->
 
     <!-- AVATAR SETTINGS -->
     <context-param>
@@ -81,6 +112,37 @@
         <listener-class>it.unitn.webprogramming18.dellmm.listeners.WebAppContextListener</listener-class>
     </listener>
     <!-- FILTERS -->
+    <filter>
+        <filter-name>UnloggedUserOnlyFilter</filter-name>
+        <filter-class>it.unitn.webprogramming18.dellmm.filters.UnloggedUserOnlyFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>UnloggedUserOnlyFilter</filter-name>
+        <url-pattern>/login</url-pattern>
+        <url-pattern>/login.json</url-pattern>
+
+        <url-pattern>/forgotPassword</url-pattern>
+        <url-pattern>/forgotPassword.json</url-pattern>
+
+        <url-pattern>/register</url-pattern>
+        <url-pattern>/register.json</url-pattern>
+
+        <url-pattern>/resetPassword</url-pattern>
+        <url-pattern>/resetPassword.json</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>FrontPagePrintListFilter</filter-name>
+        <filter-class>it.unitn.webprogramming18.dellmm.filters.FrontPagePrintListFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>FrontPagePrintListFilter</filter-name>
+        <url-pattern>/home</url-pattern>
+        <url-pattern>/category</url-pattern>
+        <url-pattern>/search</url-pattern>
+        <url-pattern>/updateProduct</url-pattern>
+    </filter-mapping>
+
     <filter>
         <filter-name>LoggedUserOnlyFilter</filter-name>
         <filter-class>it.unitn.webprogramming18.dellmm.filters.LoggedUserOnlyFilter</filter-class>
@@ -102,26 +164,18 @@
         <url-pattern>/notifications.json</url-pattern>
 
         <url-pattern>/markNotification.json</url-pattern>
-    </filter-mapping>
 
-    <filter>
-        <filter-name>UnloggedUserOnlyFilter</filter-name>
-        <filter-class>it.unitn.webprogramming18.dellmm.filters.UnloggedUserOnlyFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>UnloggedUserOnlyFilter</filter-name>
-
-        <url-pattern>/login</url-pattern>
-        <url-pattern>/login.json</url-pattern>
-
-        <url-pattern>/forgotPassword</url-pattern>
-        <url-pattern>/forgotPassword.json</url-pattern>
-
-        <url-pattern>/register</url-pattern>
-        <url-pattern>/register.json</url-pattern>
-
-        <url-pattern>/resetPassword</url-pattern>
-        <url-pattern>/resetPassword.json</url-pattern>
+        <url-pattern>/mylists</url-pattern>
+        <url-pattern>/mylist</url-pattern>
+        <url-pattern>/updateList</url-pattern>
+        <url-pattern>/updateProduct</url-pattern>
+        <url-pattern>/service/updateItemInListService</url-pattern>
+        <url-pattern>/service/updateListService</url-pattern>
+        <url-pattern>/service/changeListService</url-pattern>
+        <url-pattern>/service/commentService</url-pattern>
+        <url-pattern>/service/sharingService</url-pattern>
+        <url-pattern>/service/updateListService</url-pattern>
+        <url-pattern>/service/updateProductService</url-pattern>
     </filter-mapping>
 
     <filter>
@@ -135,6 +189,138 @@
     </filter-mapping>
 
     <!-- SERVLETS -->
+
+    <!-- SERVLETS OF PAGE _____________________________________________________________________________ -->
+    <servlet>
+        <servlet-name>HomeServlet</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.front.HomeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>HomeServlet</servlet-name>
+        <url-pattern>/home</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>search</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.front.SearchServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>search</servlet-name>
+        <url-pattern>/search</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>CategoryServlet</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.front.CategoryServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CategoryServlet</servlet-name>
+        <url-pattern>/category</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>DisplayListsServlet</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.front.DisplayListsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DisplayListsServlet</servlet-name>
+        <url-pattern>/mylists</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>DisplaySpecificListServlet</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.front.DisplaySpecificListServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DisplaySpecificListServlet</servlet-name>
+        <url-pattern>/mylist</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>UpdateListServlet</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.front.UpdateListServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpdateListServlet</servlet-name>
+        <url-pattern>/updateList</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>UpdateProductServlet</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.front.UpdateProductServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpdateProductServlet</servlet-name>
+        <url-pattern>/updateProduct</url-pattern>
+    </servlet-mapping>
+    <!-- SERVLETS OF SERVICE _____________________________________________________________________________ -->
+    <servlet>
+        <servlet-name>UpdateItemInListService</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.front.service.UpdateItemInListService</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpdateItemInListService</servlet-name>
+        <url-pattern>/service/updateItemInListService</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>UpdateItemInListUnloggedUserOnlyService</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.front.service.UpdateItemInListUnloggedUserOnlyService
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpdateItemInListUnloggedUserOnlyService</servlet-name>
+        <url-pattern>/service/updateItemInListUnloggedUserOnlyService</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>ChangeListService</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.front.service.ChangeListService</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ChangeListService</servlet-name>
+        <url-pattern>/service/changeListService</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>CommentService</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.front.service.CommentService</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CommentService</servlet-name>
+        <url-pattern>/service/commentService</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>SharingService</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.front.service.SharingService</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SharingService</servlet-name>
+        <url-pattern>/service/sharingService</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>UpdateListService</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.front.service.UpdateListService</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpdateListService</servlet-name>
+        <url-pattern>/service/updateListService</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>UpdateProductService</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.front.service.UpdateProductService</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpdateProductService</servlet-name>
+        <url-pattern>/service/updateProductService</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CheckExistenceOfEmailService</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.service.CheckExistenceOfEmailService
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CheckExistenceOfEmailService</servlet-name>
+        <url-pattern>/service/checkExistenceOfEmailService</url-pattern>
+    </servlet-mapping>
+
+
+
+
+
+    <!--
     <servlet>
         <servlet-name>DisplaySpecificListServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.DisplaySpecificListServlet</servlet-class>
@@ -143,6 +329,7 @@
         <servlet-name>DisplaySpecificListServlet</servlet-name>
         <url-pattern>/DisplaySpecificListServlet</url-pattern>
     </servlet-mapping>
+    -->
     <servlet>
         <servlet-name>AddUpdateCategoryListServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.AddUpdateCategoryListServlet</servlet-class>
@@ -395,8 +582,10 @@
     </servlet-mapping>
 
 
+
     <!-- ERROR PAGE -->
     <error-page>
         <location>/WEB-INF/errorPage.jsp</location>
     </error-page>
+
 </web-app>

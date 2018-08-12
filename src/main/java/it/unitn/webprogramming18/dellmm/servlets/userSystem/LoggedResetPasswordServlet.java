@@ -1,6 +1,7 @@
 package it.unitn.webprogramming18.dellmm.servlets.userSystem;
 
 import it.unitn.webprogramming18.dellmm.db.daos.UserDAO;
+import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCUserDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
@@ -19,24 +20,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+
 @WebServlet(name = "LoggedResetPasswordServlet")
 public class LoggedResetPasswordServlet extends HttpServlet {
-    private static final String LOGGED_RESET_PASSWORD = "/WEB-INF/jsp/loggedResetPassword.jsp";
+    private static final String LOGGED_RESET_PASSWORD = "/WEB-INF/jsp/userSystem/loggedResetPassword.jsp";
 
     private UserDAO userDAO = null;
 
     @Override
     public void init() throws ServletException {
-        DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
-        if (daoFactory == null) {
-            throw new ServletException("Impossible to get db factory for user storage system");
-        }
 
-        try {
-            userDAO = daoFactory.getDAO(UserDAO.class);
-        } catch (DAOFactoryException ex) {
-            throw new ServletException("Impossible to get db factory for user storage system", ex);
-        }
+        userDAO = new JDBCUserDAO();
+
     }
 
 

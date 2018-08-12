@@ -1,6 +1,7 @@
 package it.unitn.webprogramming18.dellmm.servlets.userSystem;
 
 import it.unitn.webprogramming18.dellmm.db.daos.UserDAO;
+import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCUserDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
@@ -24,22 +25,13 @@ public class ResetPasswordServlet extends HttpServlet {
 
     public static final String MSG_KEY = "message";
 
-    private static final String RESET_PASSWORD_JSP = "/WEB-INF/jsp/resetPassword.jsp";
+    private static final String RESET_PASSWORD_JSP = "/WEB-INF/jsp/userSystem/resetPassword.jsp";
 
     private UserDAO userDAO;
 
     @Override
     public void init() throws ServletException {
-        DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
-        if (daoFactory == null) {
-            throw new ServletException("Impossible to get db factory for user storage system");
-        }
-
-        try {
-            userDAO = daoFactory.getDAO(UserDAO.class);
-        } catch (DAOFactoryException ex) {
-            throw new ServletException("Impossible to get db factory for user storage system", ex);
-        }
+        userDAO = new JDBCUserDAO();
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

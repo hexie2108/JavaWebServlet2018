@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+        "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+
+<taglib>
+    <tlib-version>1.0</tlib-version>
+    <jsp-version>2.0</jsp-version>
+    <short-name>tag customizzata</short-name>
+
+    <tag>
+        <name>getCategoryNameById</name>
+        <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagGetCategoryNameById</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>categoryId</name>
+            <required>true</required>
+            <type>java.lang.Integer</type>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>getUserById</name>
+        <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagGetUserById</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>userId</name>
+            <required>true</required>
+            <type>java.lang.Integer</type>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>getListCategoryByListCategoryId</name>
+        <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagGetListCategoryByListCategoryId</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>listCategoryId</name>
+            <required>true</required>
+            <type>java.lang.Integer</type>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>getAllCategoryOfProduct</name>
+        <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagGetAllCategoryOfProduct</tag-class>
+        <body-content>scriptless</body-content>
+    </tag>
+
+    <tag>
+        <name>getAllCategoryOfShoppingList</name>
+        <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagGetAllCategoryOfShoppingList</tag-class>
+        <body-content>scriptless</body-content>
+    </tag>
+
+    <tag>
+        <name>getElementsOfShppingListByCookie</name>
+        <tag-class>it.unitn.webprogramming18.dellmm.jstl.TagGetElementsOfShoppingListByCookie</tag-class>
+        <body-content>scriptless</body-content>
+    </tag>
+
+    <!--
+    <tag>
+      <name>getProductNotBuyListByListId</name>
+      <tag-class>it.unitn.webprogramming18.dellmm.jstl.notUse.TagGetProductNotBuyListByListId</tag-class>
+      <body-content>scriptless</body-content>
+      <attribute>
+        <name>listId</name>
+        <required>true</required>
+        <type>java.lang.Integer</type>
+        <rtexprvalue>true</rtexprvalue>
+      </attribute>
+    </tag>
+
+          <tag>
+            <name>getProductBoughtListByListId</name>
+            <tag-class>it.unitn.webprogramming18.dellmm.jstl.notUse.TagGetProductBoughtListByListId</tag-class>
+            <body-content>scriptless</body-content>
+            <attribute>
+              <name>listId</name>
+              <required>true</required>
+              <type>java.lang.Integer</type>
+              <rtexprvalue>true</rtexprvalue>
+            </attribute>
+          </tag>
+          <tag>
+            <name>getAllAddableListByUserId</name>
+            <tag-class>it.unitn.webprogramming18.dellmm.jstl.notUse.TagGetAllAddableListByUserId</tag-class>
+            <body-content>scriptless</body-content>
+          </tag>
+          -->
+</taglib>

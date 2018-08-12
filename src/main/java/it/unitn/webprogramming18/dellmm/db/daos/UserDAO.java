@@ -7,9 +7,10 @@ import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import java.util.List;
 
 public interface UserDAO extends DAO<User, Integer> {
+
     /**
-     * Returns the number of {@link User user} stored on the persistence system
-     * of the application.
+     * Returns the number of {@link User user} stored on the persistence
+     * system of the application.
      *
      * @return the number of records present into the storage system.
      * @throws DAOException if an error occurred during the information
@@ -24,8 +25,8 @@ public interface UserDAO extends DAO<User, Integer> {
      *
      * @param primaryKey the {@code id} of the {@code user} to get.
      * @return the {@code user} with the id equals to the one passed as
-     * parameter or {@code null} if no entities with that id is not present into
-     * the storage system.
+     * parameter or {@code null} if no entities with that id is not present
+     * into the storage system.
      * @throws DAOException if an error occurred during the information
      *                      retrieving.
      */
@@ -94,9 +95,18 @@ public interface UserDAO extends DAO<User, Integer> {
      */
     public int checkUserRegisteredByEmail(String email) throws DAOException;
 
+    /**
+     * controlla se email esiste già o no in DB
+     *
+     * @param email
+     * @return true se esiste già, false se non esiste
+     * @throws DAOException
+     */
+    public boolean checkExistenceOfEmail(String email) throws DAOException;
 
     /**
-     * Insert a user in the database and return a User with all the fields(specified and automatically generated)
+     * Insert a user in the database and return a User with all the
+     * fields(specified and automatically generated)
      *
      * @param first_name user's first name
      * @param last_name  user's surname

@@ -17,7 +17,18 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+
 public interface ServletUtility {
+
+    /**
+     * metodo statico per mandare dati in formati JSON
+     *
+     * @param request
+     * @param response
+     * @param statusCode
+     * @param json
+     * @throws IOException
+     */
     static void sendJSON(HttpServletRequest request, HttpServletResponse response, int statusCode, Object json) throws IOException {
         response.setHeader("Cache-Control", "no-cache");
         response.setHeader("Pragma", "no-cache");
@@ -32,6 +43,15 @@ public interface ServletUtility {
         response.setStatus(statusCode);
     }
 
+    /**
+     * metodo statico per mandare alla pagina di errore
+     *
+     * @param request
+     * @param response
+     * @param statusCode
+     * @param error
+     * @throws IOException
+     */
     static void sendError(HttpServletRequest request, HttpServletResponse response, int statusCode, String error) throws IOException {
         if (request.getRequestURI().endsWith(".json")) {
             HashMap<String, String> obj = new HashMap<>();
@@ -44,6 +64,15 @@ public interface ServletUtility {
         }
     }
 
+    /**
+     * metodo statico per mandare alla pagina di errore per errore di validazione
+     *
+     * @param request
+     * @param response
+     * @param statusCode
+     * @param errMap
+     * @throws IOException
+     */
     static void sendValidationError(HttpServletRequest request, HttpServletResponse response, int statusCode, Map<String, String> errMap) throws IOException {
         if (request.getRequestURI().endsWith(".json")) {
             ResourceBundle bundle = it.unitn.webprogramming18.dellmm.util.i18n.getBundle(request);

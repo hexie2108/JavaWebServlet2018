@@ -72,4 +72,32 @@ public interface CommentDAO extends DAO<Comment, Integer> {
      * @throws DAOException
      */
     public HashMap<Integer, String> getCommentsOnListByListId(String listId) throws DAOException;
+
+    /**
+     * get tutti i commenti di una lista (in formato lista)
+     *
+     * @param listId id lista
+     * @return lista di commento ordinato in base id
+     * @throws DAOException
+     */
+    public List<Comment> getCommentsOnListByListId2(Integer listId) throws DAOException;
+
+    /**
+     * get il numero di commenti di una lista
+     *
+     * @param listId id lista
+     * @return il numero di commenti
+     * @throws DAOException
+     */
+    public Integer getNumberOfCommentsByListId(Integer listId) throws DAOException;
+
+
+    /**
+     * eliminare il commento
+     *
+     * @param commentId id commento
+     * @throws DAOException
+     */
+
+    public void deleteCommentById(Integer commentId) throws DAOException;
 }
