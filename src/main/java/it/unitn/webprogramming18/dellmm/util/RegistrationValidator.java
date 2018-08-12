@@ -50,6 +50,7 @@ public class RegistrationValidator {
             PWD_MIN_SYMBOL = 1;
 
     // --- Funzioni di validazioneTypeError
+
     /**
      * verifica il formatto dell'email sia valido
      *

@@ -110,4 +110,5 @@ public interface PermissionDAO extends DAO<Permission, Integer> {
      * @return a List containing Permission objects associated to the specified list
      * @throws DAOException if an error occurred during the action
      */
-public List<Permission> getPermissionsOnListByListId(Integer listId) throws DAOException;}
+    public List<Permission> getPermissionsOnListByListId(Integer listId) throws DAOException;
+}
