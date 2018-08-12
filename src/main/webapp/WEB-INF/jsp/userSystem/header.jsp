@@ -27,18 +27,17 @@
     <%--jquery--%>
     <script type="text/javascript" src="${pageContext.request.contextPath}/libs/jquery/jquery-3.3.1.min.js"></script>
     <%--js di bootstrap--%>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/libs/bootstrap/popper.min.js"></script>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/libs/bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/libs/bootstrap-4.1.1-dist/js/bootstrap.bundle.min.js"></script>
 
     <%--js personale--%>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/user-system-script.js"></script>
 
 
     <%--css di bootstrap--%>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/libs/bootstrap/bootstrap.min.css" type="text/css"
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css" type="text/css"
           media="all">
     <%--css di fontawesome--%>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/libs/fontAwesome/all.css" type="text/css"
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/libs/fontawesome-free-5.1.1-web/css/all.min.css" type="text/css"
           media="all">
     <%--css personale --%>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/user-system-style.css" type="text/css"
