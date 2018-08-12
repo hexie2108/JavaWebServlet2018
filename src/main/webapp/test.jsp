@@ -22,7 +22,7 @@
             width: "30%",
             ajax: {
                 dataType: "json",
-                url: "${pageContext.request.contextPath}/test",
+                url: '<c:url value="/test"/>',
                 data: function (params) {
                     return {
                         q: params.term, // search term

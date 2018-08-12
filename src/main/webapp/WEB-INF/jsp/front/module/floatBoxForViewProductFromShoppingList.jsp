@@ -73,7 +73,7 @@
 
 
                             <%--  form per eliminare il prodotto dalla cookie --%>
-                            <form action="${pageContext.request.contextPath}/service/updateItemInListUnloggedUserOnlyService"
+                            <form action="<c:url value="/service/updateItemInListUnloggedUserOnlyService"/>"
                                   method="GET">
 
                                 <input class="productIdFromList" type="hidden" name="productId" value="1"/>
@@ -92,7 +92,7 @@
                             <%-- form per segna il prodotto come già comprato--%>
                             <div class="formToBuy">
 
-                                <form action="${pageContext.request.contextPath}/service/updateItemInListService"
+                                <form action="<c:url value="/service/updateItemInListService"/>"
                                       method="GET">
 
                                     <input class="productIdFromList" type="hidden" name="productId" value="1"/>
@@ -109,7 +109,7 @@
                             <%-- form per segna il prodotto come già comprato--%>
                             <div class="formToDelete">
 
-                                <form action="${pageContext.request.contextPath}/service/updateItemInListService"
+                                <form action="<c:url value="/service/updateItemInListService"/>"
                                       method="GET">
 
                                     <input class="productIdFromList" type="hidden" name="productId" value="1"/>

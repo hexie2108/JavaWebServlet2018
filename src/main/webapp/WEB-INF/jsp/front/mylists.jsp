@@ -14,7 +14,7 @@
 
         <%-- breadcrumb--%>
         <div class="breadcrumbs">
-            <a href="${pageContext.request.contextPath}">
+            <a href="<c:url value="/"/>">
                 <i class="fas fa-home"></i>
             </a>
             <span>&gt;</span>
@@ -27,7 +27,7 @@
 
         <%-- link per creare una nuova lista--%>
         <div class="add-list-box">
-            <a class="btn btn-info" href="${pageContext.request.contextPath}/updateList"><i class="fas fa-plus"></i>
+            <a class="btn btn-info" href="<c:url value="/updateList"/>"><i class="fas fa-plus"></i>
                 crea una nuova lista</a>
         </div>
 
@@ -55,7 +55,7 @@
 
                                 <div class="list-logo">
                                     <img class="img-fluid"
-                                         src="${pageContext.request.contextPath}/image/list/${list.img}" alt="logo"/>
+                                         src="<c:url value="/image/list/${list.img}"/>" alt="logo"/>
                                 </div>
 
                                 <div class="list-info">
@@ -107,16 +107,16 @@
                                     <a href="javascript:;" data-toggle="modal" data-target="#boxShowItem"
                                        onclick="showProductWindowsFromList(${product.id}, true, false, true)">
                                         <img class="img img-fluid"
-                                             src="${pageContext.request.contextPath}/image/product/${product.img}"
+                                             src="<c:url value="/image/product/${product.img}"/>"
                                              alt="${product.name}"/>
                                     </a>
 
                                         <%-- campi necessari per visuallizare il prodotto nella finestrina--%>
                                     <input class="name" type="hidden" value="${product.name}"/>
                                     <input class="logo-img" type="hidden"
-                                           value="${pageContext.request.contextPath}/${product.logo}"/>
+                                           value="<c:url value="/${product.logo}"/>"/>
                                     <input class="cat-link" type="hidden"
-                                           value="${pageContext.request.contextPath}/category?catId=${product.categoryProductId}"/>
+                                           value="<c:url value="/category?catId=${product.categoryProductId}"/>"/>
                                         <%-- get il nome della categoria--%>
                                     <custom:getCategoryNameById categoryId="${product.categoryProductId}"/>
                                     <input class="cat-name" type="hidden" value="${categoryName}"/>
@@ -137,16 +137,16 @@
                                     <a href="javascript:;" data-toggle="modal" data-target="#boxShowItem"
                                        onclick="showProductWindowsFromList(${product.id}, true, true, true)">
                                         <img class="img img-fluid"
-                                             src="${pageContext.request.contextPath}/image/product/${product.img}"
+                                             src="<c:url value="/image/product/${product.img}"/>"
                                              alt="${product.name}"/>
                                     </a>
 
                                         <%-- campi necessari per visuallizare il prodotto nella finestrina--%>
                                     <input class="name" type="hidden" value="${product.name}"/>
                                     <input class="logo-img" type="hidden"
-                                           value="${pageContext.request.contextPath}/${product.logo}"/>
+                                           value="<c:url value="/${product.logo}"/>"/>
                                     <input class="cat-link" type="hidden"
-                                           value="${pageContext.request.contextPath}/category?catId=${product.categoryProductId}"/>
+                                           value="<c:url value="/category?catId=${product.categoryProductId}"/>"/>
                                         <%-- get il nome della categoria--%>
                                     <custom:getCategoryNameById categoryId="${product.categoryProductId}"/>
                                     <input class="cat-name" type="hidden" value="${categoryName}"/>
@@ -170,7 +170,7 @@
 
                             <%-- link per visualizzare la lista in dettaglio--%>
                         <div class="list-detail-link">
-                            <a class="btn btn-info" href="${pageContext.request.contextPath}/mylist?listId=${list.id}">
+                            <a class="btn btn-info" href="<c:url value="/mylist?listId=${list.id}"/>">
                                 <i class="fas fa-search-plus"></i> in dettaglio
                             </a>
                         </div>
@@ -205,7 +205,7 @@
 
                                 <div class="list-logo">
                                     <img class="img-fluid"
-                                         src="${pageContext.request.contextPath}/image/list/${list.img}" alt="logo"/>
+                                         src="<c:url value="/image/list/${list.img}"/>" alt="logo"/>
                                 </div>
 
                                 <div class="list-info">
@@ -272,7 +272,7 @@
                                     <a href="javascript:;" data-toggle="modal" data-target="#boxShowItem"
                                        onclick="showProductWindowsFromList(${product.id}, true, false, true)">
                                         <img class="img img-fluid"
-                                             src="${pageContext.request.contextPath}/image/product/${product.img}"
+                                             src="<c:url value="/image/product/${product.img}"/>"
                                              alt="${product.name}"/>
                                     </a>
 
@@ -280,9 +280,9 @@
                                         <%-- campi necessari per visuallizare il prodotto nella finestrina--%>
                                     <input class="name" type="hidden" value="${product.name}"/>
                                     <input class="logo-img" type="hidden"
-                                           value="${pageContext.request.contextPath}/${product.logo}"/>
+                                           value="<c:url value="/${product.logo}"/>"/>
                                     <input class="cat-link" type="hidden"
-                                           value="${pageContext.request.contextPath}/category?catId=${product.categoryProductId}"/>
+                                           value="<c:url value="/category?catId=${product.categoryProductId}"/>"/>
 
                                         <%-- get il nome della categoria--%>
                                     <custom:getCategoryNameById categoryId="${product.categoryProductId}"/>
@@ -304,16 +304,16 @@
                                     <a href="javascript:;" data-toggle="modal" data-target="#boxShowItem"
                                        onclick="showProductWindowsFromList(${product.id}, true, true, true)">
                                         <img class="img img-fluid"
-                                             src="${pageContext.request.contextPath}/image/product/${product.img}"
+                                             src="<c:url value="/image/product/${product.img}"/>"
                                              alt="${product.name}"/>
                                     </a>
 
                                         <%-- campi necessari per visuallizare il prodotto nella finestrina--%>
                                     <input class="name" type="hidden" value="${product.name}"/>
                                     <input class="logo-img" type="hidden"
-                                           value="${pageContext.request.contextPath}/${product.logo}"/>
+                                           value="<c:url value="/${product.logo}"/>"/>
                                     <input class="cat-link" type="hidden"
-                                           value="${pageContext.request.contextPath}/category?catId=${product.categoryProductId}"/>
+                                           value="<c:url value="/category?catId=${product.categoryProductId}"/>"/>
 
                                         <%-- get il nome della categoria--%>
                                     <custom:getCategoryNameById categoryId="${product.categoryProductId}"/>
@@ -339,7 +339,7 @@
 
                             <%-- link per visualizzare la lista in dettaglio--%>
                         <div class="list-detail-link">
-                            <a class="btn btn-info" href="${pageContext.request.contextPath}/mylist?listId=${list.id}">
+                            <a class="btn btn-info" href="<c:url value="/mylist?listId=${list.id}"/>">
                                 <i class="fas fa-search-plus"></i> in dettaglio
                             </a>
                         </div>

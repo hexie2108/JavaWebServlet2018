@@ -14,11 +14,11 @@
 
         <%-- breadcrumb--%>
         <div class="breadcrumbs">
-            <a href="${pageContext.request.contextPath}">
+            <a href="<c:url value="/"/>">
                 <i class="fas fa-home"></i>
             </a>
             <span>&gt;</span>
-            <a href="${pageContext.request.contextPath}/mylists">
+            <a href="<c:url value="/mylists"/>">
                 <i class="fas fa-list"></i> le mie liste
             </a>
             <span>&gt;</span>
@@ -30,7 +30,7 @@
 
         <div class="updatelist mt-3">
 
-            <form action="${pageContext.request.contextPath}/service/updateListService" method="POST"
+            <form action="<c:url value="/service/updateListService"/>" method="POST"
                   enctype="multipart/form-data">
 
                 <%--parte di nome --%>
@@ -72,7 +72,7 @@
                     <c:if test="${not empty list}">
                         <div class="custom-file-input-old-image mb-3">
                                 <%--stampa l'immagine vecchia --%>
-                            <img class="img-fluid" src="${pageContext.request.contextPath}/image/list/${list.img}"
+                            <img class="img-fluid" src="<c:url value="/image/list/${list.img}"/>"
                                  alt="l'immagine di categoria"/>
                         </div>
                     </c:if>

@@ -14,7 +14,7 @@
 
         <%-- breadcrumb--%>
         <div class="breadcrumbs">
-            <a href="${pageContext.request.contextPath}">
+            <a href="<c:url value="/"/>">
                 <i class="fas fa-home"></i>
             </a>
             <span>&gt;</span>
@@ -30,7 +30,7 @@
             <%-- se utente ha qualche lista con il permesso di inserire il prodotto--%>
             <c:if test="${not empty requestScope.addbleLists}">
 
-                <form action="${pageContext.request.contextPath}/service/updateProductService" method="POST"
+                <form action="<c:url value="/service/updateProductService"/>" method="POST"
                       enctype="multipart/form-data">
 
                         <%--parte di nome --%>
@@ -129,7 +129,7 @@
 
                             <%-- link per creare la nuova lista--%>
                         <div>
-                            <a class="btn btn-info d-inline-block" href="${pageContext.request.contextPath}/updateList"><i
+                            <a class="btn btn-info d-inline-block" href="<c:url value="/updateList"/>"><i
                                     class="fas fa-plus"></i> crea una nuova lista</a>
                         </div>
                 </div>

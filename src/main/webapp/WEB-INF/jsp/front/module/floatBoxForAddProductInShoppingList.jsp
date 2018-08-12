@@ -71,7 +71,7 @@
                         <c:if test="${empty sessionScope.user}">
 
                             <%--  form di inserimento per utente anonimo--%>
-                            <form action="${pageContext.request.contextPath}/service/updateItemInListUnloggedUserOnlyService"
+                            <form action="<c:url value="/service/updateItemInListUnloggedUserOnlyService"/>"
                                   method="GET">
                                 <label for="select-list" class="d-block font-weight-bold"><i class="fas fa-list"></i>
                                     Seleziona la lista:</label>
@@ -98,7 +98,7 @@
                             <c:if test="${not empty requestScope.addbleLists}">
 
                                 <%--  form per inserire il prodotto nella lista selezionata--%>
-                                <form action="${pageContext.request.contextPath}/service/updateItemInListService"
+                                <form action="<c:url value="/service/updateItemInListService"/>"
                                       method="GET">
 
                                     <label for="select-list" class="d-block font-weight-bold"><i
@@ -120,7 +120,7 @@
                                         </button>
                                             <%-- link per creare la nuova --%>
                                         <a class="btn btn-info d-inline-block"
-                                           href="${pageContext.request.contextPath}/updateList"><i
+                                           href="<c:url value="/updateList"/>"><i
                                                 class="fas fa-plus"></i> crea una nuova</a>
 
                                     </div>
@@ -137,7 +137,7 @@
                                 <%-- link per creare la nuova lista--%>
                                 <div class="operation mt-3">
                                     <a class="btn btn-info d-inline-block"
-                                       href="${pageContext.request.contextPath}/updateList"><i class="fas fa-plus"></i>
+                                       href="<c:url value="/updateList"/>"><i class="fas fa-plus"></i>
                                         crea una nuova</a>
                                 </div>
 

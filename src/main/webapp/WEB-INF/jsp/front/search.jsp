@@ -15,7 +15,7 @@
         <%-- breadcrumb--%>
         <div class="breadcrumbs">
 
-            <a href="${pageContext.request.contextPath}">
+            <a href="<c:url value="/"/>">
                 <i class="fas fa-home"></i>
             </a>
             <span>&gt;</span>
@@ -37,11 +37,11 @@
                         </span>
             <%-- ordinare per nome di prodotto--%>
             <a class="btn btn-info ${param.order == "productName" || empty param.order ? "active" : "" }"
-               href="${pageContext.request.contextPath}/search?searchWords=${param.searchWords}&order=productName">nome</a>
+               href="<c:url value="/search?searchWords=${param.searchWords}&order=productName"/>">nome</a>
 
             <%-- ordinare per nome di categoria--%>
             <a class="btn btn-info ${param.order == "categoryName" ? "active" : "" }"
-               href="${pageContext.request.contextPath}/search?searchWords=${param.searchWords}&order=categoryName">categoria</a>
+               href="<c:url value="/search?searchWords=${param.searchWords}&order=categoryName"/>">categoria</a>
 
         </div>
 
@@ -69,7 +69,7 @@
                     </h2>
 
                         <%-- link per creare il nuovo l'oggetto --%>
-                    <a class="btn btn-info mt-3" href="${pageContext.request.contextPath}/updateProduct">
+                    <a class="btn btn-info mt-3" href="<c:url value="/updateProduct"/>">
                         <i class="fas fa-edit"></i> inserisci il tuo oggetto
                     </a>
 

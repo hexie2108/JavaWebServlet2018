@@ -24,7 +24,7 @@ sidebar di home
             <c:forEach var="category" items="${categoryProductList}">
 
                 <a class="list-group-item list-group-item-action text-center"
-                   href="${pageContext.request.contextPath}/category?catId=${category.id}">
+                   href="<c:url value="/category?catId=${category.id}"/>">
                         ${category.name}
                 </a>
 

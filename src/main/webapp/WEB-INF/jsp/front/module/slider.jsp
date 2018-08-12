@@ -25,8 +25,8 @@
 
             <div class="carousel-item ${itemStatus.index == 0 ? "active" : "" }">
 
-                <a href="${pageContext.request.contextPath}/category?catId=${product.id}">
-                    <img src="${pageContext.request.contextPath}/image/categoryProduct/${product.img}"
+                <a href="<c:url value="/category?catId=${product.id}"/>">
+                    <img src="<c:url value="/image/categoryProduct/${product.img}"/>"
                          alt="${product.name}"/>
                     <div class="carousel-caption">
                         <span>${product.name}</span>

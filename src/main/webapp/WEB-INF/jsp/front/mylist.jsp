@@ -14,11 +14,11 @@
 
         <%-- breadcrumb--%>
         <div class="breadcrumbs">
-            <a href="${pageContext.request.contextPath}">
+            <a href="<c:url value="/"/>">
                 <i class="fas fa-home"></i>
             </a>
             <span>&gt;</span>
-            <a href="${pageContext.request.contextPath}/mylists">
+            <a href="<c:url value="/mylists"/>">
                 <i class="fas fa-list"></i> le mie liste
             </a>
             <span>&gt;</span>
@@ -35,7 +35,7 @@
 
                     <%-- img di lista--%>
                     <div class="list-logo">
-                        <img class="img-fluid" src="${pageContext.request.contextPath}/image/list/${list.img}"
+                        <img class="img-fluid" src="<c:url value="/image/list/${list.img}"/>"
                              alt="logo"/>
                     </div>
                     <div class="list-info">
@@ -58,7 +58,7 @@
                         </p>
                         <div class="list-category-img">
                             <img class="img-fluid"
-                                 src="${pageContext.request.contextPath}/image/categoryList/${categoryOfList.img1}"
+                                 src="<c:url value="/image/categoryList/${categoryOfList.img1}"/>"
                                  alt="img di categoria di lista"/>
                         </div>
 
@@ -76,13 +76,13 @@
 
                         <c:if test="${userPermissionsOnList.modifyList}">
                             <a class="modify btn btn-info"
-                               href="${pageContext.request.contextPath}/updateList?listId=${list.id}"><i
+                               href="<c:url value="/updateList?listId=${list.id}"/>"><i
                                     class="fas fa-edit"></i> modifica</a>
                         </c:if>
 
                         <c:if test="${userPermissionsOnList.deleteList}">
                             <a class="delete btn btn-danger"
-                               href="${pageContext.request.contextPath}/service/updateListService?action=delete&listId=${list.id}"><i
+                               href="<c:url value="/service/updateListService?action=delete&listId=${list.id}"/>"><i
                                     class="fas fa-trash-alt"></i> elimina</a>
                         </c:if>
 
@@ -152,7 +152,7 @@
                     <div class="list-item">
 
                         <div class="item-img">
-                            <img class="img-fluid" src="${pageContext.request.contextPath}/image/product/${product.img}"
+                            <img class="img-fluid" src="<c:url value="/image/product/${product.img}"/>"
                                  alt="${product.name}"/>
                         </div>
 
@@ -161,7 +161,7 @@
                         </div>
 
                         <div class="item-cat">
-                            <a href="${pageContext.request.contextPath}/category?catId=${product.categoryProductId}">
+                            <a href="<c:url value="/category?catId=${product.categoryProductId}"/>">
                                     <%-- get il nome della categoiria di prodotto--%>
                                 <custom:getCategoryNameById categoryId="${product.categoryProductId}"/>
                                     ${categoryName}
@@ -170,7 +170,7 @@
 
                         <div class="item-logo">
                             <img class="img-fluid"
-                                 src="${pageContext.request.contextPath}/image/productLogo/${product.logo}" alt="logo"/>
+                                 src="<c:url value="/image/productLogo/${product.logo}"/>" alt="logo"/>
                         </div>
 
                         <div class="item-description">
@@ -183,7 +183,7 @@
 
                                 <%-- link per segnare il prodotto come già comprato--%>
                             <a class="btn btn-info"
-                               href="${pageContext.request.contextPath}/service/updateItemInListService?action=bought&productId=${product.id}&listId=${list.id}"
+                               href="<c:url value="/service/updateItemInListService?action=bought&productId=${product.id}&listId=${list.id}"/>"
                                title="comprato">
                                 <i class="fas fa-check-circle"></i> comprato
                             </a>
@@ -193,7 +193,7 @@
 
                                 <%-- link per eliminare il prodotto--%>
                                 <a class="btn btn-danger"
-                                   href="${pageContext.request.contextPath}/service/updateItemInListService?action=delete&productId=${product.id}&listId=${list.id}"
+                                   href="<c:url value="/service/updateItemInListService?action=delete&productId=${product.id}&listId=${list.id}"/>"
                                    title="elimina">
                                     <i class="fas fa-ban"></i> elimina
                                 </a>
@@ -213,7 +213,7 @@
                     <div class="list-item item-bought">
 
                         <div class="item-img">
-                            <img class="img-fluid" src="${pageContext.request.contextPath}/image/product/${product.img}"
+                            <img class="img-fluid" src="<c:url value="/image/product/${product.img}"/>"
                                  alt="${product.name}"/>
                         </div>
 
@@ -222,7 +222,7 @@
                         </div>
 
                         <div class="item-cat">
-                            <a href="${pageContext.request.contextPath}/category?catId=${product.categoryProductId}">
+                            <a href="<c:url value="/category?catId=${product.categoryProductId}"/>">
                                     <%-- get il nome della categoiria di prodotto--%>
                                 <custom:getCategoryNameById categoryId="${product.categoryProductId}"/>
                                     ${categoryName}
@@ -231,7 +231,7 @@
 
                         <div class="item-logo">
                             <img class="img-fluid"
-                                 src="${pageContext.request.contextPath}/image/productLogo/${product.logo}" alt="logo"/>
+                                 src="<c:url value="/image/productLogo/${product.logo}"/>" alt="logo"/>
                         </div>
 
                         <div class="item-description">
@@ -247,7 +247,7 @@
 
                                 <%-- link per eliminare il prodotto--%>
                                 <a class="btn btn-danger"
-                                   href="${pageContext.request.contextPath}/service/updateItemInListService?action=delete&productId=${product.id}&listId=${list.id}"
+                                   href="<c:url value="/service/updateItemInListService?action=delete&productId=${product.id}&listId=${list.id}"/>"
                                    title="elimina">
                                     <i class="fas fa-ban"></i> elimina
                                 </a>

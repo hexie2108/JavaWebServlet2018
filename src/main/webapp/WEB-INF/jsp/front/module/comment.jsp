@@ -32,7 +32,7 @@
 
                             <%-- stampa user img --%>
                         <div class="user-img">
-                            <img class="img-fluid" src="${pageContext.request.contextPath}/image/user/${SingleUser.img}"
+                            <img class="img-fluid" src="<c:url value="/image/user/${SingleUser.img}"/>"
                                  alt="${SingleUser.name}"/>
                         </div>
                             <%-- stampa user name --%>
@@ -53,7 +53,7 @@
                     <div class="comment-delete">
                         <c:if test="${comment.userId == sessionScope.user.id}">
                             <a class="btn btn-danger"
-                               href="${pageContext.request.contextPath}/service/commentService?action=delete&commentId=${comment.id}"><i
+                               href="<c:url value="/service/commentService?action=delete&commentId=${comment.id}"/>"><i
                                     class="fas fa-trash-alt"></i> elimina</a>
                         </c:if>
                     </div>
@@ -76,7 +76,7 @@
 
     <%-- stampa il form per scrivere il commento --%>
     <div class="edit-comment">
-        <form action="${pageContext.request.contextPath}/service/commentService" method="POST">
+        <form action="<c:url value="/service/commentService"/>" method="POST">
             <textarea class="form-control" name="commentText" placeholder="lasciare qualche messaggi" rows="5"
                       required="required"></textarea>
             <input type="hidden" name="action" value="insert"/>

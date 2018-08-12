@@ -22,26 +22,26 @@
     </title>
 
     <%--icone del sito--%>
-    <link rel="icon" href="${pageContext.request.contextPath}/favicon.ico" type="image/vnd.microsoft.icon">
-    <link rel="shortcut icon" href="${pageContext.request.contextPath}/favicon.ico" type="image/vnd.microsoft.icon">
+    <link rel="icon" href="<c:url value="/favicon.ico"/>" type="image/vnd.microsoft.icon">
+    <link rel="shortcut icon" href="<c:url value="/favicon.ico"/>" type="image/vnd.microsoft.icon">
 
     <%--jquery--%>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/libs/jquery/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="<c:url value="/libs/jquery/jquery-3.3.1.min.js"/>"></script>
     <%--js di bootstrap--%>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/libs/bootstrap-4.1.1-dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="<c:url value="/libs/bootstrap-4.1.1-dist/js/bootstrap.min.js"/>"></script>
     <%--js personale di sito--%>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/js/script.js"></script>
+    <script type="text/javascript" src="<c:url value="/js/script.js"/>"></script>
     <%--jQuery personale di sito--%>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/js/jqscript.js"></script>
+    <script type="text/javascript" src="<c:url value="/js/jqscript.js"/>"></script>
 
     <%--css di bootstrap--%>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css" type="text/css"
+    <link rel="stylesheet" href="<c:url value="/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css"/>" type="text/css"
           media="all">
     <%--css di fontawesome--%>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/libs/fontawesome-free-5.1.1-web/css/all.min.css" type="text/css"
+    <link rel="stylesheet" href="<c:url value="/libs/fontawesome-free-5.1.1-web/css/all.min.css"/>" type="text/css"
           media="all">
     <%--css personale di sito--%>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css" type="text/css" media="all">
+    <link rel="stylesheet" href="<c:url value="/css/style.css"/>" type="text/css" media="all">
 
 </head>
 
@@ -58,8 +58,8 @@
             <%-- logo di sito--%>
             <div class="site-logo-section">
 
-                <a href="${pageContext.request.contextPath}" title="home">
-                    <img class="logo d-inline" src="${pageContext.request.contextPath}/image/base/logo.png" alt="logo"/>
+                <a href="<c:url value="/"/>" title="home">
+                    <img class="logo d-inline" src="<c:url value="/image/base/logo.png"/>" alt="logo"/>
                     <h2 class="site-title d-inline">
                         Il nome del sito
                     </h2>
@@ -76,13 +76,13 @@
                         <c:if test="${empty sessionScope.user}">
 
                             <li class="nav-item">
-                                <a class="nav-link" href="${pageContext.request.contextPath}/register">
+                                <a class="nav-link" href="<c:url value="/register"/>">
                                     <i class="fas fa-user-plus"></i> ISCRIVERSI
                                 </a>
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" href="${pageContext.request.contextPath}/login">
+                                <a class="nav-link" href="<c:url value="/login"/>">
                                     <i class="fas fa-sign-in-alt"></i> LOGIN
                                 </a>
                             </li>
@@ -93,7 +93,7 @@
                         <c:if test="${not empty sessionScope.user}">
 
                             <li class="nav-item">
-                                <a class="nav-link" href="${pageContext.request.contextPath}/mylists">
+                                <a class="nav-link" href="<c:url value="/mylists"/>">
                                     <i class="fas fa-list"></i> MIE LISTE
                                 </a>
                             </li>
@@ -111,7 +111,7 @@
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" href="${pageContext.request.contextPath}/logout">
+                                <a class="nav-link" href="<c:url value="/logout"/>">
                                     <i class="fas fa-sign-out-alt"></i> LOGOUT
                                 </a>
                             </li>
@@ -128,7 +128,7 @@
             <div class="search-section col">
 
                 <%-- form di ricerca--%>
-                <form id="search-form" class="mt-5" action="${pageContext.request.contextPath}/search">
+                <form id="search-form" class="mt-5" action="<c:url value="/search"/>">
                     <div class="input-group mb-3">
                         <input type="search" class="form-control" name="searchWords" placeholder="cerchi qualcosa?"
                                required="required">
@@ -147,7 +147,7 @@
                 <ul class="navbar-nav nav-justified justify-content-center w-100">
 
                     <li class="nav-item active">
-                        <a class="nav-link " href="${pageContext.request.contextPath}" title="home">
+                        <a class="nav-link " href="<c:url value="/"/>" title="home">
                             HOME
                         </a>
                     </li>
@@ -161,13 +161,13 @@
                             <custom:getAllCategoryOfProduct/>
                             <c:forEach var="category" items="${categoryProductList}">
                                 <a class="dropdown-item"
-                                   href="${pageContext.request.contextPath}/category?catId=${category.id}">${category.name}</a>
+                                   href="<c:url value="/category?catId=${category.id}"/>">${category.name}</a>
                             </c:forEach>
                         </div>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/updateProduct">
+                        <a class="nav-link" href="<c:url value="/updateProduct"/>">
                             AGGIUNGE PRODOTTO
                         </a>
                     </li>

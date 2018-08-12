@@ -25,7 +25,7 @@
                 <div class="sharing-body">
 
                     <%--form per creare una nuova condivisione --%>
-                    <form class="form-inline" action="${pageContext.request.contextPath}/service/sharingService"
+                    <form class="form-inline" action="<c:url value="/service/sharingService"/>"
                           method="GET">
 
                         <%-- 4 checkbox di permessi --%>
@@ -100,7 +100,7 @@
 
                                     <div class="user-img">
                                         <img class="img-fluid"
-                                             src="${pageContext.request.contextPath}/image/user/${SingleUser.img}"
+                                             src="<c:url value="/image/user/${SingleUser.img}"/>"
                                              alt="${SingleUser.name}"/>
                                     </div>
                                     <span>
@@ -111,7 +111,7 @@
                                     <%-- stampa 4 checkbox in base il permesso --%>
                                 <div class="sharing-option">
                                     <form class="form-inline"
-                                          action="${pageContext.request.contextPath}/service/sharingService"
+                                          action="<c:url value="/service/sharingService"/>"
                                           method="GET">
 
                                         <div class="custom-control custom-control-inline custom-checkbox  justify-content-start">
@@ -159,7 +159,7 @@
                                             <input type="hidden" name="listId" value="${list.id}">
                                             <input class="btn btn-info" type="submit" value="modifica"/>
                                             <a class="btn btn-danger"
-                                               href="${pageContext.request.contextPath}/service/sharingService?action=delete&permissionId=${permission.id}&listId=${list.id}">elimina</a>
+                                               href="<c:url value="/service/sharingService?action=delete&permissionId=${permission.id}&listId=${list.id}"/>">elimina</a>
                                         </div>
 
                                     </form>

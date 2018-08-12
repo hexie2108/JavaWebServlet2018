@@ -16,12 +16,12 @@ la lista di prodotto
 
                 <%-- img di  prodotto --%>
             <img class="list-item-img img-fluid card-img-top"
-                 src="${pageContext.request.contextPath}/image/product/${product.img}" alt="${product.name}"/>
+                 src="<c:url value="/image/product/${product.img}"/>" alt="${product.name}"/>
 
                 <%-- link della categoria di prodotto --%>
             <div class="list-item-cat ${not empty categoria ?"hiddin-cat":""}">
                 <a class="list-item-cat-link"
-                   href="${pageContext.request.contextPath}/category?catId=${product.categoryProductId}">
+                   href="<c:url value="/category?catId=${product.categoryProductId}"/>">
 
                         <%-- get il nome della categoria di prodotto--%>
                     <custom:getCategoryNameById categoryId="${product.categoryProductId}"/>
@@ -44,7 +44,7 @@ la lista di prodotto
             <div class="list-item-info">
                 <div class="list-item-logo  d-inline-block w-50">
                     <img class="list-item-logo-img img-fluid"
-                         src="${pageContext.request.contextPath}/image/productLogo/${product.logo}" alt="logo"/>
+                         src="<c:url value="/image/productLogo/${product.logo}"/>" alt="logo"/>
                 </div>
             </div>
 

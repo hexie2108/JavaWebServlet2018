@@ -15,7 +15,7 @@
 
         <%-- breadcrumb--%>
         <div class="breadcrumbs">
-            <a href="${pageContext.request.contextPath}">
+            <a href="<c:url value="/"/>">
                 <i class="fas fa-home"></i>
             </a>
             <span>&gt;</span>
@@ -30,7 +30,7 @@
 
         <%-- image di categoria attuale--%>
         <div class="category-image-section d-inline">
-            <img class="category-logo " src="${pageContext.request.contextPath}/image/categoryProduct/${categoria.img}"
+            <img class="category-logo " src="<c:url value="/image/categoryProduct/${categoria.img}"/>"
                  alt="${categoria.name}"/>
         </div>
 

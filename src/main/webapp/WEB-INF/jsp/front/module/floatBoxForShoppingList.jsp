@@ -57,7 +57,7 @@
                 <%--se possiede almeno una lista --%>
                 <c:if test="${not empty sessionScope.myListId}">
 
-                    <form action="${pageContext.request.contextPath}/service/changeListService" method="GET">
+                    <form action="<c:url value="/service/changeListService"/>" method="GET">
                         <label for="select-list" class="d-block">
                             <i class="fas fa-list"></i> Seleziona la lista:
                         </label>
@@ -84,7 +84,7 @@
                     </h2>
                     <%-- link per creare una nuova lista--%>
                     <div class="add-list-box">
-                        <a class="btn btn-info" href="${pageContext.request.contextPath}/updateList"><i
+                        <a class="btn btn-info" href="<c:url value="/updateList"/>"><i
                                 class="fas fa-plus"></i> crea una nuova lista</a>
                     </div>
 
@@ -101,7 +101,7 @@
             <%-- form per cambiare il tipo di lista per utente anonimo --%>
             <div class="list-type-selector mb-3">
 
-                <form action="${pageContext.request.contextPath}/service/updateItemInListUnloggedUserOnlyService"
+                <form action="<c:url value="/service/updateItemInListUnloggedUserOnlyService"/>"
                       method="GET">
                     <label for="type-list" class="d-block">
                         <i class="fas fa-sitemap"></i> Tipo della lista:
@@ -181,7 +181,7 @@
                                             </c:if>
 
                                     <img class="img"
-                                         src="${pageContext.request.contextPath}/image/product/${product.img}"
+                                         src="<c:url value="/image/product/${product.img}"/>"
                                          alt="${product.name}"/>
 
                                     </a>
@@ -196,9 +196,9 @@
 
                                     <input class="name" type="hidden" value="${product.name}"/>
                                     <input class="logo-img" type="hidden"
-                                           value="${pageContext.request.contextPath}/image/productLogo/${product.logo}"/>
+                                           value="<c:url value="/image/productLogo/${product.logo}"/>"/>
                                     <input class="cat-link" type="hidden"
-                                           value="${pageContext.request.contextPath}/category?catId=${product.categoryProductId}"/>
+                                           value="<c:url value="/category?catId=${product.categoryProductId}"/>"/>
                                         <%-- get il nome della categoria del prodotto--%>
                                     <custom:getCategoryNameById categoryId="${product.categoryProductId}"/>
                                     <input class="cat-name" type="hidden" value="${categoryName}"/>
@@ -214,7 +214,7 @@
                                     <c:if test="${empty sessionScope.user}">
 
                                         <%-- link per eliminare il prodotto dalla cookie--%>
-                                        <a href="${pageContext.request.contextPath}/service/updateItemInListUnloggedUserOnlyService?action=delete&productId=${product.id}"
+                                        <a href="<c:url value="/service/updateItemInListUnloggedUserOnlyService?action=delete&productId=${product.id}"/>"
                                            title="elimina">
                                             <i class="fas fa-ban"></i>
                                         </a>
@@ -225,7 +225,7 @@
                                     <c:if test="${not empty sessionScope.user}">
 
                                         <%-- link per segna il prodotto come comprato--%>
-                                        <a href="${pageContext.request.contextPath}/service/updateItemInListService?action=bought&productId=${product.id}&listId=${sessionScope.myListId}"
+                                        <a href="<c:url value="/service/updateItemInListService?action=bought&productId=${product.id}&listId=${sessionScope.myListId}"/>"
                                            title="comprato">
                                             <i class="fas fa-check-circle"></i>
                                         </a>
@@ -234,7 +234,7 @@
                                         <c:if test="${MylistPermission.deleteObject == true}">
 
                                             <%-- link per eliminare il prodotto--%>
-                                            <a href="${pageContext.request.contextPath}/service/updateItemInListService?action=delete&productId=${product.id}&listId=${sessionScope.myListId}"
+                                            <a href="<c:url value="/service/updateItemInListService?action=delete&productId=${product.id}&listId=${sessionScope.myListId}"/>"
                                                title="elimina">
                                                 <i class="fas fa-ban"></i>
                                             </a>
@@ -274,7 +274,7 @@
                                             </c:if>
 
                                     <img class="img"
-                                         src="${pageContext.request.contextPath}/image/product/${product.img}"
+                                         src="<c:url value="/image/product/${product.img}"/>"
                                          alt="${product.name}"/>
 
                                     </a>
@@ -288,9 +288,9 @@
 
                                     <input class="name" type="hidden" value="${product.name}"/>
                                     <input class="logo-img" type="hidden"
-                                           value="${pageContext.request.contextPath}/image/productLogo/${product.logo}"/>
+                                           value="<c:url value="/image/productLogo/${product.logo}"/>"/>
                                     <input class="cat-link" type="hidden"
-                                           value="${pageContext.request.contextPath}/category?catId=${product.categoryProductId}"/>
+                                           value="<c:url value="/category?catId=${product.categoryProductId}"/>"/>
 
                                         <%-- get il nome della categoria del prodotto--%>
                                     <custom:getCategoryNameById categoryId="${product.categoryProductId}"/>
@@ -311,7 +311,7 @@
                                         <c:if test="${MylistPermission.deleteObject == true}">
 
                                             <%-- link per eliminare il prodotto--%>
-                                            <a href="${pageContext.request.contextPath}/service/updateItemInListService?action=delete&productId=${product.id}&listId=${sessionScope.myListId}"
+                                            <a href="<c:url value="/service/updateItemInListService?action=delete&productId=${product.id}&listId=${sessionScope.myListId}"/>"
                                                title="elimina">
                                                 <i class="fas fa-ban"></i>
                                             </a>
