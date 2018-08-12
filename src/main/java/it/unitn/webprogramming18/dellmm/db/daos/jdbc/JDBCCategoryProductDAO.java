@@ -178,6 +178,4 @@ public class JDBCCategoryProductDAO extends JDBCDAO<CategoryProduct, Integer> im
 
         return categoryProduct;
     }
-
-
 }

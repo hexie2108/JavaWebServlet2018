@@ -230,7 +230,6 @@ public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements Comment
 
     @Override
     public void deleteCommentById(Integer commentId) throws DAOException {
-
         if (commentId == null) {
             throw new DAOException("parameter not valid", new IllegalArgumentException("The passed commentId is null"));
         }
@@ -249,6 +248,5 @@ public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements Comment
         } finally {
             C3p0Util.close(CON);
         }
-
     }
 }

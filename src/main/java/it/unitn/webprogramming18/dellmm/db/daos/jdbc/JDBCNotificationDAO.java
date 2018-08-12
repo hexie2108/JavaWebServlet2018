@@ -63,6 +63,9 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
         if (notification == null) {
             throw new DAOException("notification bean is null");
         }
+
+        CON = C3p0Util.getConnection();
+
         try (PreparedStatement stm = CON.prepareStatement("INSERT INTO Notification (date, text, status, userId) VALUES (?,?,?,?)",
                 Statement.RETURN_GENERATED_KEYS)) {
 

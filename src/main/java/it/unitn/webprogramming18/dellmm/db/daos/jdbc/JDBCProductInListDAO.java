@@ -32,6 +32,7 @@ public class JDBCProductInListDAO extends JDBCDAO<ProductInList, Integer> implem
     @Override
     public Long getCount() throws DAOException {
         CON = C3p0Util.getConnection();
+
         try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM ProductInList")) {
             ResultSet counter = stmt.executeQuery();
             if (counter.next()) {
@@ -39,6 +40,8 @@ public class JDBCProductInListDAO extends JDBCDAO<ProductInList, Integer> implem
             }
         } catch (SQLException ex) {
             throw new DAOException("Impossible to count productInList", ex);
+        } finally {
+            C3p0Util.close(CON);
         }
 
         return 0L;
@@ -69,6 +72,8 @@ public class JDBCProductInListDAO extends JDBCDAO<ProductInList, Integer> implem
             return productInList.getId();
         } catch (SQLException ex) {
             throw new DAOException("Impossible to insert the new productInList entry", ex);
+        } finally {
+            C3p0Util.close(CON);
         }
     }
 
@@ -111,7 +116,6 @@ public class JDBCProductInListDAO extends JDBCDAO<ProductInList, Integer> implem
             throw new DAOException("Impossible to get the list of productInList", ex);
         } finally {
             C3p0Util.close(CON);
-
         }
 
         return productInLists;
@@ -170,6 +174,8 @@ public class JDBCProductInListDAO extends JDBCDAO<ProductInList, Integer> implem
             }
         } catch (SQLException ex) {
             throw new DAOException("Impossible to count productInList", ex);
+        } finally {
+            C3p0Util.close(CON);
         }
 
         return res;
@@ -209,7 +215,9 @@ public class JDBCProductInListDAO extends JDBCDAO<ProductInList, Integer> implem
         if (listId == null || productId == null) {
             throw new DAOException("parameter not valid", new IllegalArgumentException("The passed listId or  productId is null"));
         }
+
         CON = C3p0Util.getConnection();
+
         try (PreparedStatement stm = CON.prepareStatement(
                 " DELETE FROM ProductInList WHERE "
                         + "productId = ? AND "
