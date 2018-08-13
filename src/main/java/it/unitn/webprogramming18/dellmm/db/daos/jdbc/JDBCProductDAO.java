@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -315,34 +316,75 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
 
 
     public List<Product> getPublicProductListByNameSearch(String name, String order, Integer index, Integer number) throws DAOException {
-        if (name == null || (!order.equals("categoryName") && !order.equals("productName")) || index == null || index < 0 || number == null || number < 0) {
-            throw new DAOException("parameter not valid", new IllegalArgumentException("The passed parameters is not valid"));
+        return search(name, order, "asc", index, number);
+    }
+
+    public List<Product> search(
+            String toSearch,
+            String order,
+            String direction,
+            Integer index,
+            Integer number
+    ) throws DAOException {
+        final String[] validOrder = {"categoryName", "productName", "relevance"};
+        final String[] validDirection = {"asc", "desc"};
+
+        if (toSearch == null) {
+            throw new DAOException("parameter not valid", new IllegalArgumentException("The toSearch parameter is null"));
+        }
+
+        if (order == null || Arrays.stream(validOrder).noneMatch(order::equals)) {
+            throw new DAOException("parameter not valid", new IllegalArgumentException("The order parameter is not one of " + Arrays.toString(validOrder)));
+        }
+
+        if (direction == null || Arrays.stream(validDirection).noneMatch(direction::equals)) {
+            throw new DAOException("parameter not valid", new IllegalArgumentException("The direction parameter is not one of " + Arrays.toString(validDirection)));
+        }
+
+        if (index == null || index < 0) {
+            throw new DAOException("parameter not valid", new IllegalArgumentException("The index parameter is not valid(must be present and >= 0)"));
+        }
+
+        if (number == null || number < 0) {
+            throw new DAOException("parameter not valid", new IllegalArgumentException("The number parameter is not valid(must be present and >= 0"));
         }
 
         List<Product> productList = new ArrayList<>();
 
         CON = C3p0Util.getConnection();
 
-        String sql = null;
-        if (order.equals("categoryName")) {
+        String sqlDirection = direction.equalsIgnoreCase("asc")?"ASC": "DESC";
+
+        String sql;
+        if (order.equalsIgnoreCase("categoryName")) {
             sql =
                     "SELECT Product.* " +
-                    "FROM Product JOIN CategoryProduct " +
-                    "ON Product.categoryProductId = CategoryProduct.id " +
-                    "WHERE Product.privateListId IS NULL AND MATCH(Product.name, Product.description) AGAINST (? IN NATURAL  LANGUAGE  MODE) > " + MIN_RELEVANCE + " " +
-                    "ORDER BY CategoryProduct.name ASC " +
-                    "LIMIT ?,? ";
-
-        } else {
+                            "FROM Product JOIN CategoryProduct " +
+                            "ON Product.categoryProductId = CategoryProduct.id " +
+                            "WHERE Product.privateListId IS NULL AND MATCH(Product.name, Product.description) AGAINST (? IN NATURAL  LANGUAGE  MODE) > " + MIN_RELEVANCE + " " +
+                            "ORDER BY CategoryProduct.name " + sqlDirection + " " +
+                            "LIMIT ?,? ";
+        } else if (order.equalsIgnoreCase("productName")) {
             sql =
                     "SELECT * " +
-                    "FROM Product " +
-                    "WHERE privateListId IS NULL AND MATCH(Product.name, Product.description) AGAINST (? IN NATURAL  LANGUAGE  MODE) > " + MIN_RELEVANCE + " " +
-                    "ORDER BY name ASC " +
-                    "LIMIT ?,?";
+                            "FROM Product " +
+                            "WHERE privateListId IS NULL AND MATCH(Product.name, Product.description) AGAINST (? IN NATURAL  LANGUAGE  MODE) > " + MIN_RELEVANCE + " " +
+                            "ORDER BY name " + sqlDirection + " " +
+                            "LIMIT ?,?";
+        } else {
+            sql =
+                    "SELECT P.* " +
+                            "FROM " +
+                            "(SELECT *, MATCH(Product.name, Product.description) AGAINST (? IN NATURAL  LANGUAGE  MODE) as rev " +
+                            "FROM Product " +
+                            "WHERE privateListId IS NULL) AS P " +
+                            "WHERE rev > " + MIN_RELEVANCE + " " +
+                            "ORDER BY rev " + sqlDirection + " " +
+                            "LIMIT ?,?";
         }
+
         try (PreparedStatement stm = CON.prepareStatement(sql)) {
-            stm.setString(1, "%" + name + "%");
+            stm.setString(1, toSearch);
             stm.setInt(2, index);
             stm.setInt(3, number);
             try (ResultSet rs = stm.executeQuery()) {
@@ -357,8 +399,8 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
         }
 
         return productList;
-
     }
+
 
     @Override
     public Integer getCountOfPublicProductByNameSearch(String name) throws DAOException {

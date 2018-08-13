@@ -31,18 +31,45 @@
 
         <%-- links per impostare l'ordine--%>
         <div class="order-manage float-right">
+            <span>
+                Ordina per:
+            </span>
 
-                        <span>
-                                <i class="fas fa-sort-alpha-down"></i> ordina per: 
-                        </span>
-            <%-- ordinare per nome di prodotto--%>
-            <a class="btn btn-info ${param.order == "productName" || empty param.order ? "active" : "" }"
-               href="<c:url value="/search?searchWords=${param.searchWords}&order=productName"/>">nome</a>
-
-            <%-- ordinare per nome di categoria--%>
-            <a class="btn btn-info ${param.order == "categoryName" ? "active" : "" }"
-               href="<c:url value="/search?searchWords=${param.searchWords}&order=categoryName"/>">categoria</a>
-
+            <div class="btn-group">
+                <button class="btn btn-info dropdown-toggle" data-toggle="dropdown" href="#">
+                    <c:choose>
+                        <c:when test="${(param.order == 'productName' || empty param.order) && (param.direction == 'asc')}">
+                            nome <i class="fas fa-sort-alpha-down"></i>
+                        </c:when>
+                        <c:when test="${(param.order == 'productName' || empty param.order) && (empty param.direction || param.direction == 'desc')}">
+                            nome <i class="fas fa-sort-alpha-up"></i>
+                        </c:when>
+                        <c:when test="${(param.order == 'categoryName'                    ) && (param.direction == 'asc')}">
+                            categoria <i class="fas fa-sort-alpha-down"></i>
+                        </c:when>
+                        <c:when test="${(param.order == 'categoryName'                    ) && (empty param.direction ||param.direction == 'desc')}">
+                            categoria <i class="fas fa-sort-alpha-up"></i>
+                        </c:when>
+                        <c:when test="${(param.order == 'relevance'                       ) && (empty param.direction || param.direction == 'asc')}">
+                            rilevanza <i class="fas fa-sort-amount-down"></i>
+                        </c:when>
+                        <c:when test="${(param.order == 'relevance'                       ) && (param.direction == 'desc')}">
+                            rilevanza <i class="fas fa-sort-amount-up"></i>
+                        </c:when>
+                    </c:choose>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <%-- ordinare per nome di prodotto--%>
+                    <a class="dropdown-item" href="<c:url value="/search?searchWords=${param.searchWords}&order=productName&direction=asc"/>">nome <i class="fas fa-sort-alpha-down"></i></a>
+                    <a class="dropdown-item" href="<c:url value="/search?searchWords=${param.searchWords}&order=productName&direction=desc"/>">nome <i class="fas fa-sort-alpha-up"></i></a>
+                    <%-- ordinare per nome di categoria--%>
+                    <a class="dropdown-item" href="<c:url value="/search?searchWords=${param.searchWords}&order=categoryName&direction=asc"/>">categoria <i class="fas fa-sort-alpha-down"></i></a>
+                    <a class="dropdown-item" href="<c:url value="/search?searchWords=${param.searchWords}&order=categoryName&direction=desc"/>">categoria <i class="fas fa-sort-alpha-up"></i></a>
+                    <%-- ordinare per relevance --%>
+                    <a class="dropdown-item" href="<c:url value="/search?searchWords=${param.searchWords}&order=relevance&direction=asc"/>">rilevanza <i class="fas fa-sort-amount-down"></i></a>
+                    <a class="dropdown-item" href="<c:url value="/search?searchWords=${param.searchWords}&order=relevance&direction=desc"/>">rilevanza <i class="fas fa-sort-amount-up"></i></a>
+                </div>
+            </div>
         </div>
 
         <div class="product-list">

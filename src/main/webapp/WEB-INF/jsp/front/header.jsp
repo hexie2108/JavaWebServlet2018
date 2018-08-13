@@ -28,7 +28,7 @@
     <%--jquery--%>
     <script type="text/javascript" src="<c:url value="/libs/jquery/jquery-3.3.1.min.js"/>"></script>
     <%--js di bootstrap--%>
-    <script type="text/javascript" src="<c:url value="/libs/bootstrap-4.1.1-dist/js/bootstrap.min.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/libs/bootstrap-4.1.1-dist/js/bootstrap.bundle.min.js"/>"></script>
     <%--js personale di sito--%>
     <script type="text/javascript" src="<c:url value="/js/script.js"/>"></script>
     <%--jQuery personale di sito--%>

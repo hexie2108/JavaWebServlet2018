@@ -94,7 +94,7 @@ public interface ProductDAO extends DAO<Product, Integer> {
 
 
     /**
-     * trovare i prodotti pubblici corrispondenti dato un nome di prodotto (anche incompleto)
+     * trovare i prodotti pubblici corrispondenti dato un nome di prodotto (with incomplete name, misspelling, ...)
      *
      * @param name   nome da ricercare
      * @param order  indicare ordinamento, può essere "categoryName" o "productName"
@@ -105,6 +105,17 @@ public interface ProductDAO extends DAO<Product, Integer> {
      */
     public List<Product> getPublicProductListByNameSearch(String name, String order, Integer index, Integer number) throws DAOException;
 
+    /**
+     * Finds all public product given a text to search in the name or description of the product(with incomplete name, misspelling, ...)
+     * @param toSearch text to search in name or description of the product
+     * @param order used to select the field for which the results are ordered. can be {"categoryName", "productName", "relevance"}
+     * @param direction direction of the sort(big to small, small to big.  can be {"asc", "desc"}
+     * @param index index from where to start
+     * @param number number of result to get
+     * @return list with the products requested
+     * @throws DAOException
+     */
+    public List<Product> search(String toSearch, String order, String direction, Integer index, Integer number) throws DAOException;
 
     /**
      * get il numero del prodotto pubblico con nome corrisondente

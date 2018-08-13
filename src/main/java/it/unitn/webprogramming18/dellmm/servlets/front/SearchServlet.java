@@ -52,13 +52,26 @@ public class SearchServlet extends HttpServlet {
         //se non è vuota
         if (order != null) {
             //ma con valore diverso da quelli prefissati
-            if (!order.equals("categoryName") && !order.equals("productName")) {
+            if (!order.equals("categoryName") && !order.equals("productName") && !order.equals("relevance")) {
                 throw new ServletException("il parametro di ordinamento non valido");
             }
         }
         //altrimenti, assegna il valore default
         else {
-            order = "productName";
+            order = "relevance";
+        }
+
+        // get direzione richiesta(oridne ascendente/discendente)
+        String direction = request.getParameter("direction");
+
+        // Se vuoto assegna default, se non valido crea exception
+        if (direction != null) {
+            if(!direction.equals("asc") && !direction.equals("desc")) {
+                throw new ServletException("il parametro direction non è valido");
+            }
+        }
+        else {
+            direction = order.equals("relevance")?"desc":"asc";
         }
 
         //get numero di prodotto per singola pagina
@@ -80,7 +93,7 @@ public class SearchServlet extends HttpServlet {
 
         try {
             //get la lista di prodotto secondo la parola ricercata
-            productList = productDAO.getPublicProductListByNameSearch(searchWords, order, startPosition, numebrProductForList);
+            productList = productDAO.search(searchWords, order, direction, startPosition, numebrProductForList);
             //get il numero totale di pagine
             totalNumberOfPage = (int) Math.ceil(productDAO.getCountOfPublicProductByNameSearch(searchWords) * 1.0 / numebrProductForList);
 
