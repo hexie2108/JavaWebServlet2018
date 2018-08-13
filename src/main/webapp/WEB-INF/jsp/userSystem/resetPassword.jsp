@@ -1,4 +1,4 @@
-<%-- la pagina di login --%>
+<%-- la pagina di reset password --%>
 
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
@@ -101,7 +101,7 @@
 
 <div class="link-utils">     
         <div class="content-top">
-                <a class="" href="<c:url value="/login?notice=1"/>">
+                <a class="" href="<c:url value="/login"/>">
                         <i class="fas fa-sign-in-alt"></i> <fmt:message key="login.label.login"/>
                 </a>
 

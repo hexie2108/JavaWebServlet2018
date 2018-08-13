@@ -10,7 +10,7 @@
 <jsp:include page="/WEB-INF/jsp/userSystem/header.jsp"/>
 
 <div>
-        <form id="form-register" name="form-register" method="post" enctype="multipart/form-data" autocomplete="off" onsubmit="return validateForm()" action="${pageContext.request.contextPath}/service/registerService">
+        <form id="form-register" name="form-register" method="post" enctype="multipart/form-data" autocomplete="off" onsubmit="return validateRegister()" action="${pageContext.request.contextPath}/service/registerService">
 
                 <h2 class="form-title">
                         <i class="fas fa-user-plus"></i> <fmt:message key="register.label.title"/> ${a}
@@ -307,7 +307,7 @@
 
 <div class="link-utils">     
         <div class="content-top">
-                <a class=" " href="<c:url value="/"/>">Richiede il rinvio di email</a>
+                <a class=" " href="<c:url value="/resendEmail"/>">Richiede il rinvio di email</a>
         </div>
         <div class="content-divider">
                 <span class="content-divider-text">
@@ -315,7 +315,7 @@
                 </span>
         </div>
         <div class="content-bottom text-center">
-                <a class="" href="<c:url value="/login?notice=1"/>">
+                <a class="" href="<c:url value="/login"/>">
                         <i class="fas fa-sign-in-alt"></i> <fmt:message key="login.label.login"/>
                 </a>
         </div>

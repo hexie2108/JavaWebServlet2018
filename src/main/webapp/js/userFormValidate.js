@@ -7,7 +7,7 @@
  * @returns {Boolean} true se valido , false se non è valido
  */
 
-function validateForm() {
+function validateRegister() {
 
         //get input del form
         var email = $("#inputEmail").val();
@@ -512,15 +512,15 @@ function validateForgotPassword() {
  * @returns {Boolean}
  */
 function validateResetPassword() {
-        
+
         var password = $("#inputPassword").val();
         var password2 = $("#inputPassword2").val();
-        
-         //nasconde tutti gli errori
+
+        //nasconde tutti gli errori
         $(".form-box  .error-messages p").hide();
         //rimuove tutti classe border-danger da inpu di form
         $(".form-box  .input-box").removeClass("border-danger");
-        
+
         //check password
         //se è vuoto o se supera la lunghezza massima o se è troppo corta 
         if (password === "" || password.length > 44 || password.length < 8)
@@ -611,7 +611,68 @@ function validateResetPassword() {
                 $(".password2-group #inputPassword2").focus();
                 return false;
         }
-        
-        
+
+
         return true;
+}
+
+/**
+ * validatore per il form di resend email
+ * @returns {undefined}
+ */
+function validateResendEmail() {
+
+        //intanto fare controllo base del email
+        if (validateEmail())
+        {
+                //poi bisogna verificare se tale email esiste o no
+                //e verifica lo stato di attivazione dell'account con tale email
+
+                //get valore di email
+                var email = $("#inputEmail").val();
+                var url = location.href;
+                var index = url.indexOf("resendEmail");
+                url = url.substring(0, index);
+                var result;
+                $.ajax({
+                        url: url + "service/checkUserService",
+                        data: {action: "checkActivationStatus", email: email},
+                        type: 'POST',
+                        dataType: "text",
+                        async: false,
+                        cache: false,
+                        error: function () {
+                                alert('error to check email existence, retry submit');
+                        },
+                        success: function (data) {
+                                result = data;
+                        }
+                });
+
+                //se email non esiste
+                if (result === "0")
+                {
+                        var errorType = ".no-existence";
+                        $(".form-box .error-messages " + errorType).show("slow");
+                        $(".form-box #inputEmail").addClass("border-danger");
+                        $(".form-box #inputEmail").focus();
+                        return false;
+                }
+                else if (result === "1")
+                {
+                        var errorType = ".already-activated";
+                        $(".form-box .error-messages " + errorType).show("slow");
+                        $(".form-box #inputEmail").addClass("border-danger");
+                        $(".form-box #inputEmail").focus();
+                        return false;
+                }
+                else
+                {
+                        return true;
+                }
+        }
+        else
+        {
+                return false;
+        }
 }

@@ -105,10 +105,7 @@
         </filter>
         <filter-mapping>
                 <filter-name>LoggedUserOnlyFilter</filter-name>
-                <url-pattern>/loggedResetPassword</url-pattern>
                 <url-pattern>/modifyUser</url-pattern>
-                <url-pattern>/resendEmail</url-pattern>
-                <url-pattern>/alreadyLoggedIn</url-pattern>
                 <url-pattern>/mylists</url-pattern>
                 <url-pattern>/mylist</url-pattern>
                 <url-pattern>/updateList</url-pattern>
@@ -283,6 +280,15 @@
         <servlet-mapping>
                 <servlet-name>ResetPasswordService</servlet-name>
                 <url-pattern>/service/resetPasswordService</url-pattern>
+        </servlet-mapping>
+        
+          <servlet>
+                <servlet-name>ResendEmailService</servlet-name>
+                <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.service.ResendEmailService</servlet-class>
+        </servlet>
+        <servlet-mapping>
+                <servlet-name>ResendEmailService</servlet-name>
+                <url-pattern>/service/resendEmailService</url-pattern>
         </servlet-mapping>
     
     

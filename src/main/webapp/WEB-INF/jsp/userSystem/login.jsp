@@ -141,16 +141,13 @@
 
 
                 <%-- input hidden per memorizzare la pagine di provenienza e pagina da rindirizzare--%>
-                <c:if test="${not empty param.notice}">
-                        <input type="hidden" name="${FormValidator.PREV_URL_KEY}"  value="<c:url value="/"/>">
-                </c:if>
                 <c:if test="${empty param.notice}">
-                        <input type="hidden" name="${FormValidator.PREV_URL_KEY}"  value="${param[FormValidator.PREV_URL_KEY]}">
+                        <input type="hidden" name="${FormValidator.PREV_URL_KEY}"  value="${prevUrl}">
                 </c:if>
 
 
                 <button class="btn btn-lg btn-primary btn-block" type="submit">
-                        <fmt:message key="login.label.login"/>
+                        <fmt:message key="login.label.login"/> ${a}
                 </button>
 
 

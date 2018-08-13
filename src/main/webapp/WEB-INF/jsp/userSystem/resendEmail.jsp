@@ -1,4 +1,4 @@
-<%-- la pagina di forgot password --%>
+<%-- la pagina form per resend email --%>
 
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
@@ -12,10 +12,10 @@
 
 <div class="form-box">
 
-        <form id="form-forgot" method="POST" onsubmit="return validateForgotPassword()" action="${pageContext.request.contextPath}/service/forgotPasswordService">
+        <form id="form-forgot" method="POST" onsubmit="return validateResendEmail()" action="${pageContext.request.contextPath}/service/resendEmailService">
 
                 <h2 class="form-title">
-                        <fmt:message key="forgotPassword.label.recoverPwd"/>
+                        Rinvia email di attivazione
                 </h2>
 
 
@@ -32,6 +32,10 @@
                         <p class="no-existence">
                                 <i class="fas fa-exclamation-triangle"></i>  non esiste un utente con tale email
                         </p>
+                        <p class="already-activated">
+                                <i class="fas fa-exclamation-triangle"></i>  l'account indicato è già stato attivato
+                        </p>
+                        
 
                 </div>
 
@@ -57,7 +61,7 @@
 
 
                 <button class="btn btn-lg btn-primary btn-block" type="submit">
-                        <fmt:message key="forgotPassword.label.resetPwd"/>
+                        Rinvia
                 </button>
 
         </form>
@@ -66,8 +70,8 @@
 
 <div class="link-utils">     
         <div class="content-top">
-                <a class="" href="<c:url value="/login"/>">
-                        <i class="fas fa-sign-in-alt"></i> <fmt:message key="login.label.login"/>
+                <a class="" href="<c:url value="/register"/>">
+                        <i class="fas fa-user-plus"></i> <fmt:message key="login.label.register"/>
                 </a>
 
         </div>
