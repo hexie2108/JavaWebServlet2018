@@ -13,20 +13,50 @@
 <div class="form-box">
         <form id="form-signin" method="POST" onsubmit="return validateLogin()" action="${pageContext.request.contextPath}/service/loginService">
 
-                <h2 class="form-title form-signin-heading">
+                <h2 class="form-title">
                         <i class="fas fa-sign-in-alt"></i> <fmt:message key="login.label.signin"/>
                 </h2>
 
                 <c:if test="${not empty param.notice}">
                         <div class="notice">
-                                
                                 <c:choose>
                                         <c:when test="${param.notice == 'awaitingActivation'}">
                                                 <div class="alert alert-info">
-                                                        <i class="fas fa-info"></i> riceverà a breve un email con link di attivazione 
+                                                        <i class="fas fa-info"></i>  riceverà a breve un email con link di attivazione 
+                                                </div>
+                                        </c:when>
+                                        <c:when test="${param.notice == 'awaitingResetPassword'}">
+                                                <div class="alert alert-info">
+                                                        <i class="fas fa-info"></i>  riceverà a breve un email con link per reset password
+                                                </div>
+                                        </c:when>
+                                        <c:when test="${param.notice == 'activatedOK'}">
+                                                <div class="alert alert-success">
+                                                        <i class="fas fa-info"></i>  il tuo account è stato attivato correttamente
+                                                </div>
+                                        </c:when>
+                                        <c:when test="${param.notice == 'activatedFAIL'}">
+                                                <div class="alert alert-danger">
+                                                        <i class="fas fa-info"></i>  non esiste account con tale coppia di email e link
+                                                </div>
+                                        </c:when>
+                                        <c:when test="${param.notice == 'resetLinkInvalid'}">
+                                                <div class="alert alert-danger">
+                                                        <i class="fas fa-info"></i>  il link di reset password non è valido
+                                                </div>
+                                        </c:when>
+                                        <c:when test="${param.notice == 'resetPasswordOK'}">
+                                                <div class="alert alert-success">
+                                                        <i class="fas fa-info"></i>  il password è stato resettato correttamente
                                                 </div>
                                         </c:when>
                                 </c:choose>
+
+
+
+
+
+
                         </div>
                 </c:if>
 
@@ -109,24 +139,29 @@
                         </div>      
                 </div>
 
+
+                <%-- input hidden per memorizzare la pagine di provenienza e pagina da rindirizzare--%>
+                <c:if test="${not empty param.notice}">
+                        <input type="hidden" name="${FormValidator.PREV_URL_KEY}"  value="<c:url value="/"/>">
+                </c:if>
+                <c:if test="${empty param.notice}">
+                        <input type="hidden" name="${FormValidator.PREV_URL_KEY}"  value="${param[FormValidator.PREV_URL_KEY]}">
+                </c:if>
+
+
                 <button class="btn btn-lg btn-primary btn-block" type="submit">
                         <fmt:message key="login.label.login"/>
                 </button>
 
-                <%-- input hidden per memorizzare la pagine di provenienza e pagina da rindirizzare--%>
-                <input type="hidden" name="${FormValidator.PREV_URL_KEY}"
-                       id="inputPrevUrl" value="${param[FormValidator.PREV_URL_KEY]}">
-                <input type="hidden" name="${FormValidator.NEXT_URL_KEY}"
-                       id="inputNextUrl" value="${param[FormValidator.NEXT_URL_KEY]}">
+
 
 
         </form>
 </div>
 <div class="link-utils">     
         <div class="content-top">
-                <a id="pwdDimenticata" class="pull-right"
-                   href="<c:url value="/"/>">
-                        <fmt:message key="login.label.forgotPassword"/>
+                <a id="pwdDimenticata" class="" href="<c:url value="/forgotPassword"/>">
+                        <i class="fas fa-question"></i> <fmt:message key="login.label.forgotPassword"/>
                 </a>
 
         </div>
@@ -136,13 +171,11 @@
                 </span>
         </div>
         <div class="content-bottom text-center">
-                <a href="<c:url value="/register"/>"
-                   class="btn btn-default" role="button" id="register-btn">
+                <a href="<c:url value="/register"/>" class="btn btn-default" role="button" id="register-btn">
                         <i class="fas fa-user-plus"></i> <fmt:message key="login.label.register"/>
                 </a>
         </div>
 </div>
 
-<script src="<c:url value="/js/userValidate.js"/>"></script>
 
 <jsp:include page="/WEB-INF/jsp/userSystem/footer.jsp"/>

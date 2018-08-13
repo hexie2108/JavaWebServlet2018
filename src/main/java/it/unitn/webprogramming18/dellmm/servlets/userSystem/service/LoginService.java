@@ -7,20 +7,14 @@ import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
 import it.unitn.webprogramming18.dellmm.util.FormValidator;
 import it.unitn.webprogramming18.dellmm.util.MD5Utils;
-import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.http.Cookie;
 
 /**
@@ -48,7 +42,7 @@ public class LoginService extends HttpServlet
                 //get i parametri necessari
                 String email = request.getParameter(FormValidator.EMAIL_KEY);
                 String password = request.getParameter(FormValidator.FIRST_PWD_KEY);
-                String nextUrl = request.getParameter(FormValidator.NEXT_URL_KEY);
+                String prevUrl = request.getParameter(FormValidator.PREV_URL_KEY);
                 String remember = request.getParameter(FormValidator.REMEMBER_KEY);
 
                 CheckErrorUtils.isFalse(FormValidator.validateEmail(email), "email non è valido");
@@ -122,17 +116,17 @@ public class LoginService extends HttpServlet
                 }
 
                 // Se nextUrl è vuoto o nullo, usa pagina di default(index)
-                if (nextUrl == null || nextUrl.isEmpty())
+                if (prevUrl == null || prevUrl.isEmpty())
                 {
                         String contextPath = getServletContext().getContextPath();
                         if (!contextPath.endsWith("/"))
                         {
                                 contextPath += "/";
                         }
-                        nextUrl = contextPath;
+                        prevUrl = contextPath;
                 }
 
-                response.sendRedirect(response.encodeRedirectURL(nextUrl));
+                response.sendRedirect(response.encodeRedirectURL(prevUrl));
 
         }
 }

@@ -159,4 +159,23 @@ public interface UserDAO extends DAO<User, Integer>
          */
         public User getUserByFastLoginKey(String fastLoginKey, Long currentTimeMillis) throws DAOException;
         
+        /**
+         * dato la coppia di email e link di attivazione, aggiorna lo stato di attivazione dell'utente
+         * @param email
+         * @param verifyEmailLink
+         * @return true se è stato attivato correttamente, false se non ha trovato user
+         * @throws DAOException 
+         */
+        public boolean activateUserByEmailAndVerifyLink(String email, String verifyEmailLink) throws DAOException;
+        
+        
+        /**
+         * dato la coppia di email e resetLink, controlla se c'è utente corrispondente
+         * @param email
+         * @param resetPwdLink
+         * @return true se c'è, false se non c'è
+         * @throws DAOException 
+         */
+        public boolean checkUserByEmailAndResetPwdLink(String email,  String resetPwdLink) throws DAOException;
+        
 }

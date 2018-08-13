@@ -28,7 +28,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 public class RegisterService extends HttpServlet
 {
 
-        private static final String JSP_PAGE_PATH = "/WEB-INF/jsp/userSystem/register.jsp";
+       
 
         private UserDAO userDAO;
         private EmailFactory emailFactory;

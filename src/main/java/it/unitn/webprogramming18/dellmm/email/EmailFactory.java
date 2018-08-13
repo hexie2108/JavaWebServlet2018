@@ -1,19 +1,14 @@
 package it.unitn.webprogramming18.dellmm.email;
 
-import com.sun.mail.util.MailSSLSocketFactory;
 import it.unitn.webprogramming18.dellmm.email.exceptions.EmailFactoryException;
-import it.unitn.webprogramming18.dellmm.email.messageFactories.VerifyLinkMail;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 
 public class EmailFactory
@@ -125,14 +120,41 @@ public class EmailFactory
 
                 Transport.send(msg);
         }
+        
+        /**
+         * metodo per inviare email di registrazione
+         * @param user
+         * @param request
+         * @throws MessagingException
+         * @throws UnsupportedEncodingException 
+         */
 
         public void sendEmailOfRegistration(User user, HttpServletRequest request) throws MessagingException, UnsupportedEncodingException
         {
                 String serviceName = "admin";
                 String emailSubject = "Registration";
                 String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
-                Multipart content = VerifyLinkMail.createMessage(user, basePath);
+                Multipart content = MessageFacotry.messageOfRegistration(user, basePath);
                 sendMail(serviceName, emailSubject, content, user.getEmail());
 
         }
+        
+        /**
+         * metodo per inviare email di reset password
+         * @param user
+         * @param request
+         * @throws MessagingException
+         * @throws UnsupportedEncodingException 
+         */
+        
+         public void sendEmailOfRestPassword(User user, HttpServletRequest request) throws MessagingException, UnsupportedEncodingException
+        {
+                String serviceName = "admin";
+                String emailSubject = "Reset Password";
+                String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+                Multipart content = MessageFacotry.messageOfResetPassword(user, basePath);
+                sendMail(serviceName, emailSubject, content, user.getEmail());
+
+        }
+        
 }

@@ -133,15 +133,18 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
 
                 CON = C3p0Util.getConnection();
                 try (PreparedStatement stm = CON.prepareStatement(
-                            "UPDATE User SET "
-                            + "name = ?,"
-                            + "surname = ?,"
-                            + "email = ?,"
-                            + "password = ?,"
-                            + "img = ?,"
-                            + "isAdmin = ?,"
-                            + "verifyEmailLink = ?,"
-                            + "resetPwdEmailLink = ? "
+                            " UPDATE User SET "
+                            + " name = ?,"
+                            + " surname = ?,"
+                            + " email = ?,"
+                            + " password = ?,"
+                            + " img = ?,"
+                            + " isAdmin = ?,"
+                            + " verifyEmailLink = ?,"
+                            + " resetPwdEmailLink = ? ,"
+                            + " acceptedPrivacy = ? ,"
+                            + " lastLoginTimeMillis = ? ,"
+                            + " keyForFastLogin = ? "
                             + "WHERE id = ?"
                 ))
                 {
@@ -154,7 +157,10 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
                         stm.setBoolean(6, user.isIsAdmin());
                         stm.setString(7, user.getVerifyEmailLink());
                         stm.setString(8, user.getResetPwdEmailLink());
-                        stm.setInt(9, user.getId());
+                        stm.setBoolean(9, user.isAcceptedPrivacy());
+                        stm.setLong(10, user.getLastLoginTimeMillis());
+                        stm.setString(11, user.getKeyForFastLogin());
+                        stm.setInt(12, user.getId());
                         if (stm.executeUpdate() != 1)
                         {
                                 throw new DAOException("Impossible to update the user");
@@ -582,6 +588,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
 
         }
 
+        @Override
         public User getUserByFastLoginKey(String fastLoginKey, Long currentTimeMillis) throws DAOException
         {
 
@@ -617,5 +624,77 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
 
                 return user;
 
+        }
+
+        @Override
+        public boolean activateUserByEmailAndVerifyLink(String email, String verifyEmailLink) throws DAOException
+        {
+                boolean result = true;
+                if (email == null || verifyEmailLink == null)
+                {
+                        throw new DAOException("email o verifyEmailLink is null");
+                }
+
+                CON = C3p0Util.getConnection();
+                try (PreparedStatement stm = CON.prepareStatement(
+                            "UPDATE User SET verifyEmailLink = NULL WHERE email = ? AND verifyEmailLink = ?"
+                ))
+                {
+
+                        stm.setString(1, email);
+                        stm.setString(2, verifyEmailLink);
+
+                        //se non ha trovato
+                        if (stm.executeUpdate() != 1)
+                        {
+                                result = false;
+                        }
+                }
+                catch (SQLException ex)
+                {
+                        throw new DAOException("Impossible to update the user", ex);
+                }
+                finally
+                {
+                        C3p0Util.close(CON);
+                }
+
+                return result;
+        }
+
+        @Override
+        public boolean checkUserByEmailAndResetPwdLink(String email, String resetPwdLink) throws DAOException
+        {
+                boolean flag = false;
+                if (email == null || resetPwdLink == null)
+                {
+                        throw new DAOException("email o resetPwdLink is null");
+                }
+
+                CON = C3p0Util.getConnection();
+                try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM User WHERE  email = ? AND resetPwdEmailLink = ?"))
+                {
+                        stmt.setString(1, email);
+                        stmt.setString(2, resetPwdLink);
+                        ResultSet rs = stmt.executeQuery();
+                        if (rs.next())
+                        {
+                                int res = rs.getInt(1);
+                                if (res > 0)
+                                {
+                                        flag = true;
+                                }
+                        }
+                }
+                catch (SQLException ex)
+                {
+                        throw new DAOException("Impossible to return result", ex);
+                }
+                finally
+                {
+                        C3p0Util.close(CON);
+                }
+
+                return flag;
         }
 }

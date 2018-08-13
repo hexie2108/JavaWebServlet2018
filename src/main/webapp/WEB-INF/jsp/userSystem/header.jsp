@@ -31,8 +31,8 @@
                 <script type="text/javascript" src="${pageContext.request.contextPath}/libs/bootstrap/bootstrap.min.js"></script>
 
                 <%--js personale--%>
-                <script type="text/javascript" src="${pageContext.request.contextPath}/js/user-system-script.js"></script>
-
+                <script type="text/javascript" src="${pageContext.request.contextPath}/js/userSystemScript.js"></script>
+                <script type="text/javascript" src="${pageContext.request.contextPath}/js/userFormValidate.js"></script>
 
                 <%--css di bootstrap--%>
                 <link rel="stylesheet" href="${pageContext.request.contextPath}/libs/bootstrap/bootstrap.min.css" type="text/css" media="all">

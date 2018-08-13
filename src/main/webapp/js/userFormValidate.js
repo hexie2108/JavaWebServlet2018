@@ -1,3 +1,7 @@
+
+"use strict";
+
+
 /**
  * validatore del form di registrazione
  * @returns {Boolean} true se valido , false se non è valido
@@ -65,7 +69,7 @@ function validateForm() {
                         async: false,
                         cache: false,
                         error: function () {
-                                alert('error to check email repeat, retry submit' + url);
+                                alert('error to check email repeat, retry submit');
                         },
                         success: function (data) {
                                 repeat = data;
@@ -309,7 +313,7 @@ function validateLogin() {
                 //se password sono valido
                 if (errorType === "")
                 {
-                        
+
                         var email = $("#inputEmail").val();
                         //pova login
                         var url = location.href;
@@ -324,7 +328,7 @@ function validateLogin() {
                                 async: false,
                                 cache: false,
                                 error: function () {
-                                        alert('error to login, retry submit' + url);
+                                        alert('error to check login, retry submit');
                                 },
                                 success: function (data) {
                                         result = data;
@@ -344,7 +348,7 @@ function validateLogin() {
                                 {
                                         errorType = ".no-validated-user";
                                 }
-                                
+
                                 $(".form-box .error-messages " + errorType).show("slow");
 
                                 return false;
@@ -374,14 +378,14 @@ function validateLogin() {
                         $(".form-box #inputPassword").addClass("border-danger");
                         $(".form-box #inputPassword").focus();
 
-                        return false
+                        return false;
                 }
 
 
         }
         else
         {
-                return false
+                return false;
         }
 
 
@@ -451,85 +455,163 @@ function validateGeneralInput(input) {
 
 }
 
+/**
+ * validatore della pagina di forgotPassword
+ * @returns {Boolean}
+ */
+function validateForgotPassword() {
 
+        //intanto fare controllo base del email
+        if (validateEmail())
+        {
+                //get valore di email
+                var email = $("#inputEmail").val();
+                var url = location.href;
+                var index = url.indexOf("forgotPassword");
+                url = url.substring(0, index);
+                var repeat;
+                $.ajax({
+                        url: url + "service/checkUserService",
+                        data: {action: "existence", email: email},
+                        type: 'POST',
+                        dataType: "text",
+                        async: false,
+                        cache: false,
+                        error: function () {
+                                alert('error to check email existence, retry submit');
+                        },
+                        success: function (data) {
+                                repeat = data;
+                        }
+                });
 
-
-
-
-$(document).ready(function () {
-
-        //start code per pop di suggerimenti 
-        $('#form-register [data-toggle="popover"]').popover();
-        //visualizza la barra della valutazione di password
-        $('#form-register #inputPassword').focusin(function () {
-                $(".progress-bar-div").show("slow");
-        });
-        //nasconde la barra della valutazione di password
-        $('#form-register #inputPassword').focusout(function () {
-                $(".progress-bar-div").hide("slow");
-        });
-
-
-        //valuta in tempo reale il punteggio di password
-        $('#form-register #inputPassword').on("keyup", function () {
-
-
-                var score = (zxcvbn(this.value).score);
-                var progressBar = $(".progress-bar");
-                switch (score)
+                //se email non esiste
+                if (repeat === "0")
                 {
-                        case 0:
-                                progressBar.removeClass();
-                                progressBar.addClass("progress-bar progress-bar-striped progress-bar-animated password0 bg-secondary");
-                                break;
-                        case 1:
-                                progressBar.removeClass();
-                                progressBar.addClass("progress-bar progress-bar-striped progress-bar-animated password1 bg-danger");
-                                break;
-                        case 2:
-                                progressBar.removeClass();
-                                progressBar.addClass("progress-bar progress-bar-striped progress-bar-animated password2 bg-warning");
-                                break;
-                        case 3:
-                                progressBar.removeClass();
-                                progressBar.addClass("progress-bar progress-bar-striped progress-bar-animated password3 bg-info");
-                                break;
-                        case 4:
-                                progressBar.removeClass();
-                                progressBar.addClass("progress-bar progress-bar-striped progress-bar-animated password4 bg-success");
-                                break;
+                        var errorType = ".no-existence";
+                        $(".form-box .error-messages " + errorType).show("slow");
+                        $(".form-box #inputEmail").addClass("border-danger");
+                        $(".form-box #inputEmail").focus();
+                        return false;
+                }
+                else
+                {
+                        return true;
+                }
+        }
+        else
+        {
+                return false;
+        }
+
+}
+
+
+/**
+ * validatore della pagina di resetPassword
+ * @returns {Boolean}
+ */
+function validateResetPassword() {
+        
+        var password = $("#inputPassword").val();
+        var password2 = $("#inputPassword2").val();
+        
+         //nasconde tutti gli errori
+        $(".form-box  .error-messages p").hide();
+        //rimuove tutti classe border-danger da inpu di form
+        $(".form-box  .input-box").removeClass("border-danger");
+        
+        //check password
+        //se è vuoto o se supera la lunghezza massima o se è troppo corta 
+        if (password === "" || password.length > 44 || password.length < 8)
+        {
+                var errorType = "null";
+                if (password === "")
+                {
+                        errorType = ".null";
+                }
+                else if (password.length > 44)
+                {
+                        errorType = ".max-length";
+                }
+                else if (password.length < 8)
+                {
+                        errorType = ".min-length";
                 }
 
-        });
+                $(".password-group .error-messages " + errorType).show("slow");
+                $(".password-group .input-box").addClass("border-danger");
+                $(".password-group #inputPassword").focus();
+                return false;
+        }
+        //altrimenti, controlla se password è valido
+        else
+        {
 
+                var lower = 0;
+                var lowerRegx = /^[a-z]*$/;
+                var upper = 0;
+                var upperRegx = /^[A-Z]*$/;
+                var number = 0;
+                var numberRegx = /^[0-9]*$/;
+                var symbol = 0;
 
+                var letter;
 
+                for (var i = 0; i < password.length; i++)
+                {
+                        letter = password.charAt(i);
 
-        //visualizza  il uploader di custom avatar
-        $("#form-register  #avatar-custom").click(function () {
-                $(".custom-avatar-uploader").show("slow");
-                $(".custom-file-input").attr("required", "required");
-        });
+                        if (lowerRegx.test(letter))
+                        {
+                                lower++;
+                        }
+                        else if (upperRegx.test(letter))
+                        {
+                                upper++;
+                        }
+                        else if (numberRegx.test(letter))
+                        {
+                                number++;
+                        }
+                        else if ((letter !== " ") && (letter !== "\t") && (letter !== "\n"))
+                        {
+                                symbol++;
+                        }
+                }
 
-        // nasconde il uploade e clear input di file e ripristina il segnaposto predefinito
-        $("#form-register  .default-avatar").click(function () {
-                $(".custom-avatar-uploader").hide("slow");
-                $(".custom-file-input").val("");
-                $(".custom-file-input").removeAttr("required");
-                $(".custom-file-label").html($(".custom-file-label-origin").html());
-        });
+                //se password non ha un carattere minuscolo, un maiuscolo, un numero e un simbolo, è invalido 
+                if ((lower < 1) || (upper < 1) || (number < 1) || (symbol < 1))
+                {
+                        var errorType = ".invalid";
+                        $(".password-group .error-messages " + errorType).show("slow");
+                        $(".password-group .input-box").addClass("border-danger");
+                        $(".password-group #inputPassword").focus();
 
-        //elimina gli spazi di input
-        $(".input-group input.input-box").change(function () {
-                $(this).val($.trim($(this).val()));
-        });
+                        return false;
+                }
 
-        //visualizza il nome file nel cutom-file-input di form
-        $(".custom-file-input").on("change", function () {
-                //get il nome di file
-                var fileName = $(this)[0].files[0].name;
-                //sostituisce il contenuto del "custom-file-label" label
-                $(this).next(".custom-file-label").html(fileName);
+        }
+        //check password2
+        //se è vuoto o è diverso da password
+        if (password2 === "" || password2 !== password)
+        {
+                var errorType = "null";
+                if (password2 === "")
+                {
+                        errorType = ".null";
+                }
+                else if (password2 !== password)
+                {
+                        errorType = ".no-equal";
+                }
 
-        });
-});
+                $(".password2-group .error-messages " + errorType).show("slow");
+                $(".password2-group .input-box").addClass("border-danger");
+                $(".password2-group #inputPassword2").focus();
+                return false;
+        }
+        
+        
+        return true;
+}

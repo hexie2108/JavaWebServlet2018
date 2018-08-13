@@ -1,106 +1,113 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%-- la pagina di login --%>
+
+<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="it.unitn.webprogramming18.dellmm.servlets.userSystem.ResetPasswordServlet" %>
-
 <%@ page import="it.unitn.webprogramming18.dellmm.util.FormValidator" %>
-<%@ page import="it.unitn.webprogramming18.dellmm.util.ConstantsUtils" %>
 
-<%@ include file="../jspf/i18n.jsp"%>
+<%@include file="/WEB-INF/jspf/i18n.jsp"%>
 
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><fmt:message key="resetPassword.title"/></title>
+<jsp:include page="/WEB-INF/jsp/userSystem/header.jsp"/>
 
-    <link rel="stylesheet" href="<c:url value="/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css"/>">
-    <script src="<c:url value="/libs/jquery/jquery-3.3.1.min.js"/>"></script>
-    <script src="<c:url value="/libs/bootstrap-4.1.1-dist/js/bootstrap.bundle.min.js"/>"></script>
 
-    <link rel="stylesheet" href="<c:url value="/css/tmpToDelete/login-style.css"/>">
-    <link rel="stylesheet" href="<c:url value="/css/tmpToDelete/common.css"/>">
 
-    <link rel="stylesheet" href="<c:url value="/libs/fontawesome-free-5.1.1-web/css/all.min.css"/>" type="text/css" media="all">
-</head>
-<body>
-<%@ include file="../jspf/i18n_switcher.jsp"%>
-<nav class="navbar navbar-default navbar-static-top">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="/">Brand</a>
-        </div>
-    </div>
-</nav>
-<div class="container-fluid" id="div-signin">
-    <div id="div-inner">
-        <form id="form-signin" method="post">
-            <div class="container-fluid">
-                <h2 class="form-signin-heading"><fmt:message key="resetPassword.title"/></h2>
+<div class="form-box">
+        <form id="form-register" method="post" onsubmit="return validateResetPassword()" action="${pageContext.request.contextPath}/service/resetPasswordService">
+
+                <h2 class="form-title">
+                        <fmt:message key="resetPassword.title"/>
+                </h2>
+
+
                 <div class="form-group">
-                    <label for="inputPassword" class="sr-only"><fmt:message key="user.label.password"/></label>
-                    <div class="input-group">
-                        <div class="input-group-prepend"><i class="input-group-text fas fa-key"></i></div>
-                        <input id="inputPassword" class="form-control" placeholder="<fmt:message key="user.label.password"/>" required="" autofocus=""
-                               type="password" name="${FormValidator.FIRST_PWD_KEY}">
-                        <span id="spanPassword"></span>
-                    </div>
+
+                        <div id="divPassword" class="password-group">
+
+                                <div class="input-group">
+                                        <div class="input-group-prepend">
+                                                <span class="input-group-text input-box">
+                                                        <i class="fas fa-key"></i>
+                                                </span>
+                                        </div>
+                                        <input id="inputPassword" class="form-control input-box" placeholder="<fmt:message key="user.label.password"/>" required=""
+                                               type="password" name="${FormValidator.FIRST_PWD_KEY}" maxlength="${FormValidator.PWD_MAX_LEN}"
+                                               value="">
+
+                                </div>
+
+                                <div class="progress progress-bar-div">
+                                        <div class="progress-bar progress-bar-striped progress-bar-animated"></div>
+                                </div>
+
+                                <div class="error-messages error-password">
+
+                                        <p class="null">
+                                                <i class="fas fa-exclamation-triangle"></i> <fmt:message key="validateUser.errors.PASSWORD_MISSING"/>
+                                        </p>
+                                        <p class="max-length">
+                                                <i class="fas fa-exclamation-triangle"></i> <fmt:message key="validateUser.errors.PASSWORD_TOO_LONG"/>
+                                        </p>
+                                        <p class="min-length">
+                                                <i class="fas fa-exclamation-triangle"></i> <fmt:message key="validateUser.errors.PASSWORD_TOO_SHORT"/>
+                                        </p>
+                                        <p class="invalid">
+                                                <i class="fas fa-exclamation-triangle"></i>  <fmt:message key="validateUser.errors.PASSWORD_NOT_VALID"/>
+                                        </p>
+
+                                </div>          
+
+
+                        </div>
+
+                        <div id="divPassword2" class="password2-group mt-3">
+
+
+                                <div class="input-group">
+                                        <div class="input-group-prepend">
+                                                <span class="input-group-text input-box">
+                                                        <i class="fas fa-key"></i>
+                                                </span>
+                                        </div>
+                                        <input id="inputPassword2" class="input-box form-control" placeholder="<fmt:message key="user.label.repeatPassword"/>" required=""
+                                               type="password" name="${FormValidator.SECOND_PWD_KEY}" maxlength="${FormValidator.PWD_MAX_LEN}"
+                                               value="">
+
+                                </div>
+                                <div class="error-messages error-password2">
+
+                                        <p class="null">
+                                                <i class="fas fa-exclamation-triangle"></i>   <fmt:message key="validateUser.errors.PASSWORD2_MISSING"/>
+                                        </p>
+                                        <p class="no-equal">
+                                                <i class="fas fa-exclamation-triangle"></i>  <fmt:message key="validateUser.errors.PASSWORD2_NOT_SAME"/>
+                                        </p>
+
+                                </div>
+                        </div>
+
                 </div>
 
-                <input type="hidden" name="id" id="inputId" value="${param[ResetPasswordServlet.ID_KEY]}">
 
-                <div class="alert d-none" id="id-res">
-                </div>
+                <%-- input hidden per memorizzare dati di email e resetLink--%>
+                <input type="hidden" name="resetPwdLink" value="${param.resetPwdLink}" />
+                <input type="hidden" name="${FormValidator.EMAIL_KEY}" value="${param[FormValidator.EMAIL_KEY]}" />
 
-                <div class="btn-group btn-group-justified" role="group" aria-label="...">
-                    <div class="btn-group" role="group" id="id-annulla">
-                        <%-- TODO: Gestione prevUrl --%>
-                        <a href="${param.prevUrl}" class="btn btn-default" role="button"><fmt:message key="resetPassword.label.cancel"/></a>
-                    </div>
-                    <div class="btn-group" role="group" id="id-accedi">
-                        <button class="btn btn-primary" type="submit"><fmt:message key="resetPassword.label.submit"/></button>
-                    </div>
-                </div>
-            </div>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">
+                        <fmt:message key="resetPassword.label.submit"/>
+                </button>
+
+
         </form>
-    </div>
 </div>
 
-<script src="<c:url value="/js/userValidate.js"/>"></script>
-<script>
-    const form = $('#form-signin');
+<div class="link-utils">     
+        <div class="content-top">
+                <a class="" href="<c:url value="/login?notice=1"/>">
+                        <i class="fas fa-sign-in-alt"></i> <fmt:message key="login.label.login"/>
+                </a>
 
-    const resDiv = $('#id-res');
-    const unknownErrorMessage = '<fmt:message key="generic.errors.unknownError"/>';
-    const successMessage = '<fmt:message key="loggedResetPassword.success"/>';
+        </div>
+</div>
 
-    const url = '<c:url value="/resetPassword.json"/>';
-    const validationUrl = '<c:url value="/${ConstantsUtils.VALIDATE_REGISTRATION}"/>';
+<script src="<c:url value="/libs/zxcvbn/zxcvbn.js"/>"></script>
 
-    form.find('input').on('blur change',function(){
-        request_user_validation(form, false, validationUrl)
-            .done(function(d){
-                updateVerifyMessages(form, d);
-            });
-    });
-
-    form.submit(function(e){
-        e.preventDefault();
-
-        formSubmit(
-            url,
-            form, {
-                'multipart': false,
-                'session': false,
-                'redirectUrl': null,
-                'unknownErrorMessage': unknownErrorMessage,
-                'successMessage': successMessage,
-                'resDiv': resDiv
-            }
-        )
-
-    });
-</script>
-</body>
-</html>
-
+<jsp:include page="/WEB-INF/jsp/userSystem/footer.jsp"/>

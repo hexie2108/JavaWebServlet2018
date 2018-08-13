@@ -1,7 +1,7 @@
 package it.unitn.webprogramming18.dellmm.servlets.userSystem;
 
 import it.unitn.webprogramming18.dellmm.email.EmailFactory;
-import it.unitn.webprogramming18.dellmm.email.messageFactories.VerifyLinkMail;
+import it.unitn.webprogramming18.dellmm.email.MessageFacotry;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 
 import javax.mail.MessagingException;
@@ -35,12 +35,11 @@ public class ResendEmailServlet extends HttpServlet
                 HttpSession session = request.getSession(false);
                 User user = (User) session.getAttribute("user");
 
-                try
+            /*     try
                 {
-                        emailFactory.sendMail(
+                       emailFactory.sendMail("Registration",
                                     "Registration",
-                                    "Registration",
-                                    VerifyLinkMail.createMessage(user , ""),
+                                    MessageFacotry.createMessage(user , ""),
                                     "registrazioneprogettowebprog@gmail.com"
                         ); // Per ora le mandiamo a noi stessi per evitare casini
                 }
@@ -54,6 +53,6 @@ public class ResendEmailServlet extends HttpServlet
                         }
                         errorList.add("Impossible to send the email. Please check the email in user's settings and click resend");
                         session.setAttribute("errors", errorList);
-                }
+                }*/
         }
 }

@@ -304,7 +304,7 @@
         </form>
 
 </div>
-           
+
 <div class="link-utils">     
         <div class="content-top">
                 <a class=" " href="<c:url value="/"/>">Richiede il rinvio di email</a>
@@ -315,7 +315,7 @@
                 </span>
         </div>
         <div class="content-bottom text-center">
-                <a class="" href="<c:url value="/login"/>">
+                <a class="" href="<c:url value="/login?notice=1"/>">
                         <i class="fas fa-sign-in-alt"></i> <fmt:message key="login.label.login"/>
                 </a>
         </div>
@@ -354,7 +354,5 @@
 </div>       
 
 <script src="<c:url value="/libs/zxcvbn/zxcvbn.js"/>"></script>
-<script src="<c:url value="/js/userValidate.js"/></script>
 
-
-        <jsp:include page="/WEB-INF/jsp/userSystem/footer.jsp"/>
+<jsp:include page="/WEB-INF/jsp/userSystem/footer.jsp"/>

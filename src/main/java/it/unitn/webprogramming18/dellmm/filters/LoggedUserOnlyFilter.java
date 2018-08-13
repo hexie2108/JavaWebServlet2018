@@ -54,8 +54,24 @@ public class LoggedUserOnlyFilter implements Filter
                 //get la parte di url esclude dominio es: /index.jsp
                 String uri = request.getRequestURI();
 
-                //faccio un redirect alla pagina di login mantenendo l'url
-                // richiesta a login avvenuto con successo
+                // nextUrl  permette utente di ritornerà a la pagina richiesta dopo aver fatto login
+                String prevUrl = null;
+                //se nel url contiene "service"
+                if (uri.contains("service/"))
+                {
+                        //memorizza url della provenienza prima della richiesta
+                        prevUrl = request.getHeader("Referer");
+                }
+                else
+                {
+                        // memorizza url della richiesta attuale,  
+                        prevUrl = request.getRequestURI();
+                }
+                if (prevUrl == null)
+                {
+                        prevUrl = "";
+                }
+
                 //get il percorso base
                 String contextPath = request.getServletContext().getContextPath();
                 if (!contextPath.endsWith("/"))
@@ -63,24 +79,7 @@ public class LoggedUserOnlyFilter implements Filter
                         contextPath += "/";
                 }
 
-                // nextUrl  permette utente di ritornerà a la pagina richiesta dopo aver fatto login
-                String nextUrl = null;
-                //se nel url contiene "service"
-                if (uri.contains("service/"))
-                {
-                        //memorizza url della provenienza prima della richiesta
-                        nextUrl = request.getHeader("Referer");
-                }
-                else
-                {
-                        // memorizza url della richiesta attuale,  
-                       nextUrl = request.getRequestURI();
-                }
-                if(nextUrl==null ){
-                        nextUrl = "";
-                }
-
-                response.sendRedirect(contextPath + ConstantsUtils.LOGIN + "?nextUrl=" + URLEncoder.encode(nextUrl, "UTF-8")
+                response.sendRedirect(contextPath + ConstantsUtils.LOGIN + "?prevUrl=" + URLEncoder.encode(prevUrl, "UTF-8")
                 );
 
         }

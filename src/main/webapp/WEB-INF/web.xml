@@ -79,7 +79,6 @@
                 <description>ServletContextListener</description>
                 <listener-class>it.unitn.webprogramming18.dellmm.listeners.WebAppContextListener</listener-class>
         </listener>
- 
         <!-- FILTERS -->
         <filter>
                 <filter-name>AutoLoginFilter</filter-name>
@@ -89,8 +88,6 @@
                 <filter-name>AutoLoginFilter</filter-name>
                 <url-pattern>/*</url-pattern>
         </filter-mapping>
-        
-
         <filter>
                 <filter-name>FrontPagePrintListFilter</filter-name>
                 <filter-class>it.unitn.webprogramming18.dellmm.filters.FrontPagePrintListFilter</filter-class>
@@ -124,12 +121,7 @@
                 <url-pattern>/service/updateListService</url-pattern>
                 <url-pattern>/service/updateProductService</url-pattern>
         </filter-mapping>
-        
-        
-        
-        
         <!-- SERVLETS OF PAGE _____________________________________________________________________________ -->
-     
         <servlet>
                 <servlet-name>HomeServlet</servlet-name>
                 <servlet-class>it.unitn.webprogramming18.dellmm.servlets.front.HomeServlet</servlet-class>
@@ -267,7 +259,42 @@
                 <servlet-name>LoginService</servlet-name>
                 <url-pattern>/service/loginService</url-pattern>
         </servlet-mapping>
+        <servlet>
+                <servlet-name>ForgotPasswordService</servlet-name>
+                <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.service.ForgotPasswordService</servlet-class>
+        </servlet>
+        <servlet-mapping>
+                <servlet-name>ForgotPasswordService</servlet-name>
+                <url-pattern>/service/forgotPasswordService</url-pattern>
+        </servlet-mapping>
+        <servlet>
+                <servlet-name>ActivateUserService</servlet-name>
+                <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.service.ActivateUserService</servlet-class>
+        </servlet>
+        <servlet-mapping>
+                <servlet-name>ActivateUserService</servlet-name>
+                <url-pattern>/service/activateUserService</url-pattern>
+        </servlet-mapping>
+    
+        <servlet>
+                <servlet-name>ResetPasswordService</servlet-name>
+                <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.service.ResetPasswordService</servlet-class>
+        </servlet>
+        <servlet-mapping>
+                <servlet-name>ResetPasswordService</servlet-name>
+                <url-pattern>/service/resetPasswordService</url-pattern>
+        </servlet-mapping>
+    
+    
         <!-- USER SYSTEM SERVLETS -->
+        <servlet>
+                <servlet-name>RegisterServlet</servlet-name>
+                <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.RegisterServlet</servlet-class>
+        </servlet>
+        <servlet-mapping>
+                <servlet-name>RegisterServlet</servlet-name>
+                <url-pattern>/register</url-pattern>
+        </servlet-mapping>
         <servlet>
                 <servlet-name>LoginServlet</servlet-name>
                 <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.LoginServlet</servlet-class>
@@ -285,34 +312,6 @@
                 <url-pattern>/logout</url-pattern>
         </servlet-mapping>
         <servlet>
-                <servlet-name>RegisterServlet</servlet-name>
-                <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.RegisterServlet</servlet-class>
-        </servlet>
-        <servlet-mapping>
-                <servlet-name>RegisterServlet</servlet-name>
-                <url-pattern>/register</url-pattern>
-        </servlet-mapping>
-        <servlet-mapping>
-                <servlet-name>RegisterServlet</servlet-name>
-                <url-pattern>/register.json</url-pattern>
-        </servlet-mapping>
-        <servlet>
-                <servlet-name>ResendEmailServlet</servlet-name>
-                <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.ResendEmailServlet</servlet-class>
-        </servlet>
-        <servlet-mapping>
-                <servlet-name>ResendEmailServlet</servlet-name>
-                <url-pattern>/resendEmail</url-pattern>
-        </servlet-mapping>
-        <servlet>
-                <servlet-name>ValidateUserServlet</servlet-name>
-                <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.ValidateUserServlet</servlet-class>
-        </servlet>
-        <servlet-mapping>
-                <servlet-name>ValidateUserServlet</servlet-name>
-                <url-pattern>/validateUser</url-pattern>
-        </servlet-mapping>
-        <servlet>
                 <servlet-name>ForgotPasswordServlet</servlet-name>
                 <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.ForgotPasswordServlet</servlet-class>
         </servlet>
@@ -320,10 +319,7 @@
                 <servlet-name>ForgotPasswordServlet</servlet-name>
                 <url-pattern>/forgotPassword</url-pattern>
         </servlet-mapping>
-        <servlet-mapping>
-                <servlet-name>ForgotPasswordServlet</servlet-name>
-                <url-pattern>/forgotPassword.json</url-pattern>
-        </servlet-mapping>
+    
         <servlet>
                 <servlet-name>ResetPasswordServlet</servlet-name>
                 <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.ResetPasswordServlet</servlet-class>
@@ -332,10 +328,18 @@
                 <servlet-name>ResetPasswordServlet</servlet-name>
                 <url-pattern>/resetPassword</url-pattern>
         </servlet-mapping>
+    
+        <servlet>
+                <servlet-name>ResendEmailServlet</servlet-name>
+                <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.ResendEmailServlet</servlet-class>
+        </servlet>
         <servlet-mapping>
-                <servlet-name>ResetPasswordServlet</servlet-name>
-                <url-pattern>/resetPassword.json</url-pattern>
+                <servlet-name>ResendEmailServlet</servlet-name>
+                <url-pattern>/resendEmail</url-pattern>
         </servlet-mapping>
+ 
+    
+    
         <servlet>
                 <servlet-name>ModifyUserServlet</servlet-name>
                 <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.ModifyUserServlet</servlet-class>
@@ -360,14 +364,7 @@
                 <servlet-name>LoggedResetPasswordServlet</servlet-name>
                 <url-pattern>/loggedResetPassword.json</url-pattern>
         </servlet-mapping>
-        <servlet>
-                <servlet-name>AlreadyLoggedInServlet</servlet-name>
-                <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.AlreadyLoggedInServlet</servlet-class>
-        </servlet>
-        <servlet-mapping>
-                <servlet-name>AlreadyLoggedInServlet</servlet-name>
-                <url-pattern>/alreadyLoggedIn</url-pattern>
-        </servlet-mapping>
+    
         <!-- ERROR PAGE 
         <error-page>
                 <location>/WEB-INF/errorPage.jsp</location>

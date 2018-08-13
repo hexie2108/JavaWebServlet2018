@@ -57,7 +57,6 @@ public class FormValidator
         public static final String I18N_ERROR_STRING_PREFIX = "validateUser.errors.";
 
         public static final String PREV_URL_KEY = "prevUrl",
-                    NEXT_URL_KEY = "nextUrl",
                     REMEMBER_KEY = "remember";
 
         //enumerazione di errore
