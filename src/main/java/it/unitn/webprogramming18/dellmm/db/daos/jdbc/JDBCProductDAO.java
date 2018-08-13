@@ -18,6 +18,8 @@ import java.util.List;
  */
 public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements ProductDAO {
 
+    private final static double MIN_RELEVANCE = 0.375;
+
     private Product getProductFromResultSet(ResultSet rs) throws SQLException {
         Product product = new Product();
 
@@ -323,10 +325,21 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
 
         String sql = null;
         if (order.equals("categoryName")) {
-            sql = "SELECT P.* FROM Product P, CategoryProduct C WHERE P.categoryProductId=C.id AND P.name LIKE ? AND P.privateListId IS NULL ORDER BY C.name ASC  LIMIT ?,?";
+            sql =
+                    "SELECT Product.* " +
+                    "FROM Product JOIN CategoryProduct " +
+                    "ON Product.categoryProductId = CategoryProduct.id " +
+                    "WHERE Product.privateListId IS NULL AND MATCH(Product.name, Product.description) AGAINST (? IN NATURAL  LANGUAGE  MODE) > " + MIN_RELEVANCE + " " +
+                    "ORDER BY CategoryProduct.name ASC " +
+                    "LIMIT ?,? ";
 
         } else {
-            sql = "SELECT * FROM Product WHERE name LIKE ? AND privateListId IS NULL ORDER BY name ASC  LIMIT ?,?";
+            sql =
+                    "SELECT * " +
+                    "FROM Product " +
+                    "WHERE privateListId IS NULL AND MATCH(Product.name, Product.description) AGAINST (? IN NATURAL  LANGUAGE  MODE) > " + MIN_RELEVANCE + " " +
+                    "ORDER BY name ASC " +
+                    "LIMIT ?,?";
         }
         try (PreparedStatement stm = CON.prepareStatement(sql)) {
             stm.setString(1, "%" + name + "%");
@@ -358,7 +371,11 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
         CON = C3p0Util.getConnection();
 
         //try-with-resource, libera risorse in ogni caso
-        try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM Product WHERE name LIKE ? AND privateListId IS NULL")) {
+        try (PreparedStatement stmt = CON.prepareStatement(
+                "SELECT COUNT(*) " +
+                "FROM Product " +
+                "WHERE privateListId IS NULL AND  MATCH(Product.name, Product.description) AGAINST (? IN NATURAL  LANGUAGE  MODE) > " + MIN_RELEVANCE + " "
+        )) {
             stmt.setString(1, "%" + name + "%");
             ResultSet counter = stmt.executeQuery();
             if (counter.next()) {
