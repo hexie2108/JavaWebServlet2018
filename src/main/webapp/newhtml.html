@@ -1,0 +1,56 @@
+
+<div class="body">
+        <div class="main">
+                <style>
+
+                        .body{
+                                font-family: "Microsoft Yahei";
+                                background: #FAFAFA;
+                                width: 1920px;
+                                height: 1080px;
+                                position:fixed; 
+
+                        }					
+                        .main{
+
+                                width: 50%;
+                                margin: 50px auto;
+                                background: white;
+                                padding: 50px;
+                        }
+                        .main h1{
+                                margin: 20px 0;
+                        }
+                        .main p{
+                                margin: 10px 0;
+                        }
+
+                        .main a{
+                                display: block;
+                                text-align: center;
+                                width: 200px;
+                                height: 40x;
+                                line-height: 40px;
+                                color:white;
+                                text-decoration: none;
+                                background: #17a2b8;
+                                transition: .5s;
+                                border-radius: 5px;
+                        }
+                        .main a:hover{
+                                background:   #138496;
+                        }
+                </style>
+                <h1>
+                        grazie " + user.getName()+" "+user.getSurname() +" per esserti registrato a XXXXX
+                </h1>
+                <br/>
+                <p>
+                        per convalidare tuo account, click la link seguente
+                </p>
+                <br/>
+                <a href="+path+/service/validateUserService">
+                        convalida
+                </a>
+        </div>
+</div>

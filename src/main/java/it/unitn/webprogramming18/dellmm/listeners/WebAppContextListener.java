@@ -58,7 +58,8 @@ public class WebAppContextListener implements ServletContextListener
 
                 }
                  */
- /* Init email */
+                
+                /* Init email */
                 final String smtpHostname = sce.getServletContext().getInitParameter("smtpHostname");
                 final String smtpPort = sce.getServletContext().getInitParameter("smtpPort");
                 final String smtpUsername = sce.getServletContext().getInitParameter("smtpUsername");

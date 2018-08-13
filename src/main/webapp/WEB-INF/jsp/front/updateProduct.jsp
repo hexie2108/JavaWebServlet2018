@@ -35,7 +35,7 @@
                                         <%--parte di nome --%>
                                         <div class="form-group">
                                                 <label for="productName"><i class="fas fa-shopping-basket"></i> il nome del prodotto:</label>
-                                                <input type="text" class="form-control"   id="productName" name="productName" required="required" value="">
+                                                <input type="text" class="form-control"   id="productName" name="productName" required="required" value="" maxlength="44">
                                         </div>
 
                                         <%--parte di logo --%>

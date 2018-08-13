@@ -7,7 +7,7 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
-import it.unitn.webprogramming18.dellmm.util.RegistrationValidator;
+import it.unitn.webprogramming18.dellmm.util.FormValidator;
 import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 
 import javax.servlet.ServletException;
@@ -59,11 +59,11 @@ public class ModifyUserServlet extends HttpServlet
 
                         if (user.getImg().matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"))
                         {
-                                request.setAttribute(RegistrationValidator.AVATAR_KEY, "");
+                                request.setAttribute(FormValidator.AVATAR_KEY, "");
                         }
                         else
                         {
-                                request.setAttribute(RegistrationValidator.AVATAR_KEY, user.getImg());
+                                request.setAttribute(FormValidator.AVATAR_KEY, user.getImg());
                         }
 
                         request.getRequestDispatcher(MODIFY_USER_JSP).forward(request, response);
@@ -94,12 +94,12 @@ public class ModifyUserServlet extends HttpServlet
                 }
 
                 // Ottieni tutti i parametri
-                String firstName = request.getParameter(RegistrationValidator.FIRST_NAME_KEY);
-                String lastName = request.getParameter(RegistrationValidator.LAST_NAME_KEY);
-                String email = request.getParameter(RegistrationValidator.EMAIL_KEY);
-                String avatar = request.getParameter(RegistrationValidator.AVATAR_KEY);
+                String firstName = request.getParameter(FormValidator.FIRST_NAME_KEY);
+                String lastName = request.getParameter(FormValidator.LAST_NAME_KEY);
+                String email = request.getParameter(FormValidator.EMAIL_KEY);
+                String avatar = request.getParameter(FormValidator.AVATAR_KEY);
 
-                Part avatarImg = request.getPart(RegistrationValidator.AVATAR_IMG_KEY);
+                Part avatarImg = request.getPart(FormValidator.AVATAR_IMG_KEY);
 
                 HttpSession session = request.getSession(false);
                 User user = (User) session.getAttribute("user");
@@ -108,7 +108,7 @@ public class ModifyUserServlet extends HttpServlet
 
                 if (firstName != null && !firstName.isEmpty())
                 {
-                        kv.put(RegistrationValidator.FIRST_NAME_KEY, firstName);
+                        kv.put(FormValidator.FIRST_NAME_KEY, firstName);
                 }
                 else
                 {
@@ -117,7 +117,7 @@ public class ModifyUserServlet extends HttpServlet
 
                 if (lastName != null && !lastName.isEmpty())
                 {
-                        kv.put(RegistrationValidator.LAST_NAME_KEY, lastName);
+                        kv.put(FormValidator.LAST_NAME_KEY, lastName);
                 }
                 else
                 {
@@ -126,7 +126,7 @@ public class ModifyUserServlet extends HttpServlet
 
                 if (email != null && !email.isEmpty())
                 {
-                        kv.put(RegistrationValidator.EMAIL_KEY, email);
+                        kv.put(FormValidator.EMAIL_KEY, email);
                 }
                 else
                 {
@@ -135,22 +135,22 @@ public class ModifyUserServlet extends HttpServlet
 
                 if (avatar != null && !avatar.isEmpty())
                 {
-                        kv.put(RegistrationValidator.AVATAR_KEY, avatar);
-                        kv.put(RegistrationValidator.AVATAR_IMG_KEY, avatarImg);
+                        kv.put(FormValidator.AVATAR_KEY, avatar);
+                        kv.put(FormValidator.AVATAR_IMG_KEY, avatarImg);
                 }
                 else
                 {
                         avatar = "";
                 }
-
+/*
                 // Usa il validator per verifiacare la conformità
                 Map<String, String> messages
-                            = RegistrationValidator.partialValidate(userDAO, kv)
+                            = FormValidator.partialValidate(userDAO, kv)
                                         .entrySet()
                                         .stream()
                                         .collect(Collectors.toMap(
-                                                    (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> e.getKey(),
-                                                    (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> RegistrationValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString()
+                                                    (Map.Entry<String, FormValidator.ErrorMessage> e) -> e.getKey(),
+                                                    (Map.Entry<String, FormValidator.ErrorMessage> e) -> FormValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString()
                                         )
                                         );
 
@@ -159,7 +159,7 @@ public class ModifyUserServlet extends HttpServlet
                         ServletUtility.sendValidationError(request, response, 400, messages);
                         return;
                 }
-
+*/
                 if (!firstName.isEmpty())
                 {
                         user.setName(firstName);
@@ -179,7 +179,7 @@ public class ModifyUserServlet extends HttpServlet
                 {
                         String avatarName = avatar;
 
-                        if (avatar.equals(RegistrationValidator.CUSTOM_AVATAR))
+                        if (avatar.equals(FormValidator.CUSTOM_AVATAR))
                         {
                                 avatarName = UUID.randomUUID().toString();
 
@@ -206,7 +206,7 @@ public class ModifyUserServlet extends HttpServlet
 
                         user.setImg(avatarName);
 
-                        if (RegistrationValidator.DEFAULT_AVATARS.stream().noneMatch(oldImg::equals))
+                        if (FormValidator.DEFAULT_AVATARS.stream().noneMatch(oldImg::equals))
                         {
                                 Path toDelete = Paths.get(path.toString(), oldImg);
                                 try

@@ -2,7 +2,7 @@
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="it.unitn.webprogramming18.dellmm.servlets.userSystem.ResetPasswordServlet" %>
 
-<%@ page import="it.unitn.webprogramming18.dellmm.util.RegistrationValidator" %>
+<%@ page import="it.unitn.webprogramming18.dellmm.util.FormValidator" %>
 <%@ page import="it.unitn.webprogramming18.dellmm.util.ConstantsUtils" %>
 
 <%@ include file="../jspf/i18n.jsp"%>
@@ -42,7 +42,7 @@
                     <div class="input-group">
                         <div class="input-group-prepend"><i class="input-group-text fas fa-key"></i></div>
                         <input id="inputPassword" class="form-control" placeholder="<fmt:message key="user.label.password"/>" required="" autofocus=""
-                               type="password" name="${RegistrationValidator.FIRST_PWD_KEY}">
+                               type="password" name="${FormValidator.FIRST_PWD_KEY}">
                         <span id="spanPassword"></span>
                     </div>
                 </div>

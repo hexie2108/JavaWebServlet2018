@@ -4,7 +4,6 @@ import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
 import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 
 import javax.servlet.*;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -22,6 +21,7 @@ import java.net.URLEncoder;
 public class UnloggedUserOnlyFilter implements Filter
 {
 
+        @Override
         public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws ServletException, IOException
         {
                 HttpServletRequest request = (HttpServletRequest) req;
@@ -77,10 +77,12 @@ public class UnloggedUserOnlyFilter implements Filter
                 }
         }
 
+        @Override
         public void init(FilterConfig config) throws ServletException
         {
         }
 
+        @Override
         public void destroy()
         {
         }

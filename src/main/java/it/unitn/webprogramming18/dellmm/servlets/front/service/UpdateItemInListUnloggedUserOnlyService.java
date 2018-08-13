@@ -47,7 +47,6 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet
                         String productId = request.getParameter("productId");
                         //se id prodotto è nullo
                         CheckErrorUtils.isNull(productId, "manca il parametro productId");
-                       
 
                         //get la cookie della lista locale
                         Cookie cookOfList = null;
@@ -70,6 +69,8 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet
                                 //crea una nuova cookie per la lista locale, e inserisce il id prodotto da aggiungere
                                 cookOfList = new Cookie("localShoppingList", productId);
                                 cookOfList.setPath(getServletContext().getContextPath());
+                                //dura un mese
+                                cookOfList.setMaxAge(60 * 60 * 24 * 30);
                                 response.addCookie(cookOfList);
                                 result = "InsertOk";
 
@@ -97,6 +98,8 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet
                                         //aggiunge id nella cookie
                                         cookOfList.setValue(cookOfList.getValue() + "," + productId);
                                         cookOfList.setPath(getServletContext().getContextPath());
+                                        //aggiorna la vita di cookie
+                                        cookOfList.setMaxAge(60 * 60 * 24 * 30);
                                         response.addCookie(cookOfList);
                                         result = "InsertOk";
                                 }
@@ -120,7 +123,7 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet
                         String productId = request.getParameter("productId");
                         //se id prodotto è nullo
                         CheckErrorUtils.isNull(productId, "manca il parametro productId");
-                     
+
                         //get la cookie della lista locale
                         Cookie cookOfList = null;
                         Cookie[] cookies = request.getCookies();
@@ -175,6 +178,8 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet
                                         //aggiorna cookie
                                         cookOfList.setValue(String.join(",", productIdList));
                                         cookOfList.setPath(getServletContext().getContextPath());
+                                        //aggiorna la vita di cookie
+                                        cookOfList.setMaxAge(60 * 60 * 24 * 30);
                                         response.addCookie(cookOfList);
                                         //set il risultato
                                         result = "DeleteOk";
@@ -197,6 +202,8 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet
                         //crea o aggiorna cookie della categoria per la lista locale
                         Cookie cookOfListCategory = new Cookie("localShoppingListCategory", categoryList);
                         cookOfListCategory.setPath(getServletContext().getContextPath());
+                        //aggiorna la vita di cookie
+                        cookOfListCategory.setMaxAge(60 * 60 * 24 * 30);
                         response.addCookie(cookOfListCategory);
                         //set il risultato
                         result = "ChangeListCategoryOk";

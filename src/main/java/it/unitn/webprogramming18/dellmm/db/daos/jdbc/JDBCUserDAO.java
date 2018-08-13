@@ -30,6 +30,9 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
                 user.setIsAdmin(rs.getBoolean("isAdmin"));
                 user.setVerifyEmailLink(rs.getString("verifyEmailLink"));
                 user.setResetPwdEmailLink(rs.getString("resetPwdEmailLink"));
+                user.setAcceptedPrivacy(rs.getBoolean("acceptedPrivacy"));
+                user.setLastLoginTimeMillis(rs.getLong("lastLoginTimeMillis"));
+                user.setKeyForFastLogin(rs.getString("keyForFastLogin"));
 
                 return user;
         }
@@ -49,7 +52,8 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
                 catch (SQLException ex)
                 {
                         throw new DAOException("Impossible to count user", ex);
-                } finally
+                }
+                finally
                 {
                         C3p0Util.close(CON);
                 }
@@ -82,7 +86,8 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
                 catch (SQLException ex)
                 {
                         throw new DAOException("Impossible to get the user for the passed primary key", ex);
-                } finally
+                }
+                finally
                 {
                         C3p0Util.close(CON);
                 }
@@ -109,7 +114,8 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
                 catch (SQLException ex)
                 {
                         throw new DAOException("Impossible to get the list of user", ex);
-                } finally
+                }
+                finally
                 {
                         C3p0Util.close(CON);
                 }
@@ -157,7 +163,8 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
                 catch (SQLException ex)
                 {
                         throw new DAOException("Impossible to update the user", ex);
-                } finally
+                }
+                finally
                 {
                         C3p0Util.close(CON);
                 }
@@ -194,7 +201,8 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
                 catch (SQLException e)
                 {
                         throw new DAOException("Impossible to find the user");
-                } finally
+                }
+                finally
                 {
                         C3p0Util.close(CON);
                 }
@@ -232,7 +240,8 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
                 catch (SQLException e)
                 {
                         throw new DAOException("Impossible to find the user");
-                } finally
+                }
+                finally
                 {
                         C3p0Util.close(CON);
                 }
@@ -266,7 +275,8 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
                 catch (SQLException e)
                 {
                         throw new DAOException("Impossible to update the password");
-                } finally
+                }
+                finally
                 {
                         C3p0Util.close(CON);
                 }
@@ -301,7 +311,8 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
                 catch (SQLException ex)
                 {
                         throw new DAOException("Impossible to return result", ex);
-                } finally
+                }
+                finally
                 {
                         C3p0Util.close(CON);
                 }
@@ -335,7 +346,8 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
                 catch (SQLException ex)
                 {
                         throw new DAOException("Impossible to return result", ex);
-                } finally
+                }
+                finally
                 {
                         C3p0Util.close(CON);
                 }
@@ -344,14 +356,14 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
         }
 
         @Override
-        public User generateUser(String first_name, String last_name, String email, String password, String imageName) throws DAOException
+        public User generateUser(String first_name, String last_name, String email, String password, String imageName, boolean acceptedPrivacy) throws DAOException
         {
-                if (first_name == null || last_name == null || email == null || password == null)
+                if (first_name == null || last_name == null || email == null || password == null || imageName == null)
                 {
                         throw new DAOException(
                                     "parameter not valid",
                                     new IllegalArgumentException(
-                                                "The passed email, password, last name or first name is null"
+                                                "The passed email, password, last name ,first name , o imageName is null"
                                     )
                         );
                 }
@@ -362,6 +374,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
                 boolean successo = false;
 
                 CON = C3p0Util.getConnection();
+
                 for (int tentativi = 0; (tentativi < 5) && (!successo); tentativi++)
                 {
                         successo = true;
@@ -372,8 +385,8 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
                                 try
                                 {
                                         PreparedStatement std = CON.prepareStatement(
-                                                    "INSERT INTO User (name, surname, email, password, img, isAdmin, verifyEmailLink, resendPwdEmailLink)"
-                                                    + "VALUES (?,?,?,?,?,FALSE,?,NULL)",
+                                                    "INSERT INTO User(name, surname, email, password, img, isAdmin, verifyEmailLink, resetPwdEmailLink	, acceptedPrivacy, lastLoginTimeMillis, keyForFastLogin)"
+                                                    + " VALUES (?,?,?,?,?,FALSE,?,NULL, ?, NULL, NULL) ",
                                                     Statement.RETURN_GENERATED_KEYS
                                         );
                                         std.setString(1, first_name);
@@ -382,6 +395,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
                                         std.setString(4, password);
                                         std.setString(5, imageName);
                                         std.setString(6, verifyLink);
+                                        std.setBoolean(7, acceptedPrivacy);
 
                                         if (std.executeUpdate() != 1)
                                         {
@@ -410,7 +424,6 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
                         }
                         catch (SQLException ex)
                         {
-                                ex.printStackTrace();
                                 throw new DAOException("Impossible to create the user", ex);
                         }
 
@@ -433,7 +446,10 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
                 user.setPassword(password);
                 user.setImg(imageName);
                 user.setVerifyEmailLink(verifyLink);
-                user.setResetPwdEmailLink(null); //TODO: Convertire resendEmailLink in resetPassword?
+                user.setResetPwdEmailLink(null);
+                user.setAcceptedPrivacy(acceptedPrivacy);
+                user.setLastLoginTimeMillis(null);
+                user.setKeyForFastLogin(null);
 
                 return user;
         }
@@ -493,7 +509,8 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
                 catch (SQLException ex)
                 {
                         throw new DAOException("Impossible to get the list of user", ex);
-                } finally
+                }
+                finally
                 {
                         C3p0Util.close(CON);
                 }
@@ -502,8 +519,12 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
         }
 
         @Override
-        public void delete(int id) throws DAOException
+        public void delete(Integer id) throws DAOException
         {
+                if (id == null)
+                {
+                        throw new DAOException("id is null");
+                }
 
                 CON = C3p0Util.getConnection();
                 try (PreparedStatement stm = CON.prepareStatement(
@@ -520,9 +541,81 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO
                 catch (SQLException ex)
                 {
                         throw new DAOException("Impossible to delete the user", ex);
-                } finally
+                }
+                finally
                 {
                         C3p0Util.close(CON);
                 }
+        }
+
+        @Override
+        public void updateLastLoginTimeAndFastLoginKey(Integer id, Long timeMillis, String fastLoginKey) throws DAOException
+        {
+                if (id == null || timeMillis == null || fastLoginKey == null)
+                {
+                        throw new DAOException("id, timestamp o fastLoginKey is null");
+                }
+
+                CON = C3p0Util.getConnection();
+                try (PreparedStatement stm = CON.prepareStatement(
+                            "UPDATE User SET lastLoginTimeMillis = ? , keyForFastLogin = ? WHERE id = ?"
+                ))
+                {
+
+                        stm.setLong(1, timeMillis);
+                        stm.setString(2, fastLoginKey);
+                        stm.setInt(3, id);
+
+                        if (stm.executeUpdate() != 1)
+                        {
+                                throw new DAOException("Impossible to update last login time of user");
+                        }
+                }
+                catch (SQLException ex)
+                {
+                        throw new DAOException("Impossible to update the user", ex);
+                }
+                finally
+                {
+                        C3p0Util.close(CON);
+                }
+
+        }
+
+        public User getUserByFastLoginKey(String fastLoginKey, Long currentTimeMillis) throws DAOException
+        {
+
+                User user = null;
+
+                if (fastLoginKey == null || currentTimeMillis == null)
+                {
+                        throw new DAOException("fastLoginKey o currentTimeMillis is null");
+                }
+
+                CON = C3p0Util.getConnection();
+                try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM User WHERE (? - lastLoginTimeMillis ) < (1000*60*60*24*30) AND   keyForFastLogin = ?"))
+                {
+                        stm.setLong(1, currentTimeMillis);
+                        stm.setString(2, fastLoginKey);
+
+                        try (ResultSet rs = stm.executeQuery())
+                        {
+                                if (rs.next())
+                                {
+                                        user = getUserFromResultSet(rs);
+                                }
+                        }
+                }
+                catch (SQLException ex)
+                {
+                        throw new DAOException("Impossible to get the user for the passed keyForFastLogin", ex);
+                }
+                finally
+                {
+                        C3p0Util.close(CON);
+                }
+
+                return user;
+
         }
 }

@@ -40,7 +40,7 @@ public class ResendEmailServlet extends HttpServlet
                         emailFactory.sendMail(
                                     "Registration",
                                     "Registration",
-                                    VerifyLinkMail.createMessage(user),
+                                    VerifyLinkMail.createMessage(user , ""),
                                     "registrazioneprogettowebprog@gmail.com"
                         ); // Per ora le mandiamo a noi stessi per evitare casini
                 }

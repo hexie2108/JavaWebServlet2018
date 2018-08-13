@@ -60,11 +60,6 @@ public class FileUtils
 
                 //get il nome originale di file
                 fileName = new File(item.getName()).getName();
-                //controlla se il file è un tipo di immagine valido
-                if (!isValidFileExtension(item.getContentType()))
-                {
-                        throw new ServletException("il tipo di file non è valido");
-                }
 
                 //combina i percorsi completi e genera due oggetti file
                 oldFile = new File(uploadPath + File.separator + TEMPORALY_FILE_NAME);
@@ -114,33 +109,7 @@ public class FileUtils
 
         }
 
-        /**
-         * controlla se il tipo di file corrisponde un tra tipi di file valido
-         *
-         * @param contentType il tipo di file input
-         * @param allowTypes array di tipi di file valido
-         * @return true se è uno tra tipi file valido, false altrimenti
-         */
-        public static boolean isValidFileExtension(String contentType)
-        {
-                String[] allowTypes = new String[]
-                {
-                        "jpg", "jpeg", "png", "gif", "bmp"
-                };
-                if (null == contentType || "".equals(contentType))
-                {
-                        return false;
-                }
-                for (String type : allowTypes)
-                {
-                        if (contentType.contains(type))
-                        {
-                                return true;
-                        }
-                }
-                return false;
-
-        }
+   
 
         /**
          * inizializzare e istanziare uploader

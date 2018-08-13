@@ -1,10 +1,8 @@
 package it.unitn.webprogramming18.dellmm.servlets.front.service;
 
-import it.unitn.webprogramming18.dellmm.db.daos.ListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.PermissionDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ProductInListDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCPermissionDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCProductInListDAO;
@@ -12,11 +10,11 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.javaBeans.Permission;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import it.unitn.webprogramming18.dellmm.javaBeans.ProductInList;
-import it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
 import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
 import it.unitn.webprogramming18.dellmm.util.FileUtils;
+import it.unitn.webprogramming18.dellmm.util.FormValidator;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -39,7 +37,6 @@ public class UpdateProductService extends HttpServlet
         private PermissionDAO permissionDAO;
         private ProductDAO productDAO;
         private ProductInListDAO productInListDAO;
-
 
         @Override
         public void init() throws ServletException
@@ -124,11 +121,14 @@ public class UpdateProductService extends HttpServlet
 
                 //se variabile sono nullo
                 CheckErrorUtils.isNull(productName, "manca il parametro productName");
+                CheckErrorUtils.isFalse(FormValidator.validateGeneralInput(productName), "il parametro productName ha superato la lunghezza massima consentita");
                 CheckErrorUtils.isNull(productCategory, "manca il parametro productCategory");
                 CheckErrorUtils.isNull(productDescription, "manca il parametro productDescription");
                 CheckErrorUtils.isNull(listId, "manca il parametro listId");
                 CheckErrorUtils.isNull(prodcutImgFileItem, "manca il prametro file prodcutImgFileItem");
                 CheckErrorUtils.isNull(prodcutLogoFileItem, "manca il prametro file prodcutLogoFileItem");
+                CheckErrorUtils.isFalse(FormValidator.isValidFileExtension(prodcutImgFileItem.getContentType()), "il file img di prodotto caricato non è un tipo valido");
+                CheckErrorUtils.isFalse(FormValidator.isValidFileExtension(prodcutLogoFileItem.getContentType()), "il file img di logo caricato non è un tipo valido");
 
                 //get user corrente
                 User user = (User) request.getSession().getAttribute("user");

@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ page import="it.unitn.webprogramming18.dellmm.util.RegistrationValidator" %>
+<%@ page import="it.unitn.webprogramming18.dellmm.util.FormValidator" %>
 <%@ page import="it.unitn.webprogramming18.dellmm.util.ConstantsUtils" %>
 
 <%@ include file="../jspf/i18n.jsp"%>
@@ -39,7 +39,7 @@
                     <div class="input-group-prepend"><i class="input-group-text fas fa-user"></i></div>
                     <div class="input-group-prepend"><span class="input-group-text">${sessionScope.user.name}</span></div>
                     <input id="inputFirstName" class="form-control" placeholder="<fmt:message key="user.label.name"/>" autofocus=""
-                           type="text" name="${RegistrationValidator.FIRST_NAME_KEY}">
+                           type="text" name="${FormValidator.FIRST_NAME_KEY}">
                     <span id="spanFirstName"></span>
                 </div>
             </div>
@@ -51,7 +51,7 @@
                     <div class="input-group-prepend"><i class="input-group-text fas fa-user"></i></div>
                     <div class="input-group-prepend"><span class="input-group-text">${sessionScope.user.surname}</span></div>
                     <input id="inputLastName" class="form-control" placeholder="<fmt:message key="user.label.surname"/>" autofocus=""
-                           type="text" name="${RegistrationValidator.LAST_NAME_KEY}">
+                           type="text" name="${FormValidator.LAST_NAME_KEY}">
                     <span id="spanLastName"></span>
                 </div>
             </div>
@@ -65,7 +65,7 @@
                     <div class="input-group-prepend"><i class="input-group-text fas fa-at"></i></div>
                     <div class="input-group-prepend"><span class="input-group-text">${sessionScope.user.email}</span></div>
                     <input id="inputEmail" class="form-control" placeholder="<fmt:message key="user.label.email"/>" autofocus=""
-                           type="email" name="${RegistrationValidator.EMAIL_KEY}">
+                           type="email" name="${FormValidator.EMAIL_KEY}">
                     <span id="spanEmail"></span>
                 </div>
             </div>
@@ -73,17 +73,17 @@
 
         <div class="form-group row">
             <div class="input-group col-sm-12">
-                <c:set var="customI" value="${RegistrationValidator.DEFAULT_AVATARS.stream().noneMatch(x -> sessionScope.user.img.equals(x)).get()}" scope="page"/>
+                <c:set var="customI" value="${FormValidator.DEFAULT_AVATARS.stream().noneMatch(x -> sessionScope.user.img.equals(x)).get()}" scope="page"/>
                 <c:if test="${customI}">
                     <label>
-                        <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}" value="" checked>
+                        <input class="d-none img-radio" required="" type="radio" name="${FormValidator.AVATAR_KEY}" value="" checked>
                         <img src="<c:url value="${pageContext.servletContext.getInitParameter('avatarsFolder')}/${sessionScope.user.img}"/>" class="img-input"
                         ><i class="far fa-check-circle img-check"></i>
                     </label>
                 </c:if>
-                <c:forEach items="${RegistrationValidator.DEFAULT_AVATARS}" var="av">
+                <c:forEach items="${FormValidator.DEFAULT_AVATARS}" var="av">
                     <label>
-                        <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}"
+                        <input class="d-none img-radio" required="" type="radio" name="${FormValidator.AVATAR_KEY}"
                                value="${av}" ${sessionScope.user.img.equals(av)?'checked':''}
                         >
                         <img src="<c:url value="${pageContext.servletContext.getInitParameter('avatarsFolder')}/${av}"/>" class="img-input"
@@ -91,11 +91,11 @@
                     </label>
                 </c:forEach>
                 <label>
-                    <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}" value="custom" id="customAvatar">
+                    <input class="d-none img-radio" required="" type="radio" name="${FormValidator.AVATAR_KEY}" value="custom" id="customAvatar">
                     <img src="<c:url value="/libs/fontawesome-free-5.1.1-web/svgs/regular/plus-square.svg"/>" class="img-input"
                     ><i class="far fa-check-circle img-check"></i>
                     <input id="customAvatarImg"
-                           type="file" name="${RegistrationValidator.AVATAR_IMG_KEY}"
+                           type="file" name="${FormValidator.AVATAR_IMG_KEY}"
                            accept="image/*">
                 </label>
                 <div class="form-control d-none" id="inputAvatar"></div>

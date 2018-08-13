@@ -35,7 +35,7 @@
                                 <%--parte di nome --%>
                                 <div class="form-group">
                                         <label for="listName"><i class="fas fa-info-circle"></i> il nome della lista:</label>
-                                        <input type="text" class="form-control"   id="listName" name="listName" required="required" value="${not empty list?list.name:""}">
+                                        <input type="text" class="form-control"   id="listName" name="listName" required="required" value="${not empty list?list.name:""}" maxlength="44">
                                 </div>
 
                                 <%--parte di categoria --%>

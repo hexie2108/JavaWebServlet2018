@@ -19,6 +19,7 @@ import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
 import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
 import it.unitn.webprogramming18.dellmm.util.FileUtils;
+import it.unitn.webprogramming18.dellmm.util.FormValidator;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -50,8 +51,6 @@ public class UpdateListService extends HttpServlet
         private String result = null;
         private String prevUrl = null;
         private String uploadPath = null;
-
-      
 
         @Override
         public void init() throws ServletException
@@ -212,11 +211,17 @@ public class UpdateListService extends HttpServlet
                 //se variabile sono nullo
                 CheckErrorUtils.isNull(action, "manca il parametro action");
                 CheckErrorUtils.isNull(listName, "manca il parametro listName");
+                CheckErrorUtils.isFalse(FormValidator.validateGeneralInput(listName), "il parametro listaName ha superato la lunghezza massima consentita");
                 CheckErrorUtils.isNull(listCategory, "manca il parametro listCategory");
                 CheckErrorUtils.isNull(listDescription, "manca il parametro listDescription");
+                if (listImgFileItem != null){
+                         CheckErrorUtils.isFalse(FormValidator.isValidFileExtension(listImgFileItem.getContentType()), "il file caricato non è un tipo valido");
+                }
 
                 //get user corrente
-                user = (User) request.getSession().getAttribute("user");
+                {
+                        user = (User) request.getSession().getAttribute("user");
+                }
 
                 //in caso di inserimento 
                 if (action.equals("insert"))

@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.net.URLEncoder;
 
 /**
- * se utente non è loggato e ha fatto una richiesta di JSON oppure POST
- * rindirizza alla pagina 401
  *
- * se utente non è loggato e ha fatto una richiesta GET, rindirizza alla pagina
- * di Login.
+ * se utente non è loggato , e richiede un url che non contiene "service",
+ * memorizza url di pagina richiesta in nextUrl e rindirizza alla pagina di
+ * Login. se utente non è loggato, e richiede un url che contiene "service",
+ * memorizza url di pagina di provenienza in nextUrl e rindirizza alla pagina di
+ * login
+ *
  */
 public class LoggedUserOnlyFilter implements Filter
 {
@@ -52,39 +54,35 @@ public class LoggedUserOnlyFilter implements Filter
                 //get la parte di url esclude dominio es: /index.jsp
                 String uri = request.getRequestURI();
 
-                //se nel url contiene parola JSON oppure il metodo di richiesta non è get
-                if (uri.matches("^.*\\.json$") || !request.getMethod().equalsIgnoreCase("GET"))
+                //faccio un redirect alla pagina di login mantenendo l'url
+                // richiesta a login avvenuto con successo
+                //get il percorso base
+                String contextPath = request.getServletContext().getContextPath();
+                if (!contextPath.endsWith("/"))
                 {
-                        ServletUtility.sendError(request, response, 401, "generic.errors.userNotLogged");
+                        contextPath += "/";
                 }
 
-                // Se l'url non finisce con .json ed è un get 
+                // nextUrl  permette utente di ritornerà a la pagina richiesta dopo aver fatto login
+                String nextUrl = null;
+                //se nel url contiene "service"
+                if (uri.contains("service/"))
+                {
+                        //memorizza url della provenienza prima della richiesta
+                        nextUrl = request.getHeader("Referer");
+                }
                 else
                 {
-                        //faccio un redirect alla pagina di login mantenendo l'url
-
-                        // richiesta a login avvenuto con successo
-                        //get il percorso base
-                        String contextPath = request.getServletContext().getContextPath();
-                        if (!contextPath.endsWith("/"))
-                        {
-                                contextPath += "/";
-                        }
-
-                        String prevUrl = request.getParameter("prevUrl");
-                        if (prevUrl == null)
-                        {
-                                prevUrl = contextPath;
-                        }
-
-                        // memorizza url della richiesta attuale in nextUrl,  che permette utente di ritornerà a questa pagina dopo il login
-                        String nextUrl = request.getRequestURI();
-
-                        response.sendRedirect(contextPath + ConstantsUtils.LOGIN + "?"
-                                    + "prevUrl" + "=" + URLEncoder.encode(prevUrl, "UTF-8")
-                                    + "&" + "nextUrl" + "=" + URLEncoder.encode(nextUrl, "UTF-8")
-                        );
+                        // memorizza url della richiesta attuale,  
+                       nextUrl = request.getRequestURI();
                 }
+                if(nextUrl==null ){
+                        nextUrl = "";
+                }
+
+                response.sendRedirect(contextPath + ConstantsUtils.LOGIN + "?nextUrl=" + URLEncoder.encode(nextUrl, "UTF-8")
+                );
+
         }
 
         @Override

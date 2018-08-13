@@ -1,19 +1,19 @@
-<%-- la pagina di jsp --%>
+<%-- la pagina di registrazione --%>
 
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="it.unitn.webprogramming18.dellmm.util.RegistrationValidator" %>
-<%@ page import="it.unitn.webprogramming18.dellmm.util.ConstantsUtils" %>
+<%@ page import="it.unitn.webprogramming18.dellmm.util.FormValidator" %>
+
 <%@ include file="/WEB-INF/jspf/i18n.jsp"%>
 
 
 <jsp:include page="/WEB-INF/jsp/userSystem/header.jsp"/>
 
 <div>
-        <form id="form-register" name="form-register" method="post" enctype="multipart/form-data" autocomplete="off" onsubmit="return validateForm()">
+        <form id="form-register" name="form-register" method="post" enctype="multipart/form-data" autocomplete="off" onsubmit="return validateForm()" action="${pageContext.request.contextPath}/service/registerService">
 
                 <h2 class="form-title">
-                        <i class="fas fa-user-plus"></i> <fmt:message key="register.label.title"/>
+                        <i class="fas fa-user-plus"></i> <fmt:message key="register.label.title"/> ${a}
                 </h2>
 
 
@@ -28,9 +28,9 @@
                                                 </span>
                                         </div>
                                         <input id="inputEmail" class="form-control input-box" placeholder="<fmt:message key="user.label.email"/>" required="" 
-                                               type="email" name="${RegistrationValidator.EMAIL_KEY}"  autocomplete="off"
+                                               type="email" name="${FormValidator.EMAIL_KEY}"  autocomplete="off" maxlength="${FormValidator.EMAIL_MAX_LEN}"
                                                data-toggle="popover" data-html="true" data-placement="top"  data-trigger="focus"
-                                               title="suggerimenti" data-content=" la lunghezza deve essere limitata a ${RegistrationValidator.EMAIL_MAX_LEN}" >
+                                               title="suggerimenti" data-content=" la lunghezza deve essere limitata a 44" >
 
 
                                 </div>
@@ -54,7 +54,7 @@
 
                 </div>
 
-                <div class="form-group row ">
+                <div class="form-group row  mt-4">
 
                         <div class="first-name-group col-sm-6 ">
 
@@ -66,7 +66,7 @@
                                                 </span>
                                         </div>
                                         <input id="inputFirstName" class="form-control input-box" placeholder="<fmt:message key="user.label.name"/>" required="" 
-                                               type="text" name="${RegistrationValidator.FIRST_NAME_KEY}" 
+                                               type="text" name="${FormValidator.FIRST_NAME_KEY}"  maxlength="${FormValidator.FIRST_NAME_MAX_LEN}"
                                                data-toggle="popover" data-html="true" data-placement="top"  data-trigger="focus"
                                                title="suggerimenti" data-content="la lunghezza deve essere limitata a 44"
                                                >
@@ -96,7 +96,7 @@
                                         </div>
 
                                         <input id="inputLastName" class="form-control input-box" placeholder="<fmt:message key="user.label.surname"/>" required="" 
-                                               type="text" name="${RegistrationValidator.LAST_NAME_KEY}"
+                                               type="text" name="${FormValidator.LAST_NAME_KEY}" maxlength="${FormValidator.LAST_NAME_MAX_LEN}"
                                                data-toggle="popover" data-html="true" data-placement="top"  data-trigger="focus"
                                                title="suggerimenti" data-content="la lunghezza deve essere limitata a 44"
                                                >
@@ -119,10 +119,10 @@
 
 
 
-                <div class="form-group row">
+                <div class="form-group row ">
 
                         <div id="divPassword" class="password-group col-sm-6">
-                                <label for="inputPassword" class="sr-only"><fmt:message key="user.label.password"/></label>
+
                                 <div class="input-group">
                                         <div class="input-group-prepend">
                                                 <span class="input-group-text input-box">
@@ -130,7 +130,7 @@
                                                 </span>
                                         </div>
                                         <input id="inputPassword" class="form-control input-box" placeholder="<fmt:message key="user.label.password"/>" required=""
-                                               type="password" name="${RegistrationValidator.FIRST_PWD_KEY}"
+                                               type="password" name="${FormValidator.FIRST_PWD_KEY}" maxlength="${FormValidator.PWD_MAX_LEN}"
                                                data-toggle="popover" data-html="true" data-placement="top"  data-trigger="focus"
                                                title="suggerimenti" data-content="deve essere:<br/>
                                                1. Lunga almeno 8 caratteri e al massimo 44 caratteri<br/>
@@ -169,7 +169,7 @@
 
                         <div id="divPassword2" class="password2-group col-sm-6">
 
-                                <label for="inputPassword2" class="sr-only"><fmt:message key="user.label.repeatPassword"/></label>
+
                                 <div class="input-group">
                                         <div class="input-group-prepend">
                                                 <span class="input-group-text input-box">
@@ -177,7 +177,7 @@
                                                 </span>
                                         </div>
                                         <input id="inputPassword2" class="input-box form-control" placeholder="<fmt:message key="user.label.repeatPassword"/>" required=""
-                                               type="password" name="${RegistrationValidator.SECOND_PWD_KEY}"
+                                               type="password" name="${FormValidator.SECOND_PWD_KEY}" maxlength="${FormValidator.PWD_MAX_LEN}"
                                                data-toggle="popover" data-html="true" data-placement="top"  data-trigger="focus"
                                                title="suggerimenti" data-content="deve essere uguale a password appena inserito"
                                                value="">
@@ -200,12 +200,12 @@
                 <div class="avatar-group form-group">
                         <div class="">seleziona avatar:</div>
                         <div class="">
-                                <c:forEach items="${RegistrationValidator.DEFAULT_AVATARS}" var="av" varStatus="status">
+                                <c:forEach items="${FormValidator.DEFAULT_AVATARS}" var="av" varStatus="status">
 
                                         <div class="avatar-box custom-control custom-radio custom-control-inline">
-                                                <input type="radio" class="custom-control-input  img-radio default-avatar" id="avatar-${status.index}" name="${RegistrationValidator.AVATAR_KEY}" value="${av}" ${status.index==0?"checked":""} required="required" />
+                                                <input type="radio" class="custom-control-input  img-radio default-avatar" id="avatar-${status.index}" name="${FormValidator.AVATAR_KEY}" value="${av}" ${status.index==0?"checked":""} required="required" />
                                                 <label class="custom-control-label" for="avatar-${status.index}">
-                                                        <img class="img-input img-fluid" src="<c:url value="/${ConstantsUtils.IMAGE_BASE_PATH}/${ConstantsUtils.IMAGE_OF_USER}/${av}"/>" />
+                                                        <img class="img-input img-fluid" src="<c:url value="/image/user/${av}"/>" />
                                                         <span class="img-check">
                                                                 <i class="far fa-check-circle "></i>
                                                         </span>
@@ -216,9 +216,9 @@
                                 </c:forEach>
 
                                 <div class="avatar-box custom-control custom-radio custom-control-inline">
-                                        <input type="radio" class="custom-control-input  img-radio" id="avatar-custom" name="${RegistrationValidator.AVATAR_KEY}" value="custom"  required="required" />
+                                        <input type="radio" class="custom-control-input  img-radio" id="avatar-custom" name="${FormValidator.AVATAR_KEY}" value="custom"  required="required" />
                                         <label class="custom-control-label" for="avatar-custom">
-                                                <img class="img-input img-fluid" src="<c:url value="/${ConstantsUtils.IMAGE_BASE_PATH}/base/custom-avatar.svg"/>" />
+                                                <img class="img-input img-fluid" src="<c:url value="/image/base/custom-avatar.svg"/>" />
                                                 <span class="img-check">
                                                         <i class="far fa-check-circle "></i>
                                                 </span>
@@ -244,7 +244,7 @@
 
                         <div class=" custom-file input-group mb-3">
 
-                                <input type="file" class="custom-file-input"  id="customAvatarImg" name="${RegistrationValidator.AVATAR_IMG_KEY}" accept="image/jpeg, image/png, image/gif, image/bmp">
+                                <input type="file" class="custom-file-input"  id="customAvatarImg" name="${FormValidator.AVATAR_IMG_KEY}" accept="image/jpeg, image/png, image/gif, image/bmp">
                                 <label class="custom-file-label input-box" for="customAvatarImg">seleziona file</label>
                                 <%-- serve per ripristinare il segnaposto --%>
                                 <label class="custom-file-label-origin d-none">seleziona file</label>
@@ -281,7 +281,7 @@
 
                         <div id="divPrivacy">
                                 <div class="input-group custom-control custom-checkbox">
-                                        <input id="inputInfPrivacy" class="custom-control-input"  type="checkbox" name="${RegistrationValidator.INF_PRIVACY_KEY}" >
+                                        <input id="inputInfPrivacy" class="custom-control-input"  type="checkbox" name="${FormValidator.INF_PRIVACY_KEY}" value="accepted">
                                         <label class="form-check-label custom-control-label ml-1" for="inputInfPrivacy">
                                                 <a href="javascript:;" data-toggle="modal" data-target="#boxShowPrivacy" >
                                                         <fmt:message key="register.label.privacyStatementCheckbox"/>
@@ -294,8 +294,7 @@
 
                 </div>
 
-                <div class="alert d-none" id="id-res">
-                </div>
+
 
                 <button class="btn btn-lg btn-primary btn-block" type="submit">
                         <fmt:message key="register.label.submit"/>
@@ -305,10 +304,22 @@
         </form>
 
 </div>
-<div class="util-link">
-        <a class="btn btn-info" href="<c:url value="/"/>"><i class="fas fa-home"></i> HOME</a>
-        <a class="btn btn-info" href="<c:url value="/login"/>"><i class="fas fa-sign-in-alt"></i> LOGIN</a>
-</div>               
+           
+<div class="link-utils">     
+        <div class="content-top">
+                <a class=" " href="<c:url value="/"/>">Richiede il rinvio di email</a>
+        </div>
+        <div class="content-divider">
+                <span class="content-divider-text">
+                        <fmt:message key="login.label.alreadyRegistered"/>
+                </span>
+        </div>
+        <div class="content-bottom text-center">
+                <a class="" href="<c:url value="/login"/>">
+                        <i class="fas fa-sign-in-alt"></i> <fmt:message key="login.label.login"/>
+                </a>
+        </div>
+</div>
 
 
 <%-- finestra modale di privacy --%>   
@@ -343,7 +354,7 @@
 </div>       
 
 <script src="<c:url value="/libs/zxcvbn/zxcvbn.js"/>"></script>
-<script src="<c:url value="/js/userValidate.js?language=${pageContext.request.locale.getLanguage()}"/>"></script>
+<script src="<c:url value="/js/userValidate.js"/></script>
 
 
-<jsp:include page="/WEB-INF/jsp/userSystem/footer.jsp"/>
+        <jsp:include page="/WEB-INF/jsp/userSystem/footer.jsp"/>

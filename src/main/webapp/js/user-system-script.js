@@ -58,8 +58,8 @@ function validateForm() {
                 url = url.substring(0, index);
                 var repeat;
                 $.ajax({
-                        url: url + "service/checkExistenceOfEmailService",
-                        data: {email: email},
+                        url: url + "service/checkUserService",
+                        data: {action: "existence", email: email},
                         type: 'POST',
                         dataType: "text",
                         async: false,
@@ -287,31 +287,168 @@ function validateForm() {
         return true;
 }
 
-/**
- * rimuove class border-danger
- * @param {type} object
- * @returns {undefined}
- */
-function removeBorderColor(object) {
-        object.removeClass("border-danger");
-}
-/**
- * aggiunge class border-danger
- * @param {type} object
- * @returns {undefined}
- */
-function addBorderColor(object) {
-        object.addClass("border-danger");
-}
 
 
 /**
- * nasconde tutti errori
- * @param {type} object
- * @returns {undefined}
+ * validatore del form di login
+ * @returns {Boolean} true se valido , false se non è valido
  */
-function hideError(object) {
-        object.hide();
+function validateLogin() {
+
+        //intanto fare controllo base del email
+        if (validateEmail())
+        {
+
+                //se è un indirizzo email valido
+                var password = $("#inputPassword").val();
+                //remove i bordi di errore
+                $(".form-box  #inputPassword").removeClass("border-danger");
+
+                //check su password
+                var errorType = validateGeneralInput(password);
+                //se password sono valido
+                if (errorType === "")
+                {
+                        
+                        var email = $("#inputEmail").val();
+                        //pova login
+                        var url = location.href;
+                        var index = url.indexOf("login");
+                        url = url.substring(0, index);
+                        var result;
+                        $.ajax({
+                                url: url + "service/checkUserService",
+                                data: {action: "login", email: email, password: password},
+                                type: 'POST',
+                                dataType: "text",
+                                async: false,
+                                cache: false,
+                                error: function () {
+                                        alert('error to login, retry submit' + url);
+                                },
+                                success: function (data) {
+                                        result = data;
+                                }
+                        });
+
+                        if (result === "0" || result === "1")
+                        {
+
+                                //in caso, email e password non corrisponde
+                                if (result === "0")
+                                {
+                                        errorType = ".no-equal";
+                                }
+                                //in caso, account non è ancora attivato
+                                else if (result === "1")
+                                {
+                                        errorType = ".no-validated-user";
+                                }
+                                
+                                $(".form-box .error-messages " + errorType).show("slow");
+
+                                return false;
+                        }
+                        //altrimenti è corretto
+                        else
+                        {
+
+                                return true;
+                        }
+
+
+                }
+                else
+                {
+
+                        if (errorType === "null")
+                        {
+                                errorType = ".password-null";
+                        }
+                        else if (errorType === "max-length")
+                        {
+                                errorType = ".password-max-length";
+                        }
+
+                        $(".form-box .error-messages " + errorType).show("slow");
+                        $(".form-box #inputPassword").addClass("border-danger");
+                        $(".form-box #inputPassword").focus();
+
+                        return false
+                }
+
+
+        }
+        else
+        {
+                return false
+        }
+
+
+}
+
+/**
+ * controlla base sull'indirizzo email
+ * @returns {Boolean} true se valido , false se non è valido
+ */
+function validateEmail() {
+
+        //get valore di email
+        var email = $("#inputEmail").val();
+        //nasconde tutti gli errori
+        $(".form-box  .error-messages p").hide();
+        //rimuove tutti classe border-danger da inpu di form
+        $(".form-box  #inputEmail").removeClass("border-danger");
+
+        //espressione per controllare il formatto di email
+        var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/;
+        //se è vuoto o se supera la lunghezza massima o non rispetta il formatto di email
+        if (email === "" || email.length > 44 || !reg.test(email))
+        {
+                var errorType = "null";
+                if (email === "")
+                {
+                        errorType = ".email-null";
+                }
+                else if (email.length > 44)
+                {
+                        errorType = ".email-max-length";
+                }
+
+                else if (!reg.test(email))
+                {
+                        errorType = ".invalid-format-email";
+                }
+
+                $(".form-box .error-messages " + errorType).show("slow");
+                $(".form-box #inputEmail").addClass("border-danger");
+                $(".form-box #inputEmail").focus();
+                return false;
+        }
+
+        return true;
+
+
+}
+
+/**
+ * i controllo del valore di un campo generico
+ * @param {String} input valore da controllare
+ * @returns {String} che indica il tipo di errore 
+ */
+function validateGeneralInput(input) {
+        var errorType = "";
+        if (input === "")
+        {
+                errorType = "null";
+        }
+        else if (input.length > 44)
+        {
+                errorType = "max-length";
+        }
+
+        return errorType;
+
 }
 
 
@@ -322,19 +459,19 @@ function hideError(object) {
 $(document).ready(function () {
 
         //start code per pop di suggerimenti 
-        $('[data-toggle="popover"]').popover();
+        $('#form-register [data-toggle="popover"]').popover();
         //visualizza la barra della valutazione di password
-        $('#inputPassword').focusin(function () {
+        $('#form-register #inputPassword').focusin(function () {
                 $(".progress-bar-div").show("slow");
         });
         //nasconde la barra della valutazione di password
-        $('#inputPassword').focusout(function () {
+        $('#form-register #inputPassword').focusout(function () {
                 $(".progress-bar-div").hide("slow");
         });
 
 
         //valuta in tempo reale il punteggio di password
-        $('#inputPassword').on("keyup", function () {
+        $('#form-register #inputPassword').on("keyup", function () {
 
 
                 var score = (zxcvbn(this.value).score);
@@ -365,24 +502,17 @@ $(document).ready(function () {
 
         });
 
-        //visualizza il nome file nel cutom-file-input di form
-        $(".custom-file-input").on("change", function () {
-                //get il nome di file
-                var fileName = $(this)[0].files[0].name;
-                //sostituisce il contenuto del "custom-file-label" label
-                $(this).next(".custom-file-label").html(fileName);
 
-        });
 
 
         //visualizza  il uploader di custom avatar
-        $("#avatar-custom").click(function () {
+        $("#form-register  #avatar-custom").click(function () {
                 $(".custom-avatar-uploader").show("slow");
                 $(".custom-file-input").attr("required", "required");
         });
 
         // nasconde il uploade e clear input di file e ripristina il segnaposto predefinito
-        $(".default-avatar").click(function () {
+        $("#form-register  .default-avatar").click(function () {
                 $(".custom-avatar-uploader").hide("slow");
                 $(".custom-file-input").val("");
                 $(".custom-file-input").removeAttr("required");
@@ -392,5 +522,14 @@ $(document).ready(function () {
         //elimina gli spazi di input
         $(".input-group input.input-box").change(function () {
                 $(this).val($.trim($(this).val()));
+        });
+
+        //visualizza il nome file nel cutom-file-input di form
+        $(".custom-file-input").on("change", function () {
+                //get il nome di file
+                var fileName = $(this)[0].files[0].name;
+                //sostituisce il contenuto del "custom-file-label" label
+                $(this).next(".custom-file-label").html(fileName);
+
         });
 });

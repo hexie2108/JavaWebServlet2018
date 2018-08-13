@@ -5,7 +5,7 @@ import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCUserDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
-import it.unitn.webprogramming18.dellmm.util.RegistrationValidator;
+import it.unitn.webprogramming18.dellmm.util.FormValidator;
 import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 
 import javax.servlet.ServletException;
@@ -52,7 +52,7 @@ public class ResetPasswordServlet extends HttpServlet
         protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
         {
                 String pw_rst_id = request.getParameter(ID_KEY);
-                String password = request.getParameter(RegistrationValidator.FIRST_PWD_KEY);
+                String password = request.getParameter(FormValidator.FIRST_PWD_KEY);
 
                 if (pw_rst_id == null)
                 {
@@ -61,24 +61,24 @@ public class ResetPasswordServlet extends HttpServlet
                 }
 
                 HashMap<String, Object> kv = new HashMap<>();
-                kv.put(RegistrationValidator.FIRST_PWD_KEY, password);
+                kv.put(FormValidator.FIRST_PWD_KEY, password);
 
                 ResourceBundle bundle = it.unitn.webprogramming18.dellmm.util.i18n.getBundle(request);
 
-                Map<String, String> messages
-                            = RegistrationValidator.partialValidate(userDAO, kv)
+               /* Map<String, String> messages
+                            = FormValidator.partialValidate(userDAO, kv)
                                         .entrySet()
                                         .stream()
                                         .collect(Collectors.toMap(
-                                                    (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> e.getKey(),
-                                                    (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> RegistrationValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString()
+                                                    (Map.Entry<String, FormValidator.ErrorMessage> e) -> e.getKey(),
+                                                    (Map.Entry<String, FormValidator.ErrorMessage> e) -> FormValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString()
                                         ));
 
                 if (!messages.isEmpty())
                 {
                         ServletUtility.sendValidationError(request, response, 400, messages);
                         return;
-                }
+                }*/
 
                 try
                 {

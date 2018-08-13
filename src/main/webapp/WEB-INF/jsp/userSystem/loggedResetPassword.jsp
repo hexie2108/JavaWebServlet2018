@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ page import="it.unitn.webprogramming18.dellmm.util.RegistrationValidator" %>
+<%@ page import="it.unitn.webprogramming18.dellmm.util.FormValidator" %>
 <%@ page import="it.unitn.webprogramming18.dellmm.util.ConstantsUtils" %>
 
 <%@ include file="../jspf/i18n.jsp"%>
@@ -38,7 +38,7 @@
                 <div class="input-group">
                     <div class="input-group-prepend"><i class="input-group-text fas fa-key"></i></div>
                     <input id="inputPassword" class="form-control" placeholder="<fmt:message key="user.label.password"/>" required=""
-                           type="password" name="${RegistrationValidator.FIRST_PWD_KEY}">
+                           type="password" name="${FormValidator.FIRST_PWD_KEY}">
                     <div class="input-group-append"><span class="input-group-text" id="strongPassword" ><fmt:message key="user.label.passwordScore"/>: x/x</span></div>
                     <span id="spanPassword"></span>
                 </div>
@@ -51,7 +51,7 @@
                 <div class="input-group">
                     <div class="input-group-prepend"><i class="input-group-text fas fa-key"></i></div>
                     <input id="inputPassword2" class="form-control" placeholder="<fmt:message key="user.label.repeatPassword"/>" required=""
-                           type="password" name="${RegistrationValidator.SECOND_PWD_KEY}">
+                           type="password" name="${FormValidator.SECOND_PWD_KEY}">
                     <span id="spanPassword2"></span>
                 </div>
             </div>

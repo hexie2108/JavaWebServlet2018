@@ -3,6 +3,7 @@ package it.unitn.webprogramming18.dellmm.db.daos;
 import it.unitn.webprogramming18.dellmm.db.utils.DAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
+import java.sql.Timestamp;
 
 import java.util.List;
 
@@ -78,6 +79,7 @@ public interface UserDAO extends DAO<User, Integer>
          *
          * @param resetLink the resetLink used(that is linked with the user)
          * @param newPassword the new password to set
+         * @return 
          * @throws DAOException
          */
         public boolean changePassword(String resetLink, String newPassword) throws DAOException;
@@ -112,8 +114,9 @@ public interface UserDAO extends DAO<User, Integer>
          * @param password password of the user
          * @param imageName name of the (file) image
          * @return generated user
+         * @throws it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException
          */
-        public User generateUser(String first_name, String last_name, String email, String password, String imageName) throws DAOException;
+        public User generateUser(String first_name, String last_name, String email, String password, String imageName, boolean acceptedPrivacy) throws DAOException;
 
         /**
          * Filter the users
@@ -134,5 +137,26 @@ public interface UserDAO extends DAO<User, Integer>
          * @param id user id
          * @throws DAOException
          */
-        public void delete(int id) throws DAOException;
+        public void delete(Integer id) throws DAOException;
+        
+        
+        /**
+         * aggiornare il tempo di l'utlimo login dell'utente
+         * @param id id utente
+         * @param timeMillis tempo in secondo
+         * @param fastLoginKey key per auto login
+         * @throws DAOException 
+         */
+        public void updateLastLoginTimeAndFastLoginKey(Integer id, Long timeMillis, String fastLoginKey) throws DAOException;
+        
+        
+        /**
+         * prima si controlla il tempo di l'ultimo login, se è minore di 30 giorni, allora fastLoginKey è valido, altrimenti non è valido
+         * poi, ritorna record di user con tale loginKey
+         * @param fastLoginKey 
+         * @return user beans se trova , null se non trova
+         * @throws DAOException 
+         */
+        public User getUserByFastLoginKey(String fastLoginKey, Long currentTimeMillis) throws DAOException;
+        
 }
