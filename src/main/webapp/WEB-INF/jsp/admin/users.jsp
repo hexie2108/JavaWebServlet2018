@@ -150,7 +150,7 @@
                             <label>
                                 <input class="d-none img-radio" type="radio" name="${RegistrationValidator.AVATAR_KEY}"
                                        value="${av}">
-                                <img src="<c:url value="/${pageContext.servletContext.getInitParameter('avatarsFolder')}/${av}"/>"
+                                <img src="<c:url value="${pageContext.servletContext.getInitParameter('avatarsFolder')}/${av}"/>"
                                      class="img-input"
                                 ><i class="far fa-check-circle img-check"></i>
                             </label>
@@ -252,7 +252,7 @@
 
         function formatRow(row, data, index) {
             const imgAvatar = $('<img/>', {
-                src: '<c:url value="/${pageContext.servletContext.getInitParameter('avatarsFolder')}/"/>' + data.img,
+                src: '<c:url value="${pageContext.servletContext.getInitParameter('avatarsFolder')}/"/>' + data.img,
                 class: "img-responsive img-table"
             });
 

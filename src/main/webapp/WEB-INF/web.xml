@@ -31,21 +31,31 @@
         <param-name>categoryListImgsFolder</param-name>
         <param-value>img/categoryListImgs</param-value>
     </context-param>
+
     <context-param>
         <description>Path of the folder where CategoryProduct images are stored</description>
         <param-name>categoryProductImgsFolder</param-name>
         <param-value>img/categoryProductImgs</param-value>
     </context-param>
+
     <context-param>
         <description>Path of the folder where List images are stored</description>
         <param-name>listImgsFolder</param-name>
         <param-value>img/listImgs</param-value>
     </context-param>
+
     <context-param>
         <description>Path of the folder where Product images are stored</description>
         <param-name>productImgsFolder</param-name>
         <param-value>img/productImgs</param-value>
     </context-param>
+
+    <context-param>
+        <description>Path of the folder where avatars are stored</description>
+        <param-name>avatarsFolder</param-name>
+        <param-value>image/avatars</param-value>
+    </context-param>
+
     <!-- SMTP SETTINGS -->
     <context-param>
         <description>Hostname of the SMTP server</description>
@@ -92,19 +102,6 @@
     <welcome-file-list>
         <welcome-file>home</welcome-file>
     </welcome-file-list>
-    <!-- pagina di errore
-    <error-page>
-        <error-code>404</error-code>
-        <location>/WEB-INF/jsp/error/404.jsp</location>
-    </error-page>
-    -->
-
-    <!-- AVATAR SETTINGS -->
-    <context-param>
-        <description>Path of the folder where avatars are stored</description>
-        <param-name>avatarsFolder</param-name>
-        <param-value>img/avatars</param-value>
-    </context-param>
 
     <!-- LISTENERS -->
     <listener>
