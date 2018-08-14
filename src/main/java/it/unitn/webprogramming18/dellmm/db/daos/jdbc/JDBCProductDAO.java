@@ -6,13 +6,11 @@ import it.unitn.webprogramming18.dellmm.db.utils.C3p0Util;
 import it.unitn.webprogramming18.dellmm.db.utils.jdbc.JDBCDAO;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The JDBC implementation of the {@link ProductDAO} interface.
@@ -316,13 +314,14 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
 
 
     public List<Product> getPublicProductListByNameSearch(String name, String order, Integer index, Integer number) throws DAOException {
-        return search(name, order, "asc", index, number);
+        return search(name, order, "asc", new ArrayList<>(),index, number);
     }
 
     public List<Product> search(
             String toSearch,
             String order,
             String direction,
+            List<Integer> categories,
             Integer index,
             Integer number
     ) throws DAOException {
@@ -346,8 +345,21 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
         }
 
         if (number == null || number < 0) {
-            throw new DAOException("parameter not valid", new IllegalArgumentException("The number parameter is not valid(must be present and >= 0"));
+            throw new DAOException("parameter not valid", new IllegalArgumentException("The number parameter is not valid(must be present and >= 0)"));
         }
+
+        if (categories.stream().anyMatch(Objects::isNull)) {
+            throw new DAOException("parameter not valid", new IllegalArgumentException("The catId parameters is not valid(must be a list of numbers)"));
+        }
+
+        StringBuilder sbSql = new StringBuilder( 1024 );
+        sbSql.append(" ( ");
+
+        for( int i=0; i < categories.size(); i++ ) {
+            if( i > 0 ) sbSql.append( "," );
+            sbSql.append( " ?" );
+        } // for
+        sbSql.append( " ) " );
 
         List<Product> productList = new ArrayList<>();
 
@@ -362,14 +374,17 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
                             "FROM Product JOIN CategoryProduct " +
                             "ON Product.categoryProductId = CategoryProduct.id " +
                             "WHERE Product.privateListId IS NULL AND MATCH(Product.name, Product.description) AGAINST (? IN NATURAL  LANGUAGE  MODE) > " + MIN_RELEVANCE + " " +
+                                (!categories.isEmpty()?" AND Product.categoryProductId IN " + sbSql.toString():" ") +
                             "ORDER BY CategoryProduct.name " + sqlDirection + " " +
                             "LIMIT ?,? ";
         } else if (order.equalsIgnoreCase("productName")) {
             sql =
                     "SELECT * " +
                             "FROM Product " +
-                            "WHERE privateListId IS NULL AND MATCH(Product.name, Product.description) AGAINST (? IN NATURAL  LANGUAGE  MODE) > " + MIN_RELEVANCE + " " +
-                            "ORDER BY name " + sqlDirection + " " +
+                            "WHERE privateListId IS NULL " +
+                                "AND MATCH(name, description) AGAINST (? IN NATURAL  LANGUAGE  MODE) > " + MIN_RELEVANCE + " " +
+                                (!categories.isEmpty()?" AND categoryProductId IN " + sbSql.toString(): " ") +
+                            " BY name " + sqlDirection + " " +
                             "LIMIT ?,?";
         } else {
             sql =
@@ -377,7 +392,9 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
                             "FROM " +
                             "(SELECT *, MATCH(Product.name, Product.description) AGAINST (? IN NATURAL  LANGUAGE  MODE) as rev " +
                             "FROM Product " +
-                            "WHERE privateListId IS NULL) AS P " +
+                            "WHERE privateListId IS NULL " +
+                                (!categories.isEmpty()?" AND categoryProductId IN "+ sbSql.toString(): " ") +
+                            " ) AS P " +
                             "WHERE rev > " + MIN_RELEVANCE + " " +
                             "ORDER BY rev " + sqlDirection + " " +
                             "LIMIT ?,?";
@@ -385,8 +402,17 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
 
         try (PreparedStatement stm = CON.prepareStatement(sql)) {
             stm.setString(1, toSearch);
-            stm.setInt(2, index);
-            stm.setInt(3, number);
+            int i = 2;
+
+            for(Integer cat : categories) {
+                stm.setInt(i, cat);
+                i++;
+            }
+
+            stm.setInt(i, index);
+            stm.setInt(i+1, number);
+
+
             try (ResultSet rs = stm.executeQuery()) {
                 while (rs.next()) {
                     productList.add(getProductFromResultSet(rs));

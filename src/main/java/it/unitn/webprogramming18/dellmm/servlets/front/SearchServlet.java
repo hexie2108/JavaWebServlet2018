@@ -13,7 +13,10 @@ import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -74,6 +77,15 @@ public class SearchServlet extends HttpServlet {
             direction = order.equals("relevance")?"desc":"asc";
         }
 
+        String[] catId = request.getParameterValues("catId");
+        List<Integer> categories;
+        if(catId == null) {
+            categories = new ArrayList<Integer>();
+        } else {
+            categories = Arrays.stream(catId).map(Integer::parseInt).collect(Collectors.toList());
+        }
+
+
         //get numero di prodotto per singola pagina
         int numebrProductForList = ConstantsUtils.NUMBER_PRODUCT_FOR_SEARCH;
         //posizione di start di query per get lista di prodotto
@@ -93,7 +105,7 @@ public class SearchServlet extends HttpServlet {
 
         try {
             //get la lista di prodotto secondo la parola ricercata
-            productList = productDAO.search(searchWords, order, direction, startPosition, numebrProductForList);
+            productList = productDAO.search(searchWords, order, direction, categories, startPosition, numebrProductForList);
             //get il numero totale di pagine
             totalNumberOfPage = (int) Math.ceil(productDAO.getCountOfPublicProductByNameSearch(searchWords) * 1.0 / numebrProductForList);
 

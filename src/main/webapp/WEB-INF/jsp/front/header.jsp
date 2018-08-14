@@ -7,6 +7,8 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="custom" uri="/WEB-INF/custom.tld" %>
 
+<%@ page import="java.util.Arrays" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -43,6 +45,11 @@
     <%--css personale di sito--%>
     <link rel="stylesheet" href="<c:url value="/css/style.css"/>" type="text/css" media="all">
 
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="<c:url value="/libs/bootstrap-select-1.13.1/css/bootstrap-select.min.css"/>">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="<c:url value="/libs/bootstrap-select-1.13.1/js/bootstrap-select.min.js"/>"></script>
 </head>
 
 <body class="front-page">
@@ -51,6 +58,7 @@
 
     <%-- la sezione di header--%>
     <header class="header">
+        <custom:getAllCategoryOfProduct/>
 
         <%-- barra top--%>
         <div class="top-bar  fixed-top bg-dark ">
@@ -130,8 +138,16 @@
                 <%-- form di ricerca--%>
                 <form id="search-form" class="mt-5" action="<c:url value="/search"/>">
                     <div class="input-group mb-3">
+                        <select class="selectpicker form-control col-3" multiple title="All" name="catId"
+                                data-selected-text-format="count" data-live-search="true"
+                                data-header="Select none to not filter, select some to filter"
+                        >
+                            <c:forEach var="category" items="${categoryProductList}">
+                                <option value="${category.id}" ${paramValues.catId.stream().anyMatch((e) -> e.equals(category.id.toString())).get()?'selected':''}>${category.name}</option>
+                            </c:forEach>
+                        </select>
                         <input type="search" class="form-control" name="searchWords" placeholder="cerchi qualcosa?"
-                               required="required">
+                               required="required" value="${not empty param.searchWords?param.searchWords:''}">
                         <div class="input-group-append">
                             <button type="submit" class="btn btn-info"><i class="fas fa-search"></i> CERCA</button>
                         </div>
@@ -158,7 +174,6 @@
                         </a>
                         <div class="dropdown-menu">
                             <%--get tutte le categorie di prodotto--%>
-                            <custom:getAllCategoryOfProduct/>
                             <c:forEach var="category" items="${categoryProductList}">
                                 <a class="dropdown-item"
                                    href="<c:url value="/category?catId=${category.id}"/>">${category.name}</a>

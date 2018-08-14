@@ -110,12 +110,13 @@ public interface ProductDAO extends DAO<Product, Integer> {
      * @param toSearch text to search in name or description of the product
      * @param order used to select the field for which the results are ordered. can be {"categoryName", "productName", "relevance"}
      * @param direction direction of the sort(big to small, small to big.  can be {"asc", "desc"}
+     * @param categories array of the categories in which the product can be
      * @param index index from where to start
      * @param number number of result to get
      * @return list with the products requested
      * @throws DAOException
      */
-    public List<Product> search(String toSearch, String order, String direction, Integer index, Integer number) throws DAOException;
+    public List<Product> search(String toSearch, String order, String direction,List<Integer> categories, Integer index, Integer number) throws DAOException;
 
     /**
      * get il numero del prodotto pubblico con nome corrisondente
