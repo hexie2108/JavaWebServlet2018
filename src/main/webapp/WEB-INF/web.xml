@@ -118,6 +118,19 @@
                 <url-pattern>/service/updateListService</url-pattern>
                 <url-pattern>/service/updateProductService</url-pattern>
         </filter-mapping>
+        <filter>
+                <filter-name>AlreadyLoggedUserOnlyFilter</filter-name>
+                <filter-class>it.unitn.webprogramming18.dellmm.filters.AlreadyLoggedUserOnlyFilter</filter-class>
+        </filter>
+           <filter-mapping>
+                <filter-name>LoggedUserOnlyFilter</filter-name>
+                <url-pattern>/login</url-pattern>
+                <url-pattern>/register</url-pattern>
+                <url-pattern>/forgotPassword</url-pattern>
+                <url-pattern>/resendEmail</url-pattern>
+        </filter-mapping>
+        
+        
         <!-- SERVLETS OF PAGE _____________________________________________________________________________ -->
         <servlet>
                 <servlet-name>HomeServlet</servlet-name>
@@ -175,6 +188,8 @@
                 <servlet-name>UpdateProductServlet</servlet-name>
                 <url-pattern>/updateProduct</url-pattern>
         </servlet-mapping>
+        
+        
         <!-- SERVLETS OF SERVICE _____________________________________________________________________________ -->
         <servlet>
                 <servlet-name>UpdateItemInListUnloggedUserOnlyService</servlet-name>
