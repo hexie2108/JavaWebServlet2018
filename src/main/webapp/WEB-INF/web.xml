@@ -117,7 +117,7 @@
     <!-- Only unlogged user can pass -->
     <filter>
         <filter-name>UnloggedUserOnlyFilter</filter-name>
-        <filter-class>it.unitn.webprogramming18.dellmm.filters.UnloggedUserOnlyFilter</filter-class>
+        <filter-class>it.unitn.webprogramming18.dellmm.filters.AlreadyLoggedUserOnlyFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>UnloggedUserOnlyFilter</filter-name>
