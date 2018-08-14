@@ -426,7 +426,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
     }
 
     @Override
-    public void delete(int id) throws DAOException {
+    public void delete(Integer id) throws DAOException {
 
         CON = C3p0Util.getConnection();
         try (PreparedStatement stm = CON.prepareStatement(

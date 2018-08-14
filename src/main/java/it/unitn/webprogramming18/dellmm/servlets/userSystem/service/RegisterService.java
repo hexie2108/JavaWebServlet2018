@@ -10,6 +10,9 @@ import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
 import it.unitn.webprogramming18.dellmm.util.FileUtils;
 import it.unitn.webprogramming18.dellmm.util.FormValidator;
 import it.unitn.webprogramming18.dellmm.util.MD5Utils;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import javax.mail.MessagingException;
 import javax.servlet.ServletException;
@@ -24,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.*;
 import java.util.stream.Collectors;

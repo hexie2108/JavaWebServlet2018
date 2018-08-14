@@ -34,7 +34,7 @@ public class ResetPasswordServlet extends HttpServlet {
 
     public static final String MSG_KEY = "message";
 
-    private static final String RESET_PASSWORD_JSP = "/WEB-INF/jsp/userSystem/resetPassword.jsp";
+    private static final String JSP_PAGE_PATH = "/WEB-INF/jsp/userSystem/resetPassword.jsp";
 
     private UserDAO userDAO;
 
@@ -43,41 +43,39 @@ public class ResetPasswordServlet extends HttpServlet {
         userDAO = new JDBCUserDAO();
     }
 
-        @Override
-        protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-        {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
 
-                //get i parametri necessari
-                String email = request.getParameter(FormValidator.EMAIL_KEY);
-                String resetPwdLink = request.getParameter("resetPwdLink");
+            //get i parametri necessari
+            String email = request.getParameter(FormValidator.EMAIL_KEY);
+            String resetPwdLink = request.getParameter("resetPwdLink");
 
-                CheckErrorUtils.isNull(email, "il parametro email è nullo");
-                CheckErrorUtils.isNull(resetPwdLink, "il parametro resetPwdLink è nullo");
+            CheckErrorUtils.isNull(email, "il parametro email è nullo");
+            CheckErrorUtils.isNull(resetPwdLink, "il parametro resetPwdLink è nullo");
 
-                try
-                {
-                        //se resetPwdLink è valido
-                        if (userDAO.checkUserByEmailAndResetPwdLink(email, resetPwdLink))
-                        {
+            try
+            {
+                    //se resetPwdLink è valido
+                    if (userDAO.checkUserByEmailAndResetPwdLink(email, resetPwdLink))
+                    {
 
-                                //set il titolo della pagina
-                                request.setAttribute(ConstantsUtils.HEAD_TITLE, "reset password");
-                                request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
-                        }
-                        //se non è valido
-                        else
-                        {
-                                //ritorna alla pagina di login
-                                String result = "resetLinkInvalid";
-                                String prevUrl = getServletContext().getContextPath() + "/login?notice=" + result;
-                                response.sendRedirect(response.encodeRedirectURL(prevUrl));
-                        }
-                }
-                catch (DAOException ex)
-                {
-                        throw new ServletException(ex.getMessage(), ex);
-                }
-
-        }
-
+                            //set il titolo della pagina
+                            request.setAttribute(ConstantsUtils.HEAD_TITLE, "reset password");
+                            request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
+                    }
+                    //se non è valido
+                    else
+                    {
+                            //ritorna alla pagina di login
+                            String result = "resetLinkInvalid";
+                            String prevUrl = getServletContext().getContextPath() + "/login?notice=" + result;
+                            response.sendRedirect(response.encodeRedirectURL(prevUrl));
+                    }
+            }
+            catch (DAOException ex)
+            {
+                    throw new ServletException(ex.getMessage(), ex);
+            }
+    }
 }

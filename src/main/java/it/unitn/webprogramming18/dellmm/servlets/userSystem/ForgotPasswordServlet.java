@@ -1,11 +1,5 @@
 package it.unitn.webprogramming18.dellmm.servlets.userSystem;
 
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCUserDAO;
-import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
-import it.unitn.webprogramming18.dellmm.email.EmailFactory;
-import it.unitn.webprogramming18.dellmm.email.messageFactories.ResetPasswordMail;
-import it.unitn.webprogramming18.dellmm.javaBeans.User;
-import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
 
 import javax.servlet.ServletException;
