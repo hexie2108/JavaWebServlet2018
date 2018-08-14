@@ -22,7 +22,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * il servizio che effettua controlla esistenza di email ,e test di login
+ * il servizio che effettua controlla esistenza di email, controlla lo stato di
+ * attivazione ,e test di login
  *
  * @author mikuc
  */
@@ -115,6 +116,40 @@ public class CheckUserService extends HttpServlet
                         response.getWriter().print(result);
 
                 }
+                //in caso di check lo stato di attivazione di utente
+                else if (action.equals("checkActivationStatus"))
+                {
+
+                        User user = null;
+                        int result;
+                        try
+                        {
+                                user = userDAO.getByEmail(email);
+                        }
+                        catch (DAOException ex)
+                        {
+                                throw new ServletException(ex.getMessage(), ex);
+                        }
+                        //se utente non esiste
+                        if (user == null)
+                        {
+                                result = 0;
+                        }
+                        //se utente è già attivato
+                        else if (user.getVerifyEmailLink() == null)
+                        {
+                                result = 1;
+                        }
+                        //ok
+                        else
+                        {
+                                result = 2;
+                        }
+
+                        response.setContentType("text/plain; charset=utf-8");
+                        response.getWriter().print(result);
+
+                }
 
                 //se valore di action è sconosciuto
                 else
@@ -123,9 +158,5 @@ public class CheckUserService extends HttpServlet
 
                 }
         }
-
-       
-        
-        
 
 }
