@@ -1,7 +1,7 @@
 package it.unitn.webprogramming18.dellmm.servlets.userSystem;
 
 import it.unitn.webprogramming18.dellmm.email.EmailFactory;
-import it.unitn.webprogramming18.dellmm.email.messageFactories.VerifyLinkMail;
+import it.unitn.webprogramming18.dellmm.email.MessageFacotry;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 
 import javax.mail.MessagingException;
@@ -30,21 +30,24 @@ public class ResendEmailServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute("user");
 
-        try {
-            emailFactory.sendMail(
-                    "Registration",
-                    "Registration",
-                    VerifyLinkMail.createMessage(user),
-                    "registrazioneprogettowebprog@gmail.com"
-            ); // Per ora le mandiamo a noi stessi per evitare casini
-        } catch (MessagingException e) {
-            // TODO: Cambiare a notification ?
-            ArrayList<String> errorList = (ArrayList<String>) session.getAttribute("errors");
-            if (errorList == null) {
-                errorList = new ArrayList<>();
-            }
-            errorList.add("Impossible to send the email. Please check the email in user's settings and click resend");
-            session.setAttribute("errors", errorList);
+            /*     try
+                {
+                       emailFactory.sendMail("Registration",
+                                    "Registration",
+                                    MessageFacotry.createMessage(user , ""),
+                                    "registrazioneprogettowebprog@gmail.com"
+                        ); // Per ora le mandiamo a noi stessi per evitare casini
+                }
+                catch (MessagingException e)
+                {
+                        // TODO: Cambiare a notification ?
+                        ArrayList<String> errorList = (ArrayList<String>) session.getAttribute("errors");
+                        if (errorList == null)
+                        {
+                                errorList = new ArrayList<>();
+                        }
+                        errorList.add("Impossible to send the email. Please check the email in user's settings and click resend");
+                        session.setAttribute("errors", errorList);
+                }*/
         }
-    }
 }

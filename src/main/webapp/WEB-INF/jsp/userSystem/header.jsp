@@ -4,7 +4,7 @@
 
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ include file="/WEB-INF/jspf/i18n.jsp"%>
 
 <!DOCTYPE html>
 <html>
@@ -30,8 +30,8 @@
     <script type="text/javascript" src="<c:url value="/libs/bootstrap-4.1.1-dist/js/bootstrap.bundle.min.js"/>"></script>
 
     <%--js personale--%>
-    <script type="text/javascript" src="<c:url value="/js/user-system-script.js"/>"></script>
-
+    <script type="text/javascript" src="<c:url value="/js/userSystemScript.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/js/userFormValidate.js"/>"></script>
 
     <%--css di bootstrap--%>
     <link rel="stylesheet" href="<c:url value="/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css"/>" type="text/css"
@@ -67,11 +67,11 @@
                     </h2>
                 </a>
 
-            </div>
+                                        </div> 
+                                        <jsp:include page="/WEB-INF/jspf/i18n_switcher.jsp"/>
+                                </div>
 
-        </div>
-
-    </header>
+                        </header>
 
 
     <div class="right-windows">

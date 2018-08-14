@@ -1,5 +1,9 @@
 <%@ page contentType="text/javascript;charset=UTF-8" language="java" %>
-    <%@ page import="it.unitn.webprogramming18.dellmm.util.RegistrationValidator" %>
+<%@ page import="it.unitn.webprogramming18.dellmm.util.FormValidator" %>
+<%@taglib prefix="c"  uri="http://java.sun.com/jsp/jstl/core" %>
+
+
+
 
     "use strict";
 
@@ -49,13 +53,13 @@
         ;
     }
 
-    function add_file_errors(form, data) {
-        const checked_radio = form.find('input[name="${RegistrationValidator.AVATAR_KEY}"]:checked');
-        const avatarImgCustom = form.find('input[name="${RegistrationValidator.AVATAR_IMG_KEY}"]')[0];
+function add_file_errors(form, data){
+    const checked_radio = form.find('input[name="${FormValidator.AVATAR_KEY}"]:checked');
+    const avatarImgCustom = form.find('input[name="${FormValidator.AVATAR_IMG_KEY}"]')[0];
 
-        if (checked_radio.length === 0 || checked_radio.val() !== "${RegistrationValidator.CUSTOM_AVATAR}") {
-            return data;
-        }
+    if(checked_radio.length === 0 || checked_radio.val() !== "${FormValidator.CUSTOM_AVATAR}" ) {
+        return data;
+    }
 
         // Se l'estensione per leggere i file è supportata faccio il controllo altrimenti no
         // (fatto successivamente dal server)
@@ -71,15 +75,15 @@
 
         const fileToUpload = avatarImgCustom.files[0];
 
-        if (!fileToUpload) {
-            data["${RegistrationValidator.AVATAR_IMG_KEY}"] = "No file";
-        } else if (fileToUpload.size < ${RegistrationValidator.MIN_LEN_FILE}) {
-            data["${RegistrationValidator.AVATAR_IMG_KEY}"] = "File has zero size";
-        } else if (fileToUpload.size > ${RegistrationValidator.MAX_LEN_FILE}) {
-            data["${RegistrationValidator.AVATAR_IMG_KEY}"] = "File has size > 15MB";
-        } else if (window.Blob && !fileToUpload.type.startsWith("image/")) {
-            data["${RegistrationValidator.AVATAR_IMG_KEY}"] = "File must be an image";
-        }
+    if(!fileToUpload) {
+        data["${FormValidator.AVATAR_IMG_KEY}"] = "No file";
+    } else if (fileToUpload.size < ${FormValidator.MIN_LEN_FILE}) {
+        data["${FormValidator.AVATAR_IMG_KEY}"] = "File has zero size";
+    } else if(fileToUpload.size > ${FormValidator.MAX_LEN_FILE}){
+        data["${FormValidator.AVATAR_IMG_KEY}"] = "File has size > 15MB";
+    } else if(window.Blob && !fileToUpload.type.startsWith("image/")) {
+        data["${FormValidator.AVATAR_IMG_KEY}"] = "File must be an image";
+    }
 
         return data;
     }

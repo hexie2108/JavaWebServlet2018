@@ -5,7 +5,9 @@ import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCUserDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
-import it.unitn.webprogramming18.dellmm.util.RegistrationValidator;
+import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
+import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
+import it.unitn.webprogramming18.dellmm.util.FormValidator;
 import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 
 import javax.servlet.ServletException;
@@ -17,8 +19,15 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+/**
+ * visualizza la pagina per reset password
+ *
+ * @author mikuc
+ */
 @WebServlet(name = "ResetPasswordServlet")
 public class ResetPasswordServlet extends HttpServlet {
     public static final String ID_KEY = "id";
@@ -34,64 +43,41 @@ public class ResetPasswordServlet extends HttpServlet {
         userDAO = new JDBCUserDAO();
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (request.getRequestURI().endsWith(".json")) {
-            ServletUtility.sendError(request, response, 400, "generic.errors.postOnly");
-        } else {
-            request.getRequestDispatcher(RESET_PASSWORD_JSP).forward(request, response);
-        }
-    }
+        @Override
+        protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+        {
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String pw_rst_id = request.getParameter(ID_KEY);
-        String password = request.getParameter(RegistrationValidator.FIRST_PWD_KEY);
+                //get i parametri necessari
+                String email = request.getParameter(FormValidator.EMAIL_KEY);
+                String resetPwdLink = request.getParameter("resetPwdLink");
 
-        if (pw_rst_id == null) {
-            ServletUtility.sendError(request, response, 400, "resetPassword.errors.missingId");
-            return;
-        }
+                CheckErrorUtils.isNull(email, "il parametro email è nullo");
+                CheckErrorUtils.isNull(resetPwdLink, "il parametro resetPwdLink è nullo");
 
-        HashMap<String, Object> kv = new HashMap<>();
-        kv.put(RegistrationValidator.FIRST_PWD_KEY, password);
+                try
+                {
+                        //se resetPwdLink è valido
+                        if (userDAO.checkUserByEmailAndResetPwdLink(email, resetPwdLink))
+                        {
 
-        ResourceBundle bundle = it.unitn.webprogramming18.dellmm.util.i18n.getBundle(request);
+                                //set il titolo della pagina
+                                request.setAttribute(ConstantsUtils.HEAD_TITLE, "reset password");
+                                request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
+                        }
+                        //se non è valido
+                        else
+                        {
+                                //ritorna alla pagina di login
+                                String result = "resetLinkInvalid";
+                                String prevUrl = getServletContext().getContextPath() + "/login?notice=" + result;
+                                response.sendRedirect(response.encodeRedirectURL(prevUrl));
+                        }
+                }
+                catch (DAOException ex)
+                {
+                        throw new ServletException(ex.getMessage(), ex);
+                }
 
-        Map<String, String> messages =
-                RegistrationValidator.partialValidate(userDAO, kv)
-                        .entrySet()
-                        .stream()
-                        .collect(Collectors.toMap(
-                                (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> e.getKey(),
-                                (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> RegistrationValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString()
-                        ));
-
-        if (!messages.isEmpty()) {
-            ServletUtility.sendValidationError(request, response, 400, messages);
-            return;
-        }
-
-        try {
-            if (!userDAO.changePassword(pw_rst_id, password)) {
-                ServletUtility.sendError(request, response, 400, "resetPassword.errors.notFoundId");
-                return;
-            }
-        } catch (IllegalArgumentException ex) {
-            ServletUtility.sendError(request, response, 400, "resetPassword.errors.invalidId");
-            return;
-        } catch (DAOException e) {
-            ServletUtility.sendError(request, response, 500, "resetPassword.errors.cantChange");
-            return;
         }
 
-        if (request.getRequestURI().endsWith(".json")) {
-            ServletUtility.sendJSON(request, response, 200, new HashMap());
-        } else {
-            String contextPath = getServletContext().getContextPath();
-            if (!contextPath.endsWith("/")) {
-                contextPath += "/";
-            }
-
-            response.sendRedirect(contextPath);
-        }
-    }
 }

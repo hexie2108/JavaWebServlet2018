@@ -1,140 +1,202 @@
-.user-system {
+.user-system{
 
-    background: url(../image/base/login-bg.png);
+        background: url(../image/base/login-bg.png);
 }
 
-.user-system .right-windows {
-    width: 30rem;
-    float: right;
-    border: 1px solid rgba(0, 0, 0, .125);
-    border-radius: .25rem;
-    padding: 1rem;
-    margin: 1rem;
-    margin-top: 5rem;
-    background-color: white;
+
+
+.user-system .right-windows{
+        border: 1px solid rgba(0,0,0,.125);
+        border-radius: .25rem;
+        padding: 1rem;
+        margin: auto;
+        margin-top: 6rem;
+        background-color: white;
+        width: 500px;
 }
 
-.user-system .right-windows .form-title {
 
-    text-align: center;
-    margin: 1rem 0 2rem 0;
+.user-system .right-windows .form-title{
 
-}
-
-.user-system .top-bar .site-logo-section a {
-    text-decoration: none;
-    color: #138496;
+        text-align: center;
+        margin: 1rem 0 2rem 0;
 
 }
 
-.user-system .top-bar .site-logo-section .logo {
-    height: 55px;
+.user-system .top-bar .site-logo-section{
+        width: 80%;
+        display: inline-block;
 }
 
-.user-system .top-bar .site-logo-section .site-title {
-    vertical-align: middle;
+.user-system .top-bar .site-logo-section a{
+        text-decoration: none;
+        color: #138496;
+
 }
 
-.user-system .util-link {
-
-    margin-top: 2rem;
-    text-align: right;
+.user-system .top-bar .site-logo-section .logo{
+        height: 55px; 
 }
+.user-system .top-bar .site-logo-section .site-title{
+        vertical-align: middle;
+}
+
+
+
+.user-system .language-switch{
+        display: inline-block;
+        width: 19%;
+        text-align: right;
+}
+
+
+.user-system .form-box .error-messages p{
+        display: none;
+        color: red;
+        padding: .5rem;
+        margin: 0;
+}
+
+
+.user-system .content-divider{
+        text-align: center;
+        position: relative;
+        margin: 1rem 0;
+}
+
+.user-system .content-divider:after{
+
+
+        content: '';
+        display: block;
+        width: 100%;
+        height: 1px;
+        border-top: 1px solid #ced4da;
+        position: absolute;
+        top: 50%;
+        z-index: 1;
+}
+
+.user-system .content-divider-text{
+        position: relative;
+        background-color: #fff;
+        z-index: 2;
+        padding: 0 1rem;
+}
+
+
+.user-system .alert{
+    padding: .5rem 1rem;
+}
+
 
 /*register.jsp-----------------------------------------------*/
 
 #form-register .avatar-box {
-    width: 10%;
-    margin: .5rem;
-    padding: 0;
+        width: 10%;
+        margin: .5rem;
+        padding: 0;
 }
 
-#form-register .avatar-box .custom-control-label::before {
-    display: none;
+#form-register  .avatar-box .custom-control-label::before{
+        display: none;
 }
 
 #form-register .avatar-box .img-input {
-    width: 100%;
+        width: 100%;
 }
-
-#form-register .avatar-box .custom-img {
-    width: 100%;
+#form-register .avatar-box .custom-img{
+        width: 100%;
 }
 
 #form-register .img-check {
-    color: #138496;
-    position: absolute;
-    font-size: 1.5rem;
-    visibility: hidden;
-    position: absolute;
-    top: 0;
-    right: -10px;
-    background: white;
-    border-radius: 50%;
-    opacity: .8;
-    line-height: 1.5rem;
+        color: #138496;
+        position: absolute;
+        font-size: 1.5rem;
+        visibility: hidden;
+        position: absolute;
+        top: 0;
+        right: -10px;
+        background: white;
+        border-radius: 50%;
+        opacity: .8;
+        line-height: 1.5rem;
 }
 
-#form-register .img-radio:checked + .custom-control-label .img-check {
-    visibility: visible;
+
+
+
+
+#form-register .img-radio:checked + .custom-control-label  .img-check{
+        visibility: visible;
 }
+
 
 #form-register #customAvatar:checked ~ #customAvatarImg {
-    display: inline-block;
+        display: inline-block;
 }
 
 #form-register #customAvatar:not(checked) ~ #customAvatarImg {
-    display: none;
+        display: none;
 }
 
-#form-register .custom-avatar-uploader {
-    display: none;
+
+#form-register  .custom-avatar-uploader{
+        display: none;
 }
 
-#form-register .progress-bar-div {
-    display: none;
-    margin-top: 1rem;
+#form-register .progress-bar-div{
+        display: none;
+        margin-top: 1rem;
 }
 
-#form-register .progress-bar-div .progress-bar {
-    height: 1rem;
-    width: 0;
-
-}
-
-#form-register .progress-bar-div .password0 {
-    width: 20%;
+#form-register .progress-bar-div .progress-bar{
+        height: 1rem;
+        width: 0;
 
 }
 
-#form-register .progress-bar-div .password1 {
-    width: 40%;
+#form-register .progress-bar-div .password0{
+        width: 20%;
 
 }
 
-#form-register .progress-bar-div .password2 {
-    width: 60%;
+#form-register .progress-bar-div .password1{
+        width: 40%;
 
 }
 
-#form-register .progress-bar-div .password3 {
-    width: 80%;
+#form-register .progress-bar-div .password2{
+        width: 60%;
+
+}
+#form-register .progress-bar-div .password3{
+        width: 80%;
+
+}
+#form-register .progress-bar-div .password4{
+        width: 100%;
 
 }
 
-#form-register .progress-bar-div .password4 {
-    width: 100%;
-
+#form-register .form-group.row .col-sm-6{
+        margin-bottom: .5rem;
+        margin-top: .5rem
 }
 
-#form-register .form-group.row .col-sm-6 {
-    margin-bottom: .5rem;
-    margin-top: .5rem
+#form-register .error-messages p{
+        display: none;
+        color: red;
+        padding: .5rem;
+        margin: 0;
 }
 
-#form-register .error-messages p {
-    display: none;
-    color: red;
-    padding: .5rem;
-    margin: 0;
+.user-system  .link-utils{
+
+        margin-top: 2rem;
+        width: 100%;
 }
+
+
+/*login.jsp--------------------------------------------------------------------------*/
+

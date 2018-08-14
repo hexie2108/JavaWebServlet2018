@@ -6,22 +6,26 @@
 package it.unitn.webprogramming18.dellmm.javaBeans;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 /**
  * @author luca_morgese
  */
-public class User implements Serializable {
+public class User implements Serializable
+{
 
-    private int id;
-    private String name;
-    private String surname;
-    private String password;
-    private String email;
-    private String img;
-    private boolean isAdmin;
-    private String verifyEmailLink;
-    private String resetPwdEmailLink;
-
+        private int id;
+        private String name;
+        private String surname;
+        private String password;
+        private String email;
+        private String img;
+        private boolean isAdmin;
+        private String verifyEmailLink;
+        private String resetPwdEmailLink;
+        private boolean acceptedPrivacy;
+        private Long lastLoginTimeMillis;
+        private String keyForFastLogin;
 
     /**
      * @return the id
@@ -142,10 +146,60 @@ public class User implements Serializable {
         return resetPwdEmailLink;
     }
 
-    /**
-     * @param resetPwdEmailLink the resetPwdEmailLink to set
-     */
-    public void setResetPwdEmailLink(String resetPwdEmailLink) {
-        this.resetPwdEmailLink = resetPwdEmailLink;
-    }
+        /**
+         * @param resetPwdEmailLink the resetPwdEmailLink to set
+         */
+        public void setResetPwdEmailLink(String resetPwdEmailLink)
+        {
+                this.resetPwdEmailLink = resetPwdEmailLink;
+        }
+
+        /**
+         * @return the acceptedPrivacy
+         */
+        public boolean isAcceptedPrivacy()
+        {
+                return acceptedPrivacy;
+        }
+
+        /**
+         * @param acceptedPrivacy the acceptedPrivacy to set
+         */
+        public void setAcceptedPrivacy(boolean acceptedPrivacy)
+        {
+                this.acceptedPrivacy = acceptedPrivacy;
+        }
+
+
+        /**
+         * @return the keyForFastLogin
+         */
+        public String getKeyForFastLogin()
+        {
+                return keyForFastLogin;
+        }
+
+        /**
+         * @param keyForFastLogin the keyForFastLogin to set
+         */
+        public void setKeyForFastLogin(String keyForFastLogin)
+        {
+                this.keyForFastLogin = keyForFastLogin;
+        }
+
+        /**
+         * @return the lastLoginTimeMillis
+         */
+        public Long getLastLoginTimeMillis()
+        {
+                return lastLoginTimeMillis;
+        }
+
+        /**
+         * @param lastLoginTimeMillis the lastLoginTimeMillis to set
+         */
+        public void setLastLoginTimeMillis(Long lastLoginTimeMillis)
+        {
+                this.lastLoginTimeMillis = lastLoginTimeMillis;
+        }
 }

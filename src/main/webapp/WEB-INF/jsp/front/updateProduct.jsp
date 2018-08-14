@@ -33,12 +33,11 @@
                 <form action="<c:url value="/service/updateProductService"/>" method="POST"
                       enctype="multipart/form-data">
 
-                        <%--parte di nome --%>
-                    <div class="form-group">
-                        <label for="productName"><i class="fas fa-shopping-basket"></i> il nome del prodotto:</label>
-                        <input type="text" class="form-control" id="productName" name="productName" required="required"
-                               value="">
-                    </div>
+                                        <%--parte di nome --%>
+                                        <div class="form-group">
+                                                <label for="productName"><i class="fas fa-shopping-basket"></i> il nome del prodotto:</label>
+                                                <input type="text" class="form-control"   id="productName" name="productName" required="required" value="" maxlength="44">
+                                        </div>
 
                         <%--parte di logo --%>
                     <div class="form-group">

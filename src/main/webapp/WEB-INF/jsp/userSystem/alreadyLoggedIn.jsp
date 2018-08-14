@@ -32,4 +32,3 @@ ${sessionScope['user'].surname}<br>
 <a href="${requestScope.prevUrl}">Go back</a>
 </body>
 </html>
-

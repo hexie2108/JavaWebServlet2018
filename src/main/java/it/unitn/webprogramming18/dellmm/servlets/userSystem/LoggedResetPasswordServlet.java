@@ -6,7 +6,7 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
-import it.unitn.webprogramming18.dellmm.util.RegistrationValidator;
+import it.unitn.webprogramming18.dellmm.util.FormValidator;
 import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 
 import javax.servlet.ServletException;
@@ -44,27 +44,27 @@ public class LoggedResetPasswordServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String firstPassword = request.getParameter(RegistrationValidator.FIRST_PWD_KEY);
-        String secondPassword = request.getParameter(RegistrationValidator.SECOND_PWD_KEY);
+        String firstPassword = request.getParameter(FormValidator.FIRST_PWD_KEY);
+        String secondPassword = request.getParameter(FormValidator.SECOND_PWD_KEY);
 
         HashMap<String, Object> kv = new HashMap<>();
-        kv.put(RegistrationValidator.FIRST_PWD_KEY, firstPassword);
-        kv.put(RegistrationValidator.SECOND_PWD_KEY, secondPassword);
-
+        kv.put(FormValidator.FIRST_PWD_KEY, firstPassword);
+        kv.put(FormValidator.SECOND_PWD_KEY, secondPassword);
+/*
         Map<String, String> messages =
-                RegistrationValidator.partialValidate(null, kv)
-                        .entrySet()
-                        .stream()
-                        .collect(Collectors.toMap(
-                                (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> e.getKey(),
-                                (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> RegistrationValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString()
-                                )
-                        );
+                FormValidator.partialValidate(null, kv)
+                    .entrySet()
+                    .stream()
+                    .collect(Collectors.toMap(
+                        (Map.Entry<String, FormValidator.ErrorMessage> e) -> e.getKey(),
+                        (Map.Entry<String, FormValidator.ErrorMessage> e) -> FormValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString()
+                    )
+                );
 
         if (!messages.isEmpty()) {
             ServletUtility.sendValidationError(request, response, 400, messages);
             return;
-        }
+        }*/
 
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute("user");

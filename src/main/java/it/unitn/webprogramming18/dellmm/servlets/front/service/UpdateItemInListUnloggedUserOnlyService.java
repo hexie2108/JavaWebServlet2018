@@ -40,11 +40,10 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet {
             //variabile per controllare la ripetizione
             boolean repeatItem = false;
 
-            //get id prodotto da aggiungere
-            String productId = request.getParameter("productId");
-            //se id prodotto è nullo
-            CheckErrorUtils.isNull(productId, "manca il parametro productId");
-
+                        //get id prodotto da aggiungere
+                        String productId = request.getParameter("productId");
+                        //se id prodotto è nullo
+                        CheckErrorUtils.isNull(productId, "manca il parametro productId");
 
             //get la cookie della lista locale
             Cookie cookOfList = null;
@@ -58,13 +57,16 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet {
                 }
             }
 
-            //se la lista locale non esiste oppure è vuoto
-            if (cookOfList == null || cookOfList.getValue().equals("")) {
-                //crea una nuova cookie per la lista locale, e inserisce il id prodotto da aggiungere
-                cookOfList = new Cookie("localShoppingList", productId);
-                cookOfList.setPath(getServletContext().getContextPath());
-                response.addCookie(cookOfList);
-                result = "InsertOk";
+                        //se la lista locale non esiste oppure è vuoto
+                        if (cookOfList == null || cookOfList.getValue().equals(""))
+                        {
+                                //crea una nuova cookie per la lista locale, e inserisce il id prodotto da aggiungere
+                                cookOfList = new Cookie("localShoppingList", productId);
+                                cookOfList.setPath(getServletContext().getContextPath());
+                                //dura un mese
+                                cookOfList.setMaxAge(60 * 60 * 24 * 30);
+                                response.addCookie(cookOfList);
+                                result = "InsertOk";
 
             }
             //se esiste già una lista locale non vuota
@@ -83,12 +85,14 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet {
                 //se non cè la ripetizione
                 if (!repeatItem) {
 
-                    //aggiunge id nella cookie
-                    cookOfList.setValue(cookOfList.getValue() + "," + productId);
-                    cookOfList.setPath(getServletContext().getContextPath());
-                    response.addCookie(cookOfList);
-                    result = "InsertOk";
-                }
+                                        //aggiunge id nella cookie
+                                        cookOfList.setValue(cookOfList.getValue() + "," + productId);
+                                        cookOfList.setPath(getServletContext().getContextPath());
+                                        //aggiorna la vita di cookie
+                                        cookOfList.setMaxAge(60 * 60 * 24 * 30);
+                                        response.addCookie(cookOfList);
+                                        result = "InsertOk";
+                                }
 
                 //se cè una ripetizione
                 else {
@@ -103,22 +107,25 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet {
             //flag per sapere l'avvenuta della eliminazione
             boolean successDelete = false;
 
-            //get id prodotto da eliminare
-            String productId = request.getParameter("productId");
-            //se id prodotto è nullo
-            CheckErrorUtils.isNull(productId, "manca il parametro productId");
+                        //get id prodotto da eliminare
+                        String productId = request.getParameter("productId");
+                        //se id prodotto è nullo
+                        CheckErrorUtils.isNull(productId, "manca il parametro productId");
 
-            //get la cookie della lista locale
-            Cookie cookOfList = null;
-            Cookie[] cookies = request.getCookies();
-            //se utente ha una cookie della lista locale
-            if (cookies != null && cookies.length > 0) {
-                for (Cookie cookie : cookies) {
-                    if (cookie.getName().equals("localShoppingList")) {
-                        cookOfList = cookie;
-                    }
-                }
-            }
+                        //get la cookie della lista locale
+                        Cookie cookOfList = null;
+                        Cookie[] cookies = request.getCookies();
+                        //se utente ha una cookie della lista locale
+                        if (cookies != null && cookies.length > 0)
+                        {
+                                for (Cookie cookie : cookies)
+                                {
+                                        if (cookie.getName().equals("localShoppingList"))
+                                        {
+                                                cookOfList = cookie;
+                                        }
+                                }
+                        }
 
             //se la lista locale non esiste oppure è vuoto
             if (cookOfList == null || cookOfList.equals("")) {
@@ -150,32 +157,38 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet {
                 //se ha trovato
                 else {
 
-                    //aggiorna cookie
-                    cookOfList.setValue(String.join(",", productIdList));
-                    cookOfList.setPath(getServletContext().getContextPath());
-                    response.addCookie(cookOfList);
-                    //set il risultato
-                    result = "DeleteOk";
-                }
+                                        //aggiorna cookie
+                                        cookOfList.setValue(String.join(",", productIdList));
+                                        cookOfList.setPath(getServletContext().getContextPath());
+                                        //aggiorna la vita di cookie
+                                        cookOfList.setMaxAge(60 * 60 * 24 * 30);
+                                        response.addCookie(cookOfList);
+                                        //set il risultato
+                                        result = "DeleteOk";
+                                }
 
             }
 
         }
 
-        //in caso cambia la categoria della lista locale
-        else if (action.equals("changeListCategory")) {
-            //get id categoria
-            String categoryList = request.getParameter("categoryList");
-            //se id è vuota
-            if (categoryList == null || categoryList.equals("-1")) {
-                throw new ServletException("manca il parametro id categoria della lista");
-            }
-            //crea o aggiorna cookie della categoria per la lista locale
-            Cookie cookOfListCategory = new Cookie("localShoppingListCategory", categoryList);
-            cookOfListCategory.setPath(getServletContext().getContextPath());
-            response.addCookie(cookOfListCategory);
-            //set il risultato
-            result = "ChangeListCategoryOk";
+                //in caso cambia la categoria della lista locale
+                else if (action.equals("changeListCategory"))
+                {
+                        //get id categoria
+                        String categoryList = request.getParameter("categoryList");
+                        //se id è vuota
+                        if (categoryList == null || categoryList.equals("-1"))
+                        {
+                                throw new ServletException("manca il parametro id categoria della lista");
+                        }
+                        //crea o aggiorna cookie della categoria per la lista locale
+                        Cookie cookOfListCategory = new Cookie("localShoppingListCategory", categoryList);
+                        cookOfListCategory.setPath(getServletContext().getContextPath());
+                        //aggiorna la vita di cookie
+                        cookOfListCategory.setMaxAge(60 * 60 * 24 * 30);
+                        response.addCookie(cookOfListCategory);
+                        //set il risultato
+                        result = "ChangeListCategoryOk";
 
         }
 

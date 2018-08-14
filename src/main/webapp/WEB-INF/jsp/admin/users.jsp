@@ -2,8 +2,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<%@ page import="it.unitn.webprogramming18.dellmm.util.RegistrationValidator" %>
-<%@ page import="it.unitn.webprogramming18.dellmm.util.ConstantsUtils" %>
+<%@ page import="it.unitn.webprogramming18.dellmm.util.FormValidator"%>
+<%@ page import="it.unitn.webprogramming18.dellmm.util.ConstantsUtils"%>
 
 <%@ include file="../../jspf/i18n.jsp" %>
 <html>
@@ -93,11 +93,9 @@
                             <label for="inputFirstName" class="sr-only"><fmt:message key="user.label.name"/></label>
                             <div class="input-group ">
                                 <div class="input-group-prepend"><i class="input-group-text fas fa-user"></i></div>
-                                <div class="input-group-prepend"><span class="input-group-text"
-                                                                       id="roSpanFirstName"></span></div>
-                                <input id="inputFirstName" class="form-control"
-                                       placeholder="<fmt:message key="user.label.name"/>" autofocus=""
-                                       type="text" name="${RegistrationValidator.FIRST_NAME_KEY}">
+                                <div class="input-group-prepend"><span class="input-group-text" id="roSpanFirstName"></span></div>
+                                <input id="inputFirstName" class="form-control" placeholder="<fmt:message key="user.label.name"/>" autofocus=""
+                                       type="text" name="${FormValidator.FIRST_NAME_KEY}" >
                                 <span id="spanFirstName"></span>
                             </div>
                         </div>
@@ -106,11 +104,9 @@
                             <label for="inputLastName" class="sr-only"><fmt:message key="user.label.surname"/></label>
                             <div class="input-group">
                                 <div class="input-group-prepend"><i class="input-group-text fas fa-user"></i></div>
-                                <div class="input-group-prepend"><span class="input-group-text"
-                                                                       id="roSpanLastName"></span></div>
-                                <input id="inputLastName" class="form-control"
-                                       placeholder="<fmt:message key="user.label.surname"/>" autofocus=""
-                                       type="text" name="${RegistrationValidator.LAST_NAME_KEY}">
+                                <div class="input-group-prepend"><span class="input-group-text" id="roSpanLastName"></span></div>
+                                <input id="inputLastName" class="form-control" placeholder="<fmt:message key="user.label.surname"/>" autofocus=""
+                                       type="text" name="${FormValidator.LAST_NAME_KEY}">
                                 <span id="spanLastName"></span>
                             </div>
                         </div>
@@ -121,11 +117,9 @@
                             <label for="inputEmail" class="sr-only"><fmt:message key="user.label.email"/></label>
                             <div class="input-group">
                                 <div class="input-group-prepend"><i class="input-group-text fas fa-at"></i></div>
-                                <div class="input-group-prepend"><span class="input-group-text" id="roSpanEmail"></span>
-                                </div>
-                                <input id="inputEmail" class="form-control"
-                                       placeholder="<fmt:message key="user.label.email"/>" autofocus=""
-                                       type="email" name="${RegistrationValidator.EMAIL_KEY}">
+                                <div class="input-group-prepend"><span class="input-group-text" id="roSpanEmail"></span></div>
+                                <input id="inputEmail" class="form-control" placeholder="<fmt:message key="user.label.email"/>" autofocus=""
+                                       type="email" name="${FormValidator.EMAIL_KEY}">
                                 <span id="spanEmail"></span>
                             </div>
                         </div>
@@ -134,21 +128,18 @@
                             <label for="inputPassword" class="sr-only"><fmt:message key="user.label.password"/></label>
                             <div class="input-group">
                                 <div class="input-group-prepend"><i class="input-group-text fas fa-key"></i></div>
-                                <input id="inputPassword" class="form-control"
-                                       placeholder="<fmt:message key="user.label.password"/>"
-                                       type="password" name="${RegistrationValidator.FIRST_PWD_KEY}" value="">
-                                <div class="input-group-append"><span class="input-group-text"
-                                                                      id="strongPassword"><fmt:message
-                                        key="user.label.passwordScore"/>: x/x</span></div>
+                                <input id="inputPassword" class="form-control" placeholder="<fmt:message key="user.label.password"/>"
+                                       type="password" name="${FormValidator.FIRST_PWD_KEY}" value="">
+                                <div class="input-group-append"><span class="input-group-text" id="strongPassword" ><fmt:message key="user.label.passwordScore"/>: x/x</span></div>
                                 <span id="spanPassword"></span>
                             </div>
                         </div>
                     </div>
 
                     <div class="form-group" id="avatarDiv">
-                        <c:forEach items="${RegistrationValidator.DEFAULT_AVATARS}" var="av" varStatus="st">
+                        <c:forEach items="${FormValidator.DEFAULT_AVATARS}" var="av" varStatus="st">
                             <label>
-                                <input class="d-none img-radio" type="radio" name="${RegistrationValidator.AVATAR_KEY}"
+                                <input class="d-none img-radio" type="radio" name="${FormValidator.AVATAR_KEY}"
                                        value="${av}">
                                 <img src="<c:url value="${pageContext.servletContext.getInitParameter('avatarsFolder')}/${av}"/>"
                                      class="img-input"
@@ -156,13 +147,11 @@
                             </label>
                         </c:forEach>
                         <label>
-                            <input class="d-none img-radio" type="radio" name="${RegistrationValidator.AVATAR_KEY}"
-                                   value="custom" id="customAvatar">
-                            <img src="<c:url value="/libs/fontawesome-free-5.1.1-web/svgs/regular/plus-square.svg"/>"
-                                 class="img-input"
+                            <input class="d-none img-radio" type="radio" name="${FormValidator.AVATAR_KEY}" value="custom" id="customAvatar">
+                            <img src="<c:url value="/libs/fontawesome-free-5.1.1-web/svgs/regular/plus-square.svg"/>" class="img-input"
                             ><i class="far fa-check-circle img-check"></i>
                             <input id="customAvatarImg"
-                                   type="file" name="${RegistrationValidator.AVATAR_IMG_KEY}"
+                                   type="file" name="${FormValidator.AVATAR_IMG_KEY}"
                                    accept="image/*">
                         </label>
                         <span id="spanAvatar"></span>
@@ -273,13 +262,13 @@
                     if (/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(data.img)) {
                         modifyUserForm.find('#avatarDiv').prepend(
                             '<label id="customImgLabel">' +
-                            '    <input class="d-none img-radio" required="" type="radio" name="${RegistrationValidator.AVATAR_KEY}" value="" checked>' +
+                            '    <input class="d-none img-radio" required="" type="radio" name="${FormValidator.AVATAR_KEY}" value="" checked>' +
                             '    <img src="<c:url value="${pageContext.servletContext.getInitParameter('avatarsFolder')}/"/>' + data.img + '" class="img-input"' +
                             '        ><i class="far fa-check-circle img-check"></i>' +
                             '</label>'
                         );
                     } else {
-                        modifyUserForm.find('input[name="${RegistrationValidator.AVATAR_KEY}"][value="' + data.img + '"]').prop("checked", true);
+                        modifyUserForm.find('input[name="${FormValidator.AVATAR_KEY}"][value="' + data.img + '"]').prop("checked", true);
                     }
                 }
             });

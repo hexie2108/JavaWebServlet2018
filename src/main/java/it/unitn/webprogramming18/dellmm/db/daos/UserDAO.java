@@ -3,6 +3,7 @@ package it.unitn.webprogramming18.dellmm.db.daos;
 import it.unitn.webprogramming18.dellmm.db.utils.DAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
+import java.sql.Timestamp;
 
 import java.util.List;
 
@@ -104,18 +105,19 @@ public interface UserDAO extends DAO<User, Integer> {
      */
     public boolean checkExistenceOfEmail(String email) throws DAOException;
 
-    /**
-     * Insert a user in the database and return a User with all the
-     * fields(specified and automatically generated)
-     *
-     * @param first_name user's first name
-     * @param last_name  user's surname
-     * @param email      the email address of the user
-     * @param password   password of the user
-     * @param imageName  name of the (file) image
-     * @return generated user
-     */
-    public User generateUser(String first_name, String last_name, String email, String password, String imageName) throws DAOException;
+        /**
+         * Insert a user in the database and return a User with all the
+         * fields(specified and automatically generated)
+         *
+         * @param first_name user's first name
+         * @param last_name user's surname
+         * @param email the email address of the user
+         * @param password password of the user
+         * @param imageName name of the (file) image
+         * @return generated user
+         * @throws it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException
+         */
+        public User generateUser(String first_name, String last_name, String email, String password, String imageName, boolean acceptedPrivacy) throws DAOException;
 
     /**
      * Filter the users
@@ -130,11 +132,51 @@ public interface UserDAO extends DAO<User, Integer> {
      */
     public List<User> filter(Integer id, String email, String name, String surname, Boolean isAdmin) throws DAOException;
 
-    /**
-     * Delete user
-     *
-     * @param id user id
-     * @throws DAOException
-     */
-    public void delete(int id) throws DAOException;
+        /**
+         * Delete user
+         *
+         * @param id user id
+         * @throws DAOException
+         */
+        public void delete(Integer id) throws DAOException;
+
+
+        /**
+         * aggiornare il tempo di l'utlimo login dell'utente
+         * @param id id utente
+         * @param timeMillis tempo in secondo
+         * @param fastLoginKey key per auto login
+         * @throws DAOException
+         */
+        public void updateLastLoginTimeAndFastLoginKey(Integer id, Long timeMillis, String fastLoginKey) throws DAOException;
+
+
+        /**
+         * prima si controlla il tempo di l'ultimo login, se è minore di 30 giorni, allora fastLoginKey è valido, altrimenti non è valido
+         * poi, ritorna record di user con tale loginKey
+         * @param fastLoginKey
+         * @return user beans se trova , null se non trova
+         * @throws DAOException
+         */
+        public User getUserByFastLoginKey(String fastLoginKey, Long currentTimeMillis) throws DAOException;
+
+        /**
+         * dato la coppia di email e link di attivazione, aggiorna lo stato di attivazione dell'utente
+         * @param email
+         * @param verifyEmailLink
+         * @return true se è stato attivato correttamente, false se non ha trovato user
+         * @throws DAOException
+         */
+        public boolean activateUserByEmailAndVerifyLink(String email, String verifyEmailLink) throws DAOException;
+
+
+        /**
+         * dato la coppia di email e resetLink, controlla se c'è utente corrispondente
+         * @param email
+         * @param resetPwdLink
+         * @return true se c'è, false se non c'è
+         * @throws DAOException
+         */
+        public boolean checkUserByEmailAndResetPwdLink(String email,  String resetPwdLink) throws DAOException;
+
 }

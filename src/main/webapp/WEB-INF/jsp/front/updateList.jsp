@@ -33,12 +33,11 @@
             <form action="<c:url value="/service/updateListService"/>" method="POST"
                   enctype="multipart/form-data">
 
-                <%--parte di nome --%>
-                <div class="form-group">
-                    <label for="listName"><i class="fas fa-info-circle"></i> il nome della lista:</label>
-                    <input type="text" class="form-control" id="listName" name="listName" required="required"
-                           value="${not empty list?list.name:""}">
-                </div>
+                                <%--parte di nome --%>
+                                <div class="form-group">
+                                        <label for="listName"><i class="fas fa-info-circle"></i> il nome della lista:</label>
+                                        <input type="text" class="form-control"   id="listName" name="listName" required="required" value="${not empty list?list.name:""}" maxlength="44">
+                                </div>
 
                 <%--parte di categoria --%>
                 <div class="form-group">
