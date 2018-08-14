@@ -49,7 +49,4 @@ public class LoginServlet extends HttpServlet
                 request.setAttribute(FormValidator.PREV_URL_KEY, prevUrl);
                 request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
         }
-
-}
-
 }
