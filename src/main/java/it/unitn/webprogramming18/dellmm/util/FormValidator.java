@@ -50,6 +50,13 @@ public class FormValidator
                     "user-ninja.svg",
                     "user-secret.svg"
         ));
+        
+        //array di pagina di userSystem
+        public static final String[] pageNameOfUserSystem = {
+                    "register",
+                    "forgotPassword",
+                    "resetPassword"
+        };
 
         //custom avatar
         public static final String CUSTOM_AVATAR = "custom";
@@ -59,31 +66,7 @@ public class FormValidator
         public static final String PREV_URL_KEY = "prevUrl",
                     REMEMBER_KEY = "remember";
 
-        //enumerazione di errore
-        public enum ErrorMessage
-        {
-                FIRST_NAME_MISSING,
-                FIRST_NAME_TOO_LONG,
-                LAST_NAME_MISSING,
-                LAST_NAME_TOO_LONG,
-                PASSWORD_MISSING,
-                PASSWORD_TOO_LONG,
-                PASSWORD_NOT_VALID,
-                PASSWORDS_MISSING,
-                PASSWORD2_MISSING,
-                PASSWORD2_NOT_SAME,
-                EMAIL_MISSING,
-                EMAIL_TOO_LONG,
-                EMAIL_NOT_VALID,
-                EMAIL_ALREADY_USED,
-                INF_PRIVACY_MISSING,
-                AVATAR_MISSING,
-                AVATAR_NOT_VALID,
-                AVATAR_IMG_MISSING,
-                AVATAR_IMG_ZERO_DIM,
-                AVATAR_IMG_TOO_BIG,
-                AVATAR_IMG_NOT_IMG,
-        }
+        
 
         // --- Funzioni di validazione
         /**
