@@ -2,13 +2,16 @@ package it.unitn.webprogramming18.dellmm.email;
 
 import it.unitn.webprogramming18.dellmm.email.exceptions.EmailFactoryException;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
+import it.unitn.webprogramming18.dellmm.util.i18n;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.Properties;
+import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 
 public class EmailFactory
@@ -120,6 +123,10 @@ public class EmailFactory
 
                 Transport.send(msg);
         }
+
+        private String getBasePath(HttpServletRequest request) {
+                return request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+        }
         
         /**
          * metodo per inviare email di registrazione
@@ -128,13 +135,15 @@ public class EmailFactory
          * @throws MessagingException
          * @throws UnsupportedEncodingException 
          */
+        public void sendEmailOfRegistration(User user, HttpServletRequest request) throws MessagingException, UnsupportedEncodingException {
+                ResourceBundle bundle = i18n.getBundle(request);
 
-        public void sendEmailOfRegistration(User user, HttpServletRequest request) throws MessagingException, UnsupportedEncodingException
-        {
                 String serviceName = "admin";
-                String emailSubject = "Registration";
-                String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
-                Multipart content = MessageFacotry.messageOfRegistration(user, basePath);
+                String emailSubject = bundle.getString("emailFactory.registerEmail.subject");
+
+                String url = getBasePath(request) + "/service/activateUserService?Email="+ URLEncoder.encode(user.getEmail(), "UTF-8")+"&verifyEmailLink=" +  URLEncoder.encode(user.getVerifyEmailLink(), "UTF-8");
+
+                Multipart content = MessageFacotry.messageOfRegistration(user, url, bundle);
                 sendMail(serviceName, emailSubject, content, user.getEmail());
 
         }
@@ -146,15 +155,16 @@ public class EmailFactory
          * @throws MessagingException
          * @throws UnsupportedEncodingException 
          */
-        
-         public void sendEmailOfRestPassword(User user, HttpServletRequest request) throws MessagingException, UnsupportedEncodingException
-        {
-                String serviceName = "admin";
-                String emailSubject = "Reset Password";
-                String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
-                Multipart content = MessageFacotry.messageOfResetPassword(user, basePath);
-                sendMail(serviceName, emailSubject, content, user.getEmail());
+        public void sendEmailOfRestPassword(User user, HttpServletRequest request) throws MessagingException, UnsupportedEncodingException {
+            ResourceBundle bundle = i18n.getBundle(request);
 
+            String serviceName = "admin";
+            String emailSubject = bundle.getString("emailFactory.resetPasswordEmail.subject");
+
+            String url = getBasePath(request) + "/resetPassword?Email="+URLEncoder.encode(user.getEmail(), "UTF-8")+"&resetPwdLink=" + URLEncoder.encode(user.getResetPwdEmailLink(), "UTF-8");
+
+            Multipart content = MessageFacotry.messageOfResetPassword(user, url, bundle);
+            sendMail(serviceName, emailSubject, content, user.getEmail());
         }
         
 }

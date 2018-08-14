@@ -13,7 +13,7 @@ public class i18n {
     }};
     private static final String BUNDLE_NAME = "text";
 
-    public static ResourceBundle getBundle(HttpServletRequest request) {
+    public static Locale getLocale(HttpServletRequest request) {
         String language = request.getParameter("language");
         HttpSession session = request.getSession(true);
 
@@ -28,10 +28,21 @@ public class i18n {
             locale = request.getLocale();
         }
 
+        if (SUPPORTED_LANGUAGES.get(locale.getLanguage()) == null) {
+            // Se il locale non è tra quelli supportati
+            locale = Locale.forLanguageTag("en");
+        }
+
         session.setAttribute("language", locale.getLanguage());
 
-        ResourceBundle bundle = ResourceBundle.getBundle("text", locale);
+        return locale;
+    }
 
-        return bundle;
+    public static ResourceBundle getBundle(Locale locale) {
+        return ResourceBundle.getBundle("text", locale);
+    }
+
+    public static ResourceBundle getBundle(HttpServletRequest request) {
+        return getBundle(getLocale(request));
     }
 }
