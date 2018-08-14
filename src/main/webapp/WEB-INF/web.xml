@@ -77,6 +77,8 @@
         <param-name>smtpPassword</param-name>
         <param-value>xeecaoS5tood3bee</param-value>
     </context-param>
+
+    <!-- Constants -->
     <!-- quantià di item nelle varie pagine-->
     <context-param>
         <description>quantià categoria per slider</description>
@@ -98,6 +100,7 @@
         <param-name>quantityItemForSearch</param-name>
         <param-value>9</param-value>
     </context-param>
+
     <!-- pagina di index -->
     <welcome-file-list>
         <welcome-file>home</welcome-file>
@@ -108,7 +111,9 @@
         <description>ServletContextListener</description>
         <listener-class>it.unitn.webprogramming18.dellmm.listeners.WebAppContextListener</listener-class>
     </listener>
+
     <!-- FILTERS -->
+    <!-- Only unlogged user can pass -->
     <filter>
         <filter-name>UnloggedUserOnlyFilter</filter-name>
         <filter-class>it.unitn.webprogramming18.dellmm.filters.UnloggedUserOnlyFilter</filter-class>
@@ -128,18 +133,7 @@
         <url-pattern>/resetPassword.json</url-pattern>
     </filter-mapping>
 
-    <filter>
-        <filter-name>FrontPagePrintListFilter</filter-name>
-        <filter-class>it.unitn.webprogramming18.dellmm.filters.FrontPagePrintListFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>FrontPagePrintListFilter</filter-name>
-        <url-pattern>/home</url-pattern>
-        <url-pattern>/category</url-pattern>
-        <url-pattern>/search</url-pattern>
-        <url-pattern>/updateProduct</url-pattern>
-    </filter-mapping>
-
+    <!-- Only logged users can pass -->
     <filter>
         <filter-name>LoggedUserOnlyFilter</filter-name>
         <filter-class>it.unitn.webprogramming18.dellmm.filters.LoggedUserOnlyFilter</filter-class>
@@ -175,6 +169,7 @@
         <url-pattern>/service/updateProductService</url-pattern>
     </filter-mapping>
 
+    <!-- Only admins can pass -->
     <filter>
         <filter-name>AdminUserOnlyFilter</filter-name>
         <filter-class>it.unitn.webprogramming18.dellmm.filters.AdminUserOnlyFilter</filter-class>
@@ -183,6 +178,18 @@
         <filter-name>AdminUserOnlyFilter</filter-name>
 
         <url-pattern>/admin/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>FrontPagePrintListFilter</filter-name>
+        <filter-class>it.unitn.webprogramming18.dellmm.filters.FrontPagePrintListFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>FrontPagePrintListFilter</filter-name>
+        <url-pattern>/home</url-pattern>
+        <url-pattern>/category</url-pattern>
+        <url-pattern>/search</url-pattern>
+        <url-pattern>/updateProduct</url-pattern>
     </filter-mapping>
 
     <!-- SERVLETS -->
@@ -196,6 +203,7 @@
         <servlet-name>HomeServlet</servlet-name>
         <url-pattern>/home</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>search</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.front.SearchServlet</servlet-class>
@@ -204,6 +212,7 @@
         <servlet-name>search</servlet-name>
         <url-pattern>/search</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>CategoryServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.front.CategoryServlet</servlet-class>
@@ -212,6 +221,7 @@
         <servlet-name>CategoryServlet</servlet-name>
         <url-pattern>/category</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>DisplayListsServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.front.DisplayListsServlet</servlet-class>
@@ -220,6 +230,7 @@
         <servlet-name>DisplayListsServlet</servlet-name>
         <url-pattern>/mylists</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>DisplaySpecificListServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.front.DisplaySpecificListServlet</servlet-class>
@@ -228,6 +239,7 @@
         <servlet-name>DisplaySpecificListServlet</servlet-name>
         <url-pattern>/mylist</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>UpdateListServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.front.UpdateListServlet</servlet-class>
@@ -236,6 +248,7 @@
         <servlet-name>UpdateListServlet</servlet-name>
         <url-pattern>/updateList</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>UpdateProductServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.front.UpdateProductServlet</servlet-class>
@@ -244,6 +257,7 @@
         <servlet-name>UpdateProductServlet</servlet-name>
         <url-pattern>/updateProduct</url-pattern>
     </servlet-mapping>
+
     <!-- SERVLETS OF SERVICE _____________________________________________________________________________ -->
     <servlet>
         <servlet-name>UpdateItemInListService</servlet-name>
@@ -253,6 +267,7 @@
         <servlet-name>UpdateItemInListService</servlet-name>
         <url-pattern>/service/updateItemInListService</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>UpdateItemInListUnloggedUserOnlyService</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.front.service.UpdateItemInListUnloggedUserOnlyService
@@ -262,6 +277,7 @@
         <servlet-name>UpdateItemInListUnloggedUserOnlyService</servlet-name>
         <url-pattern>/service/updateItemInListUnloggedUserOnlyService</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>ChangeListService</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.front.service.ChangeListService</servlet-class>
@@ -270,6 +286,7 @@
         <servlet-name>ChangeListService</servlet-name>
         <url-pattern>/service/changeListService</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>CommentService</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.front.service.CommentService</servlet-class>
@@ -278,6 +295,7 @@
         <servlet-name>CommentService</servlet-name>
         <url-pattern>/service/commentService</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>SharingService</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.front.service.SharingService</servlet-class>
@@ -286,6 +304,7 @@
         <servlet-name>SharingService</servlet-name>
         <url-pattern>/service/sharingService</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>UpdateListService</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.front.service.UpdateListService</servlet-class>
@@ -294,6 +313,7 @@
         <servlet-name>UpdateListService</servlet-name>
         <url-pattern>/service/updateListService</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>UpdateProductService</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.front.service.UpdateProductService</servlet-class>
@@ -313,10 +333,6 @@
         <url-pattern>/service/checkExistenceOfEmailService</url-pattern>
     </servlet-mapping>
 
-
-
-
-
     <!--
     <servlet>
         <servlet-name>DisplaySpecificListServlet</servlet-name>
@@ -335,6 +351,7 @@
         <servlet-name>AddUpdateCategoryListServlet</servlet-name>
         <url-pattern>/AddUpdateCategoryListServlet</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>AddUpdateCategoryProductServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.another.AddUpdateCategoryProductServlet</servlet-class>
@@ -343,6 +360,7 @@
         <servlet-name>AddUpdateCategoryProductServlet</servlet-name>
         <url-pattern>/AddUpdateCategoryProductServlet</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>PrepareAddUpdateListPageServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.PrepareAddUpdateListPageServlet</servlet-class>
@@ -351,6 +369,7 @@
         <servlet-name>PrepareAddUpdateListPageServlet</servlet-name>
         <url-pattern>/PrepareAddUpdateListPageServlet</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>AddUpdateListServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.AddUpdateListServlet</servlet-class>
@@ -359,6 +378,7 @@
         <servlet-name>AddUpdateListServlet</servlet-name>
         <url-pattern>/AddUpdateListServlet</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>PrepareAddUpdateProductServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.PrepareAddUpdateProductPageServlet</servlet-class>
@@ -367,6 +387,7 @@
         <servlet-name>PrepareAddUpdateProductServlet</servlet-name>
         <url-pattern>/PrepareAddUpdateProductServlet</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>AddUpdateProductServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.AddUpdateProductServlet</servlet-class>
@@ -386,23 +407,12 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>DisplayListsServlet</servlet-name>
-        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.DisplayListsServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>DisplayListsServlet</servlet-name>
-        <url-pattern>/DisplayListsServlet</url-pattern>
-    </servlet-mapping>
-    <servlet>
         <servlet-name>LoginServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.LoginServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/login</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/login.json</url-pattern>
     </servlet-mapping>
 
@@ -422,9 +432,6 @@
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/register</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/register.json</url-pattern>
     </servlet-mapping>
 
@@ -436,6 +443,7 @@
         <servlet-name>ResendEmailServlet</servlet-name>
         <url-pattern>/resendEmail</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>ValidateUserServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.ValidateUserServlet</servlet-class>
@@ -452,9 +460,6 @@
     <servlet-mapping>
         <servlet-name>ForgotPasswordServlet</servlet-name>
         <url-pattern>/forgotPassword</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ForgotPasswordServlet</servlet-name>
         <url-pattern>/forgotPassword.json</url-pattern>
     </servlet-mapping>
 
@@ -492,9 +497,6 @@
     <servlet-mapping>
         <servlet-name>LoggedResetPasswordServlet</servlet-name>
         <url-pattern>/loggedResetPassword</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>LoggedResetPasswordServlet</servlet-name>
         <url-pattern>/loggedResetPassword.json</url-pattern>
     </servlet-mapping>
 
@@ -506,6 +508,7 @@
         <servlet-name>AlreadyLoggedInServlet</servlet-name>
         <url-pattern>/alreadyLoggedIn</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>NotificationsServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.another.NotificationsServlet</servlet-class>
@@ -514,6 +517,7 @@
         <servlet-name>NotificationsServlet</servlet-name>
         <url-pattern>/notifications</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>NotificationsServletJSON</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.another.JSONNotificationsServlet</servlet-class>
@@ -577,8 +581,6 @@
         <servlet-name>JSONCategoryListsServlet</servlet-name>
         <url-pattern>/admin/categoryLists.json</url-pattern>
     </servlet-mapping>
-
-
 
     <!-- ERROR PAGE -->
     <error-page>
