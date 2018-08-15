@@ -3,7 +3,6 @@ package it.unitn.webprogramming18.dellmm.db.daos;
 import it.unitn.webprogramming18.dellmm.db.utils.DAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.javaBeans.Shop;
-
 import java.util.List;
 
 public interface ShopDAO extends DAO<Shop, Integer> {
@@ -71,4 +70,17 @@ public interface ShopDAO extends DAO<Shop, Integer> {
      * @throws DAOException if an error occurred during the action.
      */
     public List<Shop> getShopsByCategory(String category) throws DAOException;
+    
+    /**
+     * Returns a list of relevant shops at max R meters from user's position.
+     * "Relevant" means that returned shops are of categories from user lists' categories.
+     * Needs a pre-created list of all CategoryList IDs of all lists that the user can access.
+     * 
+     * @param categories list of ints representing relevant categories to check shops for
+     * @param usrLat user's latitude
+     * @param usrLng user's longitude
+     * @return       described above
+     * @throws DAOException if an error occurred during the action.
+     */
+    public List<Shop> getRelevantShopsInProximity(List<Integer> categories, Double usrLng, Double usrLat) throws DAOException;
 }

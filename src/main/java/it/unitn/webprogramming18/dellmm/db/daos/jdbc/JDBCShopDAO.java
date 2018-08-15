@@ -5,6 +5,7 @@ import it.unitn.webprogramming18.dellmm.db.utils.C3p0Util;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.jdbc.JDBCDAO;
 import it.unitn.webprogramming18.dellmm.javaBeans.Shop;
+import it.unitn.webprogramming18.dellmm.javaBeans.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -184,5 +185,49 @@ public class JDBCShopDAO extends JDBCDAO<Shop, Integer> implements ShopDAO {
         }
 
         return shopList;
+    }
+    
+    public List<Shop> getRelevantShopsInProximity(List<Integer> categories, Double usrLng, Double usrLat) throws DAOException {
+        if (categories == null || usrLat == null || usrLng == null) {
+            throw new DAOException("One or more parameters (user, usrLat, usrLng) are null");
+        }
+
+        CON = C3p0Util.getConnection();
+        List<Shop> relevantShopsList = new ArrayList<>();
+        List<Shop> shopsInProximityList = new ArrayList<>();
+        //Va capito come tradurre la distanza da gradi a metri, e settare una distanza ragionevole
+        double distance = 50;
+        
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Shop "
+                                                        + "WHERE ABS(ST_Distance_Sphere(POINT(?,?), POINT(Shop.lng, Shop.lat))) < ?")) {
+            stm.setDouble(1, usrLng);
+            stm.setDouble(2, usrLat);
+            stm.setDouble(3, distance);
+            
+            //Get all shops in proximity
+            try (ResultSet rs = stm.executeQuery()) {
+                while (rs.next()) {
+                    shopsInProximityList.add(getShopFromResultSet(rs));
+                }
+            }
+            
+            //Get all relevant shops. Needed better algorithm
+            for (Integer catId : categories) {
+                for (Shop shop : shopsInProximityList) {
+                    if (shop.getCategory() == catId) {
+                        relevantShopsList.add(shop);
+                        //Deletes registered shop from general proximity list for efficience purposes
+                        shopsInProximityList.remove(shop);
+                    }
+                }
+            }
+            
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get the list of relevant shops in proximity", ex);
+        } finally {
+            C3p0Util.close(CON);
+        }
+
+        return relevantShopsList;
     }
 }
