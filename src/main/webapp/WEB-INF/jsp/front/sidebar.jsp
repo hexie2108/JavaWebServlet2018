@@ -9,30 +9,30 @@ sidebar di home
 
 <aside class="sidebar col-3">
 
-    <div class="tag-category">
+        <div class="tag-category">
 
-        <h2 class="text-center">
-            <i class="fas fa-store"></i> CATEGORIA
-        </h2>
+                <h2 class="text-center">
+                        <i class="fas fa-store"></i> CATEGORIA
+                </h2>
 
-        <%-- la lista di tutti categoira --%>
-        <div class="list-group">
+                <%-- la lista di tutti categoira --%>
+                <div class="list-group">
 
-            <%-- get tutte le categorie di prodotto --%>
-            <custom:getAllCategoryOfProduct/>
+                        <%-- get tutte le categorie di prodotto --%>
+                        <custom:getAllCategoryOfProduct/>
 
-            <c:forEach var="category" items="${categoryProductList}">
+                        <c:forEach var="category" items="${categoryProductList}">
 
-                <a class="list-group-item list-group-item-action text-center"
-                   href="<c:url value="/category?catId=${category.id}"/>">
-                        ${category.name}
-                </a>
+                                <a class="list-group-item list-group-item-action text-center"
+                                   href="<c:url value="/category?catId=${category.id}"/>">
+                                        ${category.name}
+                                </a>
 
-            </c:forEach>
+                        </c:forEach>
+
+                </div>
 
         </div>
-
-    </div>
 
 
 </aside>

@@ -80,6 +80,13 @@ public class AutoLoginFilter implements Filter
                                 if (user != null)
                                 {
                                         session.setAttribute("user", user);
+                                        //check se utente ha accettato Privacy
+                                        //se non ha ancora fatto, visualizza popup di privacy
+                                        if (!user.isAcceptedPrivacy())
+                                        {
+                                                session.setAttribute("result", "privacy");
+                                        }
+
                                 }
                                 //se fast login key non è valido, cancella cookie, per evitare di rifare auto login
                                 else
@@ -89,7 +96,7 @@ public class AutoLoginFilter implements Filter
                                         cookie.setPath(request.getServletContext().getContextPath());
                                         //set la vita di cookie per 0 secondi
                                         cookie.setMaxAge(0);
-                                       this.response.addCookie(cookie);
+                                        this.response.addCookie(cookie);
                                 }
                         }
                 }

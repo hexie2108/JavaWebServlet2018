@@ -114,6 +114,13 @@ public class LoginService extends HttpServlet
                                 throw new ServletException("errore per la mancanza dell'algoritmo MD5 in ambiente di esecuzione", ex);
                         }
                 }
+                
+                //check se utente ha accettato Privacy
+                //se non ha ancora fatto, visualizza popup di privacy
+                if(!user.isAcceptedPrivacy()){
+                        request.getSession().setAttribute("result", "privacy");
+                }
+                
 
                 // Se nextUrl è vuoto o nullo, usa pagina di default(index)
                 if (prevUrl == null || prevUrl.isEmpty())

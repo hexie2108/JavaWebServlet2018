@@ -10,28 +10,28 @@
 
 
 <div class="update-product -main-section col-12">
-    <div class="content">
+        <div class="content">
 
-        <%-- breadcrumb--%>
-        <div class="breadcrumbs">
-            <a href="<c:url value="/"/>">
-                <i class="fas fa-home"></i>
-            </a>
-            <span>&gt;</span>
+                <%-- breadcrumb--%>
+                <div class="breadcrumbs">
+                        <a href="<c:url value="/"/>">
+                                <i class="fas fa-home"></i>
+                        </a>
+                        <span>&gt;</span>
 
-            <span>
+                        <span>
                                 <i class="fas fa-edit"></i> ${head_title}
                         </span>
 
-        </div>
+                </div>
 
-        <div class="update-product mt-3">
+                <div class="update-product mt-3">
 
-            <%-- se utente ha qualche lista con il permesso di inserire il prodotto--%>
-            <c:if test="${not empty requestScope.addbleLists}">
+                        <%-- se utente ha qualche lista con il permesso di inserire il prodotto--%>
+                        <c:if test="${not empty requestScope.addbleLists}">
 
-                <form action="<c:url value="/service/updateProductService"/>" method="POST"
-                      enctype="multipart/form-data">
+                                <form action="<c:url value="/service/updateProductService"/>" method="POST"
+                                      enctype="multipart/form-data">
 
                                         <%--parte di nome --%>
                                         <div class="form-group">
@@ -39,106 +39,106 @@
                                                 <input type="text" class="form-control"   id="productName" name="productName" required="required" value="" maxlength="44">
                                         </div>
 
-                        <%--parte di logo --%>
-                    <div class="form-group">
+                                        <%--parte di logo --%>
+                                        <div class="form-group">
 
-                        <label for="prodocutLogo"><i class="far fa-bookmark"></i> il logo del prodotto:</label>
-                        <div class="custom-file mb-3">
-                            <input type="file" class="custom-file-input" id="prodocutLogo" name="prodocutLogo"
-                                   accept="image/jpeg, image/png, image/gif, image/bmp" required="required">
-                            <label class="custom-file-label" for="prodocutLogo">seleziona file</label>
-                        </div>
+                                                <label for="prodocutLogo"><i class="far fa-bookmark"></i> il logo del prodotto:</label>
+                                                <div class="custom-file mb-3">
+                                                        <input type="file" class="custom-file-input" id="prodocutLogo" name="prodocutLogo"
+                                                               accept="image/jpeg, image/png, image/gif, image/bmp" required="required">
+                                                        <label class="custom-file-label" for="prodocutLogo">seleziona file</label>
+                                                </div>
 
-                    </div>
+                                        </div>
 
-                        <%--parte di categoria --%>
-                    <div class="form-group">
-                        <label for="productCategory"><i class="fas fa-store"></i> la categoria del prodotto:</label>
-                        <select id="type-list" class="form-control custom-select" id="productCategory"
-                                name="productCategory">
-                                <%--get tutte le categorie diel prodotto --%>
-                            <custom:getAllCategoryOfProduct/>
+                                        <%--parte di categoria --%>
+                                        <div class="form-group">
+                                                <label for="productCategory"><i class="fas fa-store"></i> la categoria del prodotto:</label>
+                                                <select id="type-list" class="form-control custom-select" id="productCategory"
+                                                        name="productCategory">
+                                                        <%--get tutte le categorie diel prodotto --%>
+                                                        <custom:getAllCategoryOfProduct/>
 
-                                <%--stampa tutte le categorie del prodotto --%>
-                            <c:forEach var="categoryOfProduct" items="${categoryProductList}">
+                                                        <%--stampa tutte le categorie del prodotto --%>
+                                                        <c:forEach var="categoryOfProduct" items="${categoryProductList}">
 
-                                <option value="${categoryOfProduct.id}" }>${categoryOfProduct.name}</option>
+                                                                <option value="${categoryOfProduct.id}" }>${categoryOfProduct.name}</option>
 
-                            </c:forEach>
-                        </select>
-                    </div>
-
-
-                        <%--parte di descrizione --%>
-                    <div class="form-group">
-                        <label for="productDescription"><i class="far fa-file-alt"></i> la descrizione del
-                            prodotto:</label>
-                        <textarea class="form-control" id="productDescription" name="productDescription" rows="5"
-                                  required="required"></textarea>
-                    </div>
-
-                        <%--parte di immagine --%>
-                    <div class="form-group">
-                        <label for="ProductImg"><i class="far fa-image"></i> l'immagine del prodotto:</label>
-
-                        <div class="custom-file mb-3">
-                            <input type="file" class="custom-file-input" id="productImg" name="productImg"
-                                   accept="image/jpeg, image/png, image/gif, image/bmp" required="required">
-                            <label class="custom-file-label" for="productImg">seleziona file</label>
-                        </div>
+                                                        </c:forEach>
+                                                </select>
+                                        </div>
 
 
-                    </div>
+                                        <%--parte di descrizione --%>
+                                        <div class="form-group">
+                                                <label for="productDescription"><i class="far fa-file-alt"></i> la descrizione del
+                                                        prodotto:</label>
+                                                <textarea class="form-control" id="productDescription" name="productDescription" rows="5"
+                                                          required="required"></textarea>
+                                        </div>
 
-                        <%--parte di lista di spesa da aggiungere --%>
-                    <div class="form-group">
-                        <label for="listId"><i class="fas fa-list"></i> la lista da inserire:</label>
-                        <select id="type-list" class="form-control custom-select" id="listId" name="listId">
+                                        <%--parte di immagine --%>
+                                        <div class="form-group">
+                                                <label for="ProductImg"><i class="far fa-image"></i> l'immagine del prodotto:</label>
 
-                                <%--stampa tutte le liste di spese con il permesso di inserire il prodotto --%>
-                            <c:forEach var="shoppingList" items="${requestScope.addbleLists}">
-                                <option value="${shoppingList.id}">${shoppingList.name}</option>
-                            </c:forEach>
-                        </select>
-                    </div>
-
-
-                        <%--parte di suggerimenti --%>
-                    <div class="form-group">
-                        <label>accetta solo file *.jpg, *.png, *.gif, *.bmp</label>
-                    </div>
+                                                <div class="custom-file mb-3">
+                                                        <input type="file" class="custom-file-input" id="productImg" name="productImg"
+                                                               accept="image/jpeg, image/png, image/gif, image/bmp" required="required">
+                                                        <label class="custom-file-label" for="productImg">seleziona file</label>
+                                                </div>
 
 
-                    <div class="form-group">
+                                        </div>
 
-                        <button type="submit" class="btn btn-info w-50">inserisce</button>
+                                        <%--parte di lista di spesa da aggiungere --%>
+                                        <div class="form-group">
+                                                <label for="listId"><i class="fas fa-list"></i> la lista da inserire:</label>
+                                                <select id="type-list" class="form-control custom-select" id="listId" name="listId">
 
-                    </div>
+                                                        <%--stampa tutte le liste di spese con il permesso di inserire il prodotto --%>
+                                                        <c:forEach var="shoppingList" items="${requestScope.addbleLists}">
+                                                                <option value="${shoppingList.id}">${shoppingList.name}</option>
+                                                        </c:forEach>
+                                                </select>
+                                        </div>
 
-                </form>
 
-            </c:if>
+                                        <%--parte di suggerimenti --%>
+                                        <div class="form-group">
+                                                <label>accetta solo file *.jpg, *.png, *.gif, *.bmp</label>
+                                        </div>
 
-            <%-- se utente non ha neanche una lista con il permesso di inserire il prodotto--%>
-            <c:if test="${empty requestScope.addbleLists}">
 
-                <div class="emtpy-list">
-                        <%-- stampa l'avviso--%>
-                    <h2 class="mb-3">non hai ancora una lista da poter inserire il prodotto</p>
+                                        <div class="form-group">
 
-                            <%-- link per creare la nuova lista--%>
-                        <div>
-                            <a class="btn btn-info d-inline-block" href="<c:url value="/updateList"/>"><i
-                                    class="fas fa-plus"></i> crea una nuova lista</a>
-                        </div>
+                                                <button type="submit" class="btn btn-info w-50">inserisce</button>
+
+                                        </div>
+
+                                </form>
+
+                        </c:if>
+
+                        <%-- se utente non ha neanche una lista con il permesso di inserire il prodotto--%>
+                        <c:if test="${empty requestScope.addbleLists}">
+
+                                <div class="emtpy-list">
+                                        <%-- stampa l'avviso--%>
+                                        <h2 class="mb-3">non hai ancora una lista da poter inserire il prodotto</p>
+
+                                                <%-- link per creare la nuova lista--%>
+                                                <div>
+                                                        <a class="btn btn-info d-inline-block" href="<c:url value="/updateList"/>"><i
+                                                                        class="fas fa-plus"></i> crea una nuova lista</a>
+                                                </div>
+                                </div>
+
+                        </c:if>
+
+
                 </div>
 
-            </c:if>
-
-
         </div>
-
-    </div>
 </div>
 
 

@@ -3,58 +3,45 @@ package it.unitn.webprogramming18.dellmm.servlets.userSystem.service;
 import it.unitn.webprogramming18.dellmm.db.daos.UserDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCUserDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
-import it.unitn.webprogramming18.dellmm.email.EmailFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
 import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
 import it.unitn.webprogramming18.dellmm.util.FileUtils;
 import it.unitn.webprogramming18.dellmm.util.FormValidator;
 import it.unitn.webprogramming18.dellmm.util.MD5Utils;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-import javax.mail.MessagingException;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.security.NoSuchAlgorithmException;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import javax.mail.MessagingException;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-public class RegisterService extends HttpServlet {
+@MultipartConfig
+public class ModifyUserService extends HttpServlet
+{
 
-    private static final String JSP_PAGE_PATH = "/WEB-INF/jsp/userSystem/register.jsp";
+        private UserDAO userDAO;
 
-    private UserDAO userDAO;
-    private EmailFactory emailFactory;
+        @Override
+        public void init() throws ServletException
+        {
 
-    @Override
-    public void init() throws ServletException {
+                userDAO = new JDBCUserDAO();
 
-        userDAO = new JDBCUserDAO();
+        }
 
-        emailFactory = (EmailFactory) super.getServletContext().getAttribute("emailFactory");
-        CheckErrorUtils.isNull(emailFactory, "Impossible to get email factory for email system");
-
-    }
-
-    /**
-     * post occupa il servizio della registrazione
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        @Override
+        protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+        {
                 // usa un metodo statico per controllare se la richiesta è codificato in formato multipart/form-data
                 CheckErrorUtils.isFalse(ServletFileUpload.isMultipartContent(request), "la richiesta non è stata codificata in formato multipart/form-data");
 
@@ -69,12 +56,11 @@ public class RegisterService extends HttpServlet {
                         throw new ServletException("l'errore durante analisi della richiesta");
                 }
 
-                String email = null;
                 String firstName = null;
                 String lastName = null;
                 String password = null;
                 String avatar = null;
-                String privacy = null;
+
                 FileItem customAvatarImgFile = null;
 
                 if (items != null && items.size() > 0)
@@ -86,10 +72,7 @@ public class RegisterService extends HttpServlet {
                                 {
                                         switch (item.getFieldName())
                                         {
-                                                //get il valore di vari parametri
-                                                case FormValidator.EMAIL_KEY:
-                                                        email = item.getString();
-                                                        break;
+
                                                 case FormValidator.FIRST_NAME_KEY:
                                                         firstName = item.getString();
                                                         break;
@@ -101,9 +84,6 @@ public class RegisterService extends HttpServlet {
                                                         break;
                                                 case FormValidator.AVATAR_KEY:
                                                         avatar = item.getString();
-                                                        break;
-                                                case FormValidator.INF_PRIVACY_KEY:
-                                                        privacy = item.getString();
                                                         break;
 
                                         }
@@ -124,61 +104,53 @@ public class RegisterService extends HttpServlet {
                 }
 
                 //check tutti parametri necessari
-                CheckErrorUtils.isFalse(FormValidator.validateEmail(email), "email non è valido");
-                CheckErrorUtils.isFalse(FormValidator.checkEmailRepeat(email, userDAO), "email già presente");
                 CheckErrorUtils.isFalse(FormValidator.validateFirstName(firstName), "il name non è valido");
                 CheckErrorUtils.isFalse(FormValidator.validateLastName(lastName), "il surname non è valido");
-                CheckErrorUtils.isFalse(FormValidator.validatePassword(password), "la password non è valido");
-                CheckErrorUtils.isFalse(FormValidator.validateAvatar(avatar), "l'avatar selezionato non è valido");
 
-
-                boolean acceptedPrivacy = false;
-                //se utente ha accettato la privacy durante fase di registrazione
-                if (privacy != null)
-                {
-                        acceptedPrivacy = true;
-                }
-
-                //se avatar è custom
-                if (avatar != null && avatar.equals(FormValidator.CUSTOM_AVATAR))
-                {
-                        //check file caricato
-                        CheckErrorUtils.isNull(customAvatarImgFile, "file di img caricato è nullo");
-                        CheckErrorUtils.isFalse(FormValidator.validateCustomAvatarImg(customAvatarImgFile), "file di img caricato non è valido");
-                        //set il percorso complete per salvare immagine di user
-                        String uploadPath = request.getServletContext().getRealPath("/") + ConstantsUtils.IMAGE_BASE_PATH + File.separator + ConstantsUtils.IMAGE_OF_USER;
-                        //salva l'immagine di user e get il nome salvato
-                        avatar = FileUtils.upload(customAvatarImgFile, uploadPath, ConstantsUtils.IMAGE_OF_USER_WIDTH, ConstantsUtils.IMAGE_OF_USER_HEIGHT);
-                }
-
-                // Genera l'utente, manda la mail di verifica e in caso visualizza gli errori
+                User user = (User) request.getSession().getAttribute("user");
+                //aggiorna i dati di user in db
                 try
                 {
-                        User user = userDAO.generateUser(
-                                    firstName,
-                                    lastName,
-                                    email,
-                                    MD5Utils.getMD5(password),
-                                    avatar,
-                                    acceptedPrivacy);
+                        //se vuole modificare avatar
+                        if (avatar != null)
+                        {
+                                CheckErrorUtils.isFalse(FormValidator.validateAvatar(avatar), "l'avatar selezionato non è valido");
 
-                        //manda email
+                                //set il percorso complete per salvare immagine di user
+                                String uploadPath = request.getServletContext().getRealPath("/") + ConstantsUtils.IMAGE_BASE_PATH + File.separator + ConstantsUtils.IMAGE_OF_USER;
+                                //elimina avatar vecchio
+                                FileUtils.deleteFile(uploadPath + File.separator + user.getImg());
 
-                        emailFactory.sendEmailOfRegistration(user, request);
+                                //se vuole caricare una nuova avatar personale
+                                if (avatar.equals(FormValidator.CUSTOM_AVATAR))
+                                {
+                                        //check file caricato
+                                        CheckErrorUtils.isNull(customAvatarImgFile, "file di img caricato è nullo");
+                                        CheckErrorUtils.isFalse(FormValidator.validateCustomAvatarImg(customAvatarImgFile), "file di img caricato non è valido");
 
+                                        //salva nuovo l'immagine di user e get il nome salvato
+                                        avatar = FileUtils.upload(customAvatarImgFile, uploadPath, ConstantsUtils.IMAGE_OF_USER_WIDTH, ConstantsUtils.IMAGE_OF_USER_HEIGHT);
+
+                                }
+                                user.setImg(avatar);
+                        }
+
+                        //se vuole cambiare anche la password
+                        if (password != null && !password.isEmpty())
+                        {
+                                CheckErrorUtils.isFalse(FormValidator.validatePassword(password), "la password non è valido");
+                                user.setPassword(MD5Utils.getMD5(password));
+                        }
+
+                        user.setName(firstName);
+                        user.setSurname(lastName);
+
+                        userDAO.update(user);
                 }
                 catch (DAOException ex)
                 {
                         throw new ServletException(ex.getMessage(), ex);
 
-                }
-                catch (MessagingException ex)
-                {
-                        throw new ServletException("errore durente la creazione e l'invio del email per la registrazione", ex);
-                }
-                catch (UnsupportedEncodingException ex)
-                {
-                        throw new ServletException("errore durente la codifica dei caratteri", ex);
                 }
                 catch (NoSuchAlgorithmException ex)
                 {
@@ -186,7 +158,8 @@ public class RegisterService extends HttpServlet {
                 }
 
                 //ritorna alla pagina di login
-                String prevUrl = getServletContext().getContextPath() + "/login?notice=awaitingActivation";
+                String prevUrl = getServletContext().getContextPath() + "/modifyUser?update=ok";
                 response.sendRedirect(response.encodeRedirectURL(prevUrl));
         }
+
 }

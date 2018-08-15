@@ -11,38 +11,38 @@
 
 <div class="category-main-section col-12">
 
-    <div class="content">
+        <div class="content">
 
-        <%-- breadcrumb--%>
-        <div class="breadcrumbs">
-            <a href="<c:url value="/"/>">
-                <i class="fas fa-home"></i>
-            </a>
-            <span>&gt;</span>
-            <span>
+                <%-- breadcrumb--%>
+                <div class="breadcrumbs">
+                        <a href="<c:url value="/"/>">
+                                <i class="fas fa-home"></i>
+                        </a>
+                        <span>&gt;</span>
+                        <span>
                                 <i class="fas fa-store"></i> categoria
                         </span>
-            <span>&gt;</span>
-            <span>
-                ${categoria.name}
-            </span>
+                        <span>&gt;</span>
+                        <span>
+                                ${categoria.name}
+                        </span>
+                </div>
+
+                <%-- image di categoria attuale--%>
+                <div class="category-image-section d-inline">
+                        <img class="category-logo " src="<c:url value="/image/categoryProduct/${categoria.img}"/>"
+                             alt="${categoria.name}"/>
+                </div>
+
+                <div class="product-list">
+                        <div class="product-list-head">
+
+                        </div>
+
+                        <jsp:include page="/WEB-INF/jsp/front/module/productList.jsp"/>
+                </div>
+
         </div>
-
-        <%-- image di categoria attuale--%>
-        <div class="category-image-section d-inline">
-            <img class="category-logo " src="<c:url value="/image/categoryProduct/${categoria.img}"/>"
-                 alt="${categoria.name}"/>
-        </div>
-
-        <div class="product-list">
-            <div class="product-list-head">
-
-            </div>
-
-            <jsp:include page="/WEB-INF/jsp/front/module/productList.jsp"/>
-        </div>
-
-    </div>
 </div>
 
 

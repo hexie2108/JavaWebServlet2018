@@ -16,20 +16,20 @@
 
 <footer class="footer bg-secondary mt-5">
 
-    <div class="author-info">
-        @progettoWeb2018
-    </div>
+        <div class="author-info">
+                @progettoWeb2018
+        </div>
 
 </footer>
 
 <script>
-    $(document).ready(function(){
-        $('.selectpicker').selectpicker({
-            style: 'btn-info',
-            countSelectedText: '{0}/{1} selected',
-            noneResultsText: 'No result matched {0}'
+        $(document).ready(function () {
+                $('.selectpicker').selectpicker({
+                        style: 'btn-info',
+                        countSelectedText: '{0}/{1} selected',
+                        noneResultsText: 'No result matched {0}'
+                });
         });
-    });
 </script>
 </div>
 </body>

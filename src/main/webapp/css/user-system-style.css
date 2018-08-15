@@ -89,6 +89,12 @@
     padding: .5rem 1rem;
 }
 
+.user-system  .link-utils{
+
+        margin-top: 2rem;
+        width: 100%;
+}
+
 
 /*register.jsp-----------------------------------------------*/
 
@@ -191,11 +197,7 @@
         margin: 0;
 }
 
-.user-system  .link-utils{
 
-        margin-top: 2rem;
-        width: 100%;
-}
 
 
 /*login.jsp--------------------------------------------------------------------------*/

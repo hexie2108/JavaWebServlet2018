@@ -40,8 +40,7 @@
     <link rel="stylesheet" href="<c:url value="/libs/fontawesome-free-5.1.1-web/css/all.min.css"/>" type="text/css"
           media="all">
     <%--css personale --%>
-    <link rel="stylesheet" href="<c:url value="/css/user-system-style.css"/>" type="text/css"
-          media="all">
+    <link rel="stylesheet" href="<c:url value="/css/user-system-style.css"/>" type="text/css"media="all">
 
 </head>
 
