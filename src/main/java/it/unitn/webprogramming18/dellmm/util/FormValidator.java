@@ -50,12 +50,17 @@ public class FormValidator
                     "user-ninja.svg",
                     "user-secret.svg"
         ));
-        
+
         //array di pagina di userSystem
-        public static final String[] pageNameOfUserSystem = {
-                    "register",
-                    "forgotPassword",
-                    "resetPassword"
+        public static final String[] pageNameOfUserSystem =
+        {
+                "login",
+                "register",
+                "forgotPassword",
+                "resetPassword",
+                "resendEmail",
+                "activateUser",
+                "service"
         };
 
         //custom avatar
@@ -65,8 +70,6 @@ public class FormValidator
 
         public static final String PREV_URL_KEY = "prevUrl",
                     REMEMBER_KEY = "remember";
-
-        
 
         // --- Funzioni di validazione
         /**
@@ -123,7 +126,7 @@ public class FormValidator
          */
         public static boolean checkEmailRepeat(String email, UserDAO userDAO)
         {
-                 boolean ris = true;
+                boolean ris = true;
                 //controlla la sua esistenza
                 try
                 {
@@ -134,7 +137,7 @@ public class FormValidator
                 }
                 catch (DAOException ignored)
                 {
-                       ris = false;
+                        ris = false;
                 }
                 return ris;
         }

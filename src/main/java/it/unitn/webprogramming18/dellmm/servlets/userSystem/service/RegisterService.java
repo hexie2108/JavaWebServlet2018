@@ -10,9 +10,6 @@ import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
 import it.unitn.webprogramming18.dellmm.util.FileUtils;
 import it.unitn.webprogramming18.dellmm.util.FormValidator;
 import it.unitn.webprogramming18.dellmm.util.MD5Utils;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import javax.mail.MessagingException;
 import javax.servlet.ServletException;
@@ -22,38 +19,37 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.security.NoSuchAlgorithmException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.*;
-import java.util.stream.Collectors;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-public class RegisterService extends HttpServlet {
+public class RegisterService extends HttpServlet
+{
 
-    private static final String JSP_PAGE_PATH = "/WEB-INF/jsp/userSystem/register.jsp";
+       
 
-    private UserDAO userDAO;
-    private EmailFactory emailFactory;
+        private UserDAO userDAO;
+        private EmailFactory emailFactory;
 
-    @Override
-    public void init() throws ServletException {
+        @Override
+        public void init() throws ServletException
+        {
 
-        userDAO = new JDBCUserDAO();
+                userDAO = new JDBCUserDAO();
 
-        emailFactory = (EmailFactory) super.getServletContext().getAttribute("emailFactory");
-        CheckErrorUtils.isNull(emailFactory, "Impossible to get email factory for email system");
+                emailFactory = (EmailFactory) super.getServletContext().getAttribute("emailFactory");
+                CheckErrorUtils.isNull(emailFactory, "Impossible to get email factory for email system");
 
-    }
+        }
 
-    /**
-     * post occupa il servizio della registrazione
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        /**
+         * post occupa il servizio della registrazione
+         */
+        @Override
+        protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+        {
 
                 // usa un metodo statico per controllare se la richiesta è codificato in formato multipart/form-data
                 CheckErrorUtils.isFalse(ServletFileUpload.isMultipartContent(request), "la richiesta non è stata codificata in formato multipart/form-data");
@@ -131,7 +127,7 @@ public class RegisterService extends HttpServlet {
                 CheckErrorUtils.isFalse(FormValidator.validatePassword(password), "la password non è valido");
                 CheckErrorUtils.isFalse(FormValidator.validateAvatar(avatar), "l'avatar selezionato non è valido");
 
-
+                
                 boolean acceptedPrivacy = false;
                 //se utente ha accettato la privacy durante fase di registrazione
                 if (privacy != null)
@@ -163,7 +159,7 @@ public class RegisterService extends HttpServlet {
                                     acceptedPrivacy);
 
                         //manda email
-
+         
                         emailFactory.sendEmailOfRegistration(user, request);
 
                 }

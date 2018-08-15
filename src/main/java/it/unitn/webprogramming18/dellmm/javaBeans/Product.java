@@ -22,6 +22,7 @@ public class Product implements Serializable {
     private int categoryProductId;
     private int privateListId;
 
+
     /**
      * @return the id
      */
@@ -105,7 +106,7 @@ public class Product implements Serializable {
     public void setCategoryProductId(int categoryProductId) {
         this.categoryProductId = categoryProductId;
     }
-
+    
     /**
      * @return the privateListId
      */
@@ -119,5 +120,6 @@ public class Product implements Serializable {
     public void setPrivateListId(int privateListId) {
         this.privateListId = privateListId;
     }
+
 
 }

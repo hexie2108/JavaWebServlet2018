@@ -11,7 +11,6 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.javaBeans.Permission;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
-
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -23,56 +22,64 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author mikuc
  */
-public class ChangeListService extends HttpServlet {
+public class ChangeListService extends HttpServlet
+{
 
-    private PermissionDAO permissionDAO;
+        private PermissionDAO permissionDAO;
 
-    /**
-     * inizializza DAO
-     *
-     * @throws ServletException
-     */
-    @Override
-    public void init() throws ServletException {
-        permissionDAO = new JDBCPermissionDAO();
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //invoca doGet
-        doGet(request, response);
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        //get id lista
-        String listId = request.getParameter("listId");
-        //se listId è nullo
-        CheckErrorUtils.isNull(listId, "manca il parametro id lista");
-
-        //get user corrente
-        User user = (User) request.getSession().getAttribute("user");
-        //get permesso dell'utente su tale lista
-        Permission permission;
-        try {
-            permission = permissionDAO.getUserPermissionOnListByIds(user.getId(), Integer.parseInt(listId));
-            //se il permesso è  vuoto
-            CheckErrorUtils.isNull(permission, "non hai nessun permesso su tale lista");
-        } catch (DAOException ex) {
-            throw new ServletException(ex.getMessage(), ex);
+        /**
+         * inizializza DAO
+         *
+         * @throws ServletException
+         */
+        @Override
+        public void init() throws ServletException
+        {
+                permissionDAO = new JDBCPermissionDAO();
         }
 
-        //memorizza  id della nuova lista
-        request.getSession().setAttribute("myListId", Integer.parseInt(listId));
-
-        //ritorna alla pagina di provenienza
-        String prevUrl = request.getHeader("Referer");
-        if (prevUrl == null) {
-            prevUrl = getServletContext().getContextPath();
+        @Override
+        protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+        {
+                //invoca doGet
+                doGet(request, response);
         }
-        response.sendRedirect(response.encodeRedirectURL(prevUrl));
 
-    }
+        @Override
+        protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+        {
+
+                //get id lista
+                String listId = request.getParameter("listId");
+                //se listId è nullo
+                CheckErrorUtils.isNull(listId, "manca il parametro id lista");
+
+                //get user corrente
+                User user = (User) request.getSession().getAttribute("user");
+                //get permesso dell'utente su tale lista
+                Permission permission;
+                try
+                {
+                        permission = permissionDAO.getUserPermissionOnListByIds(user.getId(), Integer.parseInt(listId));
+                        //se il permesso è  vuoto
+                        CheckErrorUtils.isNull(permission, "non hai nessun permesso su tale lista");
+                }
+                catch (DAOException ex)
+                {
+                        throw new ServletException(ex.getMessage(), ex);
+                }
+               
+                //memorizza  id della nuova lista 
+                request.getSession().setAttribute("myListId", Integer.parseInt(listId));
+
+                //ritorna alla pagina di provenienza
+                String prevUrl = request.getHeader("Referer");
+                if (prevUrl == null)
+                {
+                        prevUrl = getServletContext().getContextPath();
+                }
+                response.sendRedirect(response.encodeRedirectURL(prevUrl));
+
+        }
 
 }

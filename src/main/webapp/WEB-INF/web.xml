@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<<<<<<< HEAD
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
     <!-- Session settings -->
@@ -79,28 +78,7 @@
         <param-value>xeecaoS5tood3bee</param-value>
     </context-param>
 
-    <!-- Constants -->
-    <!-- quantià di item nelle varie pagine-->
-    <context-param>
-        <description>quantià categoria per slider</description>
-        <param-name>quantityCatForSlider</param-name>
-        <param-value>4</param-value>
-    </context-param>
-    <context-param>
-        <description>quantià di item per home</description>
-        <param-name>quantityItemForHome</param-name>
-        <param-value>12</param-value>
-    </context-param>
-    <context-param>
-        <description>quantià di item per categoria</description>
-        <param-name>quantityItemForCategory</param-name>
-        <param-value>9</param-value>
-    </context-param>
-    <context-param>
-        <description>quantià di item per la ricerca</description>
-        <param-name>quantityItemForSearch</param-name>
-        <param-value>9</param-value>
-    </context-param>
+
 
     <!-- pagina di index -->
     <welcome-file-list>
@@ -141,10 +119,7 @@
         <url-pattern>/modifyUser</url-pattern>
         <url-pattern>/modifyUser.json</url-pattern>
 
-        <url-pattern>/resendEmail</url-pattern>
-
-        <url-pattern>/alreadyLoggedIn</url-pattern>
-
+        
         <url-pattern>/notifications</url-pattern>
         <url-pattern>/notifications.json</url-pattern>
 

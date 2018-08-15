@@ -21,7 +21,7 @@ public interface CategoryProductDAO extends DAO<CategoryProduct, Integer> {
     /**
      * Persists the new categoryProduct passed as parameter
      * to the storage system.
-     *
+     * 
      * @param categoryProduct the new categoryProduct to insert as entry
      * @return the id of the new persisted record.
      * @throws DAOException if an error occurred during the persist action.
@@ -54,17 +54,17 @@ public interface CategoryProductDAO extends DAO<CategoryProduct, Integer> {
     @Override
     public List<CategoryProduct> getAll() throws DAOException;
 
-    /**
+     /**
      * get la lista di categoria di prodotto in base a id decrescente
-     *
      * @param index  l'indice in cui inizia a prendere
      * @param number numero che vuoi ottenere
      * @return la lista di categoria di prodotto
-     * @throws DAOException
+     * @throws DAOException 
      */
     public List<CategoryProduct> getCategoryProductList(Integer index, Integer number) throws DAOException;
-
-
+    
+    
+    
     /**
      * Update the categoryProduct passed as parameter and returns it.
      *
@@ -74,6 +74,9 @@ public interface CategoryProductDAO extends DAO<CategoryProduct, Integer> {
      */
     @Override
     public CategoryProduct update(CategoryProduct categoryProduct) throws DAOException;
+    
+    
 
-
+    
+    
 }

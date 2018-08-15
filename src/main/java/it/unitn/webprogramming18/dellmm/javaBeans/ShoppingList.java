@@ -73,7 +73,7 @@ public class ShoppingList {
     public void setImg(String img) {
         this.img = img;
     }
-
+    
     /**
      * @return the ownerId
      */
@@ -87,7 +87,7 @@ public class ShoppingList {
     public void setOwnerId(int ownerId) {
         this.ownerId = ownerId;
     }
-
+    
     /**
      * @return the categoryList
      */

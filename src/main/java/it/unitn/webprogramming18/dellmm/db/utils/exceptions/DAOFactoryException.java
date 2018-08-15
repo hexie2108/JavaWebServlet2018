@@ -12,7 +12,8 @@ package it.unitn.webprogramming18.dellmm.db.utils.exceptions;
  * @author Stefano Chirico &lt;stefano dot chirico at unitn dot it&gt;
  * @since 2017.04.17
  */
-public class DAOFactoryException extends Exception {
+public class DAOFactoryException extends Exception
+{
 
     /**
      * Constructs a new exception with {@code null} as its detail message. The
@@ -22,7 +23,8 @@ public class DAOFactoryException extends Exception {
      * @author Stefano Chirico
      * @since 1.0.170417
      */
-    public DAOFactoryException() {
+    public DAOFactoryException()
+    {
         super();
     }
 
@@ -32,11 +34,12 @@ public class DAOFactoryException extends Exception {
      * {@link #initCause}.
      *
      * @param message the detail message. The detail message is saved for later
-     *                retrieval by the {@link #getMessage()} method.
+     * retrieval by the {@link #getMessage()} method.
      * @author Stefano Chirico
      * @since 1.0.170417
      */
-    public DAOFactoryException(String message) {
+    public DAOFactoryException(String message)
+    {
         super(message);
     }
 
@@ -49,12 +52,13 @@ public class DAOFactoryException extends Exception {
      * java.security.PrivilegedActionException}).
      *
      * @param cause the cause (which is saved for later retrieval by the
-     *              {@link #getCause()} method). (A <tt>null</tt> value is permitted, and
-     *              indicates that the cause is nonexistent or unknown.)
+     * {@link #getCause()} method). (A <tt>null</tt> value is permitted, and
+     * indicates that the cause is nonexistent or unknown.)
      * @author Stefano Chirico
      * @since 1.0.170417
      */
-    public DAOFactoryException(Throwable cause) {
+    public DAOFactoryException(Throwable cause)
+    {
         super(cause);
     }
 
@@ -65,14 +69,15 @@ public class DAOFactoryException extends Exception {
      * automatically incorporated in this exception's detail message.
      *
      * @param message the detail message (which is saved for later retrieval by
-     *                the {@link #getMessage()} method).
-     * @param cause   the cause (which is saved for later retrieval by the
-     *                {@link #getCause()} method). (A <tt>null</tt> value is permitted, and
-     *                indicates that the cause is nonexistent or unknown.)
+     * the {@link #getMessage()} method).
+     * @param cause the cause (which is saved for later retrieval by the
+     * {@link #getCause()} method). (A <tt>null</tt> value is permitted, and
+     * indicates that the cause is nonexistent or unknown.)
      * @author Stefano Chirico
      * @since 1.0.170417
      */
-    public DAOFactoryException(String message, Throwable cause) {
+    public DAOFactoryException(String message, Throwable cause)
+    {
         super(message, cause);
     }
 }

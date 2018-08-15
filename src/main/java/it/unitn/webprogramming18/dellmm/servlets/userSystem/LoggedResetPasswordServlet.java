@@ -21,7 +21,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
-@WebServlet(name = "LoggedResetPasswordServlet")
 public class LoggedResetPasswordServlet extends HttpServlet {
     private static final String LOGGED_RESET_PASSWORD = "/WEB-INF/jsp/userSystem/loggedResetPassword.jsp";
 
@@ -29,14 +28,14 @@ public class LoggedResetPasswordServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-
-        userDAO = new JDBCUserDAO();
-
+       
+            userDAO = new JDBCUserDAO();
+      
     }
 
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (request.getRequestURI().endsWith(".json")) {
+        if(request.getRequestURI().endsWith(".json")) {
             ServletUtility.sendError(request, response, 400, "generic.errors.postOnly");
         } else {
             request.getRequestDispatcher(LOGGED_RESET_PASSWORD).forward(request, response);
@@ -78,7 +77,7 @@ public class LoggedResetPasswordServlet extends HttpServlet {
             return;
         }
 
-        if (request.getRequestURI().endsWith(".json")) {
+        if(request.getRequestURI().endsWith(".json")) {
             ServletUtility.sendJSON(request, response, 200, new HashMap<>());
         } else {
             String contextPath = getServletContext().getContextPath();

@@ -43,7 +43,7 @@ public class ProductInList {
     public void setProductId(int productId) {
         this.productId = productId;
     }
-
+    
     /**
      * @return the status
      */

@@ -17,11 +17,11 @@ public interface PermissionDAO extends DAO<Permission, Integer> {
      */
     @Override
     public Long getCount() throws DAOException;
-
+    
     /**
      * Persists the new permission passed as parameter
      * to the storage system.
-     *
+     * 
      * @param permission the new permission to insert as entry
      * @return the id of the new persisted record.
      * @throws DAOException if an error occurred during the persist action.
@@ -62,53 +62,42 @@ public interface PermissionDAO extends DAO<Permission, Integer> {
      */
     @Override
     public Permission update(Permission permission) throws DAOException;
-
+    
     /**
      * Returns the set of permissions on a specified list, exclude owner
-     *
+     * 
      * @param listId id di lista
      * @param UserId id di utente proprietario
      * @return a List containing Permission objects associated to the specified list
      * @throws DAOException if an error occurred during the action
      */
     public List<Permission> getSharingPermissionsOnListByListId(Integer listId, Integer UserId) throws DAOException;
-
+    
     /**
      * get il permesso di un utente su una lista specificata
-     *
+     * 
      * @param userId user's id
      * @param listId list's id
      * @return il Permission bean oppure null, se utente non ha nessun permesso
      * @throws DAOException if an error occurred during the action
      */
     public Permission getUserPermissionOnListByIds(Integer userId, Integer listId) throws DAOException;
-
-
+    
+    
     /**
      * get il numero di condivisione di una lista , esclude proprietario
-     *
      * @param listId
      * @return il numero di persone condiviso (esclude owner stesso)
-     * @throws DAOException
+     * @throws DAOException 
      */
-    public Integer getNumberSharedByListId(Integer listId) throws DAOException;
-
-
-    /**
+    public Integer getNumberSharedByListId (Integer listId) throws DAOException;
+    
+    
+        /**
      * eliminare il permesso
-     *
      * @param permissionId id permesso
-     * @throws DAOException
+     * @throws DAOException 
      */
-
+    
     public void deletePermissionById(Integer permissionId) throws DAOException;
-
-    /**
-     * Returns the set of permissions on a specified list
-     *
-     * @param listId
-     * @return a List containing Permission objects associated to the specified list
-     * @throws DAOException if an error occurred during the action
-     */
-    public List<Permission> getPermissionsOnListByListId(Integer listId) throws DAOException;
 }

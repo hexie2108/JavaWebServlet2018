@@ -59,7 +59,7 @@ public class CategoryList {
     public void setDescription(String description) {
         this.description = description;
     }
-
+    
     /**
      * @return the img1
      */

@@ -1,76 +1,60 @@
 package it.unitn.webprogramming18.dellmm.filters;
 
-import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
-import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 
 import javax.servlet.*;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.net.URLEncoder;
 
 /**
- * se utente è loggato e ha fatto una richiesta di JSON oppure POST rindirizza
- * alla pagina 401
- * <p>
- * se utente è loggato e ha fatto una richiesta GET, rindirizza alla pagina di
- * Login.
+ * se utente è loggato e sta navigando le pagine di userSystem dedicato per user
+ * non loggato
+ *
  */
-@WebFilter(filterName = "AlreadyLoggedUserOnlyFilter")
-public class AlreadyLoggedUserOnlyFilter implements Filter {
+public class AlreadyLoggedUserOnlyFilter implements Filter
+{
 
-    private void refuse(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String uri = request.getRequestURI();
+        @Override
+        public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws ServletException, IOException
+        {
 
-        if (uri.matches("^.*\\.json$") || !request.getMethod().equalsIgnoreCase("GET")) {
-            ServletUtility.sendError(request, response, 401, "generic.errors.userLogged");
-        } else {
-            // Se la richiesta è un get facciamo un redirect alla pagina che chiede all'utente se fare logout
-            // cercando di mantenere l'url  in nextUrl in modo da reindirizzare l'utente automaticamente a
-            // login avvenuto con successo
+                HttpServletRequest request = (HttpServletRequest) req;
+                HttpServletResponse response = (HttpServletResponse) resp;
 
-            String contextPath = request.getServletContext().getContextPath();
-            if (!contextPath.endsWith("/")) {
-                contextPath += "/";
-            }
+                // Non fare caching
+                response.setHeader("Cache-Control", "no-cache");
+                response.setHeader("Pragma", "no-cache");
+                response.setDateHeader("Expires", -1);
+                response.setCharacterEncoding("UTF-8");
 
-            String prevUrl = request.getParameter("prevUrl");
+                //get la sessione
+                HttpSession session = request.getSession(false);
 
-            if (prevUrl == null) {
-                prevUrl = contextPath;
-            }
+                // Se esiste la sessione oppure l'utente  è autenticato
+                if (session != null && session.getAttribute("user") != null)
+                {
+                        //get il percorso base
+                        String contextPath = request.getServletContext().getContextPath();
+                        //indirizza a home
+                        response.sendRedirect(contextPath);
+                }
+                else
+                {
 
-            // memorizza url della richiesta attuale in nextUrl,  che permette utente di ritornerà a questa pagina dopo il login
-            response.sendRedirect(
-                    contextPath + ConstantsUtils.ALREADY_LOGGED_IN + "?" +
-                            "prevUrl" + "=" + URLEncoder.encode(prevUrl, "UTF-8") +
-                            "&" + "nextUrl" + "=" + URLEncoder.encode(request.getRequestURI(), "UTF-8")
-            );
-        }
-    }
+                        // Se l'utente non è  autenticato facciamo continuare
+                        chain.doFilter(req, resp);
+                }
 
-
-    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws ServletException, IOException {
-        HttpServletRequest request = (HttpServletRequest) req;
-        HttpServletResponse response = (HttpServletResponse) resp;
-
-        HttpSession session = request.getSession(false);
-
-        // Se l'utente è autenticato
-        if (session != null && session.getAttribute("user") != null) {
-            refuse(request, response);
-            return;
         }
 
-        // Se l'utente non è autenticato facciamo continuare
-        chain.doFilter(req, resp);
-    }
+        @Override
+        public void init(FilterConfig config) throws ServletException
+        {
+        }
 
-    public void init(FilterConfig config) throws ServletException {
-    }
-
-    public void destroy() {
-    }
+        @Override
+        public void destroy()
+        {
+        }
 }

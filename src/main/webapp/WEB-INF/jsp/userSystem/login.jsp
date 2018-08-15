@@ -141,10 +141,8 @@
 
 
                 <%-- input hidden per memorizzare la pagine di provenienza e pagina da rindirizzare--%>
-                <c:if test="${empty param.notice}">
-                        <input type="hidden" name="${FormValidator.PREV_URL_KEY}"  value="${prevUrl}">
-                </c:if>
-
+               <input type="hidden" name="${FormValidator.PREV_URL_KEY}"  value="${prevUrl}">
+                
 
                 <button class="btn btn-lg btn-primary btn-block" type="submit">
                         <fmt:message key="login.label.login"/> ${a}
@@ -160,6 +158,17 @@
                 <a id="pwdDimenticata" class="" href="<c:url value="/forgotPassword"/>">
                         <i class="fas fa-question"></i> <fmt:message key="login.label.forgotPassword"/>
                 </a>
+
+                <c:if test="${empty cancell}">
+                        <a id="" class="float-right" href="${prevUrl}">
+                                <i class="fas fa-arrow-left"></i> <fmt:message key="login.label.cancel"/>
+                        </a>
+                </c:if>
+                <c:if test="${not empty cancell}">
+                        <a id="" class="float-right" href="<c:url value="/"/>">
+                                <i class="fas fa-arrow-left"></i> <fmt:message key="login.label.cancel"/>
+                        </a>
+                </c:if>      
 
         </div>
         <div class="content-divider">
