@@ -15,19 +15,17 @@ import java.util.HashMap;
 /**
  * il classe astratto di DAO per JDBC, da estendere
  *
- *
- * @param <ENTITY_CLASS> tipo di entità/classe bean da gestire.
+ * @param <ENTITY_CLASS>      tipo di entità/classe bean da gestire.
  * @param <PRIMARY_KEY_CLASS> tipo della chiave primaria di entità/tabella da gestire
  * @author Stefano Chirico &lt;stefano dot chirico at unitn dot it&gt;
  * @since 2017.04.17
  */
-public abstract class JDBCDAO<ENTITY_CLASS, PRIMARY_KEY_CLASS> implements DAO<ENTITY_CLASS, PRIMARY_KEY_CLASS>
-{
+public abstract class JDBCDAO<ENTITY_CLASS, PRIMARY_KEY_CLASS> implements DAO<ENTITY_CLASS, PRIMARY_KEY_CLASS> {
 
-    // il puntatore di connessione {@link Connection} da usare per accedere al database
-    protected Connection CON;
     // HashMap di altre classi DAOs che possono interagire con questo DAO
     protected final HashMap<Class, DAO> FRIEND_DAOS;
+    // il puntatore di connessione {@link Connection} da usare per accedere al database
+    protected Connection CON;
 
     /**
      * il costruttore base di JDBC DAO salva la connessione da usare per
@@ -37,19 +35,17 @@ public abstract class JDBCDAO<ENTITY_CLASS, PRIMARY_KEY_CLASS> implements DAO<EN
      * @author Stefano Chirico
      * @since 1.0.170417
      */
-    protected JDBCDAO(Connection con)
-    {
+    protected JDBCDAO(Connection con) {
         super();
         this.CON = con;
         FRIEND_DAOS = new HashMap<>();
     }
-    
+
     /**
      * costruttore vuoto , non serve più associare una connessione fissa
      */
-    protected JDBCDAO()
-    {
-            FRIEND_DAOS = new HashMap<>();
+    protected JDBCDAO() {
+        FRIEND_DAOS = new HashMap<>();
     }
 
     /**
@@ -57,8 +53,8 @@ public abstract class JDBCDAO<ENTITY_CLASS, PRIMARY_KEY_CLASS> implements DAO<EN
      * restituisce il DAO della classe passato
      *
      * @param <DAO_CLASS> il tipo di classe del DAO che può interagire con
-     * questo DAO.
-     * @param daoClass il nome classe del DAO che può interagire con questo DAO.
+     *                    questo DAO.
+     * @param daoClass    il nome classe del DAO che può interagire con questo DAO.
      * @return l'istanza di DAO o null se tipo del DAO passato non può
      * interagire con questo DAO
      * @throws DAOFactoryException se c'è un errore.
@@ -66,11 +62,9 @@ public abstract class JDBCDAO<ENTITY_CLASS, PRIMARY_KEY_CLASS> implements DAO<EN
      * @since 1.0.170417
      */
     @Override
-    public <DAO_CLASS extends DAO> DAO_CLASS getDAO(Class<DAO_CLASS> daoClass) throws DAOFactoryException
-    {
+    public <DAO_CLASS extends DAO> DAO_CLASS getDAO(Class<DAO_CLASS> daoClass) throws DAOFactoryException {
         return (DAO_CLASS) FRIEND_DAOS.get(daoClass);
     }
-    
-    
-  
+
+
 }

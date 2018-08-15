@@ -1,6 +1,7 @@
 package it.unitn.webprogramming18.dellmm.db.daos.jdbc;
 
 import it.unitn.webprogramming18.dellmm.db.daos.ShopDAO;
+import it.unitn.webprogramming18.dellmm.db.utils.C3p0Util;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.jdbc.JDBCDAO;
 import it.unitn.webprogramming18.dellmm.javaBeans.Shop;
@@ -34,6 +35,8 @@ public class JDBCShopDAO extends JDBCDAO<Shop, Integer> implements ShopDAO {
 
     @Override
     public Long getCount() throws DAOException {
+        CON = C3p0Util.getConnection();
+
         try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM Shop")) {
             ResultSet counter = stmt.executeQuery();
             if (counter.next()) {
@@ -41,42 +44,51 @@ public class JDBCShopDAO extends JDBCDAO<Shop, Integer> implements ShopDAO {
             }
         } catch (SQLException ex) {
             throw new DAOException("Impossible to count Shop", ex);
+        } finally {
+            C3p0Util.close(CON);
         }
 
         return 0L;
     }
-    
-    @Override
+
     public Integer insert(Shop shop) throws DAOException {
         if (shop == null) {
             throw new DAOException("shop bean is null");
         }
-        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO Shop (lat, lng, category) VALUES (?,?,?)", 
-                                                                Statement.RETURN_GENERATED_KEYS)) {
+
+        CON = C3p0Util.getConnection();
+
+        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO Shop (lat, lng, category) VALUES (?,?,?)",
+                Statement.RETURN_GENERATED_KEYS)) {
 
             stm.setDouble(1, shop.getLat());
             stm.setDouble(2, shop.getLng());
             stm.setInt(3, shop.getCategory());
-            
+
             stm.executeUpdate();
-            
+
             ResultSet rs = stm.getGeneratedKeys();
             if (rs.next()) {
                 shop.setId(rs.getInt(1));
             }
-            
+
             return shop.getId();
         } catch (SQLException ex) {
             throw new DAOException("Impossible to insert the new shop", ex);
+        } finally {
+            C3p0Util.close(CON);
         }
     }
 
     @Override
     public Shop getByPrimaryKey(Integer primaryKey) throws DAOException {
-        Shop shop = null;
         if (primaryKey == null) {
             throw new DAOException("primaryKey is null");
         }
+
+        CON = C3p0Util.getConnection();
+        Shop shop = null;
+
         try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Shop WHERE id = ?")) {
             stm.setInt(1, primaryKey);
             try (ResultSet rs = stm.executeQuery()) {
@@ -86,6 +98,8 @@ public class JDBCShopDAO extends JDBCDAO<Shop, Integer> implements ShopDAO {
             }
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the shop for the passed primary key", ex);
+        } finally {
+            C3p0Util.close(CON);
         }
 
         return shop;
@@ -93,6 +107,7 @@ public class JDBCShopDAO extends JDBCDAO<Shop, Integer> implements ShopDAO {
 
     @Override
     public List<Shop> getAll() throws DAOException {
+        CON = C3p0Util.getConnection();
         List<Shop> shopList = new ArrayList<>();
 
         try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Shop")) {
@@ -103,6 +118,8 @@ public class JDBCShopDAO extends JDBCDAO<Shop, Integer> implements ShopDAO {
             }
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the list of shop", ex);
+        } finally {
+            C3p0Util.close(CON);
         }
 
         return shopList;
@@ -113,6 +130,8 @@ public class JDBCShopDAO extends JDBCDAO<Shop, Integer> implements ShopDAO {
         if (shop == null) {
             throw new DAOException("parameter not valid", new IllegalArgumentException("The passed shop is null"));
         }
+
+        CON = C3p0Util.getConnection();
 
         try (PreparedStatement stm = CON.prepareStatement(
                 "UPDATE Shop SET " +
@@ -131,6 +150,8 @@ public class JDBCShopDAO extends JDBCDAO<Shop, Integer> implements ShopDAO {
             }
         } catch (SQLException ex) {
             throw new DAOException("Impossible to update the shop", ex);
+        } finally {
+            C3p0Util.close(CON);
         }
 
         return shop;
@@ -138,11 +159,13 @@ public class JDBCShopDAO extends JDBCDAO<Shop, Integer> implements ShopDAO {
 
     @Override
     public List<Shop> getShopsByCategory(String category) throws DAOException {
-        List<Shop> shopList = new ArrayList<>();
-
         if (category == null) {
             throw new DAOException("category is null");
         }
+
+        CON = C3p0Util.getConnection();
+        List<Shop> shopList = new ArrayList<>();
+
         try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Shop WHERE Shop.category = ?")) {
             stm.setString(1, category);
             try (ResultSet rs = stm.executeQuery()) {
@@ -152,6 +175,8 @@ public class JDBCShopDAO extends JDBCDAO<Shop, Integer> implements ShopDAO {
             }
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the list of shop of specified category", ex);
+        } finally {
+            C3p0Util.close(CON);
         }
 
         return shopList;

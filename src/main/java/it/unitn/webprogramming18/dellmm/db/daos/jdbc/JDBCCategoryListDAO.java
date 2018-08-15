@@ -6,10 +6,7 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.jdbc.JDBCDAO;
 import it.unitn.webprogramming18.dellmm.javaBeans.CategoryList;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +37,9 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
                 {
                         throw new DAOException("categoryList bean is null");
                 }
+
+                CON = C3p0Util.getConnection();
+
                 try (PreparedStatement stm = CON.prepareStatement("INSERT INTO CategoryList (name, description, img1, img2, img3) VALUES (?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS))
                 {
 
@@ -63,12 +63,17 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
                 {
                         throw new DAOException("Impossible to insert the new categoryList", ex);
                 }
+                finally
+                {
+                        C3p0Util.close(CON);
+                }
         }
 
         @Override
         public Long getCount() throws DAOException
         {
                 CON = C3p0Util.getConnection();
+
                 try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM CategoryList"))
                 {
                         ResultSet counter = stmt.executeQuery();
@@ -81,7 +86,7 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
                 {
                         throw new DAOException("Impossible to count CategoryList", ex);
                 }
-                 finally
+                finally
                 {
                         C3p0Util.close(CON);
                 }
@@ -97,7 +102,7 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
                 {
                         throw new DAOException("primaryKey is null");
                 }
-                
+
                 CON = C3p0Util.getConnection();
                 try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM CategoryList WHERE ID = ?"))
                 {
@@ -114,7 +119,7 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
                 {
                         throw new DAOException("Impossible to get the categoryList for the passed primary key", ex);
                 }
-                 finally
+                finally
                 {
                         C3p0Util.close(CON);
                 }
@@ -142,7 +147,7 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
                 {
                         throw new DAOException("Impossible to get the list of categoryList", ex);
                 }
-                 finally
+                finally
                 {
                         C3p0Util.close(CON);
                 }
@@ -163,8 +168,8 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
                             "UPDATE CategoryList SET "
                             + "name = ?,"
                             + "description = ?,"
-                            + "img1 = ? "
-                            + "img2 = ? "
+                            + "img1 = ?, "
+                            + "img2 = ?, "
                             + "img3 = ? "
                             + "WHERE id = ?"
                 ))
@@ -186,11 +191,88 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
                 {
                         throw new DAOException("Impossible to update the categoryList", ex);
                 }
-                 finally
+                finally
                 {
                         C3p0Util.close(CON);
                 }
 
                 return categoryList;
+        }
+
+        @Override
+        public List<CategoryList> filter(Integer id, String name, String description) throws DAOException
+        {
+                CON = C3p0Util.getConnection();
+
+                List<CategoryList> categoryLists = new ArrayList<>();
+
+                try (PreparedStatement stm = CON.prepareStatement(
+                            "SELECT * FROM CategoryList WHERE "
+                            + "(? IS NULL OR id LIKE CONCAT('%',TRIM(BOTH \"'\" FROM QUOTE(?)),'%')) AND "
+                            + "(? IS NULL OR name LIKE CONCAT('%',TRIM(BOTH \"'\" FROM QUOTE(?)),'%')) AND "
+                            + "(? IS NULL OR description LIKE CONCAT('%',TRIM(BOTH \"'\" FROM QUOTE(?)),'%'))"
+                ))
+                {
+                        if (id == null)
+                        {
+                                stm.setNull(1, Types.INTEGER);
+                                stm.setNull(2, Types.INTEGER);
+                        }
+                        else
+                        {
+                                stm.setString(1, id.toString());
+                                stm.setString(2, id.toString());
+                        }
+
+                        stm.setString(3, name);
+                        stm.setString(4, name);
+
+                        stm.setString(5, description);
+                        stm.setString(6, description);
+
+                        try (ResultSet rs = stm.executeQuery())
+                        {
+                                while (rs.next())
+                                {
+                                        categoryLists.add(getCategoryListFromResultSet(rs));
+                                }
+                        }
+                }
+                catch (SQLException ex)
+                {
+                        throw new DAOException("Impossible to get the list of categoryList", ex);
+                }
+                finally
+                {
+                        C3p0Util.close(CON);
+                }
+
+                return categoryLists;
+        }
+
+        @Override
+        public void delete(Integer id) throws DAOException
+        {
+                CON = C3p0Util.getConnection();
+
+                try (PreparedStatement stm = CON.prepareStatement(
+                            "DELETE FROM CategoryList WHERE id = ?"
+                ))
+                {
+                        stm.setInt(1, id);
+
+                        if (stm.executeUpdate() != 1)
+                        {
+                                throw new DAOException("Impossible to delete the categoryList");
+                        }
+                }
+                catch (SQLException ex)
+                {
+                        throw new DAOException("Impossible to delete the categoryList", ex);
+                }
+                finally
+                {
+                        C3p0Util.close(CON);
+                }
         }
 }

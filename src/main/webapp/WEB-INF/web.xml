@@ -22,7 +22,7 @@
     <context-param>
         <description>The password of $dbuser</description>
         <param-name>dbpwd</param-name>
-        <param-value>passworddacambiare</param-value>
+        <param-value>123456</param-value>
     </context-param>
 
     <!--IMG FOLDERS SETTINGS-->
@@ -119,7 +119,6 @@
         <url-pattern>/modifyUser</url-pattern>
         <url-pattern>/modifyUser.json</url-pattern>
 
-        
         <url-pattern>/notifications</url-pattern>
         <url-pattern>/notifications.json</url-pattern>
 
@@ -590,7 +589,7 @@
     </servlet-mapping>
 
 
-    <!-- ERROR PAGE -->
+    <!-- ERROR PAGE 
     <error-page>
         <error-code>404</error-code>
         <location>/WEB-INF/jsp/error/404.jsp</location>
@@ -598,4 +597,5 @@
     <error-page>
         <location>/WEB-INF/errorPage.jsp</location>
     </error-page>
+    -->
 </web-app>

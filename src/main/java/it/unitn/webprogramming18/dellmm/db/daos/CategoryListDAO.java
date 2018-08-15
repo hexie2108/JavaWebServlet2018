@@ -18,11 +18,11 @@ public interface CategoryListDAO extends DAO<CategoryList, Integer> {
      */
     @Override
     public Long getCount() throws DAOException;
-    
+
     /**
      * Persists the new categoryList passed as parameter
      * to the storage system.
-     * 
+     *
      * @param categoryList the new categoryList to insert as entry
      * @return the id of the new persisted record.
      * @throws DAOException if an error occurred during the persist action.
@@ -63,4 +63,24 @@ public interface CategoryListDAO extends DAO<CategoryList, Integer> {
      */
     @Override
     public CategoryList update(CategoryList categoryList) throws DAOException;
+
+
+    /**
+     * Filter the categoryList with the conditions passed(null for none, always search for substring not whole string)
+     *
+     * @param id          substring of the ids to search
+     * @param name        substring of the names to search
+     * @param description substring of the descriptions to search
+     * @return The filtered list
+     * @throws DAOException
+     */
+    public List<CategoryList> filter(Integer id, String name, String description) throws DAOException;
+
+    /**
+     * Delete the categoryList with specified id
+     *
+     * @param id id of the categoryList to delete
+     * @throws DAOException
+     */
+    public void delete(Integer id) throws DAOException;
 }

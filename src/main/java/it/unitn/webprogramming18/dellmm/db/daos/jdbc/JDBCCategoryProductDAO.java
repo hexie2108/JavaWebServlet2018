@@ -46,7 +46,8 @@ public class JDBCCategoryProductDAO extends JDBCDAO<CategoryProduct, Integer> im
                 catch (SQLException ex)
                 {
                         throw new DAOException("Impossible to count categoryProduct", ex);
-                } finally
+                }
+                finally
                 {
                         C3p0Util.close(CON);
                 }
@@ -83,7 +84,8 @@ public class JDBCCategoryProductDAO extends JDBCDAO<CategoryProduct, Integer> im
                 catch (SQLException ex)
                 {
                         throw new DAOException("Impossible to insert the new categoryProduct", ex);
-                } finally
+                }
+                finally
                 {
                         C3p0Util.close(CON);
                 }
@@ -113,7 +115,8 @@ public class JDBCCategoryProductDAO extends JDBCDAO<CategoryProduct, Integer> im
                 catch (SQLException ex)
                 {
                         throw new DAOException("Impossible to get the categoryProduct for the passed primary key", ex);
-                } finally
+                }
+                finally
                 {
                         C3p0Util.close(CON);
                 }
@@ -140,15 +143,15 @@ public class JDBCCategoryProductDAO extends JDBCDAO<CategoryProduct, Integer> im
                 catch (SQLException ex)
                 {
                         throw new DAOException("Impossible to get the list of categoryProduct", ex);
-                } finally
+                }
+                finally
                 {
                         C3p0Util.close(CON);
                 }
 
                 return categoryProductList;
         }
-        
-        
+
         @Override
         public List<CategoryProduct> getCategoryProductList(Integer index, Integer number) throws DAOException
         {
@@ -161,7 +164,7 @@ public class JDBCCategoryProductDAO extends JDBCDAO<CategoryProduct, Integer> im
 
                 CON = C3p0Util.getConnection();
 
-                try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Categoryproduct ORDER BY id DESC LIMIT ?,?"))
+                try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM CategoryProduct ORDER BY id DESC LIMIT ?,?"))
                 {
                         stm.setInt(1, index);
                         stm.setInt(2, number);
@@ -176,7 +179,8 @@ public class JDBCCategoryProductDAO extends JDBCDAO<CategoryProduct, Integer> im
                 catch (SQLException ex)
                 {
                         throw new DAOException("Impossible to get the list of Catogeryproduct", ex);
-                } finally
+                }
+                finally
                 {
                         C3p0Util.close(CON);
                 }
@@ -216,13 +220,12 @@ public class JDBCCategoryProductDAO extends JDBCDAO<CategoryProduct, Integer> im
                 catch (SQLException ex)
                 {
                         throw new DAOException("Impossible to update the categoryProduct", ex);
-                } finally
+                }
+                finally
                 {
                         C3p0Util.close(CON);
                 }
 
                 return categoryProduct;
         }
-
-        
 }

@@ -49,7 +49,8 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
                 catch (SQLException ex)
                 {
                         throw new DAOException("Impossible to count list", ex);
-                } finally
+                }
+                finally
                 {
                         C3p0Util.close(CON);
                 }
@@ -60,6 +61,7 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
         @Override
         public Integer insert(ShoppingList list) throws DAOException
         {
+                // TODO: Check new return type
                 if (list == null)
                 {
                         throw new DAOException("list bean is null");
@@ -88,10 +90,72 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
                 catch (SQLException ex)
                 {
                         throw new DAOException("Impossible to insert the new list", ex);
-                } finally
+                }
+                finally
                 {
                         C3p0Util.close(CON);
                 }
+        }
+
+        @Override
+        public ShoppingList getByPrimaryKey(Integer primaryKey) throws DAOException
+        {
+                ShoppingList list = null;
+                if (primaryKey == null)
+                {
+                        throw new DAOException("primaryKey is null");
+                }
+
+                CON = C3p0Util.getConnection();
+                try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM List WHERE id = ?"))
+                {
+                        stm.setInt(1, primaryKey);
+                        try (ResultSet rs = stm.executeQuery())
+                        {
+                                if (rs.next())
+                                {
+                                        list = getListFromResultSet(rs);
+                                }
+                        }
+                }
+                catch (SQLException ex)
+                {
+                        throw new DAOException("Impossible to get the list for the passed primary key", ex);
+                }
+                finally
+                {
+                        C3p0Util.close(CON);
+                }
+
+                return list;
+        }
+
+        @Override
+        public List<ShoppingList> getAll() throws DAOException
+        {
+                List<ShoppingList> lists = new ArrayList<>();
+
+                CON = C3p0Util.getConnection();
+                try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM List"))
+                {
+                        try (ResultSet rs = stm.executeQuery())
+                        {
+                                while (rs.next())
+                                {
+                                        lists.add(getListFromResultSet(rs));
+                                }
+                        }
+                }
+                catch (SQLException ex)
+                {
+                        throw new DAOException("Impossible to get the list of List", ex);
+                }
+                finally
+                {
+                        C3p0Util.close(CON);
+                }
+
+                return lists;
         }
 
         @Override
@@ -128,7 +192,8 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
                 catch (SQLException ex)
                 {
                         throw new DAOException("Impossible to update the list", ex);
-                } finally
+                }
+                finally
                 {
                         C3p0Util.close(CON);
                 }
@@ -136,71 +201,9 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
                 return list;
         }
 
-        @Override
-        public ShoppingList getByPrimaryKey(Integer primaryKey) throws DAOException
+        public java.util.List<ShoppingList> getOwnedUserListsByUserId(Integer userId) throws DAOException
         {
-                ShoppingList list = null;
-                if (primaryKey == null)
-                {
-                        throw new DAOException("primaryKey is null");
-                }
-
-                CON = C3p0Util.getConnection();
-                try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM List WHERE id = ?"))
-                {
-                        stm.setInt(1, primaryKey);
-                        try (ResultSet rs = stm.executeQuery())
-                        {
-                                if (rs.next())
-                                {
-                                        list = getListFromResultSet(rs);
-                                }
-                        }
-                }
-                catch (SQLException ex)
-                {
-                        throw new DAOException("Impossible to get the list for the passed primary key", ex);
-                } finally
-                {
-                        C3p0Util.close(CON);
-                }
-
-                return list;
-        }
-
-        @Override
-        public List<ShoppingList> getAll() throws DAOException
-        {
-                List<ShoppingList> lists = new ArrayList<>();
-
-                CON = C3p0Util.getConnection();
-                try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM List"))
-                {
-                        try (ResultSet rs = stm.executeQuery())
-                        {
-                                while (rs.next())
-                                {
-                                        lists.add(getListFromResultSet(rs));
-                                }
-                        }
-                }
-                catch (SQLException ex)
-                {
-                        throw new DAOException("Impossible to get the list of List", ex);
-                } finally
-                {
-                        C3p0Util.close(CON);
-                }
-
-                return lists;
-        }
-
-        @Override
-        public List<ShoppingList> getOwnedUserListsByUserId(Integer userId) throws DAOException
-        {
-
-                List<ShoppingList> lists = new ArrayList<>();
-
+                java.util.List<ShoppingList> lists = new ArrayList<>();
                 if (userId == null)
                 {
                         throw new DAOException("userId is null");
@@ -221,7 +224,8 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
                 catch (SQLException ex)
                 {
                         throw new DAOException("Impossible to get the owner list of user's List", ex);
-                } finally
+                }
+                finally
                 {
                         C3p0Util.close(CON);
                 }
@@ -255,7 +259,8 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
                 catch (SQLException ex)
                 {
                         throw new DAOException("Impossible to get the shared list of user's List", ex);
-                } finally
+                }
+                finally
                 {
                         C3p0Util.close(CON);
                 }
@@ -287,7 +292,8 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
                 catch (SQLException ex)
                 {
                         throw new DAOException("Impossible to get the list of user's List", ex);
-                } finally
+                }
+                finally
                 {
                         C3p0Util.close(CON);
                 }
@@ -319,7 +325,8 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
                 catch (SQLException ex)
                 {
                         throw new DAOException("Impossible to get the list of user's List", ex);
-                } finally
+                }
+                finally
                 {
                         C3p0Util.close(CON);
                 }
@@ -352,7 +359,8 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
                 catch (SQLException ex)
                 {
                         throw new DAOException("Impossible to count list", ex);
-                } finally
+                }
+                finally
                 {
                         C3p0Util.close(CON);
                 }
@@ -384,7 +392,8 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
                 catch (SQLException ex)
                 {
                         throw new DAOException("Impossible to update the list", ex);
-                } finally
+                }
+                finally
                 {
                         C3p0Util.close(CON);
                 }

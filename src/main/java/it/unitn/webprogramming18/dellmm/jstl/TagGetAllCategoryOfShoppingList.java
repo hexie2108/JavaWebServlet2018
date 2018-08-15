@@ -9,6 +9,7 @@ import it.unitn.webprogramming18.dellmm.db.daos.CategoryListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCCategoryListDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.javaBeans.CategoryList;
+
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.jsp.JspException;
@@ -21,29 +22,24 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
  *
  * @author mikuc
  */
-public class TagGetAllCategoryOfShoppingList extends SimpleTagSupport
-{
+public class TagGetAllCategoryOfShoppingList extends SimpleTagSupport {
 
-        private final CategoryListDAO categoryListDAO = new JDBCCategoryListDAO();
+    private final CategoryListDAO categoryListDAO = new JDBCCategoryListDAO();
 
-        @Override
-        public void doTag() throws JspException, IOException
-        {
+    @Override
+    public void doTag() throws JspException, IOException {
 
-                List<CategoryList> categoryList;
-                try
-                {
-                        categoryList = categoryListDAO.getAll();
-                }
-                catch (DAOException ex)
-                {
-                        throw new JspException(ex.getMessage(), ex);
-                }
-
-                //set la lista di categoria  nella richiesta
-                ((PageContext) getJspContext()).getRequest().setAttribute("categoryList", categoryList);
-
-
+        List<CategoryList> categoryList;
+        try {
+            categoryList = categoryListDAO.getAll();
+        } catch (DAOException ex) {
+            throw new JspException(ex.getMessage(), ex);
         }
+
+        //set la lista di categoria  nella richiesta
+        ((PageContext) getJspContext()).getRequest().setAttribute("categoryList", categoryList);
+
+
+    }
 
 }

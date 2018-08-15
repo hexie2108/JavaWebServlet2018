@@ -29,53 +29,53 @@ import java.util.stream.Collectors;
  * @author mikuc
  */
 @WebServlet(name = "ResetPasswordServlet")
-public class ResetPasswordServlet extends HttpServlet
-{
+public class ResetPasswordServlet extends HttpServlet {
+    public static final String ID_KEY = "id";
 
-        private static final String JSP_PAGE_PATH = "/WEB-INF/jsp/userSystem/resetPassword.jsp";
-        private UserDAO userDAO;
+    public static final String MSG_KEY = "message";
 
-        @Override
-        public void init() throws ServletException
-        {
-                userDAO = new JDBCUserDAO();
-        }
+    private static final String JSP_PAGE_PATH = "/WEB-INF/jsp/userSystem/resetPassword.jsp";
 
-        @Override
-        protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-        {
+    private UserDAO userDAO;
 
-                //get i parametri necessari
-                String email = request.getParameter(FormValidator.EMAIL_KEY);
-                String resetPwdLink = request.getParameter("resetPwdLink");
+    @Override
+    public void init() throws ServletException {
+        userDAO = new JDBCUserDAO();
+    }
 
-                CheckErrorUtils.isNull(email, "il parametro email è nullo");
-                CheckErrorUtils.isNull(resetPwdLink, "il parametro resetPwdLink è nullo");
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
 
-                try
-                {
-                        //se resetPwdLink è valido
-                        if (userDAO.checkUserByEmailAndResetPwdLink(email, resetPwdLink))
-                        {
+            //get i parametri necessari
+            String email = request.getParameter(FormValidator.EMAIL_KEY);
+            String resetPwdLink = request.getParameter("resetPwdLink");
 
-                                //set il titolo della pagina
-                                request.setAttribute(ConstantsUtils.HEAD_TITLE, "reset password");
-                                request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
-                        }
-                        //se non è valido
-                        else
-                        {
-                                //ritorna alla pagina di login
-                                String result = "resetLinkInvalid";
-                                String prevUrl = getServletContext().getContextPath() + "/login?notice=" + result;
-                                response.sendRedirect(response.encodeRedirectURL(prevUrl));
-                        }
-                }
-                catch (DAOException ex)
-                {
-                        throw new ServletException(ex.getMessage(), ex);
-                }
+            CheckErrorUtils.isNull(email, "il parametro email è nullo");
+            CheckErrorUtils.isNull(resetPwdLink, "il parametro resetPwdLink è nullo");
 
-        }
+            try
+            {
+                    //se resetPwdLink è valido
+                    if (userDAO.checkUserByEmailAndResetPwdLink(email, resetPwdLink))
+                    {
 
+                            //set il titolo della pagina
+                            request.setAttribute(ConstantsUtils.HEAD_TITLE, "reset password");
+                            request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
+                    }
+                    //se non è valido
+                    else
+                    {
+                            //ritorna alla pagina di login
+                            String result = "resetLinkInvalid";
+                            String prevUrl = getServletContext().getContextPath() + "/login?notice=" + result;
+                            response.sendRedirect(response.encodeRedirectURL(prevUrl));
+                    }
+            }
+            catch (DAOException ex)
+            {
+                    throw new ServletException(ex.getMessage(), ex);
+            }
+    }
 }

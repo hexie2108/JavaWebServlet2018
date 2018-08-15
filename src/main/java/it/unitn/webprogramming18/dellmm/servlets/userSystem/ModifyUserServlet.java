@@ -3,8 +3,6 @@ package it.unitn.webprogramming18.dellmm.servlets.userSystem;
 import it.unitn.webprogramming18.dellmm.db.daos.UserDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCUserDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
-import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
-import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
 import it.unitn.webprogramming18.dellmm.util.FormValidator;
@@ -30,32 +28,28 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class ModifyUserServlet extends HttpServlet
-{
+@WebServlet(name = "ModifyUserServlet")
+@MultipartConfig
+public class ModifyUserServlet extends HttpServlet {
 
-        private static final String MODIFY_USER_JSP = "/WEB-INF/jsp/userSystem/modifyUser.jsp";
+    private static final String MODIFY_USER_JSP = "/WEB-INF/jsp/userSystem/modifyUser.jsp";
 
-        private UserDAO userDAO;
+    private UserDAO userDAO;
 
-        @Override
-        public void init() throws ServletException
-        {
+    @Override
+    public void init() throws ServletException {
 
-                userDAO = new JDBCUserDAO();
+        userDAO = new JDBCUserDAO();
 
-        }
+    }
 
-        @Override
-        protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-        {
-                if (request.getRequestURI().endsWith(".json"))
-                {
-                        ServletUtility.sendError(request, response, 400, "generic.errors.postOnly");
-                }
-                else
-                {
-                        HttpSession session = request.getSession();
-                        User user = (User) session.getAttribute("user");
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (request.getRequestURI().endsWith(".json")) {
+            ServletUtility.sendError(request, response, 400, "generic.errors.postOnly");
+        } else {
+            HttpSession session = request.getSession();
+            User user = (User) session.getAttribute("user");
 
                         if (user.getImg().matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"))
                         {
@@ -66,32 +60,28 @@ public class ModifyUserServlet extends HttpServlet
                                 request.setAttribute(FormValidator.AVATAR_KEY, user.getImg());
                         }
 
-                        request.getRequestDispatcher(MODIFY_USER_JSP).forward(request, response);
-                }
+            request.getRequestDispatcher(MODIFY_USER_JSP).forward(request, response);
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Ottieni configurazione cartella avatars
+        String avatarsFolder = getServletContext().getInitParameter("avatarsFolder");
+        if (avatarsFolder == null) {
+            throw new ServletException("Avatars folder not configured");
         }
 
-        @Override
-        protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-        {
-                // Ottieni configurazione cartella avatars
-                String avatarsFolder = getServletContext().getInitParameter("avatarsFolder");
-                if (avatarsFolder == null)
-                {
-                        throw new ServletException("Avatars folder not configured");
-                }
+        String realContextPath = request.getServletContext().getRealPath(File.separator);
+        if (!realContextPath.endsWith("/")) {
+            realContextPath += "/";
+        }
 
-                String realContextPath = request.getServletContext().getRealPath(File.separator);
-                if (!realContextPath.endsWith("/"))
-                {
-                        realContextPath += "/";
-                }
+        Path path = Paths.get(realContextPath + avatarsFolder);
 
-                Path path = Paths.get(realContextPath + avatarsFolder);
-
-                if (!Files.exists(path))
-                {
-                        Files.createDirectories(path);
-                }
+        if (!Files.exists(path)) {
+            Files.createDirectories(path);
+        }
 
                 // Ottieni tutti i parametri
                 String firstName = request.getParameter(FormValidator.FIRST_NAME_KEY);
@@ -101,10 +91,10 @@ public class ModifyUserServlet extends HttpServlet
 
                 Part avatarImg = request.getPart(FormValidator.AVATAR_IMG_KEY);
 
-                HttpSession session = request.getSession(false);
-                User user = (User) session.getAttribute("user");
+        HttpSession session = request.getSession(false);
+        User user = (User) session.getAttribute("user");
 
-                HashMap<String, Object> kv = new HashMap<>();
+        HashMap<String, Object> kv = new HashMap<>();
 
                 if (firstName != null && !firstName.isEmpty())
                 {
@@ -165,46 +155,38 @@ public class ModifyUserServlet extends HttpServlet
                         user.setName(firstName);
                 }
 
-                if (!lastName.isEmpty())
-                {
-                        user.setSurname(lastName);
-                }
+        if (!lastName.isEmpty()) {
+            user.setSurname(lastName);
+        }
 
-                if (!email.isEmpty())
-                {
-                        user.setEmail(email);
-                }
+        if (!email.isEmpty()) {
+            user.setEmail(email);
+        }
 
-                if (!avatar.isEmpty())
-                {
-                        String avatarName = avatar;
+        if (!avatar.isEmpty()) {
+            String avatarName = avatar;
 
                         if (avatar.equals(FormValidator.CUSTOM_AVATAR))
                         {
                                 avatarName = UUID.randomUUID().toString();
 
-                                try (InputStream fileContent = avatarImg.getInputStream())
-                                {
-                                        File file = new File(path.toString(), avatarName.toString());
-                                        Files.copy(fileContent, file.toPath());
-                                }
-                                catch (FileAlreadyExistsException ex)
-                                { // Molta sfiga
-                                        ServletUtility.sendError(request, response, 500, "generic.errors.fileCollision");
-                                        getServletContext().log("File \"" + avatarName.toString() + "\" already exists on the server");
-                                        return;
-                                }
-                                catch (RuntimeException ex)
-                                {
-                                        ServletUtility.sendError(request, response, 500, "generic.errors.unuploudableFile");
-                                        getServletContext().log("impossible to upload the file", ex);
-                                        return;
-                                }
-                        }
+                try (InputStream fileContent = avatarImg.getInputStream()) {
+                    File file = new File(path.toString(), avatarName.toString());
+                    Files.copy(fileContent, file.toPath());
+                } catch (FileAlreadyExistsException ex) { // Molta sfiga
+                    ServletUtility.sendError(request, response, 500, "generic.errors.fileCollision");
+                    getServletContext().log("File \"" + avatarName.toString() + "\" already exists on the server");
+                    return;
+                } catch (RuntimeException ex) {
+                    ServletUtility.sendError(request, response, 500, "generic.errors.unuploudableFile");
+                    getServletContext().log("impossible to upload the file", ex);
+                    return;
+                }
+            }
 
-                        String oldImg = user.getImg();
+            String oldImg = user.getImg();
 
-                        user.setImg(avatarName);
+            user.setImg(avatarName);
 
                         if (FormValidator.DEFAULT_AVATARS.stream().noneMatch(oldImg::equals))
                         {
@@ -221,29 +203,22 @@ public class ModifyUserServlet extends HttpServlet
                         }
                 }
 
-                try
-                {
-                        userDAO.update(user);
-                }
-                catch (DAOException e)
-                {
-                        ServletUtility.sendError(request, response, 500, "generic.unupdatableUser");
-                        return;
-                }
-
-                if (request.getRequestURI().endsWith(".json"))
-                {
-                        ServletUtility.sendJSON(request, response, 200, new HashMap<>());
-                }
-                else
-                {
-                        String contextPath = getServletContext().getContextPath();
-                        if (!contextPath.endsWith("/"))
-                        {
-                                contextPath += "/";
-                        }
-
-                        response.sendRedirect(contextPath + ConstantsUtils.MODIFY_USER);
-                }
+        try {
+            userDAO.update(user);
+        } catch (DAOException e) {
+            ServletUtility.sendError(request, response, 500, "generic.unupdatableUser");
+            return;
         }
+
+        if (request.getRequestURI().endsWith(".json")) {
+            ServletUtility.sendJSON(request, response, 200, new HashMap<>());
+        } else {
+            String contextPath = getServletContext().getContextPath();
+            if (!contextPath.endsWith("/")) {
+                contextPath += "/";
+            }
+
+            response.sendRedirect(contextPath + ConstantsUtils.MODIFY_USER);
+        }
+    }
 }
