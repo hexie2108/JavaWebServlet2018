@@ -18,11 +18,11 @@ public interface CommentDAO extends DAO<Comment, Integer> {
      */
     @Override
     public Long getCount() throws DAOException;
-    
+
     /**
      * Persists the new comment passed as parameter
      * to the storage system.
-     * 
+     *
      * @param comment the new comment to insert as entry
      * @return the id of the new persisted record.
      * @throws DAOException if an error occurred during the persist action.
@@ -72,4 +72,32 @@ public interface CommentDAO extends DAO<Comment, Integer> {
      * @throws DAOException
      */
     public HashMap<Integer, String> getCommentsOnListByListId(String listId) throws DAOException;
+
+    /**
+     * get tutti i commenti di una lista (in formato lista)
+     *
+     * @param listId id lista
+     * @return lista di commento ordinato in base id
+     * @throws DAOException
+     */
+    public List<Comment> getCommentsOnListByListId2(Integer listId) throws DAOException;
+
+    /**
+     * get il numero di commenti di una lista
+     *
+     * @param listId id lista
+     * @return il numero di commenti
+     * @throws DAOException
+     */
+    public Integer getNumberOfCommentsByListId(Integer listId) throws DAOException;
+
+
+    /**
+     * eliminare il commento
+     *
+     * @param commentId id commento
+     * @throws DAOException
+     */
+
+    public void deleteCommentById(Integer commentId) throws DAOException;
 }

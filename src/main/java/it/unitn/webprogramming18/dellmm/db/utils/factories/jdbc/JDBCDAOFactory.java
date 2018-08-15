@@ -6,18 +6,26 @@
  */
 package it.unitn.webprogramming18.dellmm.db.utils.factories.jdbc;
 
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 import it.unitn.webprogramming18.dellmm.db.utils.DAO;
+import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.db.utils.jdbc.JDBCDAO;
 
+import java.beans.PropertyVetoException;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
+import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.ServletContext;
 
 /**
  * This JDBC implementation of {@code DAOFactory}.
@@ -36,8 +44,8 @@ public class JDBCDAOFactory implements DAOFactory {
      * {@code DAOFactory}.
      *
      * @param dbUrl the url to access the database.
-     * @throws DAOFactoryException if an error occurred during {@code DAOFactory}
-     *                             creation.
+     * @throws DAOFactoryException if an error occurred during
+     *                             {@code DAOFactory} creation.
      * @author Stefano Chirico
      * @since 1.0.170417
      */
@@ -45,7 +53,7 @@ public class JDBCDAOFactory implements DAOFactory {
         super();
 
         try {
-            Class.forName("com.mysql.jdbc.Driver", true, getClass().getClassLoader());
+            Class.forName("com.mysql.jdbc.Driver");
 
         } catch (ClassNotFoundException cnfe) {
             cnfe.printStackTrace();
@@ -60,6 +68,7 @@ public class JDBCDAOFactory implements DAOFactory {
         }
 
         DAO_CACHE = new HashMap<>();
+
     }
 
     /**
@@ -73,6 +82,7 @@ public class JDBCDAOFactory implements DAOFactory {
      */
     public static void configure(String dbUrl, String dbUser, String dbPwd) throws DAOFactoryException {
         if (instance == null) {
+
             instance = new JDBCDAOFactory(dbUrl, dbUser, dbPwd);
         } else {
             throw new DAOFactoryException("DAOFactory already configured. You can call configure only one time");
@@ -103,11 +113,17 @@ public class JDBCDAOFactory implements DAOFactory {
      */
     @Override
     public void shutdown() {
+
         try {
-            DriverManager.getConnection("jdbc:derby:;shutdown=true"); //TODO: Indagare
-        } catch (SQLException sqle) {
-            Logger.getLogger(JDBCDAOFactory.class.getName()).info(sqle.getMessage());
+            this.CON.close();
+            Enumeration<Driver> drivers = DriverManager.getDrivers();
+            while (drivers.hasMoreElements()) {
+                DriverManager.deregisterDriver(drivers.nextElement());
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(JDBCDAOFactory.class.getName()).info(e.getMessage());
         }
+
     }
 
     /**
@@ -118,7 +134,8 @@ public class JDBCDAOFactory implements DAOFactory {
      * @param daoInterface the class instance of the {@code db} to get.
      * @return the concrete {@code db} which type is the class passed as
      * parameter.
-     * @throws DAOFactoryException if an error occurred during the operation.
+     * @throws DAOFactoryException if an error occurred during the
+     *                             operation.
      * @author Stefano Chirico
      * @since 1.0.170417
      */
@@ -146,4 +163,5 @@ public class JDBCDAOFactory implements DAOFactory {
             throw new DAOFactoryException("Impossible to return the DAO", ex);
         }
     }
+
 }

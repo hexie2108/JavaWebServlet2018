@@ -1,12 +1,11 @@
 package it.unitn.webprogramming18.dellmm.servlets.userSystem;
 
 import it.unitn.webprogramming18.dellmm.db.daos.UserDAO;
+import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCUserDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
-import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
-import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
-import it.unitn.webprogramming18.dellmm.util.PagePathsConstants;
-import it.unitn.webprogramming18.dellmm.util.RegistrationValidator;
+import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
+import it.unitn.webprogramming18.dellmm.util.FormValidator;
 import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 
 import javax.servlet.ServletException;
@@ -32,37 +31,34 @@ import java.util.stream.Collectors;
 @WebServlet(name = "ModifyUserServlet")
 @MultipartConfig
 public class ModifyUserServlet extends HttpServlet {
-    private static final String MODIFY_USER_JSP = "/WEB-INF/jsp/modifyUser.jsp";
+
+    private static final String MODIFY_USER_JSP = "/WEB-INF/jsp/userSystem/modifyUser.jsp";
 
     private UserDAO userDAO;
 
     @Override
     public void init() throws ServletException {
-        DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
-        if (daoFactory == null) {
-            throw new ServletException("Impossible to get db factory for user storage system");
-        }
 
-        try {
-            userDAO = daoFactory.getDAO(UserDAO.class);
-        } catch (DAOFactoryException ex) {
-            throw new ServletException("Impossible to get db factory for user storage system", ex);
-        }
+        userDAO = new JDBCUserDAO();
+
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if(request.getRequestURI().endsWith(".json")) {
+        if (request.getRequestURI().endsWith(".json")) {
             ServletUtility.sendError(request, response, 400, "generic.errors.postOnly");
         } else {
             HttpSession session = request.getSession();
             User user = (User) session.getAttribute("user");
 
-            if (user.getImg().matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")) {
-                request.setAttribute(RegistrationValidator.AVATAR_KEY, "");
-            } else {
-                request.setAttribute(RegistrationValidator.AVATAR_KEY, user.getImg());
-            }
+                        if (user.getImg().matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"))
+                        {
+                                request.setAttribute(FormValidator.AVATAR_KEY, "");
+                        }
+                        else
+                        {
+                                request.setAttribute(FormValidator.AVATAR_KEY, user.getImg());
+                        }
 
             request.getRequestDispatcher(MODIFY_USER_JSP).forward(request, response);
         }
@@ -87,63 +83,77 @@ public class ModifyUserServlet extends HttpServlet {
             Files.createDirectories(path);
         }
 
-        // Ottieni tutti i parametri
-        String firstName = request.getParameter(RegistrationValidator.FIRST_NAME_KEY);
-        String lastName = request.getParameter(RegistrationValidator.LAST_NAME_KEY);
-        String email = request.getParameter(RegistrationValidator.EMAIL_KEY);
-        String avatar = request.getParameter(RegistrationValidator.AVATAR_KEY);
+                // Ottieni tutti i parametri
+                String firstName = request.getParameter(FormValidator.FIRST_NAME_KEY);
+                String lastName = request.getParameter(FormValidator.LAST_NAME_KEY);
+                String email = request.getParameter(FormValidator.EMAIL_KEY);
+                String avatar = request.getParameter(FormValidator.AVATAR_KEY);
 
-        Part avatarImg = request.getPart(RegistrationValidator.AVATAR_IMG_KEY);
+                Part avatarImg = request.getPart(FormValidator.AVATAR_IMG_KEY);
 
         HttpSession session = request.getSession(false);
-        User user = (User)session.getAttribute("user");
+        User user = (User) session.getAttribute("user");
 
         HashMap<String, Object> kv = new HashMap<>();
 
-        if (firstName != null && !firstName.isEmpty()) {
-            kv.put(RegistrationValidator.FIRST_NAME_KEY, firstName);
-        } else {
-            firstName = "";
-        }
+                if (firstName != null && !firstName.isEmpty())
+                {
+                        kv.put(FormValidator.FIRST_NAME_KEY, firstName);
+                }
+                else
+                {
+                        firstName = "";
+                }
 
-        if (lastName != null && !lastName.isEmpty()) {
-            kv.put(RegistrationValidator.LAST_NAME_KEY, lastName);
-        } else {
-            lastName = "";
-        }
+                if (lastName != null && !lastName.isEmpty())
+                {
+                        kv.put(FormValidator.LAST_NAME_KEY, lastName);
+                }
+                else
+                {
+                        lastName = "";
+                }
 
-        if (email != null && !email.isEmpty()) {
-            kv.put(RegistrationValidator.EMAIL_KEY, email);
-        } else {
-            email = "";
-        }
+                if (email != null && !email.isEmpty())
+                {
+                        kv.put(FormValidator.EMAIL_KEY, email);
+                }
+                else
+                {
+                        email = "";
+                }
 
-        if (avatar != null && !avatar.isEmpty()) {
-            kv.put(RegistrationValidator.AVATAR_KEY, avatar);
-            kv.put(RegistrationValidator.AVATAR_IMG_KEY, avatarImg);
-        } else {
-            avatar = "";
-        }
+                if (avatar != null && !avatar.isEmpty())
+                {
+                        kv.put(FormValidator.AVATAR_KEY, avatar);
+                        kv.put(FormValidator.AVATAR_IMG_KEY, avatarImg);
+                }
+                else
+                {
+                        avatar = "";
+                }
+/*
+                // Usa il validator per verifiacare la conformità
+                Map<String, String> messages
+                            = FormValidator.partialValidate(userDAO, kv)
+                                        .entrySet()
+                                        .stream()
+                                        .collect(Collectors.toMap(
+                                                    (Map.Entry<String, FormValidator.ErrorMessage> e) -> e.getKey(),
+                                                    (Map.Entry<String, FormValidator.ErrorMessage> e) -> FormValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString()
+                                        )
+                                        );
 
-        // Usa il validator per verifiacare la conformità
-        Map<String, String> messages =
-                RegistrationValidator.partialValidate(userDAO, kv)
-                        .entrySet()
-                        .stream()
-                        .collect(Collectors.toMap(
-                                (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> e.getKey(),
-                                (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> RegistrationValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString()
-                                )
-                        );
-
-        if (!messages.isEmpty()) {
-            ServletUtility.sendValidationError(request, response, 400, messages);
-            return;
-        }
-
-        if (!firstName.isEmpty()) {
-            user.setName(firstName);
-        }
+                if (!messages.isEmpty())
+                {
+                        ServletUtility.sendValidationError(request, response, 400, messages);
+                        return;
+                }
+*/
+                if (!firstName.isEmpty())
+                {
+                        user.setName(firstName);
+                }
 
         if (!lastName.isEmpty()) {
             user.setSurname(lastName);
@@ -156,8 +166,9 @@ public class ModifyUserServlet extends HttpServlet {
         if (!avatar.isEmpty()) {
             String avatarName = avatar;
 
-            if(avatar.equals(RegistrationValidator.CUSTOM_AVATAR)) {
-                avatarName = UUID.randomUUID().toString();
+                        if (avatar.equals(FormValidator.CUSTOM_AVATAR))
+                        {
+                                avatarName = UUID.randomUUID().toString();
 
                 try (InputStream fileContent = avatarImg.getInputStream()) {
                     File file = new File(path.toString(), avatarName.toString());
@@ -177,16 +188,20 @@ public class ModifyUserServlet extends HttpServlet {
 
             user.setImg(avatarName);
 
-            if (RegistrationValidator.DEFAULT_AVATARS.stream().noneMatch(oldImg::equals) ) {
-                Path toDelete = Paths.get(path.toString(), oldImg);
-                try {
-                    Files.delete(toDelete);
-                } catch (IOException e) {
-                    // If we can't delete the old image we just log and continue
-                    getServletContext().log("File " + toDelete.toString() + " cannot be delete");
+                        if (FormValidator.DEFAULT_AVATARS.stream().noneMatch(oldImg::equals))
+                        {
+                                Path toDelete = Paths.get(path.toString(), oldImg);
+                                try
+                                {
+                                        Files.delete(toDelete);
+                                }
+                                catch (IOException e)
+                                {
+                                        // If we can't delete the old image we just log and continue
+                                        getServletContext().log("File " + toDelete.toString() + " cannot be delete");
+                                }
+                        }
                 }
-            }
-        }
 
         try {
             userDAO.update(user);
@@ -203,7 +218,7 @@ public class ModifyUserServlet extends HttpServlet {
                 contextPath += "/";
             }
 
-            response.sendRedirect(contextPath + PagePathsConstants.MODIFY_USER);
+            response.sendRedirect(contextPath + ConstantsUtils.MODIFY_USER);
         }
     }
 }

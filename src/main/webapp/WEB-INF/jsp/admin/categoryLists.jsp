@@ -1,11 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<%@ page import="it.unitn.webprogramming18.dellmm.util.RegistrationValidator"%>
-<%@ page import="it.unitn.webprogramming18.dellmm.util.PagePathsConstants"%>
+<%@ page import="it.unitn.webprogramming18.dellmm.util.RegistrationValidator" %>
+<%@ page import="it.unitn.webprogramming18.dellmm.util.ConstantsUtils" %>
 
-<%@ include file="../../jspf/i18n.jsp"%>
+<%@ include file="../../jspf/i18n.jsp" %>
 <html>
 <head>
     <meta charset="utf-8">
@@ -17,12 +17,13 @@
     <script src="<c:url value="/libs/bootstrap-4.1.1-dist/js/bootstrap.bundle.min.js"/>"></script>
     <link rel="stylesheet" href="<c:url value="/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css"/>">
 
-    <link rel="stylesheet" href="<c:url value="/libs/fontawesome-free-5.1.1-web/css/all.min.css"/>" type="text/css" media="all">
+    <link rel="stylesheet" href="<c:url value="/libs/fontawesome-free-5.1.1-web/css/all.min.css"/>" type="text/css"
+          media="all">
 
     <link rel="stylesheet" href="<c:url value="/css/adminPages.css"/>" type="text/css" media="all"/>
 </head>
 <body>
-<%@ include file="../../jspf/i18n_switcher.jsp"%>
+<%@ include file="../../jspf/i18n_switcher.jsp" %>
 
 <form method="GET" id="filterForm"></form>
 <div class="table-responsive">
@@ -44,11 +45,15 @@
         <tr>
             <td><input class="form-control" type="number" name="id" form="filterForm" value="${param['id']}"/></td>
             <td><input class="form-control" type="text" name="name" form="filterForm" value="${param['name']}"/></td>
-            <td><input class="form-control" type="text" name="description" form="filterForm" value="${param['description']}"/></td>
+            <td><input class="form-control" type="text" name="description" form="filterForm"
+                       value="${param['description']}"/></td>
             <td></td>
             <td></td>
             <td></td>
-            <td><button class="btn btn-primary" id="btnNewCategoryList" data-toggle="modal" data-target="#modifyCategoryListModal"><i class="fas fa-plus"></i></button></td>
+            <td>
+                <button class="btn btn-primary" id="btnNewCategoryList" data-toggle="modal"
+                        data-target="#modifyCategoryListModal"><i class="fas fa-plus"></i></button>
+            </td>
         </tr>
         </tfoot>
     </table>
@@ -56,13 +61,13 @@
     </div>
 </div>
 
-<%@include file="modules/modifyCategoryList.jsp"%>
+<%@include file="modules/modifyCategoryList.jsp" %>
 
 <link rel="stylesheet" type="text/css" href="<c:url value="/libs/DataTables/datatables.min.css"/>"/>
 <script src="<c:url value="/js/verification.js"/>"></script>
 <script src="<c:url value="/libs/DataTables/datatables.min.js"/>"></script>
 <script>
-    $(document).ready( function () {
+    $(document).ready(function () {
         const resDiv = $('#id-res');
         const tableDiv = $('#categoryTable');
 
@@ -123,7 +128,7 @@
                 'img3': divImg3.find('> div > .input-group')
             };
 
-            $.each(m, function(key, value){
+            $.each(m, function (key, value) {
                 if (realData[key]) {
                     value.find('> .input-group-append, > input').show();
                     value.find('> button.ins-btn').hide();
@@ -144,10 +149,10 @@
                 5: 'img3'
             };
 
-            $.each(map, function(key, val){
+            $.each(map, function (key, val) {
                 if (data[val] !== undefined) { // Se val non è una stringa vuota(non c'è una x-esima immagine)
                     $('td', row).eq(key).html(
-                        $('<img/>',{
+                        $('<img/>', {
                             src: prefixUrl + data[val],
                             class: "img-responsive img-table"
                         })
@@ -161,17 +166,19 @@
                         $('<button/>', {
                             class: 'btn btn-md btn-primary',
                             title: '<fmt:message key="categoryLists.label.modifyCategoryList"/>',
-                            html: $('<i/>',{class: 'far fa-edit'}),
+                            html: $('<i/>', {class: 'far fa-edit'}),
                             'data-toggle': 'modal',
                             'data-target': CATEGORY_LIST_MODAL_ID,
                             type: 'button',
-                            click: function(){setModal('modify', data);}
+                            click: function () {
+                                setModal('modify', data);
+                            }
                         }),
                         $('<button/>', {
                             class: 'btn btn-md btn-danger',
                             title: '<fmt:message key="categoryLists.label.deleteCategoryList"/>',
-                            html: $('<i/>',{class: 'far fa-trash-alt'}),
-                            click: function(){
+                            html: $('<i/>', {class: 'far fa-trash-alt'}),
+                            click: function () {
                                 const btn = $(this);
 
                                 btn.attr("disabled", true);
@@ -180,9 +187,9 @@
                                     url: '<c:url value="/admin/categoryLists.json"/>',
                                     type: 'POST',
                                     data: {'action': 'delete', 'id': data.id}
-                                }).done(function(){
+                                }).done(function () {
                                     row.remove();
-                                }).fail(function(jqXHR){
+                                }).fail(function (jqXHR) {
                                     const prevText = btn.html();
 
                                     if (typeof jqXHR.responseJSON === 'object' &&
@@ -195,7 +202,7 @@
                                         btn.html(unknownErrorMessage);
                                     }
 
-                                    setTimeout(function(){
+                                    setTimeout(function () {
                                         btn.html(prevText);
 
                                         btn.attr("disabled", false);
@@ -208,12 +215,12 @@
             );
         }
 
-        tableDiv.on('xhr.dt', function (e, settings, json, xhr){
+        tableDiv.on('xhr.dt', function (e, settings, json, xhr) {
             if (json === null) {
                 const json = JSON.parse(xhr.responseText);
                 resDiv.removeClass("d-none");
 
-                if(json['message'] !== undefined && json['message'] !== null) {
+                if (json['message'] !== undefined && json['message'] !== null) {
                     resDiv.html(json['message']);
                 } else {
                     resDiv.html('<fmt:message key="generic.errors.unknownError"/>');
@@ -230,7 +237,7 @@
                 dataType: "json",
                 type: "get",
                 cache: "false",
-                data: function(d) {
+                data: function (d) {
                     return $('#filterForm').serialize();
                 },
                 dataSrc: ''
@@ -279,7 +286,7 @@
         $.fn.dataTable.ext.errMode = 'throw';
 
         {
-            categoryListModal.on("hidden.bs.modal", function() {
+            categoryListModal.on("hidden.bs.modal", function () {
                 categoryListForm[0].reset();
                 categoryListForm.find('input').val("");
                 categoryListForm.find('input[type="text"]').html("");
@@ -294,7 +301,7 @@
                     return data;
                 }
 
-                const input = form.find('[type="file"][name="'+ name +'"]');
+                const input = form.find('[type="file"][name="' + name + '"]');
 
                 // Se il browser ha l'estensione che permette di accedere alla proprietà files continuo altrimenti no
                 // (fatto successivamente dal server)
@@ -304,20 +311,20 @@
 
                 const fileToUpload = input[0].files[0];
 
-                if(!fileToUpload) {
-                    if(form.find('[name="action"]').val() === 'create' && name === firstImgName){
+                if (!fileToUpload) {
+                    if (form.find('[name="action"]').val() === 'create' && name === firstImgName) {
                         data[name] = '<fmt:message key="validateCategoryList.errors.IMG_MISSING"/>';
                     }
-                } else if(fileToUpload.size > ${CategoryListValidator.MAX_LEN_FILE}){
+                } else if (fileToUpload.size > ${CategoryListValidator.MAX_LEN_FILE}) {
                     data[name] = '<fmt:message key="validateCategoryList.errors.IMG_TOO_BIG"/>';
-                } else if(window.Blob && !fileToUpload.type.startsWith("image/")) {
+                } else if (window.Blob && !fileToUpload.type.startsWith("image/")) {
                     data[name] = '<fmt:message key="validateCategoryList.errors.IMG_NOT_IMG"/>';
                 }
 
                 return data;
             }
 
-            categoryListForm.find('input,textarea').on('blur change',() => {
+            categoryListForm.find('input,textarea').on('blur change', () => {
                 const obj = {};
 
                 const isCreate = categoryListForm.find('input[name="action"]').val() === 'create';
@@ -333,7 +340,7 @@
 
                 const descr = categoryListForm.find('textarea[name="${CategoryListValidator.DESCRIPTION_KEY}"]').val();
                 if (!descr) {
-                    if(isCreate) {
+                    if (isCreate) {
                         obj['${CategoryListValidator.DESCRIPTION_KEY}'] = '<fmt:message key="validateCategoryList.errors.DESCRIPTION_MISSING"/>';
                     }
                 } else if (descr.length > ${CategoryListValidator.DESCRIPTION_MAX_LEN}) {
@@ -344,8 +351,8 @@
                     '${CategoryListValidator.IMG1_KEY}',
                     '${CategoryListValidator.IMG2_KEY}',
                     '${CategoryListValidator.IMG3_KEY}'
-                ].reduce(function(acc, curr){
-                        return add_file_errors(acc, categoryListForm, curr,'${CategoryListValidator.IMG1_KEY}');
+                ].reduce(function (acc, curr) {
+                        return add_file_errors(acc, categoryListForm, curr, '${CategoryListValidator.IMG1_KEY}');
                     },
                     obj
                 );
@@ -353,12 +360,14 @@
                 updateVerifyMessages(categoryListForm, obj);
             });
 
-            $.each(categoryListForm.find('.file-input'), function(index, value){
+            $.each(categoryListForm.find('.file-input'), function (index, value) {
                 const k = $(value);
-                k.find('+ div').find('>button.clear-btn').click(function(){k.val("");});
+                k.find('+ div').find('>button.clear-btn').click(function () {
+                    k.val("");
+                });
             });
 
-            categoryListForm.find('.input-group  button.ins-btn').click(function(){
+            categoryListForm.find('.input-group  button.ins-btn').click(function () {
                 const iGr = $(this).parent();
 
                 iGr.find('> .input-group-append, > input').show();
@@ -367,7 +376,7 @@
                 iGr.parent().find('input[type="hidden"]').val("");
             });
 
-            categoryListForm.find('.input-group button.del-btn').click(function(){
+            categoryListForm.find('.input-group button.del-btn').click(function () {
                 const iGr = $(this).parent().parent();
 
                 iGr.find('> .input-group-append, > input').val("");
@@ -377,14 +386,13 @@
                 iGr.parent().find('input[type="hidden"]').val("delete");
             });
 
-            categoryListForm.find('button.clear-btn, button.del-btn, button.ins-btn').click(function(){
+            categoryListForm.find('button.clear-btn, button.del-btn, button.ins-btn').click(function () {
                 // Trigger update
                 categoryListForm.find('input[name="${CategoryListValidator.NAME_KEY}"]').trigger('change');
             });
 
 
-
-            categoryListForm.submit(function(e){
+            categoryListForm.submit(function (e) {
                 e.preventDefault();
 
                 formSubmit(
@@ -395,7 +403,7 @@
                         'redirectUrl': null,
                         'unknownErrorMessage': modalUnknownErrorMessage,
                         'resDiv': modalResDiv,
-                        'successCallback': function() {
+                        'successCallback': function () {
                             table.ajax.reload();
                             table.draw();
                             categoryListModal.modal('toggle');
@@ -405,7 +413,7 @@
             });
 
 
-            tableDiv.find('#btnNewCategoryList').click(function(){
+            tableDiv.find('#btnNewCategoryList').click(function () {
                 setModal("create", null);
             });
         }

@@ -1,7 +1,6 @@
 package it.unitn.webprogramming18.dellmm.filters;
 
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
-import it.unitn.webprogramming18.dellmm.util.PagePathsConstants;
 import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 
 import javax.servlet.*;
@@ -30,8 +29,8 @@ public class AdminUserOnlyFilter implements Filter {
 
         boolean authorized =
                 session != null &&
-                session.getAttribute("user") != null &&
-                ((User) session.getAttribute("user")).isIsAdmin();
+                        session.getAttribute("user") != null &&
+                        ((User) session.getAttribute("user")).isIsAdmin();
 
         System.out.println(authorized);
 

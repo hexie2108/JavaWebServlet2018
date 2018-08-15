@@ -1,6 +1,6 @@
 package it.unitn.webprogramming18.dellmm.filters;
 
-import it.unitn.webprogramming18.dellmm.util.PagePathsConstants;
+import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
 import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 
 import javax.servlet.*;
@@ -11,6 +11,13 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.URLEncoder;
 
+/**
+ * se utente non è loggato e ha fatto una richiesta di JSON oppure POST
+ * rindirizza alla pagina 401
+ * <p>
+ * se utente non è loggato e ha fatto una richiesta GET, rindirizza alla pagina
+ * di Login.
+ */
 @WebFilter(filterName = "LoggedUserOnlyFilter")
 public class LoggedUserOnlyFilter implements Filter {
 
@@ -42,7 +49,7 @@ public class LoggedUserOnlyFilter implements Filter {
             }
 
             response.sendRedirect(
-                    contextPath + PagePathsConstants.LOGIN + "?" +
+                    contextPath + ConstantsUtils.LOGIN + "?" +
                             "prevUrl" + "=" + URLEncoder.encode(prevUrl, "UTF-8") +
                             "&" + "nextUrl" + "=" + URLEncoder.encode(request.getRequestURI(), "UTF-8")
             );
