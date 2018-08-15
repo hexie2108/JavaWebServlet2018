@@ -14,6 +14,14 @@ import java.util.List;
  * The JDBC implementation of the {@link CategoryProductDAO} interface.
  */
 public class JDBCCategoryProductDAO extends JDBCDAO<CategoryProduct, Integer> implements CategoryProductDAO {
+    // TODO: Da togliere
+    public JDBCCategoryProductDAO() {
+        super();
+    }
+
+    public JDBCCategoryProductDAO(ConnectionPool cp) {
+        super(cp);
+    }
 
     private CategoryProduct getCategoryProductFromResultSet(ResultSet rs) throws SQLException {
         CategoryProduct categoryProduct = new CategoryProduct();

@@ -40,7 +40,16 @@ public class ResetPasswordServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        userDAO = new JDBCUserDAO();
+        DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
+        if (daoFactory == null) {
+            throw new ServletException("Impossible to get db factory for user storage system");
+        }
+
+        try {
+            userDAO = daoFactory.getDAO(UserDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get UserDAO for user storage system", ex);
+        }
     }
 
     @Override

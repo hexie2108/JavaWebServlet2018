@@ -48,7 +48,6 @@ public abstract class JDBCDAO<ENTITY_CLASS, PRIMARY_KEY_CLASS> implements DAO<EN
         CP = C3p0Util.getConnectionPool();
     }
 
-
     /**
      * se questo DAO può interagire con il classe DAO passato, allora
      * restituisce il DAO della classe passato

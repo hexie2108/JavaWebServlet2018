@@ -112,8 +112,14 @@ public class JDBCDAOFactory implements DAOFactory {
 
             return daoInstance;
         } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException | SecurityException ex) {
+            ex.printStackTrace();
             throw new DAOFactoryException("Impossible to return the DAO", ex);
         }
     }
 
+
+    // TODO: Da togliere
+    public ConnectionPool getCP() {
+        return cp;
+    }
 }

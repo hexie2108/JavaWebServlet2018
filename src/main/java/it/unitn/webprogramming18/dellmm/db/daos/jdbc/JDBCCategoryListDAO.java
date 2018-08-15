@@ -14,6 +14,14 @@ import java.util.List;
  * The JDBC implementation of the {@link CategoryListDAO} interface.
  */
 public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implements CategoryListDAO {
+    // TODO: Da togliere
+    public JDBCCategoryListDAO() {
+        super();
+    }
+
+    public JDBCCategoryListDAO(ConnectionPool cp) {
+        super(cp);
+    }
 
     private CategoryList getCategoryListFromResultSet(ResultSet rs) throws SQLException {
         CategoryList categoryList = new CategoryList();

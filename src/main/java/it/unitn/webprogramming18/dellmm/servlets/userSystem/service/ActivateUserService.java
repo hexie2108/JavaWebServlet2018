@@ -36,9 +36,16 @@ public class ActivateUserService extends HttpServlet
         @Override
         public void init() throws ServletException
         {
+                DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
+                if (daoFactory == null) {
+                        throw new ServletException("Impossible to get db factory for user storage system");
+                }
 
-                userDAO = new JDBCUserDAO();
-
+                try {
+                        userDAO = daoFactory.getDAO(UserDAO.class);
+                } catch (DAOFactoryException ex) {
+                        throw new ServletException("Impossible to get UserDAO for user storage system", ex);
+                }
         }
 
         @Override

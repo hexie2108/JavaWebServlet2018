@@ -12,6 +12,8 @@ import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCPermissionDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCProductDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
+import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
+import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.Permission;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList;
@@ -56,9 +58,19 @@ public class UpdateListService extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        productDAO = new JDBCProductDAO();
-        listDAO = new JDBCListDAO();
-        permissionDAO = new JDBCPermissionDAO();
+        DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
+        if (daoFactory == null) {
+            throw new ServletException("Impossible to get db factory for user storage system");
+        }
+
+        try {
+            productDAO = daoFactory.getDAO(ProductDAO.class);
+            listDAO = daoFactory.getDAO(ListDAO.class);
+            permissionDAO = daoFactory.getDAO(PermissionDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get ProductDAO or ListDAO or PermissionDAO for user storage system", ex);
+        }
+
     }
 
     /**

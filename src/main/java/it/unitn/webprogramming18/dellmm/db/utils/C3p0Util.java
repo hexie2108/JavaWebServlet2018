@@ -11,7 +11,7 @@ import java.sql.SQLException;
  */
 public class C3p0Util {
 
-    private static ConnectionPool cp;
+    private static ConnectionPool CONNECTION_POOL;
 
     /**
      * inizializza il database
@@ -21,15 +21,23 @@ public class C3p0Util {
      * @param dbPwd  password
      */
     public static final void initDBPool(String dbUrl, String dbUser, String dbPwd) {
-        cp = new ConnectionPool(dbUrl, dbUser, dbPwd, "com.mysql.jdbc.Driver");
+        CONNECTION_POOL = new ConnectionPool(dbUrl, dbUser, dbPwd, "com.mysql.jdbc.Driver");
+    }
+
+    /**
+     * Initialize with a custom ConnectionPool
+     * @param connectionPool
+     */
+    public static final void initDBPool(ConnectionPool connectionPool) {
+        CONNECTION_POOL = connectionPool;
     }
 
     /**
      * distrugge la piscina
      */
     public static final void destroy() {
-        if (cp != null) {
-            cp.destroy();
+        if (CONNECTION_POOL != null) {
+            CONNECTION_POOL.destroy();
         }
     }
 
@@ -56,15 +64,15 @@ public class C3p0Util {
      * @return l'oggetto connessione
      */
     public static final synchronized Connection getConnection() {
-        if (cp == null) {
+        if (CONNECTION_POOL == null) {
             System.err.println("connection pool not initialized. return null");
             return null;
         }
 
-        return cp.getConnection();
+        return CONNECTION_POOL.getConnection();
     }
 
     public static final ConnectionPool getConnectionPool() {
-        return cp;
+        return CONNECTION_POOL;
     }
 }

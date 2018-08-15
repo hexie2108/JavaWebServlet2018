@@ -16,6 +16,14 @@ import java.util.Objects;
  * The JDBC implementation of the {@link ProductDAO} interface.
  */
 public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements ProductDAO {
+    // TODO: Da togliere
+    public JDBCProductDAO() {
+        super();
+    }
+
+    public JDBCProductDAO(ConnectionPool cp) {
+        super(cp);
+    }
 
     private final static double MIN_RELEVANCE = 0.375;
 

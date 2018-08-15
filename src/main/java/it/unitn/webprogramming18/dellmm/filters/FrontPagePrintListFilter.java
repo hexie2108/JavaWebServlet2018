@@ -7,6 +7,8 @@ import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCPermissionDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCProductDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
+import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
+import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.Permission;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList;
@@ -40,10 +42,19 @@ public class FrontPagePrintListFilter implements Filter {
      * @param filterConfig
      */
     @Override
-    public void init(FilterConfig filterConfig) {
-        productDAO = new JDBCProductDAO();
-        listDAO = new JDBCListDAO();
-        permissionDAO = new JDBCPermissionDAO();
+    public void init(FilterConfig filterConfig) throws ServletException {
+        DAOFactory daoFactory = (DAOFactory) filterConfig.getServletContext().getAttribute("daoFactory");
+        if (daoFactory == null) {
+            throw new ServletException("Impossible to get db factory for user storage system");
+        }
+
+        try {
+            productDAO = daoFactory.getDAO(ProductDAO.class);
+            listDAO = daoFactory.getDAO(ListDAO.class);
+            permissionDAO = daoFactory.getDAO(PermissionDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get ProductDAO or ListDAO or PermissionDAO for user storage system", ex);
+        }
     }
 
     /**

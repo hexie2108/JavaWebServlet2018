@@ -18,6 +18,15 @@ import java.util.List;
  * The JDBC implementation of the {@link ShopDAO} interface.
  */
 public class JDBCShopDAO extends JDBCDAO<Shop, Integer> implements ShopDAO {
+    // TODO: Da togliere
+    public JDBCShopDAO() {
+        super();
+    }
+
+    public JDBCShopDAO(ConnectionPool cp){
+        super(cp);
+    }
+
     private Shop getShopFromResultSet(ResultSet rs) throws SQLException {
         Shop shop = new Shop();
 

@@ -8,6 +8,8 @@ package it.unitn.webprogramming18.dellmm.filters;
 import it.unitn.webprogramming18.dellmm.db.daos.UserDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCUserDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
+import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
+import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import java.io.IOException;
 import javax.servlet.Filter;
@@ -29,7 +31,7 @@ import javax.servlet.http.HttpSession;
 public class AutoLoginFilter implements Filter
 {
 
-        private final UserDAO userDAO = new JDBCUserDAO();
+        private UserDAO userDAO;
         private String fastLoginkey = null;
         private Cookie[] cookies = null;
         private User user = null;
@@ -103,10 +105,17 @@ public class AutoLoginFilter implements Filter
         }
 
         @Override
-        public void init(FilterConfig filterConfig
-        )
-        {
+        public void init(FilterConfig filterConfig) throws ServletException {
+            DAOFactory daoFactory = (DAOFactory) filterConfig.getServletContext().getAttribute("daoFactory");
+            if (daoFactory == null) {
+                    throw new ServletException("Impossible to get db factory for user storage system");
+            }
 
+            try {
+                    userDAO = daoFactory.getDAO(UserDAO.class);
+            } catch (DAOFactoryException ex) {
+                    throw new ServletException("Impossible to get UserDAO for user storage system", ex);
+            }
         }
 
 }

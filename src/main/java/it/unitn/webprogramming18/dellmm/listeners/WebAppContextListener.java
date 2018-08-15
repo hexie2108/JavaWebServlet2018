@@ -42,21 +42,16 @@ public class WebAppContextListener implements ServletContextListener {
         final String dbpwd = sce.getServletContext().getInitParameter("dbpwd");
 
         /*inizializza c3p0*/
-        C3p0Util.initDBPool(dburl, dbuser, dbpwd);
 
-                try
-                {
-
-                        JDBCDAOFactory.configure(dburl, dbuser, dbpwd);
-                        DAOFactory daoFactory = JDBCDAOFactory.getInstance();
-                        sce.getServletContext().setAttribute("daoFactory", daoFactory);
-                }
-                catch (DAOFactoryException ex)
-                {
-                        Logger.getLogger(getClass().getName()).severe(ex.toString());
-                        throw new RuntimeException(ex);
-
-                }
+        try {
+            JDBCDAOFactory.configure(dburl, dbuser, dbpwd);
+            JDBCDAOFactory jdbcDaoFactory = JDBCDAOFactory.getInstance();
+            sce.getServletContext().setAttribute("daoFactory", (DAOFactory) jdbcDaoFactory);
+            C3p0Util.initDBPool(jdbcDaoFactory.getCP());
+        } catch (DAOFactoryException ex) {
+                Logger.getLogger(getClass().getName()).severe(ex.toString());
+                throw new RuntimeException(ex);
+        }
 
         /* Init email */
         final String smtpHostname = sce.getServletContext().getInitParameter("smtpHostname");
@@ -88,20 +83,11 @@ public class WebAppContextListener implements ServletContextListener {
      */
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-
-        //distrugge la piscina
-        C3p0Util.destroy();
-                
-                
-                /*
-                DAOFactory daoFactory = (DAOFactory) sce.getServletContext().getAttribute("daoFactory");
-                if (daoFactory != null)
-                {
-                        daoFactory.shutdown();
-                }
-                daoFactory = null;
-                */
-
-
+        DAOFactory daoFactory = (DAOFactory) sce.getServletContext().getAttribute("daoFactory");
+        if (daoFactory != null)
+        {
+                daoFactory.shutdown();
+        }
+        daoFactory = null;
     }
 }

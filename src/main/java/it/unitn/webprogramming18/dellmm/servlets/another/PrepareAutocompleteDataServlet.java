@@ -34,10 +34,17 @@ public class PrepareAutocompleteDataServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
+        DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
+        if (daoFactory == null) {
+            throw new ServletException("Impossible to get db factory for user storage system");
+        }
 
-        productDAO = new JDBCProductDAO();
-        productInListDAO = new JDBCProductInListDAO();
-
+        try {
+            productDAO = daoFactory.getDAO(ProductDAO.class);
+            productInListDAO = daoFactory.getDAO(ProductInListDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get ProductDAO or ProductInListDAO for user storage system", ex);
+        }
     }
 
     /**
