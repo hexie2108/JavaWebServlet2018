@@ -5,7 +5,6 @@ import it.unitn.webprogramming18.dellmm.db.utils.C3p0Util;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.jdbc.JDBCDAO;
 import it.unitn.webprogramming18.dellmm.javaBeans.Shop;
-import it.unitn.webprogramming18.dellmm.javaBeans.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -187,38 +186,37 @@ public class JDBCShopDAO extends JDBCDAO<Shop, Integer> implements ShopDAO {
         return shopList;
     }
     
-    public List<Shop> getRelevantShopsInProximity(List<Integer> categories, Double usrLng, Double usrLat) throws DAOException {
-        if (categories == null || usrLat == null || usrLng == null) {
-            throw new DAOException("One or more parameters (user, usrLat, usrLng) are null");
+    public List<Shop> getRelevantShopsInProximity(Integer userId, Double usrLng, Double usrLat) throws DAOException {
+        if (userId == null || usrLat == null || usrLng == null) {
+            throw new DAOException("One or more parameters (userId, usrLat, usrLng) are null");
         }
 
         CON = C3p0Util.getConnection();
         List<Shop> relevantShopsList = new ArrayList<>();
-        List<Shop> shopsInProximityList = new ArrayList<>();
         //Va capito come tradurre la distanza da gradi a metri, e settare una distanza ragionevole
         double distance = 50;
         
-        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Shop "
-                                                        + "WHERE ABS(ST_Distance_Sphere(POINT(?,?), POINT(Shop.lng, Shop.lat))) < ?")) {
-            stm.setDouble(1, usrLng);
-            stm.setDouble(2, usrLat);
-            stm.setDouble(3, distance);
+        try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Shop " +
+                                                          "JOIN  ((SELECT List.categoryList FROM   List " +
+                                                                  "WHERE  ownerId = ?)" +
+                                                                "UNION" +
+                                                                 "(SELECT categoryList FROM   Permission" +
+                                                                  "JOIN   List  ON Permission.listId = List.id " +
+                                                                  "WHERE  userId = ?)) " +
+                                                          "AS C " +
+                                                          "ON Shop.category = C.categoryList " +
+                                                          "WHERE " +
+                                                          "ABS(ST_Distance_Sphere(POINT(?,?), POINT(Shop.lng, Shop.lat))) < ?")) {
+            stm.setInt(1, userId);
+            stm.setInt(2, userId);
+            stm.setDouble(3, usrLng);
+            stm.setDouble(4, usrLat);
+            stm.setDouble(5, distance);
             
             //Get all shops in proximity
             try (ResultSet rs = stm.executeQuery()) {
                 while (rs.next()) {
-                    shopsInProximityList.add(getShopFromResultSet(rs));
-                }
-            }
-            
-            //Get all relevant shops. Needed better algorithm
-            for (Integer catId : categories) {
-                for (Shop shop : shopsInProximityList) {
-                    if (shop.getCategory() == catId) {
-                        relevantShopsList.add(shop);
-                        //Deletes registered shop from general proximity list for efficience purposes
-                        shopsInProximityList.remove(shop);
-                    }
+                    relevantShopsList.add(getShopFromResultSet(rs));
                 }
             }
             

@@ -74,13 +74,12 @@ public interface ShopDAO extends DAO<Shop, Integer> {
     /**
      * Returns a list of relevant shops at max R meters from user's position.
      * "Relevant" means that returned shops are of categories from user lists' categories.
-     * Needs a pre-created list of all CategoryList IDs of all lists that the user can access.
      * 
-     * @param categories list of ints representing relevant categories to check shops for
+     * @param userId id of current user
      * @param usrLat user's latitude
      * @param usrLng user's longitude
      * @return       described above
      * @throws DAOException if an error occurred during the action.
      */
-    public List<Shop> getRelevantShopsInProximity(List<Integer> categories, Double usrLng, Double usrLat) throws DAOException;
+    public List<Shop> getRelevantShopsInProximity(Integer userId, Double usrLng, Double usrLat) throws DAOException;
 }
