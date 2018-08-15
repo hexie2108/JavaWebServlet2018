@@ -7,6 +7,9 @@
 package it.unitn.webprogramming18.dellmm.listeners;
 
 import it.unitn.webprogramming18.dellmm.db.utils.C3p0Util;
+import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
+import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
+import it.unitn.webprogramming18.dellmm.db.utils.factories.jdbc.JDBCDAOFactory;
 import it.unitn.webprogramming18.dellmm.email.EmailFactory;
 import it.unitn.webprogramming18.dellmm.email.exceptions.EmailFactoryException;
 
@@ -41,7 +44,6 @@ public class WebAppContextListener implements ServletContextListener {
         /*inizializza c3p0*/
         C3p0Util.initDBPool(dburl, dbuser, dbpwd);
 
-                /*metodo di connessione vecchio
                 try
                 {
 
@@ -55,7 +57,7 @@ public class WebAppContextListener implements ServletContextListener {
                         throw new RuntimeException(ex);
 
                 }
-                 */
+
         /* Init email */
         final String smtpHostname = sce.getServletContext().getInitParameter("smtpHostname");
         final String smtpPort = sce.getServletContext().getInitParameter("smtpPort");

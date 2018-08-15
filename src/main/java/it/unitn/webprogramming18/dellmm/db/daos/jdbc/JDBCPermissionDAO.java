@@ -1,15 +1,12 @@
 package it.unitn.webprogramming18.dellmm.db.daos.jdbc;
 
 import it.unitn.webprogramming18.dellmm.db.daos.PermissionDAO;
-import it.unitn.webprogramming18.dellmm.db.utils.C3p0Util;
+import it.unitn.webprogramming18.dellmm.db.utils.ConnectionPool;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.jdbc.JDBCDAO;
 import it.unitn.webprogramming18.dellmm.javaBeans.Permission;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +31,7 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
 
     @Override
     public List<Permission> getPermissionsOnListByListId(Integer listId) throws DAOException {
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
 
         List<Permission> permissionList = new ArrayList<>();
 
@@ -48,7 +45,7 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the list of permission for specified list", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return permissionList;
@@ -56,7 +53,7 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
 
     @Override
     public Long getCount() throws DAOException {
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM Permission")) {
             ResultSet counter = stmt.executeQuery();
             if (counter.next()) {
@@ -65,7 +62,7 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
         } catch (SQLException ex) {
             throw new DAOException("Impossible to count permission", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return 0L;
@@ -77,7 +74,7 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
             throw new DAOException("permission bean is null");
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement("INSERT INTO Permission (addObject, deleteObject, modifyList, deleteList, listId, userId) VALUES (?,?,?,?,?,?)",
                 Statement.RETURN_GENERATED_KEYS)) {
 
@@ -99,7 +96,7 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
         } catch (SQLException ex) {
             throw new DAOException("Impossible to insert the new permission", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
     }
 
@@ -110,7 +107,7 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
             throw new DAOException("primaryKey is null");
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Permission WHERE id = ?")) {
             stm.setInt(1, primaryKey);
             try (ResultSet rs = stm.executeQuery()) {
@@ -121,7 +118,7 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the permission for the passed primary key", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return permission;
@@ -131,7 +128,7 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
     public List<Permission> getAll() throws DAOException {
         List<Permission> permissionList = new ArrayList<>();
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Permission")) {
             try (ResultSet rs = stm.executeQuery()) {
                 while (rs.next()) {
@@ -141,7 +138,7 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the list of permission", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return permissionList;
@@ -153,7 +150,7 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
             throw new DAOException("parameter not valid", new IllegalArgumentException("The passed permission is null"));
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement(
                 "UPDATE Permission SET " +
                         "addObject = ?," +
@@ -179,7 +176,7 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
         } catch (SQLException ex) {
             throw new DAOException("Impossible to update the permission", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return permission;
@@ -193,7 +190,7 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
             throw new DAOException("parameter not valid", new IllegalArgumentException("The passed listId or userId is null"));
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Permission WHERE Permission.listId = ? AND Permission.userId<>? ")) {
             stm.setInt(1, listId);
             stm.setInt(2, userId);
@@ -206,7 +203,7 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the list of permission for specified list", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return permissionList;
@@ -219,7 +216,7 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
             throw new DAOException("One or both parameters (userId, listId) are null");
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Permission WHERE userId = ? AND listId = ?")) {
             stm.setInt(1, userId);
             stm.setInt(2, listId);
@@ -232,7 +229,7 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the permission for the passed userId and listId", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return permission;
@@ -246,7 +243,7 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
             throw new DAOException("listId is null");
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement("SELECT COUNT(*) FROM Permission WHERE listId = ?")) {
             stm.setInt(1, listId);
             ResultSet counter = stm.executeQuery();
@@ -258,7 +255,7 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
         } catch (SQLException ex) {
             throw new DAOException("Impossible to count permission", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return number;
@@ -272,7 +269,7 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
             throw new DAOException("parameter not valid", new IllegalArgumentException("The passed permissionId is null"));
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement(
                 " DELETE FROM Permission WHERE "
                         + " id = ? "
@@ -284,7 +281,7 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
         } catch (SQLException ex) {
             throw new DAOException("Impossible to update the permission", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
     }

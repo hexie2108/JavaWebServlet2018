@@ -1,8 +1,5 @@
 package it.unitn.webprogramming18.dellmm.db.utils;
 
-import com.mchange.v2.c3p0.ComboPooledDataSource;
-
-import java.beans.PropertyVetoException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -14,7 +11,7 @@ import java.sql.SQLException;
  */
 public class C3p0Util {
 
-    private static ComboPooledDataSource ds;
+    private static ConnectionPool cp;
 
     /**
      * inizializza il database
@@ -24,40 +21,15 @@ public class C3p0Util {
      * @param dbPwd  password
      */
     public static final void initDBPool(String dbUrl, String dbUser, String dbPwd) {
-        try {
-            //inizializzazione della piscina
-            ds = new ComboPooledDataSource();
-
-            ds.setDriverClass("com.mysql.jdbc.Driver");
-            ds.setBreakAfterAcquireFailure(false);
-            ds.setTestConnectionOnCheckout(false);
-            ds.setTestConnectionOnCheckin(false);
-            ds.setMaxPoolSize(100);
-            //ogni volta incrementa 3 connessioni
-            ds.setAcquireIncrement(3);
-            //ogni 60 secondo check i connessioni liberi nel pool
-            ds.setIdleConnectionTestPeriod(60);
-            //numero di prova dopo il fallimento
-            ds.setAcquireRetryAttempts(10);
-            //intervallo di tempo tra due prove
-            ds.setAcquireRetryDelay(1000);
-            ds.setMaxIdleTime(60);
-            ds.setMaxStatements(8);
-            ds.setMaxStatementsPerConnection(5);
-            ds.setJdbcUrl(dbUrl);
-            ds.setUser(dbUser);
-            ds.setPassword(dbPwd);
-        } catch (PropertyVetoException ex) {
-            System.err.println("errore durante l'inizializzazione della piscina: " + ex.getMessage());
-        }
+        cp = new ConnectionPool(dbUrl, dbUser, dbPwd, "com.mysql.jdbc.Driver");
     }
 
     /**
      * distrugge la piscina
      */
     public static final void destroy() {
-        if (ds != null) {
-            ds.close();
+        if (cp != null) {
+            cp.destroy();
         }
     }
 
@@ -84,13 +56,15 @@ public class C3p0Util {
      * @return l'oggetto connessione
      */
     public static final synchronized Connection getConnection() {
-        Connection conn = null;
-        try {
-            conn = ds.getConnection();
-        } catch (SQLException ex) {
-            System.err.println("errore durante l'assegnazione della nuova connessione: " + ex.getMessage());
+        if (cp == null) {
+            System.err.println("connection pool not initialized. return null");
+            return null;
         }
-        return conn;
 
+        return cp.getConnection();
+    }
+
+    public static final ConnectionPool getConnectionPool() {
+        return cp;
     }
 }

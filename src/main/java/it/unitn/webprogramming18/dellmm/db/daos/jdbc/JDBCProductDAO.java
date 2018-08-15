@@ -1,8 +1,8 @@
 package it.unitn.webprogramming18.dellmm.db.daos.jdbc;
 
 import it.unitn.webprogramming18.dellmm.db.daos.ProductDAO;
+import it.unitn.webprogramming18.dellmm.db.utils.ConnectionPool;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
-import it.unitn.webprogramming18.dellmm.db.utils.C3p0Util;
 import it.unitn.webprogramming18.dellmm.db.utils.jdbc.JDBCDAO;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 
@@ -41,7 +41,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
             throw new DAOException("listId is null");
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
 
         try (PreparedStatement stm = CON.prepareStatement("SELECT Product.* FROM ProductInList JOIN Product ON ProductInList.productId = Product.id "
                 + " WHERE  ProductInList.listId = ?")) {
@@ -55,7 +55,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the list of productInList", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return products;
@@ -64,7 +64,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
     @Override
     public Long getCount() throws DAOException {
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
 
         //try-with-resource, libera risorse in ogni caso
         try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM Product")) {
@@ -75,7 +75,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
         } catch (SQLException ex) {
             throw new DAOException("Impossible to count product", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return 0L;
@@ -88,7 +88,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
             throw new DAOException("product bean is null");
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
 
         //try-with-resource, libera risorse in ogni caso
         try (PreparedStatement stm = CON.prepareStatement("INSERT INTO Product (name, description, img, logo, categoryProductId, privateListId) VALUES (?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
@@ -113,7 +113,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
         } catch (SQLException ex) {
             throw new DAOException("Impossible to insert the new product", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
     }
@@ -124,7 +124,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
             throw new DAOException("parameter not valid", new IllegalArgumentException("The passed product is null"));
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
 
         try (PreparedStatement stm = CON.prepareStatement(
                 " UPDATE Product SET "
@@ -150,7 +150,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
         } catch (SQLException ex) {
             throw new DAOException("Impossible to update the product", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return product;
@@ -163,7 +163,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
             throw new DAOException("primaryKey is null");
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
 
         try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Product WHERE id = ?")) {
             stm.setInt(1, primaryKey);
@@ -175,7 +175,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the product for the passed primary key", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return product;
@@ -185,7 +185,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
     public List<Product> getAll() throws DAOException {
         List<Product> productList = new ArrayList<>();
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
 
         try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Product")) {
             try (ResultSet rs = stm.executeQuery()) {
@@ -196,7 +196,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the list of product", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return productList;
@@ -210,7 +210,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
 
         List<Product> productList = new ArrayList<>();
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
 
         try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Product WHERE privateListId IS NULL ORDER BY id DESC LIMIT ?,?")) {
             stm.setInt(1, index);
@@ -223,7 +223,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the list of product", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return productList;
@@ -235,7 +235,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
 
         Integer number = null;
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
 
         //try-with-resource, libera risorse in ogni caso
         try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM Product WHERE privateListId IS NULL")) {
@@ -247,7 +247,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
         } catch (SQLException ex) {
             throw new DAOException("Impossible to count product", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return number;
@@ -262,7 +262,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
 
         List<Product> productList = new ArrayList<>();
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
 
         try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Product WHERE categoryProductId = ? AND privateListId IS NULL ORDER BY id DESC LIMIT ?,?")) {
             stm.setInt(1, catId);
@@ -276,7 +276,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the list of product", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return productList;
@@ -292,7 +292,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
             throw new DAOException("parameter not valid", new IllegalArgumentException("The passed parameters is not valid"));
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
 
         //try-with-resource, libera risorse in ogni caso
         try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM Product WHERE categoryProductId = ? AND privateListId IS NULL")) {
@@ -305,7 +305,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
         } catch (SQLException ex) {
             throw new DAOException("Impossible to count product of category", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return number;
@@ -363,7 +363,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
 
         List<Product> productList = new ArrayList<>();
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
 
         String sqlDirection = direction.equalsIgnoreCase("asc")?"ASC": "DESC";
 
@@ -421,7 +421,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the list of product", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return productList;
@@ -436,7 +436,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
             throw new DAOException("parameter not valid", new IllegalArgumentException("The passed parameters is not valid"));
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
 
         //try-with-resource, libera risorse in ogni caso
         try (PreparedStatement stmt = CON.prepareStatement(
@@ -453,7 +453,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
         } catch (SQLException ex) {
             throw new DAOException("Impossible to count product of search", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return number;
@@ -467,7 +467,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
             throw new DAOException("listId is null");
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
 
         try (PreparedStatement stm = CON.prepareStatement("SELECT Product.* FROM ProductInList JOIN Product ON ProductInList.productId = Product.id "
                 + " WHERE  ProductInList.listId = ? AND ProductInList.status = \"0\"")) {
@@ -481,7 +481,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the list of productInList", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return products;
@@ -496,7 +496,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
             throw new DAOException("listId is null");
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
 
         try (PreparedStatement stm = CON.prepareStatement("SELECT Product.* FROM ProductInList JOIN Product ON ProductInList.productId = Product.id "
                 + " WHERE  ProductInList.listId = ? AND ProductInList.status = \"1\"")) {
@@ -510,7 +510,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the list of productInList", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return products;
@@ -526,7 +526,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
             throw new DAOException("listId is null");
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
 
         try (PreparedStatement stm = CON.prepareStatement("SELECT Product.* FROM ProductInList JOIN Product ON ProductInList.productId = Product.id "
                 + " WHERE  ProductInList.listId = ? AND Product.privateListId IS NOT NULL")) {
@@ -540,7 +540,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the list of productInList", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return products;
@@ -554,7 +554,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
             throw new DAOException("parameter not valid", new IllegalArgumentException("The passed productId is null"));
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement(
                 " DELETE FROM Product WHERE "
                         + " id = ? "
@@ -566,7 +566,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
         } catch (SQLException ex) {
             throw new DAOException("Impossible to update the product", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
     }
 }
