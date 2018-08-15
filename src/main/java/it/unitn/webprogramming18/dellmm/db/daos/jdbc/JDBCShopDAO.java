@@ -26,6 +26,7 @@ public class JDBCShopDAO extends JDBCDAO<Shop, Integer> implements ShopDAO {
         Shop shop = new Shop();
 
         shop.setId(rs.getInt("id"));
+        shop.setName(rs.getString("name"));
         shop.setCategory(rs.getInt("category"));
         shop.setLat(rs.getDouble("lat"));
         shop.setLng(rs.getDouble("lng"));
@@ -58,12 +59,13 @@ public class JDBCShopDAO extends JDBCDAO<Shop, Integer> implements ShopDAO {
 
         CON = C3p0Util.getConnection();
 
-        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO Shop (lat, lng, category) VALUES (?,?,?)",
+        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO Shop (name, lat, lng, category) VALUES (?,?,?,?)",
                 Statement.RETURN_GENERATED_KEYS)) {
-
-            stm.setDouble(1, shop.getLat());
-            stm.setDouble(2, shop.getLng());
-            stm.setInt(3, shop.getCategory());
+            
+            stm.setString(1, shop.getName());
+            stm.setDouble(2, shop.getLat());
+            stm.setDouble(3, shop.getLng());
+            stm.setInt(4, shop.getCategory());
 
             stm.executeUpdate();
 
@@ -135,16 +137,18 @@ public class JDBCShopDAO extends JDBCDAO<Shop, Integer> implements ShopDAO {
 
         try (PreparedStatement stm = CON.prepareStatement(
                 "UPDATE Shop SET " +
+                        "name = ?,"+
                         "lat = ?," +
                         "lng = ?," +
                         "category = ? " +
                         "WHERE id = ?"
         )) {
-
-            stm.setDouble(1, shop.getLat());
-            stm.setDouble(2, shop.getLng());
-            stm.setInt(3, shop.getCategory());
-            stm.setInt(4, shop.getId());
+            
+            stm.setString(1, shop.getName());
+            stm.setDouble(2, shop.getLat());
+            stm.setDouble(3, shop.getLng());
+            stm.setInt(4, shop.getCategory());
+            stm.setInt(5, shop.getId());
             if (stm.executeUpdate() != 1) {
                 throw new DAOException("Impossible to update the shop");
             }

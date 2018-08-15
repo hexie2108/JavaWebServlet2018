@@ -112,7 +112,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `Shop` WRITE;
 /*!40000 ALTER TABLE `Shop` DISABLE KEYS */;
-INSERT INTO `Shop` (`id`, `name`, `lat`, `lng`, `category`) VALUES (1,'banane',123,123,1),(2,'ortoFrutta',132,132,1),(3,'coop',213,213,2),(4,'ginoStore',231,231,2),(5,'corsodimerda',312,312,3),(6,'feltrinelli',321,321,3);
+INSERT INTO `Shop` (`id`,`name`, `lat`, `lng`, `category`) VALUES (1,'banane',123,123,1),(2,'ortoFrutta',132,132,1),(3,'coop',213,213,2),(4,'ginoStore',231,231,2),(5,'corsodimerda',312,312,3),(6,'feltrinelli',321,321,3);
 /*!40000 ALTER TABLE `Shop` ENABLE KEYS */;
 UNLOCK TABLES;
 

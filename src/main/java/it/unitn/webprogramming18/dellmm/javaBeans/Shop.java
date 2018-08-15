@@ -11,6 +11,7 @@ package it.unitn.webprogramming18.dellmm.javaBeans;
 public class Shop {
 
     private int id;
+    private String name;
     private double lat;
     private double lng;
     private int category;
@@ -30,6 +31,20 @@ public class Shop {
         this.id = id;
     }
 
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+    
     /**
      * @return the lat
      */
