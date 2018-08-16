@@ -1,7 +1,7 @@
 package it.unitn.webprogramming18.dellmm.db.daos.jdbc;
 
 import it.unitn.webprogramming18.dellmm.db.daos.CategoryListDAO;
-import it.unitn.webprogramming18.dellmm.db.utils.C3p0Util;
+import it.unitn.webprogramming18.dellmm.db.utils.ConnectionPool;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.jdbc.JDBCDAO;
 import it.unitn.webprogramming18.dellmm.javaBeans.CategoryList;
@@ -14,6 +14,9 @@ import java.util.List;
  * The JDBC implementation of the {@link CategoryListDAO} interface.
  */
 public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implements CategoryListDAO {
+    public JDBCCategoryListDAO(ConnectionPool cp) {
+        super(cp);
+    }
 
     private CategoryList getCategoryListFromResultSet(ResultSet rs) throws SQLException {
         CategoryList categoryList = new CategoryList();
@@ -34,7 +37,7 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
             throw new DAOException("categoryList bean is null");
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
 
         try (PreparedStatement stm = CON.prepareStatement("INSERT INTO CategoryList (name, description, img1, img2, img3) VALUES (?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
 
@@ -55,13 +58,13 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
         } catch (SQLException ex) {
             throw new DAOException("Impossible to insert the new categoryList", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
     }
 
     @Override
     public Long getCount() throws DAOException {
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
 
         try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM CategoryList")) {
             ResultSet counter = stmt.executeQuery();
@@ -71,7 +74,7 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
         } catch (SQLException ex) {
             throw new DAOException("Impossible to count CategoryList", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return 0L;
@@ -84,7 +87,7 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
             throw new DAOException("primaryKey is null");
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM CategoryList WHERE ID = ?")) {
             stm.setInt(1, primaryKey);
             try (ResultSet rs = stm.executeQuery()) {
@@ -95,7 +98,7 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the categoryList for the passed primary key", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return categoryList;
@@ -105,7 +108,7 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
     public List<CategoryList> getAll() throws DAOException {
         List<CategoryList> categoryLists = new ArrayList<>();
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM CategoryList")) {
             try (ResultSet rs = stm.executeQuery()) {
                 while (rs.next()) {
@@ -115,7 +118,7 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the list of categoryList", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return categoryLists;
@@ -127,7 +130,7 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
             throw new DAOException("parameter not valid", new IllegalArgumentException("The passed categoryList is null"));
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement(
                 "UPDATE CategoryList SET "
                         + "name = ?,"
@@ -151,7 +154,7 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
         } catch (SQLException ex) {
             throw new DAOException("Impossible to update the categoryList", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return categoryList;
@@ -159,7 +162,7 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
 
     @Override
     public List<CategoryList> filter(Integer id, String name, String description) throws DAOException {
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
 
         List<CategoryList> categoryLists = new ArrayList<>();
 
@@ -191,7 +194,7 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the list of categoryList", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return categoryLists;
@@ -199,7 +202,7 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
 
     @Override
     public void delete(Integer id) throws DAOException {
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
 
         try (PreparedStatement stm = CON.prepareStatement(
                 "DELETE FROM CategoryList WHERE id = ?"
@@ -212,7 +215,7 @@ public class JDBCCategoryListDAO extends JDBCDAO<CategoryList, Integer> implemen
         } catch (SQLException ex) {
             throw new DAOException("Impossible to delete the categoryList", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
     }
 }

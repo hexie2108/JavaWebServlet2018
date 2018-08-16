@@ -8,8 +8,6 @@ package it.unitn.webprogramming18.dellmm.servlets.another;
 import com.google.gson.Gson;
 import it.unitn.webprogramming18.dellmm.db.daos.ProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ProductInListDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCProductDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCProductInListDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
@@ -34,10 +32,17 @@ public class PrepareAutocompleteDataServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
+        DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
+        if (daoFactory == null) {
+            throw new ServletException("Impossible to get db factory for user storage system");
+        }
 
-        productDAO = new JDBCProductDAO();
-        productInListDAO = new JDBCProductInListDAO();
-
+        try {
+            productDAO = daoFactory.getDAO(ProductDAO.class);
+            productInListDAO = daoFactory.getDAO(ProductInListDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get ProductDAO or ProductInListDAO for user storage system", ex);
+        }
     }
 
     /**

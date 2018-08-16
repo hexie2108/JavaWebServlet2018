@@ -4,11 +4,9 @@ import it.unitn.webprogramming18.dellmm.db.daos.CommentDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.PermissionDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.UserDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCCommentDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCListDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCPermissionDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCUserDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
+import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
+import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.Comment;
 import it.unitn.webprogramming18.dellmm.javaBeans.Permission;
 import it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList;
@@ -38,9 +36,18 @@ public class SharingService extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        permissionDAO = new JDBCPermissionDAO();
-        listDAO = new JDBCListDAO();
-        userDAO = new JDBCUserDAO();
+        DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
+        if (daoFactory == null) {
+            throw new ServletException("Impossible to get db factory for user storage system");
+        }
+
+        try {
+            permissionDAO = daoFactory.getDAO(PermissionDAO.class);
+            listDAO = daoFactory.getDAO(ListDAO.class);
+            userDAO = daoFactory.getDAO(UserDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get PermissionDAO or ListDAO or UserDAO for user storage system", ex);
+        }
     }
 
     @Override

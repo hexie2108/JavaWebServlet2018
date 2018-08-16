@@ -6,6 +6,7 @@
  */
 package it.unitn.webprogramming18.dellmm.db.utils.jdbc;
 
+import it.unitn.webprogramming18.dellmm.db.utils.ConnectionPool;
 import it.unitn.webprogramming18.dellmm.db.utils.DAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 
@@ -24,28 +25,19 @@ public abstract class JDBCDAO<ENTITY_CLASS, PRIMARY_KEY_CLASS> implements DAO<EN
 
     // HashMap di altre classi DAOs che possono interagire con questo DAO
     protected final HashMap<Class, DAO> FRIEND_DAOS;
-    // il puntatore di connessione {@link Connection} da usare per accedere al database
-    protected Connection CON;
+
+    protected final transient ConnectionPool CP;
 
     /**
-     * il costruttore base di JDBC DAO salva la connessione da usare per
-     * accedere al database
+     * il costruttore base di JDBC DAO salva la ConnectionPool da usare per
+     * ottente una connessione e successivamente accedere al database
      *
-     * @param con ottine la connesione {@code Connection}.
-     * @author Stefano Chirico
-     * @since 1.0.170417
+     * @param cp ottiene la connessione da una {@code ConnectionPool}.
      */
-    protected JDBCDAO(Connection con) {
+    protected JDBCDAO(ConnectionPool cp) {
         super();
-        this.CON = con;
         FRIEND_DAOS = new HashMap<>();
-    }
-
-    /**
-     * costruttore vuoto , non serve più associare una connessione fissa
-     */
-    protected JDBCDAO() {
-        FRIEND_DAOS = new HashMap<>();
+        CP = cp;
     }
 
     /**

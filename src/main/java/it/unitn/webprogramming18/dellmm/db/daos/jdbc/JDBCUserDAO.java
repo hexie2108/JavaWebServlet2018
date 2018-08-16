@@ -1,7 +1,7 @@
 package it.unitn.webprogramming18.dellmm.db.daos.jdbc;
 
 import it.unitn.webprogramming18.dellmm.db.daos.UserDAO;
-import it.unitn.webprogramming18.dellmm.db.utils.C3p0Util;
+import it.unitn.webprogramming18.dellmm.db.utils.ConnectionPool;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.jdbc.JDBCDAO;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
@@ -15,6 +15,9 @@ import java.util.UUID;
  * The JDBC implementation of the {@link UserDAO} interface.
  */
 public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
+    public JDBCUserDAO(ConnectionPool cp) {
+        super(cp);
+    }
 
     private User getUserFromResultSet(ResultSet rs) throws SQLException {
         User user = new User();
@@ -37,7 +40,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
 
     @Override
     public Long getCount() throws DAOException {
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM User")) {
             ResultSet counter = stmt.executeQuery();
             if (counter.next()) {
@@ -46,7 +49,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
         } catch (SQLException ex) {
             throw new DAOException("Impossible to count user", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return 0L;
@@ -60,7 +63,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
             throw new DAOException("primaryKey is null");
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM User WHERE id = ?")) {
             stm.setInt(1, primaryKey);
             try (ResultSet rs = stm.executeQuery()) {
@@ -71,7 +74,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the user for the passed primary key", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return user;
@@ -81,7 +84,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
     public List<User> getAll() throws DAOException {
         List<User> userList = new ArrayList<>();
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM User")) {
             try (ResultSet rs = stm.executeQuery()) {
                 while (rs.next()) {
@@ -91,7 +94,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the list of user", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return userList;
@@ -103,7 +106,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
             throw new DAOException("parameter not valid", new IllegalArgumentException("The passed user is null"));
         }
 
-                CON = C3p0Util.getConnection();
+                Connection CON = CP.getConnection();
                 try (PreparedStatement stm = CON.prepareStatement(
                             " UPDATE User SET "
                             + " name = ?,"
@@ -118,9 +121,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
                             + " lastLoginTimeMillis = ? ,"
                             + " keyForFastLogin = ? "
                             + "WHERE id = ?"
-                ))
-                {
-
+                )) {
                         stm.setString(1, user.getName());
                         stm.setString(2, user.getSurname());
                         stm.setString(3, user.getEmail());
@@ -144,7 +145,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
                 }
                 finally
                 {
-                        C3p0Util.close(CON);
+                        ConnectionPool.close(CON);
                 }
 
         return user;
@@ -158,7 +159,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
             throw new DAOException("parameter not valid", new IllegalArgumentException("The passed email is null"));
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement(
                 "SELECT * FROM User "
                         + "WHERE email = ?"
@@ -173,7 +174,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
         } catch (SQLException e) {
             throw new DAOException("Impossible to find the user");
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return user;
@@ -187,7 +188,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
             throw new DAOException("parameter not valid", new IllegalArgumentException("The passed email or password is null"));
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement(
                 "SELECT * FROM User " +
                         "WHERE email = ? AND password = ?"
@@ -203,7 +204,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
         } catch (SQLException e) {
             throw new DAOException("Impossible to find the user");
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return user;
@@ -216,10 +217,10 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
             throw new IllegalArgumentException("Argument must be string rappresentation of uuid");
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement(
-                "UPDATE User SET resendPwdEmailLink=NULL, password=?"
-                        + " WHERE resendPwdEmailLink= ?"
+                "UPDATE User SET resetPwdEmailLink=NULL, password=?"
+                        + " WHERE resetPwdEmailLink= ?"
         )) {
             stm.setString(1, newPassword);
             stm.setString(2, resetLink);
@@ -230,7 +231,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
         } catch (SQLException e) {
             throw new DAOException("Impossible to update the password");
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return true;
@@ -243,7 +244,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
             throw new DAOException("email is null");
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM User WHERE  EXISTS "
                 + "(SELECT * FROM   User WHERE  User.email = ?)")) {
             stmt.setString(1, email);
@@ -257,7 +258,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
         } catch (SQLException ex) {
             throw new DAOException("Impossible to return result", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return res;
@@ -270,7 +271,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
             throw new DAOException("email is null");
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM User WHERE  User.email = ?")) {
             stmt.setString(1, email);
             ResultSet rs = stmt.executeQuery();
@@ -283,7 +284,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
         } catch (SQLException ex) {
             throw new DAOException("Impossible to return result", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return flag;
@@ -307,7 +308,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
 
         boolean successo = false;
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         for (int tentativi = 0; (tentativi < 5) && (!successo); tentativi++) {
             successo = true;
 
@@ -351,7 +352,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
 
         }
 
-        C3p0Util.close(CON);
+        ConnectionPool.close(CON);
 
         // Avendo fallito per 5 volte a generare uuid unici mandiamo un errore
         // in quanto in condizioni normali è estremamente improbabile
@@ -378,7 +379,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
     public List<User> filter(Integer id, String email, String name, String surname, Boolean isAdmin) throws DAOException {
         List<User> userList = new ArrayList<>();
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement(
                 "SELECT * FROM User WHERE "
                         + "(? IS NULL OR id LIKE CONCAT('%',TRIM(BOTH \"'\" FROM QUOTE(?)),'%')) AND "
@@ -419,7 +420,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the list of user", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return userList;
@@ -428,7 +429,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
     @Override
     public void delete(Integer id) throws DAOException {
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement(
                 "DELETE FROM User WHERE id = ?"
         )) {
@@ -445,7 +446,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
                 }
                 finally
                 {
-                        C3p0Util.close(CON);
+                        ConnectionPool.close(CON);
                 }
         }
 
@@ -457,7 +458,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
                         throw new DAOException("id, timestamp o fastLoginKey is null");
                 }
 
-                CON = C3p0Util.getConnection();
+                Connection CON = CP.getConnection();
                 try (PreparedStatement stm = CON.prepareStatement(
                             "UPDATE User SET lastLoginTimeMillis = ? , keyForFastLogin = ? WHERE id = ?"
                 ))
@@ -478,7 +479,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
                 }
                 finally
                 {
-                        C3p0Util.close(CON);
+                        ConnectionPool.close(CON);
                 }
 
         }
@@ -494,7 +495,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
                         throw new DAOException("fastLoginKey o currentTimeMillis is null");
                 }
 
-                CON = C3p0Util.getConnection();
+                Connection CON = CP.getConnection();
                 try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM User WHERE (? - lastLoginTimeMillis ) < (1000*60*60*24*30) AND   keyForFastLogin = ?"))
                 {
                         stm.setLong(1, currentTimeMillis);
@@ -514,7 +515,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
                 }
                 finally
                 {
-                        C3p0Util.close(CON);
+                        ConnectionPool.close(CON);
                 }
 
                 return user;
@@ -530,7 +531,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
                         throw new DAOException("email o verifyEmailLink is null");
                 }
 
-                CON = C3p0Util.getConnection();
+                Connection CON = CP.getConnection();
                 try (PreparedStatement stm = CON.prepareStatement(
                             "UPDATE User SET verifyEmailLink = NULL WHERE email = ? AND verifyEmailLink = ?"
                 ))
@@ -551,7 +552,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
                 }
                 finally
                 {
-                        C3p0Util.close(CON);
+                        ConnectionPool.close(CON);
                 }
 
                 return result;
@@ -566,7 +567,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
                         throw new DAOException("email o resetPwdLink is null");
                 }
 
-                CON = C3p0Util.getConnection();
+                Connection CON = CP.getConnection();
                 try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM User WHERE  email = ? AND resetPwdEmailLink = ?"))
                 {
                         stmt.setString(1, email);
@@ -587,7 +588,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
                 }
                 finally
                 {
-                        C3p0Util.close(CON);
+                        ConnectionPool.close(CON);
                 }
 
                 return flag;

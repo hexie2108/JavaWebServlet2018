@@ -6,10 +6,12 @@
 package it.unitn.webprogramming18.dellmm.jstl;
 
 import it.unitn.webprogramming18.dellmm.db.daos.CategoryProductDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCCategoryProductDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
+import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
+import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 
 import java.io.IOException;
+import javax.servlet.ServletContext;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
@@ -21,7 +23,7 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
  */
 public class TagGetCategoryNameById extends SimpleTagSupport {
 
-    private final CategoryProductDAO categoryProductDAO = new JDBCCategoryProductDAO();
+    private CategoryProductDAO categoryProductDAO;
     private Integer categoryId;
 
     /**
@@ -33,8 +35,25 @@ public class TagGetCategoryNameById extends SimpleTagSupport {
         this.categoryId = categoryId;
     }
 
+    private synchronized void setDAO(ServletContext ctx) throws JspException{
+        if (categoryProductDAO == null) {
+            DAOFactory daoFactory = (DAOFactory) ctx.getAttribute("daoFactory");
+            if (daoFactory == null) {
+                throw new JspException("Impossible to get db factory for user storage system");
+            }
+
+            try {
+                categoryProductDAO = daoFactory.getDAO(CategoryProductDAO.class);
+            } catch (DAOFactoryException ex){
+                throw new JspException("Impossible to get CategoryProductDAO for user storage system", ex);
+            }
+        }
+    }
+
     @Override
     public void doTag() throws JspException, IOException {
+        setDAO(((PageContext) getJspContext()).getServletContext());
+
         //se id categoria non è nullo
         if (this.categoryId != null) {
 

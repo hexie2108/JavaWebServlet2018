@@ -1,15 +1,12 @@
 package it.unitn.webprogramming18.dellmm.db.daos.jdbc;
 
 import it.unitn.webprogramming18.dellmm.db.daos.ListDAO;
-import it.unitn.webprogramming18.dellmm.db.utils.C3p0Util;
+import it.unitn.webprogramming18.dellmm.db.utils.ConnectionPool;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.jdbc.JDBCDAO;
 import it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +14,9 @@ import java.util.List;
  * The JDBC implementation of the {@link ListDAO} interface.
  */
 public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListDAO {
+    public JDBCListDAO(ConnectionPool cp) {
+        super(cp);
+    }
 
     private ShoppingList getListFromResultSet(ResultSet rs) throws SQLException {
         ShoppingList list = new ShoppingList();
@@ -34,7 +34,7 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
     @Override
     public Long getCount() throws DAOException {
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM List")) {
             ResultSet counter = stmt.executeQuery();
             if (counter.next()) {
@@ -43,7 +43,7 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
         } catch (SQLException ex) {
             throw new DAOException("Impossible to count list", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return 0L;
@@ -56,7 +56,7 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
             throw new DAOException("list bean is null");
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement("INSERT INTO List (name, description, img, ownerId, categoryList) VALUES (?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
 
             stm.setString(1, list.getName());
@@ -76,7 +76,7 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
         } catch (SQLException ex) {
             throw new DAOException("Impossible to insert the new list", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
     }
 
@@ -87,7 +87,7 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
             throw new DAOException("primaryKey is null");
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM List WHERE id = ?")) {
             stm.setInt(1, primaryKey);
             try (ResultSet rs = stm.executeQuery()) {
@@ -98,7 +98,7 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the list for the passed primary key", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return list;
@@ -108,7 +108,7 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
     public List<ShoppingList> getAll() throws DAOException {
         List<ShoppingList> lists = new ArrayList<>();
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM List")) {
             try (ResultSet rs = stm.executeQuery()) {
                 while (rs.next()) {
@@ -118,7 +118,7 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the list of List", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return lists;
@@ -130,7 +130,7 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
             throw new DAOException("parameter not valid", new IllegalArgumentException("The passed list is null"));
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement(
                 " UPDATE List SET "
                         + " name = ?, "
@@ -153,7 +153,7 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
         } catch (SQLException ex) {
             throw new DAOException("Impossible to update the list", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return list;
@@ -166,7 +166,7 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
             throw new DAOException("userId is null");
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM List WHERE List.ownerId = ?")) {
             stm.setInt(1, userId);
             try (ResultSet rs = stm.executeQuery()) {
@@ -177,7 +177,7 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the owner list of user's List", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return lists;
@@ -190,7 +190,7 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
             throw new DAOException("userId is null");
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement("SELECT List.* FROM Permission JOIN List ON Permission.listId = List.id WHERE Permission.userId = ? "
                 + " AND List.ownerId <> ? ")) {
             stm.setInt(1, userId);
@@ -203,7 +203,7 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the shared list of user's List", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return lists;
@@ -216,7 +216,7 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
             throw new DAOException("userId is null");
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement("SELECT List.* FROM Permission JOIN List ON Permission.listId = List.id WHERE Permission.userId = ?")) {
             stm.setInt(1, userId);
             try (ResultSet rs = stm.executeQuery()) {
@@ -227,7 +227,7 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the list of user's List", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return lists;
@@ -240,7 +240,7 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
             throw new DAOException("userId is null");
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement("SELECT List.* FROM Permission JOIN List ON Permission.listId = List.id WHERE Permission.userId = ? AND Permission.addObject = 1")) {
             stm.setInt(1, userId);
             try (ResultSet rs = stm.executeQuery()) {
@@ -251,7 +251,7 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the list of user's List", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return lists;
@@ -265,7 +265,7 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
             throw new DAOException("listId is null");
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement("SELECT COUNT(*) FROM List JOIN ProductInList "
                 + " ON List.id = ProductInList.listId "
                 + " WHERE List.id = ?")) {
@@ -277,7 +277,7 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
         } catch (SQLException ex) {
             throw new DAOException("Impossible to count list", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return res;
@@ -290,7 +290,7 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
             throw new DAOException("parameter not valid", new IllegalArgumentException("The passed listId is null"));
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement(
                 " DELETE FROM List WHERE "
                         + " id = ? "
@@ -302,7 +302,7 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
         } catch (SQLException ex) {
             throw new DAOException("Impossible to update the list", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
     }
 

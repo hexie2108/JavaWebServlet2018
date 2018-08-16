@@ -1,7 +1,7 @@
 package it.unitn.webprogramming18.dellmm.db.daos.jdbc;
 
 import it.unitn.webprogramming18.dellmm.db.daos.NotificationDAO;
-import it.unitn.webprogramming18.dellmm.db.utils.C3p0Util;
+import it.unitn.webprogramming18.dellmm.db.utils.ConnectionPool;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.jdbc.JDBCDAO;
 import it.unitn.webprogramming18.dellmm.javaBeans.Notification;
@@ -21,13 +21,13 @@ import java.util.TimeZone;
  * The JDBC implementation of the {@link NotificationDAO} interface.
  */
 public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implements NotificationDAO {
+    public JDBCNotificationDAO(ConnectionPool cp) {
+        super(cp);
+        cal.setTimeZone(TimeZone.getTimeZone("UTC"));
+    }
 
     private Calendar cal = Calendar.getInstance();
 
-    public JDBCNotificationDAO() {
-
-        cal.setTimeZone(TimeZone.getTimeZone("UTC"));
-    }
 
     private Notification getNotificationFromResultSet(ResultSet rs) throws SQLException {
         Notification notification = new Notification();
@@ -43,8 +43,7 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
 
     @Override
     public Long getCount() throws DAOException {
-
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM Notification")) {
             ResultSet counter = stmt.executeQuery();
             if (counter.next()) {
@@ -53,7 +52,7 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
         } catch (SQLException ex) {
             throw new DAOException("Impossible to count notification", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return 0L;
@@ -64,7 +63,7 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
             throw new DAOException("notification bean is null");
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
 
         try (PreparedStatement stm = CON.prepareStatement("INSERT INTO Notification (date, text, status, userId) VALUES (?,?,?,?)",
                 Statement.RETURN_GENERATED_KEYS)) {
@@ -85,7 +84,7 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
         } catch (SQLException ex) {
             throw new DAOException("Impossible to insert the new notification", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
     }
 
@@ -96,7 +95,7 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
             throw new DAOException("primaryKey is null");
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Notification WHERE id = ?")) {
             stm.setInt(1, primaryKey);
             try (ResultSet rs = stm.executeQuery()) {
@@ -107,7 +106,7 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the notification for the passed primary key", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return notification;
@@ -117,7 +116,7 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
     public List<Notification> getAll() throws DAOException {
         List<Notification> notificationList = new ArrayList<>();
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Notification")) {
             try (ResultSet rs = stm.executeQuery()) {
                 while (rs.next()) {
@@ -127,7 +126,7 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the list of notification", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return notificationList;
@@ -139,7 +138,7 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
             throw new DAOException("parameter not valid", new IllegalArgumentException("The passed notification is null"));
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement(
                 "UPDATE Notification SET " +
                         "date = ?," +
@@ -160,7 +159,7 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
         } catch (SQLException ex) {
             throw new DAOException("Impossible to update the notification", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return notification;
@@ -172,7 +171,7 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
             throw new DAOException("primaryKey is null");
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement(
                 "SELECT Notification.* FROM "
                         + "Notification JOIN User ON  User.id = Notification.userId "
@@ -195,7 +194,7 @@ public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implemen
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the list of notification", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return notificationList;

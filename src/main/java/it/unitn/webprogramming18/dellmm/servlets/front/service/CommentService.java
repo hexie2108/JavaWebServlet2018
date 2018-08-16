@@ -2,9 +2,9 @@ package it.unitn.webprogramming18.dellmm.servlets.front.service;
 
 import it.unitn.webprogramming18.dellmm.db.daos.CommentDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.PermissionDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCCommentDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCPermissionDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
+import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
+import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.Comment;
 import it.unitn.webprogramming18.dellmm.javaBeans.Permission;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
@@ -30,8 +30,17 @@ public class CommentService extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        permissionDAO = new JDBCPermissionDAO();
-        commentDAO = new JDBCCommentDAO();
+        DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
+        if (daoFactory == null) {
+            throw new ServletException("Impossible to get db factory for user storage system");
+        }
+
+        try {
+            permissionDAO = daoFactory.getDAO(PermissionDAO.class);
+            commentDAO = daoFactory.getDAO(CommentDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get PermissionDAO or CommentDAO for user storage system", ex);
+        }
     }
 
     @Override

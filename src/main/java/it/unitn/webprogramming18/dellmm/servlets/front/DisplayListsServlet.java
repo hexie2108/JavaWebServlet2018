@@ -4,11 +4,9 @@ import it.unitn.webprogramming18.dellmm.db.daos.CommentDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.PermissionDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ProductDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCCommentDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCListDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCPermissionDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCProductDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
+import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
+import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList;
@@ -38,12 +36,20 @@ public class DisplayListsServlet extends HttpServlet {
     private CommentDAO commentDAO;
 
     @Override
-    public void init() {
+    public void init() throws ServletException {
+        DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
+        if (daoFactory == null) {
+            throw new ServletException("Impossible to get db factory for user storage system");
+        }
 
-        listDAO = new JDBCListDAO();
-        productDAO = new JDBCProductDAO();
-        permissionDAO = new JDBCPermissionDAO();
-        commentDAO = new JDBCCommentDAO();
+        try {
+            listDAO = daoFactory.getDAO(ListDAO.class);
+            productDAO = daoFactory.getDAO(ProductDAO.class);
+            permissionDAO = daoFactory.getDAO(PermissionDAO.class);
+            commentDAO = daoFactory.getDAO(CommentDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get ListDAO or ProductDAO or PermissionDAO or CommendDAO for user storage system", ex);
+        }
 
     }
 

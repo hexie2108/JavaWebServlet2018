@@ -1,8 +1,9 @@
 package it.unitn.webprogramming18.dellmm.servlets.userSystem.service;
 
 import it.unitn.webprogramming18.dellmm.db.daos.UserDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCUserDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
+import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
+import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.email.EmailFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
@@ -42,7 +43,16 @@ public class RegisterService extends HttpServlet {
     @Override
     public void init() throws ServletException {
 
-        userDAO = new JDBCUserDAO();
+        DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
+        if (daoFactory == null) {
+            throw new ServletException("Impossible to get db factory for user storage system");
+        }
+
+        try {
+            userDAO = daoFactory.getDAO(UserDAO.class);
+        } catch (DAOFactoryException ex) {
+            throw new ServletException("Impossible to get UserDAO for user storage system", ex);
+        }
 
         emailFactory = (EmailFactory) super.getServletContext().getAttribute("emailFactory");
         CheckErrorUtils.isNull(emailFactory, "Impossible to get email factory for email system");

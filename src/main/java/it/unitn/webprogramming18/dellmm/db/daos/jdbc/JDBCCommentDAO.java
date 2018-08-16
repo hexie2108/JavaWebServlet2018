@@ -1,15 +1,12 @@
 package it.unitn.webprogramming18.dellmm.db.daos.jdbc;
 
 import it.unitn.webprogramming18.dellmm.db.daos.CommentDAO;
-import it.unitn.webprogramming18.dellmm.db.utils.C3p0Util;
+import it.unitn.webprogramming18.dellmm.db.utils.ConnectionPool;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.jdbc.JDBCDAO;
 import it.unitn.webprogramming18.dellmm.javaBeans.Comment;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +15,9 @@ import java.util.List;
  * The JDBC implementation of the {@link CommentDAO} interface.
  */
 public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements CommentDAO {
+    public JDBCCommentDAO(ConnectionPool cp) {
+        super(cp);
+    }
 
     private Comment getCommentFromResultSet(ResultSet rs) throws SQLException {
         Comment comment = new Comment();
@@ -32,7 +32,7 @@ public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements Comment
 
     @Override
     public Long getCount() throws DAOException {
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stmt = CON.prepareStatement("SELECT COUNT(*) FROM Comment")) {
             ResultSet counter = stmt.executeQuery();
             if (counter.next()) {
@@ -41,7 +41,7 @@ public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements Comment
         } catch (SQLException ex) {
             throw new DAOException("Impossible to count comment", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return 0L;
@@ -53,7 +53,7 @@ public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements Comment
             throw new DAOException("comment bean is null");
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement("INSERT INTO Comment (userId, listId, text) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
 
             stm.setInt(1, comment.getUserId());
@@ -71,7 +71,7 @@ public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements Comment
         } catch (SQLException ex) {
             throw new DAOException("Impossible to insert the new comment", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
     }
 
@@ -82,7 +82,7 @@ public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements Comment
             throw new DAOException("primaryKey is null");
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Comment WHERE id = ?")) {
             stm.setInt(1, primaryKey);
             try (ResultSet rs = stm.executeQuery()) {
@@ -93,7 +93,7 @@ public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements Comment
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the comment for the passed primary key", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return comment;
@@ -103,7 +103,7 @@ public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements Comment
     public List<Comment> getAll() throws DAOException {
         List<Comment> commentList = new ArrayList<>();
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Comment")) {
             try (ResultSet rs = stm.executeQuery()) {
                 while (rs.next()) {
@@ -113,7 +113,7 @@ public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements Comment
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the list of comment", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return commentList;
@@ -125,7 +125,7 @@ public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements Comment
             throw new DAOException("parameter not valid", new IllegalArgumentException("The passed comment is null"));
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement(
                 " UPDATE Comment SET "
                         + " userId = ?, "
@@ -144,7 +144,7 @@ public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements Comment
         } catch (SQLException ex) {
             throw new DAOException("Impossible to update the comment", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return comment;
@@ -158,7 +158,7 @@ public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements Comment
             throw new DAOException("listId is null");
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement("SELECT Comment.userId, Comment.text FROM Comment WHERE Comment.listId = ? ")) {
             stm.setString(1, listId);
             try (ResultSet rs = stm.executeQuery()) {
@@ -173,7 +173,7 @@ public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements Comment
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the list of comment", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return comments;
@@ -187,7 +187,7 @@ public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements Comment
             throw new DAOException("listId is null");
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Comment WHERE Comment.listId = ? ORDER BY Comment.id ASC")) {
             stm.setInt(1, listId);
             try (ResultSet rs = stm.executeQuery()) {
@@ -198,7 +198,7 @@ public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements Comment
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the list of comment", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return commentList;
@@ -211,7 +211,7 @@ public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements Comment
             throw new DAOException("listId is null");
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement("SELECT COUNT(*) FROM Comment WHERE Comment.listId = ?")) {
             stm.setInt(1, listId);
             ResultSet counter = stm.executeQuery();
@@ -221,7 +221,7 @@ public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements Comment
         } catch (SQLException ex) {
             throw new DAOException("Impossible to count comment by listid", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return number;
@@ -234,7 +234,7 @@ public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements Comment
             throw new DAOException("parameter not valid", new IllegalArgumentException("The passed commentId is null"));
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement(
                 " DELETE FROM Comment WHERE "
                         + " id = ? "
@@ -246,7 +246,7 @@ public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements Comment
         } catch (SQLException ex) {
             throw new DAOException("Impossible to update the comment", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
     }
 }
