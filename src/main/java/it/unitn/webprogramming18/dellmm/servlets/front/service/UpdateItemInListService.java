@@ -14,10 +14,13 @@ import it.unitn.webprogramming18.dellmm.javaBeans.ProductInList;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
 import it.unitn.webprogramming18.dellmm.util.FileUtils;
+import it.unitn.webprogramming18.dellmm.util.ServletUtility;
+import it.unitn.webprogramming18.dellmm.util.i18n;
 
 import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ResourceBundle;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -67,6 +70,10 @@ public class UpdateItemInListService extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+        //Language bundle
+        ResourceBundle rb = i18n.getBundle(request);
+
         //string che memorizza il risultato dell'operazione
         String result = null;
         //get azione che vuoi fare
@@ -78,7 +85,7 @@ public class UpdateItemInListService extends HttpServlet {
 
         //se manca il parametro
         if (action == null || productId == null || listId == null) {
-            throw new ServletException("manca il parametro action o  id del prodotto o id della lista da aggiungere");
+            throw new ServletException("manca il parametro action o id del prodotto o id della lista da aggiungere");
         }
 
         //get user corrente
@@ -90,9 +97,13 @@ public class UpdateItemInListService extends HttpServlet {
         } catch (DAOException ex) {
             throw new ServletException(ex.getMessage(), ex);
         }
+        
         //se il permesso è  vuoto
-        CheckErrorUtils.isNull(permission, "non hai nessun permesso su tale lista");
-
+        if (permission == null) {
+            ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.noPermissionOnList"));
+            return;
+        }
+        
         //in caso di inserimento
         if (action.equals("insert")) {
             if (permission.isAddObject()) {
@@ -115,7 +126,8 @@ public class UpdateItemInListService extends HttpServlet {
                     throw new ServletException(ex.getMessage(), ex);
                 }
             } else {
-                throw new ServletException("non hai il permesso di inserire il prodotto a questa lista");
+                ServletUtility.sendError(request, response, 400, rb.getString("permission.insertItemNotAllowed")); //Not allowed insert item in list
+                return;
             }
 
         }
@@ -148,8 +160,9 @@ public class UpdateItemInListService extends HttpServlet {
                     throw new ServletException(ex.getMessage(), ex);
                 }
                 result = "DeleteOk";
-            } else {
-                throw new ServletException("non hai il permesso di eliminare il prodotto da questa lista");
+            } else { 
+                ServletUtility.sendError(request, response, 400, rb.getString("permission.deleteItemNotAllowed")); //Not allowed delete item in list
+                return;
             }
         }
 

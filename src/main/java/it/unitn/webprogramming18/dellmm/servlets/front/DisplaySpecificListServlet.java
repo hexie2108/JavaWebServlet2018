@@ -19,9 +19,12 @@ import it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
 import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
+import it.unitn.webprogramming18.dellmm.util.ServletUtility;
+import it.unitn.webprogramming18.dellmm.util.i18n;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.ResourceBundle;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -104,9 +107,13 @@ public class DisplaySpecificListServlet extends HttpServlet {
             numberOfComment = commentDAO.getNumberOfCommentsByListId(listId);
             //get il permesso dell'utente attuale su tale lista
             userPermissionsOnList = permissionDAO.getUserPermissionOnListByIds(user.getId(), listId);
+            
+            ResourceBundle rb = i18n.getBundle(request);
             if (userPermissionsOnList == null) {
-                throw new ServletException("non hai nessun permesso su questa lista");
+                ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.noPermissionOnList"));
+                return;
             }
+            
             //in caso che utente è il proprietario
             if (shoppingList.getOwnerId() == user.getId()) {
                 //get la lista di permesso su tale lista spesa

@@ -9,8 +9,11 @@ import it.unitn.webprogramming18.dellmm.javaBeans.Comment;
 import it.unitn.webprogramming18.dellmm.javaBeans.Permission;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
+import it.unitn.webprogramming18.dellmm.util.ServletUtility;
+import it.unitn.webprogramming18.dellmm.util.i18n;
 
 import java.io.IOException;
+import java.util.ResourceBundle;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -46,13 +49,18 @@ public class CommentService extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        
+        ResourceBundle rb = i18n.getBundle(request);
+        
         //string che memorizza il risultato dell'operazione
         String result = null;
         //get l'azione che vuoi fare
         String action = request.getParameter("action");
-        //se azione è nullo
-        CheckErrorUtils.isNull(action, "manca il parametro action");
+        //se azione è nullo 
+        if(action == null){
+            ServletUtility.sendError(request, response, 400, rb.getString("users.errors.missingAction")); //manca il parametro action
+            return;
+	}
 
         //in caso di inserimento
         if (action.equals("insert")) {
@@ -60,13 +68,17 @@ public class CommentService extends HttpServlet {
             String listId = request.getParameter("listId");
             //get testo di commento
             String commentText = request.getParameter("commentText");
-            //se manca parametro id lista
+            //se manca parametro id lista servlet.errors.nullTextParameter
             CheckErrorUtils.isNull(listId, "manca il parametro listId");
             //se manca testo di commento
-            CheckErrorUtils.isNull(commentText, "manca il parametro commentText");
+            if(commentText == null){
+		ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.nullTextParameter")); //manca il parametro commentText
+		return;
+            }
             //se il  testo di commento è vuoto
             if ("".equals(commentText)) {
-                throw new ServletException("il contenuto del commento è vuoto");
+		ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.emptyTextParameter")); //manca il parametro commentText
+		return;
             }
 
             //get user corrente
@@ -76,7 +88,10 @@ public class CommentService extends HttpServlet {
             try {
                 permission = permissionDAO.getUserPermissionOnListByIds(user.getId(), Integer.parseInt(listId));
                 //se il permesso è  vuoto
-                CheckErrorUtils.isNull(permission, "non hai nessun permesso su tale lista");
+                if(permission == null){
+                    ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.noPermissionOnList")); //non hai nessun permesso su tale lista
+                    return;
+                }
 
                 //crea istanza di commento
                 Comment comment = new Comment();
@@ -120,7 +135,8 @@ public class CommentService extends HttpServlet {
                 }
                 //altrimenti errore
                 else {
-                    throw new ServletException("non sei il proprietario del commento specificato");
+                    ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.nonCommentAuthor"));
+                    return;
                 }
             } catch (DAOException ex) {
                 throw new ServletException(ex.getMessage(), ex);

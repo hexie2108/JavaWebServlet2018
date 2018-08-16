@@ -11,12 +11,15 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
+import it.unitn.webprogramming18.dellmm.util.ServletUtility;
+import it.unitn.webprogramming18.dellmm.util.i18n;
 
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -52,12 +55,17 @@ public class SearchServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         //get parola ricercata
         String searchWords = request.getParameter("searchWords");
+        
+        ResourceBundle rb = i18n.getBundle(request);
+        
         //se parola non esiste
         if (searchWords == null) {
-            throw new ServletException("la parola da cercare è nullo");
+            ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.nullSearchWord"));
+            return;
         }
         if (searchWords.equals("")) {
-            throw new ServletException("la parola da cercare è vuota");
+            ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.emptySearchWord"));
+            return;
         }
 
         //get ordine richiesta
@@ -66,7 +74,8 @@ public class SearchServlet extends HttpServlet {
         if (order != null) {
             //ma con valore diverso da quelli prefissati
             if (!order.equals("categoryName") && !order.equals("productName") && !order.equals("relevance")) {
-                throw new ServletException("il parametro di ordinamento non valido");
+                ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.invalidSortParameter"));
+                return;
             }
         }
         //altrimenti, assegna il valore default
@@ -80,7 +89,8 @@ public class SearchServlet extends HttpServlet {
         // Se vuoto assegna default, se non valido crea exception
         if (direction != null) {
             if(!direction.equals("asc") && !direction.equals("desc")) {
-                throw new ServletException("il parametro direction non è valido");
+                ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.invalidDirectionParameter"));
+                return;
             }
         }
         else {

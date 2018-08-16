@@ -1,24 +1,21 @@
 package it.unitn.webprogramming18.dellmm.servlets.front.service;
 
-import it.unitn.webprogramming18.dellmm.db.daos.CommentDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ListDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.PermissionDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.UserDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
-import it.unitn.webprogramming18.dellmm.javaBeans.Comment;
 import it.unitn.webprogramming18.dellmm.javaBeans.Permission;
 import it.unitn.webprogramming18.dellmm.javaBeans.ShoppingList;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
+import it.unitn.webprogramming18.dellmm.util.ServletUtility;
+import it.unitn.webprogramming18.dellmm.util.i18n;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ResourceBundle;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -51,16 +48,21 @@ public class SharingService extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+        //Languages bundle
+        ResourceBundle rb = i18n.getBundle(request);
+        
         //string che memorizza il risultato dell'operazione
         String result = null;
 
         //get l'azione che vuoi fare
         String action = request.getParameter("action");
         //se azione è nullo
-        CheckErrorUtils.isNull(action, "manca il parametro action");
+        if(action == null){
+            ServletUtility.sendError(request, response, 400, rb.getString("users.errors.missingAction")); //manca il parametro action
+            return;
+	}
         //get id lista
         String listId = request.getParameter("listId");
         //se id lista è nullo
@@ -82,7 +84,8 @@ public class SharingService extends HttpServlet {
 
         // controllare  se utente corrente è il proprietario della lista
         if (user.getId() != shoppingList.getOwnerId()) {
-            throw new ServletException("non sei il proprietario, non hai diritto di manipolare la sharing");
+            ServletUtility.sendError(request, response, 400, rb.getString("permission.shareListNotAllowed")); //"non sei il proprietario, non hai diritto di manipolare la sharing");
+            return;
         }
 
         String modifyList = null;
@@ -96,7 +99,8 @@ public class SharingService extends HttpServlet {
             String userEmail = request.getParameter("userEmail");
 
             if (userEmail == null || userEmail.equals("")) {
-                throw new ServletException("manca il parametro userEmail o userEmail è vuoto");
+                ServletUtility.sendError(request, response, 400, rb.getString("upgradeUserToAdmin.errors.emailMissing")); //"non esiste utente con tale email o email vuota
+                return;
             }
 
             User userToShare = null;
@@ -104,11 +108,15 @@ public class SharingService extends HttpServlet {
                 //get user beans dell'utente da condividere
                 userToShare = userDAO.getByEmail(userEmail);
                 //se  user beans  è  nullo
-                CheckErrorUtils.isNull(userToShare, "non esiste l'utente con tale email");
+                if(userToShare == null){
+                    ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.noUserWithSuchEmail")); //non esiste l'utente con tale email
+                    return;
+                }
 
                 //se utente da condividere ha già un permesso su questa lista (ripetizione)
                 if (permissionDAO.getUserPermissionOnListByIds(userToShare.getId(), Integer.parseInt(listId)) != null) {
-                    throw new ServletException("l'utente è stato già condiviso");
+                    ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.listAlreadySharedWithUser")); //Lista già condivisa con l'utente
+                    return;
                 }
             } catch (DAOException ex) {
                 throw new ServletException(ex.getMessage(), ex);
@@ -224,9 +232,7 @@ public class SharingService extends HttpServlet {
 
         //se valore di action è sconosciuto
         else {
-
             throw new ServletException("valore di action non riconosciuto");
-
         }
 
         //ritorna alla pagina di provenienza

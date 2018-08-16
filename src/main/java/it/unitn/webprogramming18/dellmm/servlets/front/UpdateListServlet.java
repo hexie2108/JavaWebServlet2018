@@ -10,8 +10,11 @@ import it.unitn.webprogramming18.dellmm.javaBeans.Permission;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
 import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
+import it.unitn.webprogramming18.dellmm.util.ServletUtility;
+import it.unitn.webprogramming18.dellmm.util.i18n;
 
 import java.io.IOException;
+import java.util.ResourceBundle;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -56,12 +59,13 @@ public class UpdateListServlet extends HttpServlet {
             //set titolo della pagina
             request.setAttribute(ConstantsUtils.HEAD_TITLE, "crea la nuova lista");
         }
-
         //in caso di update della lista esistente
         else {
             //get user corrente
             User user = (User) request.getSession().getAttribute("user");
 
+            ResourceBundle rb = i18n.getBundle(request);
+            
             ShoppingList shoppingList = null;
             Permission permission = null;
             try {
@@ -73,10 +77,15 @@ public class UpdateListServlet extends HttpServlet {
                 //get permesso dell'utente su tale lista
                 permission = permissionDAO.getUserPermissionOnListByIds(user.getId(), Integer.parseInt(listId));
                 //se il permesso è  nullo
-                CheckErrorUtils.isNull(permission, "non hai nessun permesso su tale lista");
+                if(permission == null){
+                    ServletUtility.sendError(request, response, 400 , rb.getString("servlet.errors.noPermissionOnList")); //non hai nessun permesso su tale lista
+                    return;
+                }
                 //se utente non ha il permesso di modificare la lista
-                CheckErrorUtils.isFalse(permission.isModifyList(), "non hai il permesso di modificare tale lista");
-
+                if(!permission.isModifyList()) {
+                    ServletUtility.sendError(request, response, 400 , rb.getString("permission.modifyListNotAllowed")); //non hai il permesso di modificare tale lista
+                    return; 
+                }
             } catch (DAOException ex) {
                 throw new ServletException(ex.getMessage(), ex);
             }

@@ -14,10 +14,13 @@ import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
 import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
 import it.unitn.webprogramming18.dellmm.util.FileUtils;
 import it.unitn.webprogramming18.dellmm.util.FormValidator;
+import it.unitn.webprogramming18.dellmm.util.ServletUtility;
+import it.unitn.webprogramming18.dellmm.util.i18n;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.ResourceBundle;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -58,6 +61,9 @@ public class UpdateProductService extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        //Language bundle
+        ResourceBundle rb = i18n.getBundle(request);
+        
         // usa un metodo statico per controllare se la richiesta è codificato in formato multipart/form-data
         CheckErrorUtils.isFalse(ServletFileUpload.isMultipartContent(request), "la richiesta non è stata codificata in formato multipart/form-data");
 
@@ -66,17 +72,17 @@ public class UpdateProductService extends HttpServlet {
             //in caso di richiesta codificato in formato multipart, deve usare questo metodo per ottenre i parametri in formato di lista
             items = FileUtils.initial().parseRequest(request);
         } catch (FileUploadException ex) {
-            throw new ServletException("l'errore durante analisi della richiesta");
+            throw new ServletException("Errore durante analisi della richiesta");
         }
 
         String productName = null;
         String productCategory = null;
         String productDescription = null;
         String listId = null;
-        String prodcutImg = null;
+        String productImg = null;
         String productLogo = null;
-        FileItem prodcutImgFileItem = null;
-        FileItem prodcutLogoFileItem = null;
+        FileItem productImgFileItem = null;
+        FileItem productLogoFileItem = null;
 
         if (items != null && items.size() > 0) {
             for (FileItem item : items) {
@@ -104,28 +110,53 @@ public class UpdateProductService extends HttpServlet {
 
                     // se name uguale "productImg",
                     if (item.getFieldName().equals("productImg")) {
-                        prodcutImgFileItem = item;
+                        productImgFileItem = item;
                     }
                     //se item name uguale "prodocutLogo"
                     else if (item.getFieldName().equals("prodocutLogo")) {
-                        prodcutLogoFileItem = item;
+                        productLogoFileItem = item;
                     }
-
                 }
-
             }
         }
 
-                //se variabile sono nullo
-                CheckErrorUtils.isNull(productName, "manca il parametro productName");
-                CheckErrorUtils.isFalse(FormValidator.validateGeneralInput(productName), "il parametro productName ha superato la lunghezza massima consentita");
-                CheckErrorUtils.isNull(productCategory, "manca il parametro productCategory");
-                CheckErrorUtils.isNull(productDescription, "manca il parametro productDescription");
-                CheckErrorUtils.isNull(listId, "manca il parametro listId");
-                CheckErrorUtils.isNull(prodcutImgFileItem, "manca il prametro file prodcutImgFileItem");
-                CheckErrorUtils.isNull(prodcutLogoFileItem, "manca il prametro file prodcutLogoFileItem");
-                CheckErrorUtils.isFalse(FormValidator.isValidFileExtension(prodcutImgFileItem.getContentType()), "il file img di prodotto caricato non è un tipo valido");
-                CheckErrorUtils.isFalse(FormValidator.isValidFileExtension(prodcutLogoFileItem.getContentType()), "il file img di logo caricato non è un tipo valido");
+        //se variabili sono nulle
+        if(productName == null){
+            ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.nameMissing")); //manca il parametro listName
+            return;
+	}
+        if (!FormValidator.validateGeneralInput(productName)){
+            ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.textLengthExceeded")); //"il parametro productName ha superato la lunghezza massima consentita");
+            return;
+        }
+        if(productCategory == null){
+            ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.categoryMissing")); //manca il parametro productCategory
+            return;
+	}
+        if(productDescription == null){
+            ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.descriptionMissing")); //manca il parametro productDescription
+            return;
+        }
+        
+        //ListId is of logic competence, no need to i18n for user
+        CheckErrorUtils.isNull(listId, "manca il parametro listId");
+        
+        if(productImgFileItem == null){
+            ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.imageMissing")); //manca il prametro file productImg
+            return;
+        }
+        if(productLogoFileItem == null){
+            ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.logoMissing")); //manca il prametro file logoImg
+            return;
+        }
+        if (!FormValidator.isValidFileExtension(productImgFileItem.getContentType())) {
+            ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.invalidFileFormat")); // "il file caricato non è un tipo valido");
+            return;
+        }
+        if (!FormValidator.isValidFileExtension(productLogoFileItem.getContentType())) {
+            ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.invalidFileFormat")); // "il file caricato non è un tipo valido");
+            return;
+        }
 
         //get user corrente
         User user = (User) request.getSession().getAttribute("user");
@@ -133,9 +164,15 @@ public class UpdateProductService extends HttpServlet {
         try {
             Permission permission = permissionDAO.getUserPermissionOnListByIds(user.getId(), Integer.parseInt(listId));
             //se il permesso è  nullo
-            CheckErrorUtils.isNull(permission, "non hai nessun permesso su tale lista");
-            //se utente non ha il permesso per inserire il prodotto
-            CheckErrorUtils.isFalse(permission.isAddObject(), "non hai il permesso di inserire il prodotto a tale lista");
+            if(permission == null){
+                ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.noPermissionOnList"));
+                return;
+            }
+            //se utente non ha il permesso per inserire il prodotto permission.insertItemNotAllowed
+            if(!permission.isAddObject()) {
+                ServletUtility.sendError(request, response, 400, rb.getString("permission.insertItemNotAllowed"));
+                return;
+            }
         } catch (DAOException ex) {
             throw new ServletException(ex.getMessage(), ex);
         }
@@ -143,15 +180,15 @@ public class UpdateProductService extends HttpServlet {
         //set il percorso complete per salvare immagine
         String uploadPath = request.getServletContext().getRealPath("/") + ConstantsUtils.IMAGE_BASE_PATH;
         //salva l'immagine di prodotto e get il nome salvato
-        prodcutImg = FileUtils.upload(prodcutImgFileItem, uploadPath + File.separator + ConstantsUtils.IMAGE_OF_PRODUCT, ConstantsUtils.IMAGE_OF_PRODUCT_WIDTH, ConstantsUtils.IMAGE_OF_PRODUCT_HEIGHT);
+        productImg = FileUtils.upload(productImgFileItem, uploadPath + File.separator + ConstantsUtils.IMAGE_OF_PRODUCT, ConstantsUtils.IMAGE_OF_PRODUCT_WIDTH, ConstantsUtils.IMAGE_OF_PRODUCT_HEIGHT);
         //salva l'immagine di logo e get il nome salvato
-        productLogo = FileUtils.upload(prodcutLogoFileItem, uploadPath + File.separator + ConstantsUtils.IMAGE_LOGO_OF_PRODUCT, ConstantsUtils.IMAGE_LOGO_OF_PRODUCT_WIDTH, ConstantsUtils.IMAGE_LOGO_OF_PRODUCT_HEIGHT);
+        productLogo = FileUtils.upload(productLogoFileItem, uploadPath + File.separator + ConstantsUtils.IMAGE_LOGO_OF_PRODUCT, ConstantsUtils.IMAGE_LOGO_OF_PRODUCT_WIDTH, ConstantsUtils.IMAGE_LOGO_OF_PRODUCT_HEIGHT);
 
         //crea beans di prodotto
         Product product = new Product();
         product.setName(productName);
         product.setDescription(productDescription);
-        product.setImg(prodcutImg);
+        product.setImg(productImg);
         product.setLogo(productLogo);
         product.setCategoryProductId(Integer.parseInt(productCategory));
         product.setPrivateListId(Integer.parseInt(listId));

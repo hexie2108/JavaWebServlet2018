@@ -12,8 +12,11 @@ import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.Permission;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
+import it.unitn.webprogramming18.dellmm.util.ServletUtility;
+import it.unitn.webprogramming18.dellmm.util.i18n;
 
 import java.io.IOException;
+import java.util.ResourceBundle;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -56,7 +59,9 @@ public class ChangeListService extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        
+        ResourceBundle rb = i18n.getBundle(request);
+        
         //get id lista
         String listId = request.getParameter("listId");
         //se listId è nullo
@@ -69,7 +74,10 @@ public class ChangeListService extends HttpServlet {
         try {
             permission = permissionDAO.getUserPermissionOnListByIds(user.getId(), Integer.parseInt(listId));
             //se il permesso è  vuoto
-            CheckErrorUtils.isNull(permission, "non hai nessun permesso su tale lista");
+            if (permission == null) {
+                ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.noPermissionOnList"));
+                return;
+            }
         } catch (DAOException ex) {
             throw new ServletException(ex.getMessage(), ex);
         }
