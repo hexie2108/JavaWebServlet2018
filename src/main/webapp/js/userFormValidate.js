@@ -30,7 +30,8 @@ function validateRegister() {
 
         //check email
         //espressione per controllare il formatto di email
-        var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/;
+
+        var reg = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
         //se è vuoto o se supera la lunghezza massima o non rispetta il formatto di email
         if (email === "" || email.length > 44 || !reg.test(email))
         {

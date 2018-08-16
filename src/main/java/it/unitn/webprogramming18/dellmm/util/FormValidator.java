@@ -147,6 +147,7 @@ public class FormValidator
          */
         public static boolean validateEmail(String email)
         {
+                String pattern = "^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$";
                 boolean ris = true;
 
                 if (email == null || email.isEmpty())
@@ -159,7 +160,7 @@ public class FormValidator
                         ris = false;
                 }
 
-                else if (!validateEmailFormat(email))
+                else if (!validateEmailFormat(email) || !email.matches(pattern))
                 {
                         //se il formato non è valido
                         ris = false;
