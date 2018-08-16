@@ -2,8 +2,6 @@ package it.unitn.webprogramming18.dellmm.servlets.front;
 
 import it.unitn.webprogramming18.dellmm.db.daos.CategoryProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ProductDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCCategoryProductDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCProductDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;

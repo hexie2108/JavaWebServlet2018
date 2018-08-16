@@ -8,8 +8,6 @@ package it.unitn.webprogramming18.dellmm.servlets.another;
 import com.google.gson.Gson;
 import it.unitn.webprogramming18.dellmm.db.daos.ProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ProductInListDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCProductDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCProductInListDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;

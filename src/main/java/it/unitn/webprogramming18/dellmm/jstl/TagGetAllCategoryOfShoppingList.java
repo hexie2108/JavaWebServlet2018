@@ -6,7 +6,6 @@
 package it.unitn.webprogramming18.dellmm.jstl;
 
 import it.unitn.webprogramming18.dellmm.db.daos.CategoryListDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCCategoryListDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
