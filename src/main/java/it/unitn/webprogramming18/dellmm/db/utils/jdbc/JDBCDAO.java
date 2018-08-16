@@ -6,7 +6,6 @@
  */
 package it.unitn.webprogramming18.dellmm.db.utils.jdbc;
 
-import it.unitn.webprogramming18.dellmm.db.utils.C3p0Util;
 import it.unitn.webprogramming18.dellmm.db.utils.ConnectionPool;
 import it.unitn.webprogramming18.dellmm.db.utils.DAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
@@ -39,13 +38,6 @@ public abstract class JDBCDAO<ENTITY_CLASS, PRIMARY_KEY_CLASS> implements DAO<EN
         super();
         FRIEND_DAOS = new HashMap<>();
         CP = cp;
-    }
-
-    // TODO: Da togliere
-    protected JDBCDAO() {
-        super();
-        FRIEND_DAOS = new HashMap<>();
-        CP = C3p0Util.getConnectionPool();
     }
 
     /**

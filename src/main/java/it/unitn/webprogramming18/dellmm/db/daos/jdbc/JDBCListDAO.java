@@ -14,11 +14,6 @@ import java.util.List;
  * The JDBC implementation of the {@link ListDAO} interface.
  */
 public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListDAO {
-    // TODO: Da togliere
-    public JDBCListDAO() {
-        super();
-    }
-
     public JDBCListDAO(ConnectionPool cp) {
         super(cp);
     }

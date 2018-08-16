@@ -15,11 +15,6 @@ import java.util.UUID;
  * The JDBC implementation of the {@link UserDAO} interface.
  */
 public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
-    // TODO: Da togliere
-    public JDBCUserDAO() {
-        super();
-    }
-
     public JDBCUserDAO(ConnectionPool cp) {
         super(cp);
     }

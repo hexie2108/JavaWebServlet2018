@@ -6,7 +6,6 @@
  */
 package it.unitn.webprogramming18.dellmm.listeners;
 
-import it.unitn.webprogramming18.dellmm.db.utils.C3p0Util;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.jdbc.JDBCDAOFactory;
@@ -47,7 +46,6 @@ public class WebAppContextListener implements ServletContextListener {
             JDBCDAOFactory.configure(dburl, dbuser, dbpwd);
             JDBCDAOFactory jdbcDaoFactory = JDBCDAOFactory.getInstance();
             sce.getServletContext().setAttribute("daoFactory", (DAOFactory) jdbcDaoFactory);
-            C3p0Util.initDBPool(jdbcDaoFactory.getCP());
         } catch (DAOFactoryException ex) {
                 Logger.getLogger(getClass().getName()).severe(ex.toString());
                 throw new RuntimeException(ex);

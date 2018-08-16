@@ -14,11 +14,6 @@ import java.util.List;
  * The JDBC implementation of the {@link PermissionDAO} interface.
  */
 public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements PermissionDAO {
-    // TODO: Da togliere
-    public JDBCPermissionDAO() {
-        super();
-    }
-
     public JDBCPermissionDAO(ConnectionPool cp) {
         super(cp);
     }

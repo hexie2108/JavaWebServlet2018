@@ -14,11 +14,6 @@ import java.util.List;
  * The JDBC implementation of the {@link LogDAO} interface.
  */
 public class JDBCLogDAO extends JDBCDAO<Log, Integer> implements LogDAO {
-    // TODO: Da togliere
-    public JDBCLogDAO() {
-        super();
-    }
-
     public JDBCLogDAO(ConnectionPool cp) {
         super(cp);
     }

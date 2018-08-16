@@ -21,12 +21,6 @@ import java.util.TimeZone;
  * The JDBC implementation of the {@link NotificationDAO} interface.
  */
 public class JDBCNotificationDAO extends JDBCDAO<Notification, Integer> implements NotificationDAO {
-    // TODO: Da togliere
-    public JDBCNotificationDAO() {
-        super();
-        cal.setTimeZone(TimeZone.getTimeZone("UTC"));
-    }
-
     public JDBCNotificationDAO(ConnectionPool cp) {
         super(cp);
         cal.setTimeZone(TimeZone.getTimeZone("UTC"));

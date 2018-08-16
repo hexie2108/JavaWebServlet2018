@@ -15,11 +15,6 @@ import java.util.List;
  * The JDBC implementation of the {@link CommentDAO} interface.
  */
 public class JDBCCommentDAO extends JDBCDAO<Comment, Integer> implements CommentDAO {
-    // TODO: Da togliere
-    public JDBCCommentDAO() {
-        super();
-    }
-
     public JDBCCommentDAO(ConnectionPool cp) {
         super(cp);
     }

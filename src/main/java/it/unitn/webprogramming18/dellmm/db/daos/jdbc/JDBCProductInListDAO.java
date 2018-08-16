@@ -14,11 +14,6 @@ import java.util.List;
  * The JDBC implementation of the {@link ProductInList} interface.
  */
 public class JDBCProductInListDAO extends JDBCDAO<ProductInList, Integer> implements ProductInListDAO {
-    // TODO: Da togliere
-    public JDBCProductInListDAO() {
-        super();
-    }
-
     public JDBCProductInListDAO(ConnectionPool cp) {
         super(cp);
     }
