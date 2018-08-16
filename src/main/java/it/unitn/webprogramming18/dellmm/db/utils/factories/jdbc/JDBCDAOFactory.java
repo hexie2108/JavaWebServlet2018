@@ -1,13 +1,10 @@
 package it.unitn.webprogramming18.dellmm.db.utils.factories.jdbc;
 
-import com.mchange.v2.c3p0.ComboPooledDataSource;
 import it.unitn.webprogramming18.dellmm.db.utils.ConnectionPool;
 import it.unitn.webprogramming18.dellmm.db.utils.DAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.db.utils.jdbc.JDBCDAO;
-
-import java.beans.PropertyVetoException;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

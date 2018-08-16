@@ -5,11 +5,14 @@ import it.unitn.webprogramming18.dellmm.db.daos.ProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCCategoryProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCProductDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
+import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
+import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
@@ -23,11 +26,28 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
  */
 public class TagGetElementsOfShoppingListByCookie extends SimpleTagSupport {
 
-    private final CategoryProductDAO categoryProductDAO = new JDBCCategoryProductDAO();
-    private final ProductDAO productDAO = new JDBCProductDAO();
+    private ProductDAO productDAO;
+
+
+    private synchronized void setDAO(ServletContext ctx) throws JspException{
+        if (productDAO == null) {
+            DAOFactory daoFactory = (DAOFactory) ctx.getAttribute("daoFactory");
+            if (daoFactory == null) {
+                throw new JspException("Impossible to get db factory for user storage system");
+            }
+
+            try {
+                productDAO = daoFactory.getDAO(ProductDAO.class);
+            } catch (DAOFactoryException ex){
+                throw new JspException("Impossible to get ProductDAO for user storage system", ex);
+            }
+        }
+    }
+
 
     @Override
     public void doTag() throws JspException, IOException {
+        setDAO(((PageContext)getJspContext()).getServletContext());
 
         PageContext pageContext = (PageContext) getJspContext();
         Cookie cookies[] = ((HttpServletRequest) pageContext.getRequest()).getCookies();
