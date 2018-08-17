@@ -9,6 +9,8 @@ import it.unitn.webprogramming18.dellmm.email.EmailFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
 import it.unitn.webprogramming18.dellmm.util.FormValidator;
+import it.unitn.webprogramming18.dellmm.util.ServletUtility;
+import it.unitn.webprogramming18.dellmm.util.i18n;
 
 import javax.mail.MessagingException;
 import javax.servlet.ServletException;
@@ -17,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ResourceBundle;
 import java.util.UUID;
 
 /**
@@ -27,65 +30,74 @@ import java.util.UUID;
 public class ForgotPasswordService extends HttpServlet
 {
 
-        private UserDAO userDAO;
-        private EmailFactory emailFactory;
+    private UserDAO userDAO;
+    private EmailFactory emailFactory;
 
-        @Override
-        public void init() throws ServletException
-        {
-                DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
-                if (daoFactory == null) {
-                        throw new ServletException("Impossible to get db factory for user storage system");
-                }
-
-                try {
-                        userDAO = daoFactory.getDAO(UserDAO.class);
-                } catch (DAOFactoryException ex) {
-                        throw new ServletException("Impossible to get UserDAO for user storage system", ex);
-                }
-
-                emailFactory = (EmailFactory) super.getServletContext().getAttribute("emailFactory");
-                if (emailFactory == null)
-                {
-                        throw new ServletException("Impossible to get email factory for email system");
-                }
+    @Override
+    public void init() throws ServletException
+    {
+        DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
+        if (daoFactory == null) {
+                throw new ServletException("Impossible to get db factory for user storage system");
         }
 
-        @Override
-        protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+        try {
+                userDAO = daoFactory.getDAO(UserDAO.class);
+        } catch (DAOFactoryException ex) {
+                throw new ServletException("Impossible to get UserDAO for user storage system", ex);
+        }
+
+        emailFactory = (EmailFactory) super.getServletContext().getAttribute("emailFactory");
+        if (emailFactory == null)
+        {
+                throw new ServletException("Impossible to get email factory for email system");
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        
+        //Language bundle
+        ResourceBundle rb = i18n.getBundle(request);   
+        
+        String email = request.getParameter(FormValidator.EMAIL_KEY);
+        if(!FormValidator.validateEmail(email)) {
+            ServletUtility.sendError(request, response, 400, rb.getString("validateUser.errors.EMAIL_NOT_VALID"));
+            return;
+        } //"email non è valido");
+        if(!(!FormValidator.checkEmailRepeat(email, userDAO))) {
+            ServletUtility.sendError(request, response, 400, rb.getString("validateUser.errors.EMAIL_NOT_EXISTING"));
+            return;            
+        }//, "email non esiste");
+
+        User user = null;
+        try
+        {
+            user = userDAO.getByEmail(email);
+            user.setResetPwdEmailLink(UUID.randomUUID().toString());
+            userDAO.update(user);
+
+            emailFactory.sendEmailOfRestPassword(user, request);
+
+        }
+        catch (DAOException ex)
         {
 
-                String email = request.getParameter(FormValidator.EMAIL_KEY);
-                CheckErrorUtils.isFalse(FormValidator.validateEmail(email), "email non è valido");
-                CheckErrorUtils.isFalse(!FormValidator.checkEmailRepeat(email, userDAO), "email non esiste");
-
-                User user = null;
-                try
-                {
-                        user = userDAO.getByEmail(email);
-                        user.setResetPwdEmailLink(UUID.randomUUID().toString());
-                        userDAO.update(user);
-
-                        emailFactory.sendEmailOfRestPassword(user, request);
-
-                }
-                catch (DAOException ex)
-                {
-
-                        throw new ServletException(ex.getMessage(), ex);
-                }
-
-                catch (MessagingException ex)
-                {
-                        throw new ServletException("errore durente la creazione e l'invio del email per la registrazione", ex);
-                }
-                catch (UnsupportedEncodingException ex)
-                {
-                        throw new ServletException("errore durente la codifica dei caratteri", ex);
-                }
-
-                //ritorna alla pagina di login
-                String prevUrl = getServletContext().getContextPath() + "/login?notice=awaitingResetPassword";
-                response.sendRedirect(response.encodeRedirectURL(prevUrl));
+            throw new ServletException(ex.getMessage(), ex);
         }
+
+        catch (MessagingException ex)
+        {
+            throw new ServletException("errore durente la creazione e l'invio del email per la registrazione", ex);
+        }
+        catch (UnsupportedEncodingException ex)
+        {
+            throw new ServletException("errore durente la codifica dei caratteri", ex);
+        }
+
+        //ritorna alla pagina di login
+        String prevUrl = getServletContext().getContextPath() + "/login?notice=awaitingResetPassword";
+        response.sendRedirect(response.encodeRedirectURL(prevUrl));
+    }
 }
