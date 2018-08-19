@@ -59,7 +59,9 @@
                                         key="categoryProduct.label.logo"/></label></div>
                                 <input type="file" class="file-input form-control"
                                        id="input${CategoryProductValidator.IMG_KEY}"
-                                       name="${CategoryProductValidator.IMG_KEY}">
+                                       name="${CategoryProductValidator.IMG_KEY}"
+                                       accept=".jpg, .jpeg, .bmp, .gif, .png"
+                                >
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary input-group-text clear-btn" type="button">
                                         &times;

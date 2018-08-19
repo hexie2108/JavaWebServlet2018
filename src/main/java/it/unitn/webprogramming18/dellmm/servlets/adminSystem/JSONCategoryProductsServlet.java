@@ -78,6 +78,88 @@ public class JSONCategoryProductsServlet extends HttpServlet {
         String name = request.getParameter("name");
         String description = request.getParameter("description");
 
+        String orderBy = request.getParameter("order[0][column]");
+        if (orderBy == null || orderBy.trim().isEmpty()) {
+            ServletUtility.sendError(request, response, 400, "categoryProducts.errors.orderByMissing");
+            return;
+        }
+
+        Integer columnId;
+
+        try {
+            columnId = Integer.parseInt(orderBy);
+        } catch (NumberFormatException e){
+            ServletUtility.sendError(request, response, 400, "categoryProducts.errors.orderByNotInt");
+            return;
+        }
+
+
+        String columnName = request.getParameter("columns[" + columnId + "][name]");
+        if (columnName == null || columnName.trim().isEmpty()) {
+            ServletUtility.sendError(request, response, 400, "categoryProducts.errors.columnNameMissing");
+            return;
+        }
+
+        CategoryProductDAO.OrderableColumns column;
+        switch (columnName) {
+            case "id":
+                column = CategoryProductDAO.OrderableColumns.ID;
+                break;
+            case "name":
+                column = CategoryProductDAO.OrderableColumns.NAME;
+                break;
+            case "description":
+                column = CategoryProductDAO.OrderableColumns.DESCRIPTION;
+                break;
+            default:
+                ServletUtility.sendError(request, response, 400, "categoryProducts.errors.columnNameUnrecognized");
+                return;
+        }
+
+        String direction = request.getParameter("order[0][dir]");
+        if (direction == null || direction.trim().isEmpty()) {
+            ServletUtility.sendError(request, response, 400, "categoryProducts.errors.dirMissing");
+            return;
+        }
+
+        Boolean dir;
+        switch (direction) {
+            case "asc": dir = true; break;
+            case "desc": dir = false; break;
+            default:
+                ServletUtility.sendError(request, response, 400, "categoryProducts.errors.dirUnrecognized");
+                return;
+        }
+
+        String offset = request.getParameter("start");
+        if(offset == null || offset.trim().isEmpty()) {
+            ServletUtility.sendError(request, response, 400, "categoryProducts.errors.offsetMissing");
+            return;
+        }
+
+
+        Integer iOffset;
+        try{
+            iOffset = Integer.parseInt(offset);
+        } catch (NumberFormatException e) {
+            ServletUtility.sendError(request, response, 400, "categoryProducts.errors.offsetNotInt");
+            return;
+        }
+
+        String length = request.getParameter("length");
+        if(length == null || length.trim().isEmpty()) {
+            ServletUtility.sendError(request, response, 400, "categoryProducts.errors.lengthMissing");
+            return;
+        }
+
+        Integer iLength;
+        try{
+            iLength = Integer.parseInt(length);
+        } catch (NumberFormatException e) {
+            ServletUtility.sendError(request, response, 400, "categoryProducts.errors.lengthMissing");
+            return;
+        }
+
         Integer iId;
         try {
             iId = id == null || id.trim().isEmpty() ? null : Integer.parseInt(id);
@@ -96,9 +178,21 @@ public class JSONCategoryProductsServlet extends HttpServlet {
         }
 
         try {
-            List<CategoryProduct> categoryProducts = categoryProductDAO.filter(iId, name, description);
+            List<CategoryProduct> categoryProducts = categoryProductDAO.filter(iId, name, description, column, dir, iOffset, iLength);
+            Long totalCount = categoryProductDAO.getCount();
+            Long filteredCount = categoryProductDAO.getCountFilter(iId, name, description);
 
-            ServletUtility.sendJSON(request, response, 200, categoryProducts);
+            HashMap<String, Object> h = new HashMap<>();
+            h.put("recordsTotal", totalCount);
+            h.put("recordsFiltered", filteredCount);
+            h.put("data", categoryProducts);
+
+            ServletUtility.sendJSON(
+                    request,
+                    response,
+                    200,
+                    h
+            );
         } catch (DAOException e) {
             e.printStackTrace();
             ServletUtility.sendError(request, response, 500, "categoryProducts.errors.impossibleDbFilter");

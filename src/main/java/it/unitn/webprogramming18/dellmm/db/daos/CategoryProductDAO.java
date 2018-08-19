@@ -75,7 +75,15 @@ public interface CategoryProductDAO extends DAO<CategoryProduct, Integer> {
     @Override
     public CategoryProduct update(CategoryProduct categoryProduct) throws DAOException;
 
-    public List<CategoryProduct> filter(Integer id, String name, String description) throws DAOException;
+    public enum OrderableColumns{
+        ID,
+        NAME,
+        DESCRIPTION
+    };
+
+    public Long getCountFilter(Integer id, String name, String description) throws DAOException;
+
+    public List<CategoryProduct> filter(Integer id, String name, String description, OrderableColumns orderBy, Boolean dir, Integer offset, Integer count) throws DAOException;
 
     public void delete(Integer id) throws DAOException;
 }

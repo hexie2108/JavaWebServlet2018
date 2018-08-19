@@ -54,7 +54,7 @@
         </tr>
         </tfoot>
     </table>
-    <div class="alert alert-danger d-none" id="id-res">
+    <div class="alert alert-danger form-error-alert" id="id-res">
     </div>
 </div>
 
@@ -77,7 +77,32 @@
         const modalUrlJson = '<c:url value="/admin/categoryProducts.json"/>';
         const modalResDiv = $('#id-modal-res');
 
-        const modalUnknownErrorMessage = '<fmt:message key="generic.errors.unknownError"/>';
+        const unknownErrorMessage = '<fmt:message key="generic.errors.unknownError"/>';
+
+        function showErrorAlert(title, message, closeLabel) {
+            x = $(
+               '<div class="modal fade modal-danger" id="errorAlertBox" role="dialog">' +
+               '     <div class="modal-dialog">' +
+               '        <div class="modal-content">' +
+               '            <div class="modal-header">' +
+               '                <h4 class="modal-title"><i class="fas fa-exclamation-triangle"></i> ' + title + '</h4>' +
+               '                <button type="button" class="close" data-dismiss="modal">&times;</button>' +
+               '            </div>' +
+               '            <div class="modal-body">' + message +'</div>' +
+               '            <div class="modal-footer">' +
+               '                <button type="button" class="btn btn-secondary" data-dismiss="modal">' + closeLabel + '</button>' +
+               '            </div>' +
+               '        </div>' +
+               '    </div>' +
+               '</div>'
+            );
+
+            $('body').append(x);
+            x.on('hidden.bs.modal', function(){
+                x.remove();
+            });
+            x.modal('toggle');
+        }
 
         function setModal(action, data) {
             const realData = {};
@@ -151,34 +176,22 @@
                             title: '<fmt:message key="categoryProducts.label.deleteCategoryProduct"/>',
                             html: $('<i/>', {class: 'far fa-trash-alt'}),
                             click: function () {
-                                const btn = $(this);
-
-                                btn.attr("disabled", true);
-
                                 $.ajax({
                                     url: '<c:url value="/admin/categoryProducts.json"/>',
                                     type: 'POST',
+                                    async: false,
                                     data: {'action': 'delete', 'id': data.id}
                                 }).done(function () {
                                     row.remove();
                                 }).fail(function (jqXHR) {
-                                    const prevText = btn.html();
-
                                     if (typeof jqXHR.responseJSON === 'object' &&
                                         jqXHR.responseJSON !== null &&
                                         jqXHR.responseJSON['message'] !== undefined
                                     ) {
-                                        btn.html(jqXHR.responseJSON['message']);
-
+                                        showErrorAlert('<fmt:message key="generic.label.error"/>', jqXHR.responseJSON['message'], '<fmt:message key="generic.label.close"/>');
                                     } else {
-                                        btn.html(unknownErrorMessage);
+                                        showErrorAlert('<fmt:message key="generic.label.error"/>', unknownErrorMessage, '<fmt:message key="generic.label.close"/>');
                                     }
-
-                                    setTimeout(function () {
-                                        btn.html(prevText);
-
-                                        btn.attr("disabled", false);
-                                    }, 2000);
                                 });
                             }
                         }),
@@ -188,19 +201,27 @@
         }
 
         tableDiv.on('xhr.dt', function (e, settings, json, xhr) {
-            if (json === null) {
-                const json = JSON.parse(xhr.responseText);
-                resDiv.removeClass("d-none");
-
-                if (json['message'] !== undefined && json['message'] !== null) {
-                    resDiv.html(json['message']);
-                } else {
-                    resDiv.html('<fmt:message key="generic.errors.unknownError"/>');
-                }
-            } else {
-                resDiv.addClass("d-none");
+            if (json !== null) {
                 resDiv.html("");
+                resDiv.hide();
+                return;
             }
+
+            let err = '<fmt:message key="generic.errors.unknownError"/>';
+
+            try{
+                const errJSON = JSON.parse(xhr.responseText);
+
+                if (errJSON['message'] !== undefined && errJSON['message'] !== null) {
+                    err = errJSON['message'];
+                    resDiv.html();
+                }
+            } catch(e) {
+                // Se errore durante parse o errore mal formato lascia default
+            }
+
+            resDiv.html(err);
+            resDiv.show("slow");
         });
 
         const table = tableDiv.DataTable({
@@ -210,14 +231,24 @@
                 type: "get",
                 cache: "false",
                 data: function (d) {
-                    return $('#filterForm').serialize();
+                    return $.extend( {}, d,
+                        $('#filterForm')
+                            .serializeArray()
+                            .reduce(
+                                function(accumulator,pair){
+                                    accumulator[pair.name] = pair.value;
+                                    return accumulator;
+                                }, {})
+                    );
+
                 },
-                dataSrc: ''
             },
+            serverSide: true,
             columns: [
                 {
                     target: 0,
-                    data: 'id'
+                    data: 'id',
+                    name: 'id'
                 }, {
                     target: 1,
                     data: 'img',
@@ -225,9 +256,11 @@
                 }, {
                     target: 2,
                     data: 'name',
+                    name: 'name',
                 }, {
                     target: 3,
                     data: 'description',
+                    name: 'description'
                 }, {
                     target: 4,
                     data: null,
@@ -313,7 +346,6 @@
                     obj['${CategoryProductValidator.DESCRIPTION_KEY}'] = '<fmt:message key="validateCategoryProduct.errors.Description.STRING_TOO_LONG"/>';
                 }
 
-                // TODO: Ricontrollare se obj viene modificato
                 add_file_errors(obj, categoryProductForm, '${CategoryProductValidator.IMG_KEY}', '${CategoryProductValidator.IMG_KEY}');
 
                 updateVerifyMessages(categoryProductForm, obj);
@@ -360,7 +392,7 @@
                         'multipart': true,
                         'session': true,
                         'redirectUrl': null,
-                        'unknownErrorMessage': modalUnknownErrorMessage,
+                        'unknownErrorMessage': unknownErrorMessage,
                         'resDiv': modalResDiv,
                         'successCallback': function () {
                             table.ajax.reload();

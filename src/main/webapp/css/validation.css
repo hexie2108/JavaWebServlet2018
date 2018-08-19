@@ -12,3 +12,17 @@
     padding: .5rem;
     margin: 0;
 }
+
+.modal.modal-danger .modal-header {
+    background: var(--danger);
+    color: var(--white);
+}
+
+.modal.modal-danger .modal-content {
+    border-color: var(--danger);
+}
+
+.form-error-alert {
+    display: none;
+}
+
