@@ -1,0 +1,14 @@
+.is-invalid ~ div.input-group-prepend > .input-group-text {
+    border-color: #dc3545 !important;
+}
+
+.is-invalid ~ div.input-group-append > .input-group-text {
+    border-color: #dc3545 !important;
+}
+
+.error-messages p{
+    display: none;
+    color: red;
+    padding: .5rem;
+    margin: 0;
+}

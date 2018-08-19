@@ -178,4 +178,63 @@ public class JDBCCategoryProductDAO extends JDBCDAO<CategoryProduct, Integer> im
 
         return categoryProduct;
     }
+
+    @Override
+    public List<CategoryProduct> filter(Integer id, String name, String description) throws DAOException {
+        Connection CON = CP.getConnection();
+
+        List<CategoryProduct> categoryLists = new ArrayList<>();
+
+        try (PreparedStatement stm = CON.prepareStatement(
+                "SELECT * FROM CategoryProduct WHERE " +
+                        "(? IS NULL OR id LIKE CONCAT('%',TRIM(BOTH \"'\" FROM QUOTE(?)),'%')) AND " +
+                        "(? IS NULL OR name LIKE CONCAT('%',TRIM(BOTH \"'\" FROM QUOTE(?)),'%')) AND " +
+                        "(? IS NULL OR description LIKE CONCAT('%',TRIM(BOTH \"'\" FROM QUOTE(?)),'%'))"
+        )) {
+            if (id == null) {
+                stm.setNull(1, Types.INTEGER);
+                stm.setNull(2, Types.INTEGER);
+            } else {
+                stm.setString(1, id.toString());
+                stm.setString(2, id.toString());
+            }
+
+            stm.setString(3, name);
+            stm.setString(4, name);
+
+            stm.setString(5, description);
+            stm.setString(6, description);
+
+            try (ResultSet rs = stm.executeQuery()) {
+                while (rs.next()) {
+                    categoryLists.add(getCategoryProductFromResultSet(rs));
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get the list of categoryProduct", ex);
+        } finally {
+            ConnectionPool.close(CON);
+        }
+
+        return categoryLists;
+    }
+
+    @Override
+    public void delete(Integer id) throws DAOException {
+        Connection CON = CP.getConnection();
+
+        try (PreparedStatement stm = CON.prepareStatement(
+                "DELETE FROM CategoryProduct WHERE id = ?"
+        )) {
+            stm.setInt(1, id);
+
+            if (stm.executeUpdate() != 1) {
+                throw new DAOException("Impossible to delete the categoryProduct");
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to delete the categoryProduct", ex);
+        } finally {
+            ConnectionPool.close(CON);
+        }
+    }
 }

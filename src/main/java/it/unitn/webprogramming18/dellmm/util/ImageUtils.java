@@ -1,8 +1,7 @@
 package it.unitn.webprogramming18.dellmm.util;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import javax.imageio.ImageIO;
 
 import net.coobird.thumbnailator.Thumbnails;
@@ -53,7 +52,16 @@ public class ImageUtils {
             builder = Thumbnails.of(image).size(newWidth, newHeight);
         }
         builder.outputFormat("jpg").outputQuality(0.9).toFile(newImg);
+    }
 
+    public static void convertImg2(InputStream istream, OutputStream os, int newWidth, int newHeight) throws IOException {
+        // https://github.com/coobird/thumbnailator/issues/24
+        Thumbnails.of(istream)
+                .crop(Positions.CENTER)
+                .size(newWidth, newHeight)
+                .outputFormat("jpg")
+                .outputQuality(0.9)
+                .toOutputStream(os);
     }
 
 }

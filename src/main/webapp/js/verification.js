@@ -8,20 +8,22 @@ function updateVerifyMessages(form, data) {
     // Per ogni input scrivi l'eventuale errore nello span dedicato e restituisci false se ha errori, true altrimenti
     const validityInputs = inputs.map(
         function (key) {
-            const input = form.find("#input" + key);
+            const input = form.find("[name=\"" + key + "\"]");
             const span = form.find("#span" + key);
 
+            span.html("");
+
             if (data.hasOwnProperty(key)) {
+                span.html("<i class=\"fas fa-exclamation-triangle\"></i> " + String(data[key]));
+                input.closest('.input-group').find('.input-group-prepend, .input-group-append').find('.input-group-text').addClass('border-danger');
                 input.addClass("is-invalid");
-                span.addClass("invalid-feedback");
-                span.html(String(data[key]));
+                span.show("slow");
 
                 return false;
             }
 
+            input.closest('.input-group').find('.input-group-prepend, .input-group-append').find('.input-group-text').removeClass('border-danger');
             input.removeClass("is-invalid");
-            span.removeClass("invalid-feedback");
-            span.html("");
             return true;
         }
     );

@@ -29,31 +29,31 @@
     <context-param>
         <description>Path of the folder where CategoryList images are stored</description>
         <param-name>categoryListImgsFolder</param-name>
-        <param-value>img/categoryListImgs</param-value>
+        <param-value>image/categoryList</param-value>
     </context-param>
 
     <context-param>
         <description>Path of the folder where CategoryProduct images are stored</description>
         <param-name>categoryProductImgsFolder</param-name>
-        <param-value>img/categoryProductImgs</param-value>
+        <param-value>image/categoryProduct</param-value>
     </context-param>
 
     <context-param>
         <description>Path of the folder where List images are stored</description>
         <param-name>listImgsFolder</param-name>
-        <param-value>img/listImgs</param-value>
+        <param-value>image/list</param-value>
     </context-param>
 
     <context-param>
         <description>Path of the folder where Product images are stored</description>
         <param-name>productImgsFolder</param-name>
-        <param-value>img/productImgs</param-value>
+        <param-value>image/product</param-value>
     </context-param>
 
     <context-param>
         <description>Path of the folder where avatars are stored</description>
         <param-name>avatarsFolder</param-name>
-        <param-value>image/avatars</param-value>
+        <param-value>image/user</param-value>
     </context-param>
 
     <!-- SMTP SETTINGS -->
@@ -482,6 +482,24 @@
     <servlet-mapping>
         <servlet-name>JSONCategoryListsServlet</servlet-name>
         <url-pattern>/admin/categoryLists.json</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CategoryProductsServlet</servlet-name>
+        <jsp-file>/WEB-INF/jsp/admin/categoryProducts.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CategoryProductsServlet</servlet-name>
+        <url-pattern>/admin/categoryProducts</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>JSONCategoryProductsServlet</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.adminSystem.JSONCategoryProductsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>JSONCategoryProductsServlet</servlet-name>
+        <url-pattern>/admin/categoryProducts.json</url-pattern>
     </servlet-mapping>
 
     <servlet>

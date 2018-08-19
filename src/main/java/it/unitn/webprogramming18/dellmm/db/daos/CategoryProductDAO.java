@@ -75,5 +75,7 @@ public interface CategoryProductDAO extends DAO<CategoryProduct, Integer> {
     @Override
     public CategoryProduct update(CategoryProduct categoryProduct) throws DAOException;
 
+    public List<CategoryProduct> filter(Integer id, String name, String description) throws DAOException;
 
+    public void delete(Integer id) throws DAOException;
 }
