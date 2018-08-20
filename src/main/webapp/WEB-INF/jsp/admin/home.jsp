@@ -15,7 +15,7 @@
 
         <div class="statistics">
                 <div class="statistics-head">
-                        <h2>dati statistici del sito</h2>
+                        <h2><i class="fas fa-chart-bar"></i> dati statistici del sito</h2>
                 </div>      
                 <div class="statistics-body">  
 
