@@ -113,6 +113,105 @@ function formSubmit(url, form, options) {
     });
 }
 
+function add_file_errors(contentTypeRegex, maxSize, required, errors) {
+    let fileEmptyOrNull = errors.fileEmptyOrNull;
+    let fileTooBig = errors.fileTooBig;
+    let fileContentTypeMissingOrType = errors.fileContentTypeMissingOrType;
+    let fileOfWrongType = errors.fileOfWrongType;
 
+    if ( fileEmptyOrNull === undefined){
+        console.error('errors.fileEmptyOrNull is null/undefined/empty');
+        return;
+    }
 
+    if ( fileTooBig === undefined) {
+        console.error('errors.fileTooBig is null/undefined/empty');
+        return;
+    }
+
+    if ( fileContentTypeMissingOrType === undefined) {
+        console.error('errors.fileContentTypeMissingOrType is null/undefined/empty');
+        return;
+    }
+
+    if ( fileOfWrongType === undefined) {
+        console.error('errors.fileOfWrongType is null/undefined/empty');
+        return;
+    }
+
+    if  (typeof required !== 'function' ) {
+        console.error('required must be a function');
+        return;
+    }
+
+    if (!(contentTypeRegex instanceof RegExp)) {
+        console.error('contentTypeRegex must be a regex');
+        return;
+    }
+
+    return function(data, form, name){
+        // Se l'estensione per leggere i file è supportata faccio il controllo altrimenti no
+        // (fatto successivamente dal server)
+        if (!window.FileReader) {
+            return data;
+        }
+
+        const input = form.find('[type="file"][name="' + name + '"]');
+
+        // Se il browser ha l'estensione che permette di accedere alla proprietà files continuo altrimenti no
+        // (fatto successivamente dal server)
+        if (!input[0].files) {
+            return data;
+        }
+
+        const fileToUpload = input[0].files[0];
+
+        if (!fileToUpload) {
+            if (required(form, name)) {
+                data[name] = fileEmptyOrNull;
+            }
+        } else if (fileToUpload.size > maxSize) {
+            data[name] = fileTooBig;
+        } else if (window.Blob) {
+            if (!fileToUpload.type || !fileToUpload.type.trim()) {
+                data[name] = fileContentTypeMissingOrType;
+            } else if (!(contentTypeRegex.test(fileToUpload.type))) {
+                data[name] = fileOfWrongType; // '<fmt:message key="validateCategoryProduct.errors.Img.FILE_OF_WRONG_TYPE"/>';
+            }
+        }
+
+        return data;
+    }
+}
+
+function validateString(maxLen, required, errors) {
+    const emptyOrNull = errors.emptyOrNull;
+    const tooLong = errors.tooLong;
+
+    if (emptyOrNull === undefined) {
+        console.error("errors.emptyOrNull undefined");
+        return;
+    }
+
+    if (tooLong === undefined) {
+        console.error("errors.tooLong undefined");
+        return;
+    }
+
+    if  (typeof required !== 'function' ) {
+        console.error('required must be a function');
+        return;
+    }
+
+    return function(obj, form, name) {
+        const str = form.find('[name="' + name + '"]').val();
+        if (!str) {
+            if (required(form, name)) {
+                obj[name] = emptyOrNull;
+            }
+        } else if (str.length > maxLen) {
+            obj[name] = tooLong;
+        }
+    }
+}
 

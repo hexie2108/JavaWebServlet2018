@@ -63,6 +63,7 @@
 <link rel="stylesheet" type="text/css" href="<c:url value="/libs/DataTables/datatables.min.css"/>"/>
 <script src="<c:url value="/js/verification.js"/>"></script>
 <script src="<c:url value="/libs/DataTables/datatables.min.js"/>"></script>
+<script src="<c:url value="/js/utility.js"/>"></script>
 <script>
     $(document).ready(function () {
         const resDiv = $('#id-res');
@@ -78,31 +79,6 @@
         const modalResDiv = $('#id-modal-res');
 
         const unknownErrorMessage = '<fmt:message key="generic.errors.unknownError"/>';
-
-        function showErrorAlert(title, message, closeLabel) {
-            x = $(
-               '<div class="modal fade modal-danger" id="errorAlertBox" role="dialog">' +
-               '     <div class="modal-dialog">' +
-               '        <div class="modal-content">' +
-               '            <div class="modal-header">' +
-               '                <h4 class="modal-title"><i class="fas fa-exclamation-triangle"></i> ' + title + '</h4>' +
-               '                <button type="button" class="close" data-dismiss="modal">&times;</button>' +
-               '            </div>' +
-               '            <div class="modal-body">' + message +'</div>' +
-               '            <div class="modal-footer">' +
-               '                <button type="button" class="btn btn-secondary" data-dismiss="modal">' + closeLabel + '</button>' +
-               '            </div>' +
-               '        </div>' +
-               '    </div>' +
-               '</div>'
-            );
-
-            $('body').append(x);
-            x.on('hidden.bs.modal', function(){
-                x.remove();
-            });
-            x.modal('toggle');
-        }
 
         function setModal(action, data) {
             const realData = {};
@@ -240,7 +216,6 @@
                                     return accumulator;
                                 }, {})
                     );
-
                 },
             },
             serverSide: true,
@@ -273,7 +248,7 @@
         });
 
         tableDiv.find('tfoot').find('input,select').on('keyup change', function () {
-            history.replaceState(undefined, undefined, "categoryProducts?" + $('#categoryTable tfoot').find('input,select').serialize());
+            history.replaceState(undefined, undefined, "categoryProducts?" + tableDiv.find('tfoot').find('input,select').serialize());
             table.ajax.reload();
             table.draw();
         });
@@ -289,64 +264,41 @@
                 modalResDiv.addClass('d-none');
             });
 
-            function add_file_errors(data, form, name, firstImgName) {
-                // Se l'estensione per leggere i file è supportata faccio il controllo altrimenti no
-                // (fatto successivamente dal server)
-                if (!window.FileReader) {
-                    return data;
+
+            const isCreate = (form, name) => {return form.find('[name="action"]').val() === 'create';};
+
+            const checkFile = add_file_errors(
+                /.*(jpg|jpeg|png|gif|bmp).*/,
+                isCreate, {
+                    fileEmptyOrNull: '<fmt:message key="validateCategoryProduct.errors.Img.FILE_EMPTY_OR_NULL"/>',
+                    fileTooBig: '<fmt:message key="validateCategoryProduct.errors.Img.FILE_TOO_BIG"/>',
+                    fileContentTypeMissingOrType: "<fmt:message key="validateCategoryProduct.errors.Img.FILE_CONTENT_TYPE_MISSING_OR_EMPTY"/>",
+                    fileOfWrongType: '<fmt:message key="validateCategoryProduct.errors.Img.FILE_OF_WRONG_TYPE"/>',
                 }
+            );
 
-                const input = form.find('[type="file"][name="' + name + '"]');
-
-                // Se il browser ha l'estensione che permette di accedere alla proprietà files continuo altrimenti no
-                // (fatto successivamente dal server)
-                if (!input[0].files) {
-                    return data;
+            const checkName = validateString(
+                ${CategoryProductValidator.NAME_MAX_LEN},
+                isCreate, {
+                    emptyOrNull: '<fmt:message key="validateCategoryProduct.errors.Name.STRING_EMPTY_OR_NULL"/>',
+                    tooLong: '<fmt:message key="validateCategoryProduct.errors.Name.STRING_TOO_LONG"/>',
                 }
+            );
 
-                const fileToUpload = input[0].files[0];
-
-                if (!fileToUpload) {
-                    if (form.find('[name="action"]').val() === 'create' && name === firstImgName) {
-                        data[name] = '<fmt:message key="validateCategoryProduct.errors.Img.FILE_EMPTY_OR_NULL"/>';
-                    }
-                } else if (fileToUpload.size > ${CategoryProductValidator.IMG_MAX_SIZE}) {
-                    data[name] = '<fmt:message key="validateCategoryProduct.errors.Img.FILE_TOO_BIG"/>';
-                } else if (window.Blob) {
-                    if (!fileToUpload.type || !fileToUpload.type.trim()) {
-                        data[name] = "<fmt:message key="validateCategoryProduct.errors.Img.FILE_CONTENT_TYPE_MISSING_OR_EMPTY"/>";
-                    } else if (!(/.*(jpg|jpeg|png|gif|bmp).*/.test(fileToUpload.type))) {
-                        data[name] = '<fmt:message key="validateCategoryProduct.errors.Img.FILE_OF_WRONG_TYPE"/>';
-                    }
+            const checkDescription = validateString(
+                ${CategoryProductValidator.DESCRIPTION_MAX_LEN},
+                isCreate, {
+                    emptyOrNull: '<fmt:message key="validateCategoryProduct.errors.Description.STRING_EMPTY_OR_NULL"/>',
+                    tooLong: '<fmt:message key="validateCategoryProduct.errors.Description.STRING_TOO_LONG"/>',
                 }
-
-                return data;
-            }
+            );
 
             categoryProductForm.find('input,textarea').on('blur change', () => {
                 const obj = {};
 
-                const isCreate = categoryProductForm.find('input[name="action"]').val() === 'create';
-
-                const name = categoryProductForm.find('input[name="${CategoryProductValidator.NAME_KEY}"]').val();
-                if (!name) {
-                    if (isCreate) {
-                        obj['${CategoryProductValidator.NAME_KEY}'] = '<fmt:message key="validateCategoryProduct.errors.Name.STRING_EMPTY_OR_NULL"/>';
-                    }
-                } else if (name.length > ${CategoryProductValidator.NAME_MAX_LEN}) {
-                    obj['${CategoryProductValidator.NAME_KEY}'] = '<fmt:message key="validateCategoryProduct.errors.Name.STRING_TOO_LONG"/>';
-                }
-
-                const descr = categoryProductForm.find('textarea[name="${CategoryProductValidator.DESCRIPTION_KEY}"]').val();
-                if (!descr) {
-                    if (isCreate) {
-                        obj['${CategoryProductValidator.DESCRIPTION_KEY}'] = '<fmt:message key="validateCategoryProduct.errors.Description.STRING_EMPTY_OR_NULL"/>';
-                    }
-                } else if (descr.length > ${CategoryProductValidator.DESCRIPTION_MAX_LEN}) {
-                    obj['${CategoryProductValidator.DESCRIPTION_KEY}'] = '<fmt:message key="validateCategoryProduct.errors.Description.STRING_TOO_LONG"/>';
-                }
-
-                add_file_errors(obj, categoryProductForm, '${CategoryProductValidator.IMG_KEY}', '${CategoryProductValidator.IMG_KEY}');
+                checkName(obj, categoryProductForm, "${CategoryProductValidator.NAME_KEY}");
+                checkDescription(obj, categoryProductForm, "${CategoryProductValidator.DESCRIPTION_KEY}");
+                checkFile(obj, categoryProductForm, '${CategoryProductValidator.IMG_KEY}');
 
                 updateVerifyMessages(categoryProductForm, obj);
             });

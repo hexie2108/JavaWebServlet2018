@@ -66,6 +66,9 @@
 <link rel="stylesheet" type="text/css" href="<c:url value="/libs/DataTables/datatables.min.css"/>"/>
 <script src="<c:url value="/js/verification.js"/>"></script>
 <script src="<c:url value="/libs/DataTables/datatables.min.js"/>"></script>
+
+<script src="<c:url value="/js/utility.js"/>"></script>
+<link rel="stylesheet" type="text/css" href="<c:url value="/css/validation.css"/>"/>
 <script>
     $(document).ready(function () {
         const resDiv = $('#id-res');
@@ -179,10 +182,6 @@
                             title: '<fmt:message key="categoryLists.label.deleteCategoryList"/>',
                             html: $('<i/>', {class: 'far fa-trash-alt'}),
                             click: function () {
-                                const btn = $(this);
-
-                                btn.attr("disabled", true);
-
                                 $.ajax({
                                     url: '<c:url value="/admin/categoryLists.json"/>',
                                     type: 'POST',
@@ -190,23 +189,14 @@
                                 }).done(function () {
                                     row.remove();
                                 }).fail(function (jqXHR) {
-                                    const prevText = btn.html();
-
                                     if (typeof jqXHR.responseJSON === 'object' &&
                                         jqXHR.responseJSON !== null &&
                                         jqXHR.responseJSON['message'] !== undefined
                                     ) {
-                                        btn.html(jqXHR.responseJSON['message']);
-
+                                        showErrorAlert('<fmt:message key="generic.label.error"/>', jqXHR.responseJSON['message'], '<fmt:message key="generic.label.close"/>');
                                     } else {
-                                        btn.html(unknownErrorMessage);
+                                        showErrorAlert('<fmt:message key="generic.label.error"/>', unknownErrorMessage, '<fmt:message key="generic.label.close"/>');
                                     }
-
-                                    setTimeout(function () {
-                                        btn.html(prevText);
-
-                                        btn.attr("disabled", false);
-                                    }, 2000);
                                 });
                             }
                         }),
@@ -238,20 +228,31 @@
                 type: "get",
                 cache: "false",
                 data: function (d) {
-                    return $('#filterForm').serialize();
+                    return $.extend( {}, d,
+                        $('#filterForm')
+                            .serializeArray()
+                            .reduce(
+                                function(accumulator,pair){
+                                    accumulator[pair.name] = pair.value;
+                                    return accumulator;
+                                }, {})
+                    );
                 },
-                dataSrc: ''
             },
+            serverSide: true,
             columns: [
                 {
                     target: 0,
-                    data: 'id'
+                    data: 'id',
+                    name: 'id'
                 }, {
                     target: 1,
-                    data: 'name'
+                    data: 'name',
+                    name: 'name'
                 }, {
                     target: 2,
                     data: 'description',
+                    name: 'description'
                 }, {
                     target: 3,
                     data: 'img1',
@@ -278,7 +279,7 @@
         });
 
         tableDiv.find('tfoot').find('input,select').on('keyup change', function () {
-            history.replaceState(undefined, undefined, "categoryLists?" + $('#categoryTable tfoot').find('input,select').serialize());
+            history.replaceState(undefined, undefined, "categoryLists?" + tableDiv.find('tfoot').find('input,select').serialize());
             table.ajax.reload();
             table.draw();
         });
@@ -294,68 +295,50 @@
                 modalResDiv.addClass('d-none');
             });
 
-            function add_file_errors(data, form, name, firstImgName) {
-                // Se l'estensione per leggere i file è supportata faccio il controllo altrimenti no
-                // (fatto successivamente dal server)
-                if (!window.FileReader) {
-                    return data;
+            const isCreate = (form, name) => {
+                return form.find('[name="action"]').val() === 'create';
+            };
+
+            const requiredImg = (form, name) => {
+                return form.find('[name="action"]').val() === 'create' && name === '${CategoryListValidator.IMG1_KEY}';
+            };
+
+            const checkFiles = add_file_errors(
+                /.*(jpg|jpeg|png|gif|bmp).*/,
+                ${CategoryListValidator.MAX_LEN_FILE},
+                requiredImg, {
+                    fileEmptyOrNull: '<fmt:message key="validateCategoryList.errors.IMG_MISSING"/>',
+                    fileTooBig: '<fmt:message key="validateCategoryList.errors.IMG_TOO_BIG"/>',
+                    fileContentTypeMissingOrType: "<fmt:message key="validateCategoryList.errors.IMG_CONTENT_TYPE_MISSING"/>",
+                    fileOfWrongType: '<fmt:message key="validateCategoryList.errors.IMG_NOT_IMG"/>',
                 }
+            );
 
-                const input = form.find('[type="file"][name="' + name + '"]');
-
-                // Se il browser ha l'estensione che permette di accedere alla proprietà files continuo altrimenti no
-                // (fatto successivamente dal server)
-                if (!input[0].files) {
-                    return data;
+            const checkName = validateString(
+                ${CategoryListValidator.NAME_MAX_LEN},
+                isCreate, {
+                    emptyOrNull: '<fmt:message key="validateCategoryList.errors.NAME_MISSING"/>',
+                    tooLong: '<fmt:message key="validateCategoryList.errors.NAME_TOO_LONG"/>',
                 }
+            );
 
-                const fileToUpload = input[0].files[0];
-
-                if (!fileToUpload) {
-                    if (form.find('[name="action"]').val() === 'create' && name === firstImgName) {
-                        data[name] = '<fmt:message key="validateCategoryList.errors.IMG_MISSING"/>';
-                    }
-                } else if (fileToUpload.size > ${CategoryListValidator.MAX_LEN_FILE}) {
-                    data[name] = '<fmt:message key="validateCategoryList.errors.IMG_TOO_BIG"/>';
-                } else if (window.Blob && !fileToUpload.type.startsWith("image/")) {
-                    data[name] = '<fmt:message key="validateCategoryList.errors.IMG_NOT_IMG"/>';
+            const checkDescription = validateString(
+                ${CategoryListValidator.DESCRIPTION_MAX_LEN},
+                isCreate, {
+                    emptyOrNull: '<fmt:message key="validateCategoryList.errors.DESCRIPTION_MISSING"/>',
+                    tooLong: '<fmt:message key="validateCategoryList.errors.DESCRIPTION_TOO_LONG"/>',
                 }
-
-                return data;
-            }
+            );
 
             categoryListForm.find('input,textarea').on('blur change', () => {
                 const obj = {};
 
-                const isCreate = categoryListForm.find('input[name="action"]').val() === 'create';
+                checkName(obj, categoryListForm, "${CategoryListValidator.NAME_KEY}");
+                checkDescription(obj, categoryListForm, "${CategoryListValidator.DESCRIPTION_KEY}");
 
-                const name = categoryListForm.find('input[name="${CategoryListValidator.NAME_KEY}"]').val();
-                if (!name) {
-                    if (isCreate) {
-                        obj['${CategoryListValidator.NAME_KEY}'] = '<fmt:message key="validateCategoryList.errors.NAME_MISSING"/>';
-                    }
-                } else if (name.length > ${CategoryListValidator.NAME_MAX_LEN}) {
-                    obj['${CategoryListValidator.NAME_KEY}'] = '<fmt:message key="validateCategoryList.errors.NAME_TOO_LONG"/>';
-                }
-
-                const descr = categoryListForm.find('textarea[name="${CategoryListValidator.DESCRIPTION_KEY}"]').val();
-                if (!descr) {
-                    if (isCreate) {
-                        obj['${CategoryListValidator.DESCRIPTION_KEY}'] = '<fmt:message key="validateCategoryList.errors.DESCRIPTION_MISSING"/>';
-                    }
-                } else if (descr.length > ${CategoryListValidator.DESCRIPTION_MAX_LEN}) {
-                    obj['${CategoryListValidator.DESCRIPTION_KEY}'] = '<fmt:message key="validateCategoryList.errors.DESCRIPTION_TOO_LONG"/>';
-                }
-
-                [
-                    '${CategoryListValidator.IMG1_KEY}',
-                    '${CategoryListValidator.IMG2_KEY}',
-                    '${CategoryListValidator.IMG3_KEY}'
-                ].reduce(function (acc, curr) {
-                        return add_file_errors(acc, categoryListForm, curr, '${CategoryListValidator.IMG1_KEY}');
-                    },
-                    obj
-                );
+                checkFiles(obj, categoryListForm, '${CategoryListValidator.IMG1_KEY}');
+                checkFiles(obj, categoryListForm, '${CategoryListValidator.IMG2_KEY}');
+                checkFiles(obj, categoryListForm, '${CategoryListValidator.IMG3_KEY}');
 
                 updateVerifyMessages(categoryListForm, obj);
             });

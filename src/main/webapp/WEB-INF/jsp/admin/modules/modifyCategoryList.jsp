@@ -25,7 +25,9 @@
                                         key="categoryList.label.name"/></span></div>
                                 <input id="input${CategoryListValidator.NAME_KEY}" class="form-control" placeholder=""
                                        autofocus="" type="text" name="${CategoryListValidator.NAME_KEY}">
-                                <span id="span${CategoryListValidator.NAME_KEY}"></span>
+                            </div>
+                            <div class="error-messages">
+                                <p id="span${CategoryListValidator.NAME_KEY}"></p>
                             </div>
                         </div>
                     </div>
@@ -39,7 +41,9 @@
                                         key="categoryList.label.description"/></span></div>
                                 <textarea id="input${CategoryListValidator.DESCRIPTION_KEY}" class="form-control"
                                           name="${CategoryListValidator.DESCRIPTION_KEY}" rows="4"></textarea>
-                                <span id="span${CategoryListValidator.DESCRIPTION_KEY}"></span>
+                            </div>
+                            <div class="error-messages">
+                                <p id="span${CategoryListValidator.DESCRIPTION_KEY}"></p>
                             </div>
                         </div>
                     </div>
@@ -61,7 +65,9 @@
                                         &times;
                                     </button>
                                 </div>
-                                <span id="span${CategoryListValidator.IMG1_KEY}"></span>
+                            </div>
+                            <div class="error-messages">
+                                <p id="span${CategoryListValidator.IMG1_KEY}"></p>
                             </div>
                         </div>
                     </div>
@@ -90,7 +96,9 @@
                                     <button class="btn btn-danger input-group-text del-btn" type="button"><i
                                             class="fas fa-trash-alt"></i></button>
                                 </div>
-                                <span id="span${CategoryListValidator.IMG2_KEY}"></span>
+                            </div>
+                            <div class="error-messages">
+                                <p id="span${CategoryListValidator.IMG2_KEY}"></p>
                             </div>
                         </div>
                     </div>
@@ -117,7 +125,9 @@
                                     <button class="btn btn-danger input-group-text del-btn" type="button"><i
                                             class="fas fa-trash-alt"></i></button>
                                 </div>
-                                <span id="span${CategoryListValidator.IMG3_KEY}"></span>
+                            </div>
+                            <div class="error-messages">
+                                <p id="span${CategoryListValidator.IMG3_KEY}"></p>
                             </div>
                         </div>
                     </div>

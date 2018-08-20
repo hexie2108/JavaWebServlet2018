@@ -321,6 +321,89 @@ public class JSONCategoryListsServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String orderBy = request.getParameter("order[0][column]");
+        if (orderBy == null || orderBy.trim().isEmpty()) {
+            ServletUtility.sendError(request, response, 400, "datatables.errors.orderByMissing");
+            return;
+        }
+
+        int columnId;
+
+        try {
+            columnId = Integer.parseInt(orderBy);
+        } catch (NumberFormatException e){
+            ServletUtility.sendError(request, response, 400, "datatables.errors.orderByNotInt");
+            return;
+        }
+
+
+        String columnName = request.getParameter("columns[" + columnId + "][name]");
+        if (columnName == null || columnName.trim().isEmpty()) {
+            ServletUtility.sendError(request, response, 400, "datatables.errors.columnNameMissing");
+            return;
+        }
+
+        CategoryListDAO.OrderableColumns column;
+        switch (columnName) {
+            case "id":
+                column = CategoryListDAO.OrderableColumns.ID;
+                break;
+            case "name":
+                column = CategoryListDAO.OrderableColumns.NAME;
+                break;
+            case "description":
+                column = CategoryListDAO.OrderableColumns.DESCRIPTION;
+                break;
+            default:
+                ServletUtility.sendError(request, response, 400, "datatables.errors.columnNameUnrecognized");
+                return;
+        }
+
+        String direction = request.getParameter("order[0][dir]");
+        if (direction == null || direction.trim().isEmpty()) {
+            ServletUtility.sendError(request, response, 400, "datatables.errors.dirMissing");
+            return;
+        }
+
+        boolean dir;
+        switch (direction) {
+            case "asc": dir = true; break;
+            case "desc": dir = false; break;
+            default:
+                ServletUtility.sendError(request, response, 400, "datatables.errors.dirUnrecognized");
+                return;
+        }
+
+        String offset = request.getParameter("start");
+        if(offset == null || offset.trim().isEmpty()) {
+            ServletUtility.sendError(request, response, 400, "datatables.errors.offsetMissing");
+            return;
+        }
+
+
+        int iOffset;
+        try{
+            iOffset = Integer.parseInt(offset);
+        } catch (NumberFormatException e) {
+            ServletUtility.sendError(request, response, 400, "datatables.errors.offsetNotInt");
+            return;
+        }
+
+        String length = request.getParameter("length");
+        if(length == null || length.trim().isEmpty()) {
+            ServletUtility.sendError(request, response, 400, "datatables.errors.lengthMissing");
+            return;
+        }
+
+        int iLength;
+        try{
+            iLength = Integer.parseInt(length);
+        } catch (NumberFormatException e) {
+            ServletUtility.sendError(request, response, 400, "datatables.errors.lengthNotInt");
+            return;
+        }
+
+
         String id = request.getParameter("id");
         String name = request.getParameter("name");
         String description = request.getParameter("description");
@@ -343,9 +426,22 @@ public class JSONCategoryListsServlet extends HttpServlet {
         }
 
         try {
-            List<CategoryList> categoryLists = categoryListDAO.filter(iId, name, description);
+            List<CategoryList> categoryLists = categoryListDAO.filter(iId, name, description, column,dir ,iOffset ,iLength);
 
-            ServletUtility.sendJSON(request, response, 200, categoryLists);
+            Long totalCount = categoryListDAO.getCount();
+            Long filteredCount = categoryListDAO.getCountFilter(iId, name, description);
+
+            HashMap<String, Object> h = new HashMap<>();
+            h.put("recordsTotal", totalCount);
+            h.put("recordsFiltered", filteredCount);
+            h.put("data", categoryLists);
+
+            ServletUtility.sendJSON(
+                    request,
+                    response,
+                    200,
+                    h
+            );
         } catch (DAOException e) {
             e.printStackTrace();
             ServletUtility.sendError(request, response, 500, "categoryLists.errors.impossibleDbFilter");

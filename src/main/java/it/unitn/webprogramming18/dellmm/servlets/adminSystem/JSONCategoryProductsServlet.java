@@ -6,7 +6,6 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.CategoryProduct;
 import it.unitn.webprogramming18.dellmm.util.*;
-import org.apache.commons.io.IOUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -74,29 +73,25 @@ public class JSONCategoryProductsServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String id = request.getParameter("id");
-        String name = request.getParameter("name");
-        String description = request.getParameter("description");
-
         String orderBy = request.getParameter("order[0][column]");
         if (orderBy == null || orderBy.trim().isEmpty()) {
-            ServletUtility.sendError(request, response, 400, "categoryProducts.errors.orderByMissing");
+            ServletUtility.sendError(request, response, 400, "datatables.errors.orderByMissing");
             return;
         }
 
-        Integer columnId;
+        int columnId;
 
         try {
             columnId = Integer.parseInt(orderBy);
         } catch (NumberFormatException e){
-            ServletUtility.sendError(request, response, 400, "categoryProducts.errors.orderByNotInt");
+            ServletUtility.sendError(request, response, 400, "datatables.errors.orderByNotInt");
             return;
         }
 
 
         String columnName = request.getParameter("columns[" + columnId + "][name]");
         if (columnName == null || columnName.trim().isEmpty()) {
-            ServletUtility.sendError(request, response, 400, "categoryProducts.errors.columnNameMissing");
+            ServletUtility.sendError(request, response, 400, "datatables.errors.columnNameMissing");
             return;
         }
 
@@ -112,53 +107,58 @@ public class JSONCategoryProductsServlet extends HttpServlet {
                 column = CategoryProductDAO.OrderableColumns.DESCRIPTION;
                 break;
             default:
-                ServletUtility.sendError(request, response, 400, "categoryProducts.errors.columnNameUnrecognized");
+                ServletUtility.sendError(request, response, 400, "datatables.errors.columnNameUnrecognized");
                 return;
         }
 
         String direction = request.getParameter("order[0][dir]");
         if (direction == null || direction.trim().isEmpty()) {
-            ServletUtility.sendError(request, response, 400, "categoryProducts.errors.dirMissing");
+            ServletUtility.sendError(request, response, 400, "datatables.errors.dirMissing");
             return;
         }
 
-        Boolean dir;
+        boolean dir;
         switch (direction) {
             case "asc": dir = true; break;
             case "desc": dir = false; break;
             default:
-                ServletUtility.sendError(request, response, 400, "categoryProducts.errors.dirUnrecognized");
+                ServletUtility.sendError(request, response, 400, "datatables.errors.dirUnrecognized");
                 return;
         }
 
         String offset = request.getParameter("start");
         if(offset == null || offset.trim().isEmpty()) {
-            ServletUtility.sendError(request, response, 400, "categoryProducts.errors.offsetMissing");
+            ServletUtility.sendError(request, response, 400, "datatables.errors.offsetMissing");
             return;
         }
 
 
-        Integer iOffset;
+        int iOffset;
         try{
             iOffset = Integer.parseInt(offset);
         } catch (NumberFormatException e) {
-            ServletUtility.sendError(request, response, 400, "categoryProducts.errors.offsetNotInt");
+            ServletUtility.sendError(request, response, 400, "datatables.errors.offsetNotInt");
             return;
         }
 
         String length = request.getParameter("length");
         if(length == null || length.trim().isEmpty()) {
-            ServletUtility.sendError(request, response, 400, "categoryProducts.errors.lengthMissing");
+            ServletUtility.sendError(request, response, 400, "datatables.errors.lengthMissing");
             return;
         }
 
-        Integer iLength;
+        int iLength;
         try{
             iLength = Integer.parseInt(length);
         } catch (NumberFormatException e) {
-            ServletUtility.sendError(request, response, 400, "categoryProducts.errors.lengthMissing");
+            ServletUtility.sendError(request, response, 400, "datatables.errors.lengthNotInt");
             return;
         }
+
+
+        String id = request.getParameter("id");
+        String name = request.getParameter("name");
+        String description = request.getParameter("description");
 
         Integer iId;
         try {
