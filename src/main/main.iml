@@ -27,6 +27,5 @@
     <orderEntry type="library" name="com.mchange:mchange-commons-java:0.2.9" level="project" />
     <orderEntry type="library" name="net.coobird:thumbnailator:0.4.8" level="project" />
     <orderEntry type="library" name="c3p0:c3p0:0.9.1.2" level="project" />
-    <orderEntry type="library" name="OpenLayers" level="application" />
   </component>
 </module>
