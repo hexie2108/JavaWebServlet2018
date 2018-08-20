@@ -724,4 +724,44 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
                         C3p0Util.close(CON);
                 }
         }
+
+        @Override
+        public List<Product> getListProductFromLogNotEmailYetByUserId(Integer userId, Timestamp currentTime, Integer predictionDay) throws DAOException
+        {
+                List<Product> products = new ArrayList<>();
+
+                if (userId == null || currentTime == null || predictionDay == null)
+                {
+                        throw new DAOException("userId or currentTime or  predictionDay is null");
+                }
+
+                CON = C3p0Util.getConnection();
+
+                try (PreparedStatement stm = CON.prepareStatement("SELECT Product.* FROM Log JOIN Product ON Log.productId = Product.id "
+                            + " WHERE Log.emailStatus = 0 AND Log.userId = ? AND (Log.last2 IS NOT NULL)  AND ( (TIME_TO_SEC( TIMEDIFF( last1, last2 )) - TIME_TO_SEC( TIMEDIFF( ?, last1 ))) BETWEEN 0 AND 60*60*24*? )"))
+                {
+                        stm.setInt(1, userId);
+                        stm.setTimestamp(2, currentTime);
+                        stm.setInt(3, predictionDay);
+
+                        try (ResultSet rs = stm.executeQuery())
+                        {
+                                while (rs.next())
+                                {
+                                        products.add(getProductFromResultSet(rs));
+                                }
+                        }
+                }
+                catch (SQLException ex)
+                {
+                        throw new DAOException("Impossible to get the list of productInList", ex);
+                }
+                finally
+                {
+                        C3p0Util.close(CON);
+                }
+
+                return products;
+
+        }
 }

@@ -3,6 +3,7 @@ package it.unitn.webprogramming18.dellmm.db.daos;
 import it.unitn.webprogramming18.dellmm.db.utils.DAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
+import java.sql.Timestamp;
 
 import java.util.List;
 
@@ -172,4 +173,16 @@ public interface ProductDAO extends DAO<Product, Integer> {
      * @throws DAOException
      */
     public void deleteProductById(Integer productId) throws DAOException;
+    
+    
+        /**
+         * get lista di prodotto dal log , in cui non è stato ancora inviato email , di un specifico utente
+         * @param userId id utente
+         * @param currentTime user corrente
+         * @param predictionDay se la previsione di riaqsuito è minore tale numero di giorno,  invoca funzione
+         * @return  lista di prodotto
+         */
+        public List<Product> getListProductFromLogNotEmailYetByUserId(Integer userId, Timestamp currentTime,  Integer predictionDay)  throws DAOException;
+    
+    
 }

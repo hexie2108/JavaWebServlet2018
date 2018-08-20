@@ -19,6 +19,7 @@ public class Log {
     private Timestamp last2;
     private Timestamp last3;
     private Timestamp last4;
+    private boolean emailStatus;
 
 
     /**
@@ -118,4 +119,20 @@ public class Log {
     public void setLast4(Timestamp last4) {
         this.last4 = last4;
     }
+
+        /**
+         * @return the emailStatus
+         */
+        public boolean isEmailStatus()
+        {
+                return emailStatus;
+        }
+
+        /**
+         * @param emailStatus the emailStatus to set
+         */
+        public void setEmailStatus(boolean emailStatus)
+        {
+                this.emailStatus = emailStatus;
+        }
 }
