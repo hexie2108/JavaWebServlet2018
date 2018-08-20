@@ -174,6 +174,7 @@
 <link rel="stylesheet" type="text/css" href="<c:url value="/libs/DataTables/datatables.min.css"/>"/>
 <script src="<c:url value="/libs/DataTables/datatables.min.js"/>"></script>
 <script src="<c:url value="/js/userValidate.js"/>"></script>
+<script src="<c:url value="/js/utility.js"/>"></script>
 <script src="<c:url value="/libs/zxcvbn/zxcvbn.js"/>"></script>
 <script>
     $(document).ready(function () {
@@ -190,7 +191,6 @@
                 text: ''
             })
         );
-
 
         tableDiv.on('xhr.dt', function (e, settings, json, xhr) {
             if (json === null) {
@@ -214,27 +214,28 @@
             $.ajax({
                 url: url,
                 type: 'POST',
-                data: data
+                data: data,
+                async: false
             }).done(function () {
                 successCallback();
             }).fail(function (jqXHR) {
-                const prevText = btn.html();
-
                 if (typeof jqXHR.responseJSON === 'object' &&
                     jqXHR.responseJSON !== null &&
                     jqXHR.responseJSON['message'] !== undefined
                 ) {
-                    btn.html(jqXHR.responseJSON['message']);
+                    showErrorAlert(
+                        '<fmt:message key="generic.label.error"/>',
+                        jqXHR.responseJSON['message'],
+                        '<fmt:message key="generic.label.close"/>'
+                    );
 
                 } else {
-                    btn.html(unknownErrorMessage);
+                    showErrorAlert(
+                        '<fmt:message key="generic.label.error"/>',
+                        unknownError,
+                        '<fmt:message key="generic.label.close"/>'
+                    );
                 }
-
-                setTimeout(function () {
-                    btn.html(prevText);
-
-                    btn.attr("disabled", false);
-                }, 2000);
             });
         }
 
@@ -286,7 +287,7 @@
                             table.ajax.reload();
                             table.draw();
                         }
-                    )
+                    );
                 }
             });
 
@@ -299,7 +300,11 @@
                         '<c:url value="/admin/users.json"/>',
                         {'action': 'delete', 'id': data.id},
                         $(this),
-                        (btn) => row.remove())
+                        (btn) => {
+                            table.ajax.reload();
+                            table.draw();
+                        }
+                    );
                 }
             });
 

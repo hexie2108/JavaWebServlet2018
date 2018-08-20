@@ -187,7 +187,8 @@
                                     type: 'POST',
                                     data: {'action': 'delete', 'id': data.id}
                                 }).done(function () {
-                                    row.remove();
+                                    table.ajax.reload();
+                                    table.draw();
                                 }).fail(function (jqXHR) {
                                     if (typeof jqXHR.responseJSON === 'object' &&
                                         jqXHR.responseJSON !== null &&
