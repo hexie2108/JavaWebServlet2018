@@ -101,13 +101,10 @@ public class FormValidator
         {
                 boolean ris = true;
 
-                try
-                {
+                try {
                         InternetAddress addr = new InternetAddress(email);
                         addr.validate();
-                }
-                catch (AddressException ex)
-                {
+                } catch (AddressException ex) {
                         ris = false;
                 }
 
@@ -125,15 +122,11 @@ public class FormValidator
         {
                  boolean ris = true;
                 //controlla la sua esistenza
-                try
-                {
-                        if (userDAO != null && userDAO.checkExistenceOfEmail(email))
-                        {
+                try {
+                        if (userDAO != null && userDAO.checkExistenceOfEmail(email)) {
                                 ris = false;
                         }
-                }
-                catch (DAOException ignored)
-                {
+                } catch (DAOException ignored) {
                        ris = false;
                 }
                 return ris;
@@ -150,18 +143,12 @@ public class FormValidator
                 String pattern = "^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$";
                 boolean ris = true;
 
-                if (email == null || email.isEmpty())
-                {
+                if (email == null || email.isEmpty()) {
                         ris = false;
                 }
-
-                else if (email.length() > EMAIL_MAX_LEN)
-                {
+                else if (email.length() > EMAIL_MAX_LEN) {
                         ris = false;
-                }
-
-                else if (!validateEmailFormat(email) || !email.matches(pattern))
-                {
+                } else if (!validateEmailFormat(email) || !email.matches(pattern)) {
                         //se il formato non è valido
                         ris = false;
                 }
@@ -178,13 +165,10 @@ public class FormValidator
         public static boolean validateFirstName(String firstName)
         {
                 boolean ris = true;
-                if (firstName == null || firstName.isEmpty())
-                {
+                if (firstName == null || firstName.isEmpty()) {
                         ris = false;
                 }
-
-                else if (firstName.length() > FIRST_NAME_MAX_LEN)
-                {
+                else if (firstName.length() > FIRST_NAME_MAX_LEN) {
                         ris = false;
                 }
 
@@ -201,13 +185,10 @@ public class FormValidator
         {
                 boolean ris = true;
 
-                if (lastName == null || lastName.isEmpty())
-                {
+                if (lastName == null || lastName.isEmpty()) {
                         ris = false;
                 }
-
-                else if (lastName.length() > LAST_NAME_MAX_LEN)
-                {
+                else if (lastName.length() > LAST_NAME_MAX_LEN) {
                         ris = false;
                 }
 
@@ -224,17 +205,13 @@ public class FormValidator
         {
                 boolean ris = true;
 
-                if (password == null || password.isEmpty())
-                {
+                if (password == null || password.isEmpty()) {
                         ris = false;
                 }
-
-                else if (password.length() > PWD_MAX_LEN || password.length() < PWD_MIN_LEN)
-                {
+                else if (password.length() > PWD_MAX_LEN || password.length() < PWD_MIN_LEN) {
                         ris = false;
                 }
-                else
-                {
+                else {
                         //controlla se contiene un minuscolo, un maiuscolo, un numero , un simbolo
 
                         int upper = 0;
@@ -285,14 +262,11 @@ public class FormValidator
                 boolean ris = true;
 
                 // Se avatar è custom allora controllo il file, se nessun controllo segnala errori esco immediatamente
-                if (avatar == null || avatar.isEmpty())
-                {
+                if (avatar == null || avatar.isEmpty()) {
                         ris = false;
                 }
-
                 // Se avatar non è custom controllo se è tra i valori permessi
-                else if (!avatar.equals(CUSTOM_AVATAR) && DEFAULT_AVATARS.stream().noneMatch(avatar::equals))
-                {
+                else if (!avatar.equals(CUSTOM_AVATAR) && DEFAULT_AVATARS.stream().noneMatch(avatar::equals)) {
                         ris = false;
                 }
 
@@ -309,22 +283,18 @@ public class FormValidator
         {
                 boolean ris = true;
 
-                if (fileItem == null)
-                {
+                if (fileItem == null) {
                         ris = false;
                 }
-                else if (fileItem.getSize() <= FormValidator.MIN_LEN_FILE)
-                {
+                else if (fileItem.getSize() <= FormValidator.MIN_LEN_FILE) {
                         ris = false;
                 }
-                else if (fileItem.getSize() > FormValidator.MAX_LEN_FILE)
-                {
+                else if (fileItem.getSize() > FormValidator.MAX_LEN_FILE) {
                         // Non permettere dimensioni superiori ai ~15MB
                         ris = false;
                 }
                 //controlla il tipo di file
-                else if (!isValidFileExtension(fileItem.getContentType()))
-                {
+                else if (!isValidFileExtension(fileItem.getContentType())) {
                         ris = false;
                 }
 

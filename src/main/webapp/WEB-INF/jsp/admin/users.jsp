@@ -96,7 +96,9 @@
                                 <div class="input-group-prepend"><span class="input-group-text" id="roSpanFirstName"></span></div>
                                 <input id="inputFirstName" class="form-control" placeholder="<fmt:message key="user.label.name"/>" autofocus=""
                                        type="text" name="${FormValidator.FIRST_NAME_KEY}" >
-                                <span id="spanFirstName"></span>
+                            </div>
+                            <div class="error-messages">
+                                <p id="span${FormValidator.FIRST_NAME_KEY}"></p>
                             </div>
                         </div>
 
@@ -107,7 +109,9 @@
                                 <div class="input-group-prepend"><span class="input-group-text" id="roSpanLastName"></span></div>
                                 <input id="inputLastName" class="form-control" placeholder="<fmt:message key="user.label.surname"/>" autofocus=""
                                        type="text" name="${FormValidator.LAST_NAME_KEY}">
-                                <span id="spanLastName"></span>
+                            </div>
+                            <div class="error-messages">
+                                <p id="span${FormValidator.LAST_NAME_KEY}"></p>
                             </div>
                         </div>
                     </div>
@@ -120,7 +124,9 @@
                                 <div class="input-group-prepend"><span class="input-group-text" id="roSpanEmail"></span></div>
                                 <input id="inputEmail" class="form-control" placeholder="<fmt:message key="user.label.email"/>" autofocus=""
                                        type="email" name="${FormValidator.EMAIL_KEY}">
-                                <span id="spanEmail"></span>
+                            </div>
+                            <div class="error-messages">
+                                <p id="span${FormValidator.EMAIL_KEY}"></p>
                             </div>
                         </div>
 
@@ -131,7 +137,9 @@
                                 <input id="inputPassword" class="form-control" placeholder="<fmt:message key="user.label.password"/>"
                                        type="password" name="${FormValidator.FIRST_PWD_KEY}" value="">
                                 <div class="input-group-append"><span class="input-group-text" id="strongPassword" ><fmt:message key="user.label.passwordScore"/>: x/x</span></div>
-                                <span id="spanPassword"></span>
+                            </div>
+                            <div class="error-messages">
+                                <p id="span${FormValidator.FIRST_PWD_KEY}"></p>
                             </div>
                         </div>
                     </div>
@@ -154,8 +162,12 @@
                                    type="file" name="${FormValidator.AVATAR_IMG_KEY}"
                                    accept="image/*">
                         </label>
-                        <span id="spanAvatar"></span>
-                        <span id="spanAvatarImg"></span>
+                        <div class="error-messages">
+                            <p id="span${FormValidator.AVATAR_KEY}"></p>
+                        </div>
+                        <div class="error-messages">
+                            <p id="span${FormValidator.AVATAR_IMG_KEY}"></p>
+                        </div>
                     </div>
                 </form>
 
@@ -172,8 +184,10 @@
     </div>
 </div>
 <link rel="stylesheet" type="text/css" href="<c:url value="/libs/DataTables/datatables.min.css"/>"/>
+<link rel="stylesheet" type="text/css" href="<c:url value="/css/validation.css"/>"/>
 <script src="<c:url value="/libs/DataTables/datatables.min.js"/>"></script>
-<script src="<c:url value="/js/userValidate.js"/>"></script>
+<!-- <script src="<c:url value="/js/userValidate.js"/>"></script> -->
+<script src="<c:url value="/js/verification.js"/>"></script>
 <script src="<c:url value="/js/utility.js"/>"></script>
 <script src="<c:url value="/libs/zxcvbn/zxcvbn.js"/>"></script>
 <script>
@@ -260,7 +274,7 @@
                     modifyUserForm.find('#roSpanLastName').html(data.surname);
                     modifyUserForm.find('#roSpanEmail').html(data.email);
 
-                    if (/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(data.img)) {
+                    if (/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\.jpg$/.test(data.img)) {
                         modifyUserForm.find('#avatarDiv').prepend(
                             '<label id="customImgLabel">' +
                             '    <input class="d-none img-radio" required="" type="radio" name="${FormValidator.AVATAR_KEY}" value="" checked>' +
@@ -454,15 +468,146 @@
             const successMessage = '<fmt:message key="generic.success"/>';
 
             modifyUserModal.on("hidden.bs.modal", function () {
+                clearVerifyMessages(modifyUserForm);
+
                 modifyUserForm[0].reset();
                 $('#customImgLabel').remove();
             });
 
-            modifyUserForm.find('input').blur(() => {
-                request_user_validation(modifyUserForm, true, URL).done((d) => updateVerifyMessages(modifyUserForm, add_file_errors(modifyUserForm, d)));
+
+
+            const checkEmail = function(obj, form, name) {
+                const emailVal = form.find('[name="'+name+'"]').val();
+
+                validateString(${FormValidator.EMAIL_MAX_LEN}, () => false, {
+                    emptyOrNull: '<fmt:message key="validateUser.errors.EMAIL_MISSING"/>',
+                    tooLong: '<fmt:message key="validateUser.errors.EMAIL_TOO_LONG"/>',
+                });
+
+                if (obj[name] !== undefined) {
+                    //espressione per controllare il formatto di email
+                    const reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/;
+                    //se è vuoto o se supera la lunghezza massima o non rispetta il formatto di email
+                    if (!reg.test(emailVal)) {
+                        obj[name] = '<fmt:message key="validateUser.errors.EMAIL_NOT_VALID"/>';
+                    } else {
+                        //poi bisogna verificare se tale email esiste o no
+                        //e verifica lo stato di attivazione dell'account con tale email
+
+                        //get valore di email
+                        var result;
+                        $.ajax({
+                            url: '<c:url value="service/checkUserService"/>',
+                            data: {action: "checkActivationStatus", email: emailVal},
+                            type: 'POST',
+                            dataType: "text",
+                            async: false,
+                            cache: false,
+                            error: function () {
+                                alert('error to check email existence, retry submit');
+                            },
+                            success: function (data) {
+                                //se email non esiste
+                                if (data === "0") {
+                                    obj[name] = 'no-existance'; // TODO: Change with i18n
+                                } else if (data === "1") {
+                                    obj[name] = 'already-activated'; // TODO: Change with i18n
+                                }
+                            }
+                        });
+                    }
+                }
+            };
+
+            const checkName = validateString(${FormValidator.FIRST_NAME_MAX_LEN},() => false, {
+                emptyOrNull: '<fmt:message key="validateUser.errors.FIRST_NAME_MISSING"/>',
+                tooLong: '<fmt:message key="validateUser.errors.FIRST_NAME_TOO_LONG"/>',
             });
 
-            modifyUserForm.find('#inputPassword').on("keyup", function () {
+            const checkDescription = validateString(${FormValidator.LAST_NAME_MAX_LEN}, () => false, {
+                emptyOrNull: '<fmt:message key="validateUser.errors.LAST_NAME_MISSING"/>',
+                tooLong: '<fmt:message key="validateUser.errors.LAST_NAME_TOO_LONG"/>',
+            });
+
+            function validatePassword(required) {
+                return function (obj, form, name) {
+                    var password = form.find('[name="' + name + '"]').val();
+
+                    //check password
+                    //se è vuoto o se supera la lunghezza massima o se è troppo corta
+                    if (password === "") {
+                        if (required(form, name)) {
+                            obj[name] = '<fmt:message key="validateUser.errors.PASSWORD_MISSING"/>';
+                        }
+                    } else if (password.length > 44) {
+                        obj[name] = '<fmt:message key="validateUser.errors.PASSWORD_TOO_LONG"/>';
+                    } else if (password.length < 8) {
+                        obj[name] = '<fmt:message key="validateUser.errors.PASSWORD_TOO_SHORT"/>';
+                    } else {
+                        let lower = 0;
+                        let upper = 0;
+                        let number = 0;
+                        let symbol = 0;
+
+                        for (let i = 0; i < password.length; i++) {
+                            const letter = password.charAt(i);
+
+                            if (letter === letter.toLowerCase() && letter !== letter.toUpperCase()) {
+                                lower++;
+                            } else if (letter !== letter.toLowerCase() && letter === letter.toUpperCase()) {
+                                upper++;
+                            } else if (/\d/.test(letter)) {
+                                number++;
+                            } else if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(letter)) {
+                                symbol++;
+                            }
+                        }
+
+                        //se password non ha un carattere minuscolo, un maiuscolo, un numero e un simbolo, è invalido
+                        if ((lower < 1) || (upper < 1) || (number < 1) || (symbol < 1)) {
+                            obj[name] = '<fmt:message key="validateUser.errors.PASSWORD_NOT_VALID"/>';
+                        }
+                    }
+                };
+            }
+
+            const checkPassword = validatePassword(() => false);
+
+            const checkPassword2 = function(obj, form, namePwd1, namePwd2) {
+                const password = form.find('[name="' + namePwd1 + '"]').val();
+                const password2 = form.find('[name="' + namePwd2 + '"]').val();
+
+                if (password2 === "") {
+                    obj[name] = "<fmt:message key="validateUser.errors.PASSWORD2_MISSING"/>";
+                } else if (password2 !== password) {
+                    obj[name] = "<fmt:message key="validateUser.errors.PASSWORD2_NOT_SAME"/>";
+                }
+            };
+
+            modifyUserForm.find('input, textarea').on('blur',() => {
+                resetAlert(resDiv);
+
+                const obj = {};
+
+                checkEmail(obj, modifyUserForm, '${FormValidator.EMAIL_KEY}');
+                checkName(obj, modifyUserForm, '${FormValidator.FIRST_NAME_KEY}');
+                checkDescription(obj, modifyUserForm, '${FormValidator.LAST_NAME_KEY}');
+
+                checkPassword(obj, modifyUserForm, '${FormValidator.FIRST_PWD_KEY}');
+                checkPassword2(obj, modifyUserForm, '${FormValidator.FIRST_PWD_KEY}', '${FormValidator.SECOND_PWD_KEY}');
+
+                // TODO: Fare img
+
+                add_file_errors(/.*(jpg|jpeg|bmp|png|gif).*/, ${FormValidator.MAX_LEN_FILE}, () => false, {
+                    fileEmptyOrNull: '',
+                    fileTooBig: '',
+                    fileContentTypeMissingOrType: '',
+                    fileOfWrongType: '',
+                });
+                updateVerifyMessages(modifyUserForm, obj);
+            });
+
+            modifyUserForm.find('[name="${FormValidator.FIRST_PWD_KEY}"]').on("keyup", function () {
                 strPwd.text("<fmt:message key="user.label.passwordScore"/>: " + zxcvbn(this.value).score + "/4");
             });
 

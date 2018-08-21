@@ -33,15 +33,38 @@ function updateVerifyMessages(form, data) {
     return validityInputs.every(v => v);
 }
 
+function clearVerifyMessages(form) {
+    // Prendi tutti gli <input> che ci sono nella pagina e per ognuno prendine il nome
+    const inputs = form.find('input,textarea,select').map(function () {
+        return this.name;
+    }).get();
+    // Per ogni input scrivi l'eventuale errore nello span dedicato e restituisci false se ha errori, true altrimenti
+    const validityInputs = inputs.map(
+        function (key) {
+            const input = form.find("[name=\"" + key + "\"]");
+            const span = form.find("#span" + key);
+
+            span.html("");
+            input.closest('.input-group').find('.input-group-prepend, .input-group-append').find('.input-group-text').removeClass('border-danger');
+            input.removeClass("is-invalid");
+            return true;
+        }
+    );
+
+    // Se degli input sono false(hanno errori) allora restituisci false, altrimenti true
+    // Se false l'invio del form verrà bloccato altrimenti no
+    return validityInputs.every(v => v);
+}
+
+function resetAlert(alert) {
+    alert.removeClass('alert-danger');
+    alert.removeClass('alert-success');
+    alert.removeClass('alert-warning');
+
+    alert.addClass("d-none");
+}
+
 function formSubmit(url, form, options) {
-    function resetAlert(alert) {
-        alert.removeClass('alert-danger');
-        alert.removeClass('alert-success');
-        alert.removeClass('alert-warning');
-
-        alert.addClass("d-none");
-    }
-
     const multipart = options['multipart'];
     const session = options['session'];
     const redirectUrl = options['redirectUrl'];

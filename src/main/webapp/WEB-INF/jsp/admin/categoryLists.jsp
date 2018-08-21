@@ -289,6 +289,8 @@
 
         {
             categoryListModal.on("hidden.bs.modal", function () {
+                clearVerifyMessages(categoryListForm);
+
                 categoryListForm[0].reset();
                 categoryListForm.find('input').val("");
                 categoryListForm.find('input[type="text"]').html("");

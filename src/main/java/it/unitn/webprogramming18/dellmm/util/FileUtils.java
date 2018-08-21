@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 import javax.servlet.ServletException;
 
@@ -24,8 +25,6 @@ public class FileUtils {
     private static final int MEMORY_THRESHOLD = 1024 * 1024 * 3;  // 3MB
     private static final int MAX_FILE_SIZE = 1024 * 1024 * 40; // 40MB
     private static final int MAX_REQUEST_SIZE = 1024 * 1024 * 50; // 50MB
-    //formattare la data
-    private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssS");
 
     /**
      * passando l'oggetto file della richiesta, lo ridimensiona e salva su
@@ -72,8 +71,8 @@ public class FileUtils {
     }
 
     public static String convertJPG(File oldFile, String uploadPath, int width, int height) throws IOException {
-        //genera un nuovo nome per file in base annoMeseGiornoMinutoSecondoMillisecondo
-        String newName = sdf.format(new Date()) + ".jpg";
+        //genera un nuovo nome per file in base a UUID
+        String newName = UUID.randomUUID() + ".jpg";
 
         File newFile = new File(uploadPath + File.separator + newName);
         //ridimensione e genera il nuovo file

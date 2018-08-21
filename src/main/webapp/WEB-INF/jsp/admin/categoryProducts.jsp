@@ -258,6 +258,8 @@
 
         {
             categoryProductModal.on("hidden.bs.modal", function () {
+                clearVerifyMessages(categoryProductForm);
+
                 categoryProductForm[0].reset();
                 categoryProductForm.find('input').val("");
                 categoryProductForm.find('input[type="text"]').html("");
@@ -270,6 +272,7 @@
 
             const checkFile = add_file_errors(
                 /.*(jpg|jpeg|png|gif|bmp).*/,
+                ${CategoryProductValidator.IMG_MAX_SIZE},
                 isCreate, {
                     fileEmptyOrNull: '<fmt:message key="validateCategoryProduct.errors.Img.FILE_EMPTY_OR_NULL"/>',
                     fileTooBig: '<fmt:message key="validateCategoryProduct.errors.Img.FILE_TOO_BIG"/>',
