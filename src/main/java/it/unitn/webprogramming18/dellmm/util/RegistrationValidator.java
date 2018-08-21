@@ -29,12 +29,12 @@ public class RegistrationValidator {
 
     //array di avatar default
     public static final List<String> DEFAULT_AVATARS = Collections.unmodifiableList(Arrays.asList(
-            "user.svg",
-            "user-astronaut.svg",
-            "user-graduate.svg",
-            "user-md.svg",
-            "user-ninja.svg",
-            "user-secret.svg"
+            "user.jpg",
+            "user-astronaut.jpg",
+            "user-graduate.jpg",
+            "user-md.jpg",
+            "user-ninja.jpg",
+            "user-secret.jpg"
     ));
     public static final String CUSTOM_AVATAR = "custom";
     public static final String I18N_ERROR_STRING_PREFIX = "validateUser.errors.";

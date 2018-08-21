@@ -45,10 +45,10 @@ public class FormValidator
 
         //array di avatar default
         public static final List<String> DEFAULT_AVATARS = Collections.unmodifiableList(Arrays.asList(
-                    "user.svg",
-                    "user-astronaut.svg",
-                    "user-ninja.svg",
-                    "user-secret.svg"
+                    "user.jpg",
+                    "user-astronaut.jpg",
+                    "user-ninja.jpg",
+                    "user-secret.jpg"
         ));
         
         //array di pagina di userSystem

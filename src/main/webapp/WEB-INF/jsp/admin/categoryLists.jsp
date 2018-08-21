@@ -2,7 +2,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<%@ page import="it.unitn.webprogramming18.dellmm.util.RegistrationValidator" %>
 <%@ page import="it.unitn.webprogramming18.dellmm.util.ConstantsUtils" %>
 
 <%@ include file="../../jspf/i18n.jsp" %>
@@ -67,7 +66,6 @@
 <script src="<c:url value="/js/verification.js"/>"></script>
 <script src="<c:url value="/libs/DataTables/datatables.min.js"/>"></script>
 
-<script src="<c:url value="/js/utility.js"/>"></script>
 <link rel="stylesheet" type="text/css" href="<c:url value="/css/validation.css"/>"/>
 <script>
     $(document).ready(function () {

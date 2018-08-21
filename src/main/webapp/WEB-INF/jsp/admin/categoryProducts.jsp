@@ -63,7 +63,6 @@
 <link rel="stylesheet" type="text/css" href="<c:url value="/libs/DataTables/datatables.min.css"/>"/>
 <script src="<c:url value="/js/verification.js"/>"></script>
 <script src="<c:url value="/libs/DataTables/datatables.min.js"/>"></script>
-<script src="<c:url value="/js/utility.js"/>"></script>
 <script>
     $(document).ready(function () {
         const resDiv = $('#id-res');

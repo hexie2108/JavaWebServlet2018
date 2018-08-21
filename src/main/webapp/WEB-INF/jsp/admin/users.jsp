@@ -92,7 +92,7 @@
                         <div class="col-sm-6">
                             <label for="inputFirstName" class="sr-only"><fmt:message key="user.label.name"/></label>
                             <div class="input-group ">
-                                <div class="input-group-prepend"><i class="input-group-text fas fa-user"></i></div>
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-user"></i></span></div>
                                 <div class="input-group-prepend"><span class="input-group-text" id="roSpanFirstName"></span></div>
                                 <input id="inputFirstName" class="form-control" placeholder="<fmt:message key="user.label.name"/>" autofocus=""
                                        type="text" name="${FormValidator.FIRST_NAME_KEY}" >
@@ -105,7 +105,7 @@
                         <div class="col-sm-6">
                             <label for="inputLastName" class="sr-only"><fmt:message key="user.label.surname"/></label>
                             <div class="input-group">
-                                <div class="input-group-prepend"><i class="input-group-text fas fa-user"></i></div>
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-user"></i></span></div>
                                 <div class="input-group-prepend"><span class="input-group-text" id="roSpanLastName"></span></div>
                                 <input id="inputLastName" class="form-control" placeholder="<fmt:message key="user.label.surname"/>" autofocus=""
                                        type="text" name="${FormValidator.LAST_NAME_KEY}">
@@ -120,7 +120,7 @@
                         <div class="col-sm-6">
                             <label for="inputEmail" class="sr-only"><fmt:message key="user.label.email"/></label>
                             <div class="input-group">
-                                <div class="input-group-prepend"><i class="input-group-text fas fa-at"></i></div>
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-at"></i></span></div>
                                 <div class="input-group-prepend"><span class="input-group-text" id="roSpanEmail"></span></div>
                                 <input id="inputEmail" class="form-control" placeholder="<fmt:message key="user.label.email"/>" autofocus=""
                                        type="email" name="${FormValidator.EMAIL_KEY}">
@@ -133,10 +133,13 @@
                         <div class="col-sm-6">
                             <label for="inputPassword" class="sr-only"><fmt:message key="user.label.password"/></label>
                             <div class="input-group">
-                                <div class="input-group-prepend"><i class="input-group-text fas fa-key"></i></div>
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-key"></i></span></div>
                                 <input id="inputPassword" class="form-control" placeholder="<fmt:message key="user.label.password"/>"
                                        type="password" name="${FormValidator.FIRST_PWD_KEY}" value="">
                                 <div class="input-group-append"><span class="input-group-text" id="strongPassword" ><fmt:message key="user.label.passwordScore"/>: x/x</span></div>
+                            </div>
+                            <div class="progress progress-bar-div">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated"></div>
                             </div>
                             <div class="error-messages">
                                 <p id="span${FormValidator.FIRST_PWD_KEY}"></p>
@@ -160,7 +163,7 @@
                             ><i class="far fa-check-circle img-check"></i>
                             <input id="customAvatarImg"
                                    type="file" name="${FormValidator.AVATAR_IMG_KEY}"
-                                   accept="image/*">
+                                   accept="image/jpg, image/jpeg, image/png, image/bmp, image/gif">
                         </label>
                         <div class="error-messages">
                             <p id="span${FormValidator.AVATAR_KEY}"></p>
@@ -188,7 +191,6 @@
 <script src="<c:url value="/libs/DataTables/datatables.min.js"/>"></script>
 <!-- <script src="<c:url value="/js/userValidate.js"/>"></script> -->
 <script src="<c:url value="/js/verification.js"/>"></script>
-<script src="<c:url value="/js/utility.js"/>"></script>
 <script src="<c:url value="/libs/zxcvbn/zxcvbn.js"/>"></script>
 <script>
     $(document).ready(function () {
@@ -223,8 +225,6 @@
         });
 
         function ajaxButton(url, data, btn, successCallback) {
-            btn.attr("disabled", true);
-
             $.ajax({
                 url: url,
                 type: 'POST',
@@ -475,49 +475,80 @@
             });
 
 
+            modifyUserForm.find('[name="${FormValidator.FIRST_PWD_KEY}"]').focusin(function () {
+                $(".progress-bar-div").show("slow");
+            });
+            //nasconde la barra della valutazione di password
+            modifyUserForm.find('[name="${FormValidator.FIRST_PWD_KEY}"]').focusout(function () {
+                $(".progress-bar-div").hide("slow");
+            });
 
-            const checkEmail = function(obj, form, name) {
-                const emailVal = form.find('[name="'+name+'"]').val();
+            function validateEmail(lazy, required, url, errors) {
+                const emptyOrNull = errors.emptyOrNull;
+                const tooLong = errors.tooLong;
+                const emailInvalid = errors.emailInvalid;
+                const emailNoExists = errors.emailNoExists;
+                const emailAlreadyActivated = errors.emailAlreadyActivated;
 
-                validateString(${FormValidator.EMAIL_MAX_LEN}, () => false, {
-                    emptyOrNull: '<fmt:message key="validateUser.errors.EMAIL_MISSING"/>',
-                    tooLong: '<fmt:message key="validateUser.errors.EMAIL_TOO_LONG"/>',
-                });
+                return function(obj, form, name) {
+                    const emailVal = form.find('[name="'+name+'"]').val();
 
-                if (obj[name] !== undefined) {
-                    //espressione per controllare il formatto di email
-                    const reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/;
-                    //se è vuoto o se supera la lunghezza massima o non rispetta il formatto di email
-                    if (!reg.test(emailVal)) {
-                        obj[name] = '<fmt:message key="validateUser.errors.EMAIL_NOT_VALID"/>';
-                    } else {
-                        //poi bisogna verificare se tale email esiste o no
-                        //e verifica lo stato di attivazione dell'account con tale email
+                    validateString(${FormValidator.EMAIL_MAX_LEN}, required, {
+                        emptyOrNull,
+                        tooLong
+                    });
 
-                        //get valore di email
-                        var result;
-                        $.ajax({
-                            url: '<c:url value="service/checkUserService"/>',
-                            data: {action: "checkActivationStatus", email: emailVal},
-                            type: 'POST',
-                            dataType: "text",
-                            async: false,
-                            cache: false,
-                            error: function () {
-                                alert('error to check email existence, retry submit');
-                            },
-                            success: function (data) {
-                                //se email non esiste
-                                if (data === "0") {
-                                    obj[name] = 'no-existance'; // TODO: Change with i18n
-                                } else if (data === "1") {
-                                    obj[name] = 'already-activated'; // TODO: Change with i18n
+                    if (!lazy && obj[name] === undefined && emailVal !== '') {
+                        //espressione per controllare il formatto di email
+                        const reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/;
+                        //se è vuoto o se supera la lunghezza massima o non rispetta il formatto di email
+                        if (!reg.test(emailVal)) {
+                            obj[name] = emailInvalid;
+                        } else {
+                            //poi bisogna verificare se tale email esiste o no
+                            //e verifica lo stato di attivazione dell'account con tale email
+
+                            //get valore di email
+                            var result;
+                            $.ajax({
+                                url: '<c:url value="/service/checkUserService"/>',
+                                data: {action: "checkActivationStatus", email: emailVal},
+                                type: 'POST',
+                                dataType: "text",
+                                async: false,
+                                cache: false,
+                                error: function () {
+                                    alert('error to check email existence, retry submit');
+                                },
+                                success: function (data) {
+                                    //se email non esiste
+                                    if (data === "0") {
+                                        obj[name] = emailNoExists;
+                                    } else if (data === "1") {
+                                        obj[name] = emailAlreadyActivated;
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
                     }
-                }
-            };
+                };
+            }
+
+            const checkEmailLazy = validateEmail(true, () => false,  '<c:url value="/service/checkUserService"/>', {
+                emptyOrNull: '<fmt:message key="validateUser.errors.EMAIL_MISSING"/>',
+                tooLong: '<fmt:message key="validateUser.errors.EMAIL_TOO_LONG"/>',
+                emailInvalid: '<fmt:message key="validateUser.errors.EMAIL_NOT_VALID"/>',
+                emailNoExists: 'noExist', // TODO: To i18n
+                emailAlreadyActivated: 'alreadyActivated' // TODO: To i18n
+            });
+
+            const checkEmailStrict = validateEmail(false, () => false,  '<c:url value="/service/checkUserService"/>', {
+                emptyOrNull: '<fmt:message key="validateUser.errors.EMAIL_MISSING"/>',
+                tooLong: '<fmt:message key="validateUser.errors.EMAIL_TOO_LONG"/>',
+                emailInvalid: '<fmt:message key="validateUser.errors.EMAIL_NOT_VALID"/>',
+                emailNoExists: 'noExist', // TODO: To i18n
+                emailAlreadyActivated: 'alreadyActivated' // TODO: To i18n
+            });
 
             const checkName = validateString(${FormValidator.FIRST_NAME_MAX_LEN},() => false, {
                 emptyOrNull: '<fmt:message key="validateUser.errors.FIRST_NAME_MISSING"/>',
@@ -584,32 +615,148 @@
                 }
             };
 
-            modifyUserForm.find('input, textarea').on('blur',() => {
-                resetAlert(resDiv);
+            function validateAvatar(regexContentType, arrayOfDefaultAvatar, maxFileLen, errors)  {
+                if (maxFileLen === undefined) {
+                    console.error('maxFileLen is undefined');
+                    return;
+                }
+                if (errors === undefined) {
+                    console.error("errors is undefined");
+                    return;
+                }
 
-                const obj = {};
+                const fileEmptyOrNull = errors.fileEmptyOrNull;
+                const fileTooBig = errors.fileTooBig;
+                const fileContentTypeMissingOrType = errors.fileContentTypeMissingOrType;
+                const fileOfWrongType = errors.fileOfWrongType;
+                const selectValMissing = errors.selectValMissing;
+                const selectValInvalid = errors.selectValInvalid;
 
-                checkEmail(obj, modifyUserForm, '${FormValidator.EMAIL_KEY}');
-                checkName(obj, modifyUserForm, '${FormValidator.FIRST_NAME_KEY}');
-                checkDescription(obj, modifyUserForm, '${FormValidator.LAST_NAME_KEY}');
+                if ( fileEmptyOrNull === undefined ) {
+                    console.error('fileEmptyOrNull is undefined');
+                    return;
+                }
 
-                checkPassword(obj, modifyUserForm, '${FormValidator.FIRST_PWD_KEY}');
-                checkPassword2(obj, modifyUserForm, '${FormValidator.FIRST_PWD_KEY}', '${FormValidator.SECOND_PWD_KEY}');
+                if ( fileTooBig === undefined ) {
+                    console.error('fileTooBig is undefined');
+                    return;
+                }
 
-                // TODO: Fare img
+                if ( fileContentTypeMissingOrType === undefined ) {
+                    console.error('fileContentTypeMissingOrType is undefined');
+                    return;
+                }
 
-                add_file_errors(/.*(jpg|jpeg|bmp|png|gif).*/, ${FormValidator.MAX_LEN_FILE}, () => false, {
-                    fileEmptyOrNull: '',
-                    fileTooBig: '',
-                    fileContentTypeMissingOrType: '',
-                    fileOfWrongType: '',
+                if ( fileOfWrongType === undefined ) {
+                    console.error('fileOfWrongType is undefined');
+                    return;
+                }
+
+                if ( selectValMissing === undefined ) {
+                    console.error('selectValMissing is undefined');
+                    return;
+                }
+
+                if ( selectValInvalid === undefined ) {
+                    console.error('selectValInvalid is undefined');
+                    return;
+                }
+
+                const checkFile = add_file_errors(regexContentType, maxFileLen, () => true, {
+                    fileEmptyOrNull,
+                    fileTooBig,
+                    fileContentTypeMissingOrType,
+                    fileOfWrongType,
                 });
-                updateVerifyMessages(modifyUserForm, obj);
+
+                return function(obj, form, selectName, fileName) {
+                    const select = form.find('[name="' + selectName + '"]:checked').val();
+
+                    if (select === undefined) {
+                        // if selected value is empty
+                        obj[selectName] = selectValMissing;
+                    } else if (arrayOfDefaultAvatar.indexOf(select) === -1) {
+                        // if selected value is not one of the recognized one
+                        obj[selectName] = selectValInvalid;
+                    } else if (select === "custom") {
+                        // if selected value is custom than check file
+                        checkFile(obj, form, fileName);
+                    }
+                }
+            }
+
+            const checkAvatar = validateAvatar(
+                /.*(jpg|jpeg|png|gif|bmp).*/,
+                ["","user.jpg", "user-astronaut.jpg", "user-ninja.jpg", "user-secret.jpg"],
+                ${FormValidator.MAX_LEN_FILE}, {
+                    fileEmptyOrNull: '<fmt:message key="validateUser.errors.AVATAR_IMG_MISSING"/>',
+                    fileTooBig: '<fmt:message key="validateUser.errors.AVATAR_IMG_TOO_BIG"/>',
+                    fileContentTypeMissingOrType: "<fmt:message key="validateUser.errors.AVATAR_FILE_CONTENT_MISSING_OR_EMTPY"/>",
+                    fileOfWrongType: '<fmt:message key="validateUser.errors.AVATAR_IMG_NOT_IMG"/>',
+                    selectValMissing: '<fmt:message key="validateUser.errors.AVATAR_MISSING"/>',
+                    selectValInvalid: '<fmt:message key="validateUser.errors.AVATAR_NOT_VALID"/>',
+                }
+            );
+
+            function validation(lazy) {
+                return function(){
+                    resetAlert(resDiv);
+
+                    const obj = {};
+
+                    if(lazy) {
+                        checkEmailLazy(obj, modifyUserForm, '${FormValidator.EMAIL_KEY}');
+                    } else {
+                        checkEmailStrict(obj, modifyUserForm, '${FormValidator.EMAIL_KEY}');
+                    }
+                    checkName(obj, modifyUserForm, '${FormValidator.FIRST_NAME_KEY}');
+                    checkDescription(obj, modifyUserForm, '${FormValidator.LAST_NAME_KEY}');
+
+                    checkPassword(obj, modifyUserForm, '${FormValidator.FIRST_PWD_KEY}');
+                    checkPassword2(obj, modifyUserForm, '${FormValidator.FIRST_PWD_KEY}', '${FormValidator.SECOND_PWD_KEY}');
+
+                    checkAvatar(obj, modifyUserForm, '${FormValidator.AVATAR_KEY}', '${FormValidator.AVATAR_IMG_KEY}');
+
+                    updateVerifyMessages(modifyUserForm, obj);
+
+                    return $.isEmptyObject(obj);
+                }
+            }
+
+            modifyUserForm.find('input, textarea').on('blur change',validation(true));
+
+            //visualizza la barra della valutazione di password
+            modifyUserForm.find('[name="${FormValidator.FIRST_PWD_KEY}}"]').focusin(function () {
+                $(".progress-bar-div").show("slow");
+            });
+            //nasconde la barra della valutazione di password
+            modifyUserForm.find('[name="${FormValidator.FIRST_PWD_KEY}}"]').focusout(function () {
+                $(".progress-bar-div").hide("slow");
             });
 
             modifyUserForm.find('[name="${FormValidator.FIRST_PWD_KEY}"]').on("keyup", function () {
-                strPwd.text("<fmt:message key="user.label.passwordScore"/>: " + zxcvbn(this.value).score + "/4");
+                const score = zxcvbn(this.value).score;
+                const progressBar = $(".progress-bar");
+                progressBar.css("width", score*25.0 + "%");
+
+                progressBar.removeClass("bg-secondary");
+                progressBar.removeClass("bg-danger");
+                progressBar.removeClass("bg-warning");
+                progressBar.removeClass("bg-info");
+                progressBar.removeClass("bg-success");
+
+                switch (score) {
+                    case 0: progressBar.addClass("bg-secondary"); break;
+                    case 1: progressBar.addClass("bg-danger"); break;
+                    case 2: progressBar.addClass("bg-warning"); break;
+                    case 3: progressBar.addClass("bg-info"); break;
+                    case 4: progressBar.addClass("bg-success"); break;
+                }
+
             });
+
+
+            const strictValidation = validation(false);
 
             modifyUserForm.submit(function (e) {
                 e.preventDefault();
@@ -618,22 +765,24 @@
                     $('#customAvatarImg').val("");
                 }
 
-                formSubmit(
-                    urlJSON,
-                    modifyUserForm, {
-                        'multipart': true,
-                        'session': false,
-                        'redirectUrl': null,
-                        'unknownErrorMessage': unknownErrorMessage,
-                        'successMessage': successMessage,
-                        'resDiv': resDiv,
-                        'successCallback': function () {
-                            table.ajax.reload();
-                            table.draw();
-                            modifyUserModal.modal('toggle');
+                if(strictValidation()) {
+                    formSubmit(
+                        urlJSON,
+                        modifyUserForm, {
+                            'multipart': true,
+                            'session': false,
+                            'redirectUrl': null,
+                            'unknownErrorMessage': unknownErrorMessage,
+                            'successMessage': successMessage,
+                            'resDiv': resDiv,
+                            'successCallback': function () {
+                                table.ajax.reload();
+                                table.draw();
+                                modifyUserModal.modal('toggle');
+                            }
                         }
-                    }
-                );
+                    );
+                }
             });
         }
     });
