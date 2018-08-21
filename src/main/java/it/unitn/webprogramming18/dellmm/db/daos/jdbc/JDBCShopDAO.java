@@ -191,7 +191,7 @@ public class JDBCShopDAO extends JDBCDAO<Shop, Integer> implements ShopDAO {
             throw new DAOException("One or more parameters (userId, usrLat, usrLng) are null");
         }
 
-        CON = C3p0Util.getConnection();
+        Connection CON = CP.getConnection();
         List<Shop> relevantShopsList = new ArrayList<>();
         //Va capito come tradurre la distanza da gradi a metri, e settare una distanza ragionevole
         double distance = 50;
@@ -223,7 +223,7 @@ public class JDBCShopDAO extends JDBCDAO<Shop, Integer> implements ShopDAO {
         } catch (SQLException ex) {
             throw new DAOException("Impossible to get the list of relevant shops in proximity", ex);
         } finally {
-            C3p0Util.close(CON);
+            ConnectionPool.close(CON);
         }
 
         return relevantShopsList;
