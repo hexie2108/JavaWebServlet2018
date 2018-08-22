@@ -316,7 +316,7 @@ function validateString(maxLen, required, errors) {
 }
 
 function timedChange(form, callback, timeout) {
-        const radioAndFile = form.find('input[type="radio"], input[type="file"]');
+        const radioAndFile = form.find('input[type="radio"], input[type="file"], select');
         radioAndFile.on('blur change',callback);
         form.find('input, textarea').not(radioAndFile).donetyping(callback, timeout);
 }

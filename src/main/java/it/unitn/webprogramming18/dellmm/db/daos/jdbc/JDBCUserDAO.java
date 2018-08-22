@@ -376,12 +376,10 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
         return user;
     }
 
-    public List<User> filter(Integer id, String email, String name, String surname, Boolean isAdmin) throws DAOException {
-        List<User> userList = new ArrayList<>();
-
+    public Long getCountFilter(Integer id, String email, String name, String surname, Boolean isAdmin) throws DAOException {
         Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement(
-                "SELECT * FROM User WHERE "
+                "SELECT COUNT(*) FROM User WHERE "
                         + "(? IS NULL OR id LIKE CONCAT('%',TRIM(BOTH \"'\" FROM QUOTE(?)),'%')) AND "
                         + "(? IS NULL OR email LIKE CONCAT('%',TRIM(BOTH \"'\" FROM QUOTE(?)),'%')) AND "
                         + "(? IS NULL OR name LIKE CONCAT('%',TRIM(BOTH \"'\" FROM QUOTE(?)),'%')) AND "
@@ -413,8 +411,8 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
             }
 
             try (ResultSet rs = stm.executeQuery()) {
-                while (rs.next()) {
-                    userList.add(getUserFromResultSet(rs));
+                if(rs.next()) {
+                    return rs.getLong(1);
                 }
             }
         } catch (SQLException ex) {
@@ -423,8 +421,94 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
             ConnectionPool.close(CON);
         }
 
-        return userList;
+        return 0L;
     }
+
+    @Override
+    public List<User> filter(Integer id, String email, String name, String surname, Boolean isAdmin, OrderableColumns orderBy, Boolean dir, Integer offset, Integer count) throws DAOException {
+        Connection CON = CP.getConnection();
+
+        if (orderBy == null) {
+            throw new DAOException("parameter not valid", new IllegalArgumentException("parameter orderBy must be not be null"));
+        }
+
+        if (dir == null) {
+            throw new DAOException("parameter not valid", new IllegalArgumentException("parameter dir must not be null"));
+        }
+
+        if (offset == null) {
+            throw new DAOException("parameter not valid", new IllegalArgumentException("parameter offset must not be null"));
+        }
+
+        if (count == null) {
+            throw new DAOException("parameter not valid", new IllegalArgumentException("parameter count must not be null"));
+        }
+
+        String orderBySql = null;
+        String directionSql = dir? "ASC" : "DESC";
+        switch (orderBy) {
+            case ID: orderBySql = "id"; break;
+            case NAME: orderBySql = "name"; break;
+            case SURNAME: orderBySql = "description"; break;
+            case EMAIL: orderBySql = "email"; break;
+            case ADMIN: orderBySql = "admin"; break;
+            default: throw new DAOException("parameter not valid", new IllegalArgumentException("parameter orderBy must be id, name or description"));
+        }
+
+        List<User> users = new ArrayList<>();
+
+        try (PreparedStatement stm = CON.prepareStatement(
+                "SELECT * FROM User WHERE "
+                        + "(? IS NULL OR id LIKE CONCAT('%',TRIM(BOTH \"'\" FROM QUOTE(?)),'%')) AND "
+                        + "(? IS NULL OR email LIKE CONCAT('%',TRIM(BOTH \"'\" FROM QUOTE(?)),'%')) AND "
+                        + "(? IS NULL OR name LIKE CONCAT('%',TRIM(BOTH \"'\" FROM QUOTE(?)),'%')) AND "
+                        + "(? IS NULL OR surname LIKE CONCAT('%',TRIM(BOTH \"'\" FROM QUOTE(?)),'%')) AND "
+                        + "(? IS NULL OR isAdmin = ?) " +
+                        "ORDER BY " + orderBySql + " " + directionSql + " " +
+                        "LIMIT ?, ?"
+        )) {
+            if (id == null) {
+                stm.setNull(1, Types.INTEGER);
+                stm.setNull(2, Types.INTEGER);
+            } else {
+                stm.setString(1, id.toString());
+                stm.setString(2, id.toString());
+            }
+
+            stm.setString(3, email);
+            stm.setString(4, email);
+
+            stm.setString(5, name);
+            stm.setString(6, name);
+
+            stm.setString(7, surname);
+            stm.setString(8, surname);
+
+            if (isAdmin == null) {
+                stm.setNull(9, Types.BOOLEAN);
+                stm.setNull(10, Types.BOOLEAN);
+            } else {
+                stm.setBoolean(9, isAdmin);
+                stm.setBoolean(10, isAdmin);
+            }
+
+            stm.setInt(11, offset);
+            stm.setInt(12, count);
+
+            try (ResultSet rs = stm.executeQuery()) {
+                while (rs.next()) {
+                    users.add(getUserFromResultSet(rs));
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get the list of users", ex);
+        } finally {
+            ConnectionPool.close(CON);
+        }
+
+        return users;
+    }
+
 
     @Override
     public void delete(Integer id) throws DAOException {

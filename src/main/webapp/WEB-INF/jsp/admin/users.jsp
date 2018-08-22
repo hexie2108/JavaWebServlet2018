@@ -350,8 +350,8 @@
                                 }, {})
                     );
                 },
-                dataSrc: ''
             },
+            serverSide: true,
             columns: [
                 {
                     target: 0,
@@ -362,19 +362,23 @@
                 }, {
                     target: 1,
                     data: 'id',
+                    name: 'id',
                 }, {
                     target: 2,
                     data: 'img',
                     orderable: false,
                 }, {
                     target: 3,
-                    data: 'name'
+                    data: 'name',
+                    name: 'name',
                 }, {
                     target: 4,
-                    data: 'surname'
+                    data: 'surname',
+                    name: 'surname',
                 }, {
                     target: 5,
                     data: 'email',
+                    name: 'email',
                 }, {
                     target: 6,
                     data: 'password',
@@ -382,6 +386,7 @@
                 }, {
                     target: 7,
                     data: 'isAdmin',
+                    name: 'admin'
                 }, {
                     target: 8,
                     data: 'verifyEmailLink',
@@ -395,7 +400,8 @@
                 }, {
                     target: 10,
                     data: null,
-                    defaultContent: ''
+                    defaultContent: '',
+                    orderable: false,
                 }
             ],
             order: [[1, 'asc']],

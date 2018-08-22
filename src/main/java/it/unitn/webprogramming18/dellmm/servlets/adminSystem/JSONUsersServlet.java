@@ -1,10 +1,12 @@
 package it.unitn.webprogramming18.dellmm.servlets.adminSystem;
 
+import it.unitn.webprogramming18.dellmm.db.daos.CategoryProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.UserDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
+import it.unitn.webprogramming18.dellmm.util.DatatablesUtils;
 import it.unitn.webprogramming18.dellmm.util.FormValidator;
 import it.unitn.webprogramming18.dellmm.util.RegistrationValidator;
 import it.unitn.webprogramming18.dellmm.util.ServletUtility;
@@ -50,19 +52,70 @@ public class JSONUsersServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String id = request.getParameter("id");
+        // Get parameters for ordering(what column)
+        UserDAO.OrderableColumns column;
+
+        { // Used to limit orderBy scope
+            String columnName = DatatablesUtils.getColumnName(request, response);
+            if(columnName == null) {
+                return;
+            }
+
+            // Get column and save as enum, if not valid send error
+            switch (columnName) {
+                case "id":
+                    column = UserDAO.OrderableColumns.ID;
+                    break;
+                case "name":
+                    column = UserDAO.OrderableColumns.NAME;
+                    break;
+                case "surname":
+                    column = UserDAO.OrderableColumns.SURNAME;
+                    break;
+                case "email":
+                    column = UserDAO.OrderableColumns.EMAIL;
+                    break;
+                case "admin":
+                    column = UserDAO.OrderableColumns.ADMIN;
+                    break;
+                default:
+                    ServletUtility.sendError(request, response, 400, "datatables.errors.columnNameUnrecognized");
+                    return;
+            }
+        }
+
+        // get ordering direction
+        Boolean dir = DatatablesUtils.getDirection(request, response);
+        if(dir == null) {
+            return;
+        }
+
+        // get parameters for pagination
+        Integer iOffset = DatatablesUtils.getOffset(request, response);
+        if (iOffset == null) {
+            return;
+        }
+
+        Integer iLength = DatatablesUtils.getLength(request, response);
+        if (iLength == null) {
+            return;
+        }
+
+        Integer iId;
         String email = request.getParameter("email");
         String name = request.getParameter("name");
         String surname = request.getParameter("surname");
         String admin = request.getParameter("admin");
 
-        Integer iId;
-        try {
-            iId = id == null || id.trim().isEmpty() ? null : Integer.parseInt(id);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-            ServletUtility.sendError(request, response, 400, "users.errors.idNotInt");
-            return;
+        {
+            String id = request.getParameter("id");
+            try {
+                iId = id == null || id.trim().isEmpty() ? null : Integer.parseInt(id);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                ServletUtility.sendError(request, response, 400, "users.errors.idNotInt");
+                return;
+            }
         }
 
         if (email != null && email.trim().isEmpty()) {
@@ -81,9 +134,21 @@ public class JSONUsersServlet extends HttpServlet {
 
 
         try {
-            List<User> users = userDAO.filter(iId, email, name, surname, bAdmin);
+            List<User> users = userDAO.filter(iId, email, name, surname, bAdmin, column, dir, iOffset, iLength);
+            Long totalCount = userDAO.getCount();
+            Long filteredCount = userDAO.getCountFilter(iId, email, name, surname, bAdmin);
 
-            ServletUtility.sendJSON(request, response, 200, users);
+            HashMap<String, Object> h = new HashMap<>();
+            h.put("recordsTotal", totalCount);
+            h.put("recordsFiltered", filteredCount);
+            h.put("data", users);
+
+            ServletUtility.sendJSON(
+                    request,
+                    response,
+                    200,
+                    h
+            );
         } catch (DAOException e) {
             e.printStackTrace();
             ServletUtility.sendError(request, response, 500, "users.errors.impossibleDbFilter");
