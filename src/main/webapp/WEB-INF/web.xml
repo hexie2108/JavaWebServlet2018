@@ -631,6 +631,23 @@
         <url-pattern>/service/checkUserService</url-pattern>
     </servlet-mapping>
 
+    <!-- SERVE STATIC FOLDERS -->
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/css/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/js/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/image/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/libs/*</url-pattern>
+    </servlet-mapping>
 
     <!-- ERROR PAGE -->
     <error-page>

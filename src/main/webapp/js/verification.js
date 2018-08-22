@@ -1,8 +1,56 @@
 "use strict";
 
-function showErrorAlert(title, message, closeLabel) {
+(function($){
+    $.fn.extend({
+        donetyping: function(callback,timeout){
+            timeout = timeout || 4e2; // 1 second default timeout
+            let timeoutReference;
+            const doneTyping = function(el){
+                if (!timeoutReference) {
+                    return;
+                }
+
+                timeoutReference = null;
+                callback.call(el);
+            };
+
+            return this.each(function(i,el){
+                const $el = $(el);
+                $el.is(':input') && $el.on('keyup keydown keypress paste',function(e){
+                    // This catches the backspace button in chrome, but also prevents
+                    // the event from triggering too preemptively. Without this line,
+                    // using tab/shift+tab will make the focused element fire the callback.
+                    if (e.type=='keyup' && e.keyCode!=8) return;
+
+                    // Check if timeout has been set. If it has, "reset" the clock and
+                    // start over again.
+                    if (timeoutReference) {
+                        clearTimeout(timeoutReference);
+                    }
+
+                    timeoutReference = setTimeout(function(){
+                        // if we made it here, our timeout has elapsed. Fire the callback
+                        doneTyping(el);
+                    }, timeout);
+                }).on('change blur',function(){
+                    // If we can, fire the event since we're leaving the field
+                    doneTyping(el);
+                });
+            });
+        }
+    });
+})(jQuery);
+
+
+
+function showModalAlert(type, title, message, closeLabel) {
+    if (type !== 'danger' && type !== 'success') {
+        console.error('type must be error or success');
+        return;
+    }
+
     const x = $(
-        '<div class="modal fade modal-danger" id="errorAlertBox" role="dialog">' +
+        '<div class="modal fade modal-'+ type + ' modal-danger" id="errorAlertBox" role="dialog">' +
         '     <div class="modal-dialog">' +
         '        <div class="modal-content">' +
         '            <div class="modal-header">' +
@@ -24,6 +72,14 @@ function showErrorAlert(title, message, closeLabel) {
     });
 }
 
+function showErrorAlert(title, message, closeLabel) {
+    showModalAlert('danger', title, message, closeLabel);
+}
+
+function showSuccessAlert(title, message, closeLabel) {
+    showModalAlert('success', title, message, closeLabel);
+}
+
 function updateVerifyMessages(form, data) {
     // Prendi tutti gli <input> che ci sono nella pagina e per ognuno prendine il nome
     const inputs = form.find('input,textarea,select').map(function () {
@@ -35,15 +91,23 @@ function updateVerifyMessages(form, data) {
             const input = form.find("[name=\"" + key + "\"]");
             const span = form.find("#span" + key);
 
-            span.html("");
 
             if (data.hasOwnProperty(key)) {
-                span.html("<i class=\"fas fa-exclamation-triangle\"></i> " + String(data[key]));
-                input.closest('.input-group').find('.input-group-prepend, .input-group-append').find('.input-group-text').addClass('border-danger');
-                input.addClass("is-invalid");
-                span.show("slow");
+                const toInsert = "<i class=\"fas fa-exclamation-triangle\"></i> " + String(data[key]);
+                if(toInsert !== span.html()) {
+                    span.hide('fast', function(){
+                        span.html("<i class=\"fas fa-exclamation-triangle\"></i> " + String(data[key]));
+                        input.closest('.input-group').find('.input-group-prepend, .input-group-append').find('.input-group-text').addClass('border-danger');
+                        input.addClass("is-invalid");
+                        span.show("slow");
+                    });
+                }
 
                 return false;
+            } else {
+                span.hide('fast', function(){
+                    span.html('');
+                })
             }
 
             input.closest('.input-group').find('.input-group-prepend, .input-group-append').find('.input-group-text').removeClass('border-danger');
@@ -92,9 +156,8 @@ function formSubmit(url, form, options) {
     const multipart = options['multipart'];
     const session = options['session'];
     const redirectUrl = options['redirectUrl'];
-    const unknownErrorMessage = options['unknownErrorMessage'];
-    const successMessage = options['successMessage'];
-    const resDiv = options['resDiv'];
+    const successAlert = options['successAlert'];
+    const failAlert = options['failAlert'];
     const successCallback = options['successCallback'];
 
     const req = {
@@ -122,24 +185,16 @@ function formSubmit(url, form, options) {
     form.find('[type=submit]').attr("disabled", true);
 
     rq.done(function (data) {
-        resetAlert(resDiv);
-
         if (redirectUrl) {
             window.location.href = redirectUrl;
-        } else if (successMessage) {
-            resDiv.addClass("alert-success");
-            resDiv.html(successMessage);
-            resDiv.removeClass("d-none");
+        } else if (successAlert['title'] && successAlert['message']) {
+            showSuccessAlert(successAlert['title'], successAlert['message'], successAlert['closeLabel']);
         }
 
         if (successCallback !== undefined) {
             successCallback();
         }
     }).fail(function (jqXHR) {
-        resetAlert(resDiv);
-
-        resDiv.addClass("alert-danger");
-
         if (typeof jqXHR.responseJSON === 'object' &&
             jqXHR.responseJSON !== null &&
             jqXHR.responseJSON['message'] !== undefined
@@ -148,12 +203,10 @@ function formSubmit(url, form, options) {
                 jqXHR.responseJSON['message'] = undefined;
                 updateVerifyMessages(form, jqXHR.responseJSON);
             } else {
-                resDiv.html(jqXHR.responseJSON['message']);
-                resDiv.removeClass("d-none");
+                showErrorAlert(failAlert['title'], jqXHR.responseJSON['message'], failAlert['closeLabel']);
             }
         } else {
-            resDiv.html(unknownErrorMessage);
-            resDiv.removeClass("d-none");
+            showErrorAlert(failAlert['title'], failAlert['message'], failAlert['closeLabel']);
         }
     }).always(function () {
         form.find('[type=submit]').attr("disabled", false);
@@ -223,7 +276,7 @@ function add_file_errors(contentTypeRegex, maxSize, required, errors) {
             if (!fileToUpload.type || !fileToUpload.type.trim()) {
                 data[name] = fileContentTypeMissingOrType;
             } else if (!(contentTypeRegex.test(fileToUpload.type))) {
-                data[name] = fileOfWrongType; // '<fmt:message key="validateCategoryProduct.errors.Img.FILE_OF_WRONG_TYPE"/>';
+                data[name] = fileOfWrongType;
             }
         }
 
@@ -260,5 +313,11 @@ function validateString(maxLen, required, errors) {
             obj[name] = tooLong;
         }
     }
+}
+
+function timedChange(form, callback, timeout) {
+        const radioAndFile = form.find('input[type="radio"], input[type="file"]');
+        radioAndFile.on('blur change',callback);
+        form.find('input, textarea').not(radioAndFile).donetyping(callback, timeout);
 }
 

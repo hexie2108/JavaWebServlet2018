@@ -6,6 +6,7 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.FormValidator;
+import it.unitn.webprogramming18.dellmm.util.RegistrationValidator;
 import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 
 import javax.servlet.ServletException;
@@ -171,13 +172,13 @@ public class JSONUsersServlet extends HttpServlet {
                 password = "";
             }
 
-            /* Usa il validator per verifiacare la conformità
+            // Usa il validator per verifiacare la conformità
             Map<String, String> messages =
-                    FormValidator.partialValidate(userDAO, kv)
+                    RegistrationValidator.partialValidate(userDAO, kv)
                             .entrySet()
                             .stream()
-                            .collect(Collectors.toMap((Map.Entry<String, FormValidator.ErrorMessage> e) -> e.getKey(),
-                                    (Map.Entry<String, FormValidator.ErrorMessage> e) -> FormValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString()
+                            .collect(Collectors.toMap((Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> e.getKey(),
+                                    (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> RegistrationValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString()
                                     )
                             );
 
@@ -185,8 +186,6 @@ public class JSONUsersServlet extends HttpServlet {
                 ServletUtility.sendValidationError(request, response, 400, messages);
                 return;
             }
-
-*/
 
 
             User user;
@@ -218,7 +217,7 @@ public class JSONUsersServlet extends HttpServlet {
                 String avatarName = avatar;
 
                 if(avatar.equals(FormValidator.CUSTOM_AVATAR)) {
-                    avatarName = UUID.randomUUID().toString();
+                    avatarName = UUID.randomUUID().toString() + ".jpg";
 
                     try (InputStream fileContent = avatarImg.getInputStream()) {
                         File file = new File(path.toString(), avatarName.toString());

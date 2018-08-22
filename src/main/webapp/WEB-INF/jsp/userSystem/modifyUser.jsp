@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="<c:url value="/css/userPages.css"/>">
 </head>
 <body>
-<%@ include file="../jspf/i18n_switcher.jsp"%>
+<%@ include file="../../jspf/i18n_switcher.jsp"%>
 <nav class="navbar navbar-default navbar-static-top">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -96,7 +96,7 @@
                     ><i class="far fa-check-circle img-check"></i>
                     <input id="customAvatarImg"
                            type="file" name="${FormValidator.AVATAR_IMG_KEY}"
-                           accept="image/*">
+                           accept="image/png, image/jpg, image/jpeg, image/bmp, image/gif">
                 </label>
                 <div class="form-control d-none" id="inputAvatar"></div>
                 <span id="spanAvatar"></span>

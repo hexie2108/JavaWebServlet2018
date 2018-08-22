@@ -3,7 +3,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <%@ page import="it.unitn.webprogramming18.dellmm.util.FormValidator"%>
-<%@ page import="it.unitn.webprogramming18.dellmm.util.ConstantsUtils"%>
 
 <%@ include file="../../jspf/i18n.jsp" %>
 <html>
@@ -71,8 +70,6 @@
         </tr>
         </tfoot>
     </table>
-    <div class="alert alert-danger d-none" id="id-res">
-    </div>
 </div>
 <div class="modal fade" id="modifyUserModal">
     <div class="modal-dialog modal-lg" role="document">
@@ -136,7 +133,6 @@
                                 <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-key"></i></span></div>
                                 <input id="inputPassword" class="form-control" placeholder="<fmt:message key="user.label.password"/>"
                                        type="password" name="${FormValidator.FIRST_PWD_KEY}" value="">
-                                <div class="input-group-append"><span class="input-group-text" id="strongPassword" ><fmt:message key="user.label.passwordScore"/>: x/x</span></div>
                             </div>
                             <div class="progress progress-bar-div">
                                 <div class="progress-bar progress-bar-striped progress-bar-animated"></div>
@@ -152,7 +148,7 @@
                             <label>
                                 <input class="d-none img-radio" type="radio" name="${FormValidator.AVATAR_KEY}"
                                        value="${av}">
-                                <img src="<c:url value="${pageContext.servletContext.getInitParameter('avatarsFolder')}/${av}"/>"
+                                <img src="<c:url value="/${pageContext.servletContext.getInitParameter('avatarsFolder')}/${av}"/>"
                                      class="img-input"
                                 ><i class="far fa-check-circle img-check"></i>
                             </label>
@@ -196,7 +192,6 @@
     $(document).ready(function () {
         const tableDiv = $('#userTable');
 
-        const resDiv = $('#id-res');
         const unknownError = '<fmt:message key="generic.errors.unknownError"/>';
 
         const modifyUserModal = $('#modifyUserModal');
@@ -209,22 +204,26 @@
         );
 
         tableDiv.on('xhr.dt', function (e, settings, json, xhr) {
-            if (json === null) {
-                const json = JSON.parse(xhr.responseText);
-                resDiv.removeClass("d-none");
-
-                if (json['message'] !== undefined && json['message'] !== null) {
-                    resDiv.html(json['message']);
-                } else {
-                    resDiv.html(unknownError);
-                }
-            } else {
-                resDiv.addClass("d-none");
-                resDiv.html("");
+            if (json !== null) {
+                return;
             }
+
+            let err = unknownError;
+
+            try{
+                const errJSON = JSON.parse(xhr.responseText);
+
+                if (errJSON['message'] !== undefined && errJSON['message'] !== null) {
+                    err = errJSON['message'];
+                }
+            } catch(e) {
+                // Se errore durante parse o errore mal formato lascia default
+            }
+
+            showErrorAlert('<fmt:message key="generic.label.errorTitle"/>', err, '<fmt:message key="generic.label.close"/>');
         });
 
-        function ajaxButton(url, data, btn, successCallback) {
+        function ajaxButton(url, data, successCallback) {
             $.ajax({
                 url: url,
                 type: 'POST',
@@ -238,14 +237,14 @@
                     jqXHR.responseJSON['message'] !== undefined
                 ) {
                     showErrorAlert(
-                        '<fmt:message key="generic.label.error"/>',
+                        '<fmt:message key="generic.label.errorTitle"/>',
                         jqXHR.responseJSON['message'],
                         '<fmt:message key="generic.label.close"/>'
                     );
 
                 } else {
                     showErrorAlert(
-                        '<fmt:message key="generic.label.error"/>',
+                        '<fmt:message key="generic.label.errorTitle"/>',
                         unknownError,
                         '<fmt:message key="generic.label.close"/>'
                     );
@@ -256,7 +255,7 @@
 
         function formatRow(row, data, index) {
             const imgAvatar = $('<img/>', {
-                src: '<c:url value="${pageContext.servletContext.getInitParameter('avatarsFolder')}/"/>' + data.img,
+                src: '<c:url value="/${pageContext.servletContext.getInitParameter('avatarsFolder')}/"/>' + data.img,
                 class: "img-responsive img-table"
             });
 
@@ -274,11 +273,11 @@
                     modifyUserForm.find('#roSpanLastName').html(data.surname);
                     modifyUserForm.find('#roSpanEmail').html(data.email);
 
-                    if (/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\.jpg$/.test(data.img)) {
+                    if (/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\..*$/.test(data.img)) {
                         modifyUserForm.find('#avatarDiv').prepend(
                             '<label id="customImgLabel">' +
                             '    <input class="d-none img-radio" required="" type="radio" name="${FormValidator.AVATAR_KEY}" value="" checked>' +
-                            '    <img src="<c:url value="${pageContext.servletContext.getInitParameter('avatarsFolder')}/"/>' + data.img + '" class="img-input"' +
+                            '    <img src="<c:url value="/${pageContext.servletContext.getInitParameter('avatarsFolder')}/"/>' + data.img + '" class="img-input"' +
                             '        ><i class="far fa-check-circle img-check"></i>' +
                             '</label>'
                         );
@@ -296,8 +295,7 @@
                     ajaxButton(
                         '<c:url value="/admin/upgradeUserToAdmin.json"/>',
                         {'email': data.email, 'admin': !data.isAdmin},
-                        $(this),
-                        (btn) => {
+                        () => {
                             table.ajax.reload();
                             table.draw();
                         }
@@ -313,8 +311,7 @@
                     ajaxButton(
                         '<c:url value="/admin/users.json"/>',
                         {'action': 'delete', 'id': data.id},
-                        $(this),
-                        (btn) => {
+                        () => {
                             table.ajax.reload();
                             table.draw();
                         }
@@ -343,7 +340,15 @@
                 type: "get",
                 cache: "false",
                 data: function (d) {
-                    return tableDiv.find('#filterForm').serialize();
+                    return $.extend( {}, d,
+                        $('#filterForm')
+                            .serializeArray()
+                            .reduce(
+                                function(accumulator,pair){
+                                    accumulator[pair.name] = pair.value;
+                                    return accumulator;
+                                }, {})
+                    );
                 },
                 dataSrc: ''
             },
@@ -449,29 +454,27 @@
             }
         });
 
-        tableDiv.find('tfoot').find('input,select').on('keyup change', function () {
-            history.replaceState(undefined, undefined, "users?" + $('#userTable tfoot').find('input,select').serialize());
-            table.ajax.reload();
-            table.draw();
-        });
+        timedChange(
+            tableDiv.find('tfoot'),
+            function () {
+                history.replaceState(undefined, undefined, "users?" + tableDiv.find('tfoot').find('input,select').serialize());
+                table.ajax.reload();
+                table.draw();
+            }
+        );
 
         $.fn.dataTable.ext.errMode = 'throw';
 
         {
-            const URL = '<c:url value="/${ConstantsUtils.VALIDATE_REGISTRATION}"/>';
-            const urlJSON = '<c:url value="/admin/users.json"/>';
-
+            const progressBar = modifyUserForm.find(".progress-bar");
             const resDiv = $('#id-modal-res');
-            const strPwd = modifyUserForm.find('#strongPassword');
-
-            const unknownErrorMessage = '<fmt:message key="generic.errors.unknownError"/>';
-            const successMessage = '<fmt:message key="generic.success"/>';
 
             modifyUserModal.on("hidden.bs.modal", function () {
                 clearVerifyMessages(modifyUserForm);
 
                 modifyUserForm[0].reset();
-                $('#customImgLabel').remove();
+                modifyUserForm.find('#customImgLabel').remove();
+                progressBar.css('width', '0');
             });
 
 
@@ -604,18 +607,42 @@
 
             const checkPassword = validatePassword(() => false);
 
-            const checkPassword2 = function(obj, form, namePwd1, namePwd2) {
-                const password = form.find('[name="' + namePwd1 + '"]').val();
-                const password2 = form.find('[name="' + namePwd2 + '"]').val();
+            function validatePassword2(errors) {
+                const password2Missing = errors.password2Missing;
+                const password2NotSame = errors.password2NotSame;
 
-                if (password2 === "") {
-                    obj[name] = "<fmt:message key="validateUser.errors.PASSWORD2_MISSING"/>";
-                } else if (password2 !== password) {
-                    obj[name] = "<fmt:message key="validateUser.errors.PASSWORD2_NOT_SAME"/>";
+                if (password2Missing === undefined) {
+                    console.error('errors.password2Missing is undefined');
+                    return;
                 }
-            };
 
-            function validateAvatar(regexContentType, arrayOfDefaultAvatar, maxFileLen, errors)  {
+                if (password2NotSame === undefined) {
+                    console.error('errors.password2NotSame is undefined');
+                    return;
+                }
+
+                return function(obj, form, namePwd1, namePwd2) {
+                    const password = form.find('[name="' + namePwd1 + '"]').val();
+                    const password2 = form.find('[name="' + namePwd2 + '"]').val();
+
+                    if (password2 === "") {
+                        obj[namePwd2] = "<fmt:message key="validateUser.errors.PASSWORD2_MISSING"/>";
+                    } else if (password2 !== password) {
+                        obj[namePwd2] = "<fmt:message key="validateUser.errors.PASSWORD2_NOT_SAME"/>";
+                    }
+                };
+            }
+
+            /*
+            TODO: move
+            const checkPassword2 = validatePassword2({
+                password2Missing:"<fmt:message key="validateUser.errors.PASSWORD2_MISSING"/>",
+                password2NotSame:"<fmt:message key="validateUser.errors.PASSWORD2_NOT_SAME"/>",
+            });
+            */
+
+
+            function validateAvatar(regexContentType, arrayOfDefaultAvatar, maxFileLen, required, errors)  {
                 if (maxFileLen === undefined) {
                     console.error('maxFileLen is undefined');
                     return;
@@ -674,13 +701,15 @@
 
                     if (select === undefined) {
                         // if selected value is empty
-                        obj[selectName] = selectValMissing;
-                    } else if (arrayOfDefaultAvatar.indexOf(select) === -1) {
-                        // if selected value is not one of the recognized one
-                        obj[selectName] = selectValInvalid;
+                        if (required(form, name)) {
+                            obj[selectName] = selectValMissing;
+                        }
                     } else if (select === "custom") {
                         // if selected value is custom than check file
                         checkFile(obj, form, fileName);
+                    } else if (arrayOfDefaultAvatar.indexOf(select) === -1) {
+                        // if selected value is not one of the recognized one
+                        obj[selectName] = selectValInvalid;
                     }
                 }
             }
@@ -688,7 +717,8 @@
             const checkAvatar = validateAvatar(
                 /.*(jpg|jpeg|png|gif|bmp).*/,
                 ["","user.jpg", "user-astronaut.jpg", "user-ninja.jpg", "user-secret.jpg"],
-                ${FormValidator.MAX_LEN_FILE}, {
+                ${FormValidator.MAX_LEN_FILE},
+                () => false, {
                     fileEmptyOrNull: '<fmt:message key="validateUser.errors.AVATAR_IMG_MISSING"/>',
                     fileTooBig: '<fmt:message key="validateUser.errors.AVATAR_IMG_TOO_BIG"/>',
                     fileContentTypeMissingOrType: "<fmt:message key="validateUser.errors.AVATAR_FILE_CONTENT_MISSING_OR_EMTPY"/>",
@@ -713,7 +743,7 @@
                     checkDescription(obj, modifyUserForm, '${FormValidator.LAST_NAME_KEY}');
 
                     checkPassword(obj, modifyUserForm, '${FormValidator.FIRST_PWD_KEY}');
-                    checkPassword2(obj, modifyUserForm, '${FormValidator.FIRST_PWD_KEY}', '${FormValidator.SECOND_PWD_KEY}');
+                    //checkPassword2(obj, modifyUserForm, '${FormValidator.FIRST_PWD_KEY}', '${FormValidator.SECOND_PWD_KEY}');
 
                     checkAvatar(obj, modifyUserForm, '${FormValidator.AVATAR_KEY}', '${FormValidator.AVATAR_IMG_KEY}');
 
@@ -723,7 +753,7 @@
                 }
             }
 
-            modifyUserForm.find('input, textarea').on('blur change',validation(true));
+            timedChange(modifyUserForm, validation(true));
 
             //visualizza la barra della valutazione di password
             modifyUserForm.find('[name="${FormValidator.FIRST_PWD_KEY}}"]').focusin(function () {
@@ -736,8 +766,8 @@
 
             modifyUserForm.find('[name="${FormValidator.FIRST_PWD_KEY}"]').on("keyup", function () {
                 const score = zxcvbn(this.value).score;
-                const progressBar = $(".progress-bar");
-                progressBar.css("width", score*25.0 + "%");
+
+                progressBar.css("width", (score+(this.value === ''?0:1))*20.0 + "%");
 
                 progressBar.removeClass("bg-secondary");
                 progressBar.removeClass("bg-danger");
@@ -752,7 +782,6 @@
                     case 3: progressBar.addClass("bg-info"); break;
                     case 4: progressBar.addClass("bg-success"); break;
                 }
-
             });
 
 
@@ -767,15 +796,22 @@
 
                 if(strictValidation()) {
                     formSubmit(
-                        urlJSON,
+                        '<c:url value="/admin/users.json"/>',
                         modifyUserForm, {
-                            'multipart': true,
-                            'session': false,
-                            'redirectUrl': null,
-                            'unknownErrorMessage': unknownErrorMessage,
-                            'successMessage': successMessage,
-                            'resDiv': resDiv,
-                            'successCallback': function () {
+                            multipart: true,
+                            session: false,
+                            redirectUrl: null,
+                            successAlert: {
+                                title: "<fmt:message key="generic.label.successTitle"/>",
+                                message: "<fmt:message key="generic.text.success"/>",
+                                closeLabel: "<fmt:message key="generic.label.close"/>"
+                            },
+                            failAlert: {
+                                title: "<fmt:message key="generic.label.errorTitle"/>",
+                                message: "<fmt:message key="generic.errors.unknownError"/>",
+                                closeLabel: "<fmt:message key="generic.label.close"/>"
+                            },
+                            successCallback: function () {
                                 table.ajax.reload();
                                 table.draw();
                                 modifyUserModal.modal('toggle');

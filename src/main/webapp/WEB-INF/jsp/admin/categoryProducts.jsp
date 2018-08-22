@@ -65,7 +65,6 @@
 <script src="<c:url value="/libs/DataTables/datatables.min.js"/>"></script>
 <script>
     $(document).ready(function () {
-        const resDiv = $('#id-res');
         const tableDiv = $('#categoryTable');
 
         const prefixUrl = '<c:url value="/${pageContext.servletContext.getInitParameter('categoryProductImgsFolder')}/"/>';
@@ -77,7 +76,7 @@
         const modalUrlJson = '<c:url value="/admin/categoryProducts.json"/>';
         const modalResDiv = $('#id-modal-res');
 
-        const unknownErrorMessage = '<fmt:message key="generic.errors.unknownError"/>';
+        const unknownErrorMessage = "<fmt:message key="generic.errors.unknownError"/>";
 
         function setModal(action, data) {
             const realData = {};
@@ -87,16 +86,16 @@
                 realData.description = data.description;
                 realData.img = data.img;
 
-                categoryProductModal.find('#categoryProductFormSub').html('<fmt:message key="categoryProducts.label.modifyForm.submit"/>');
-                categoryProductModal.find('.modal-title').html('<fmt:message key="categoryProducts.label.modifyForm.title"/>');
+                categoryProductModal.find('#categoryProductFormSub').html("<fmt:message key="categoryProducts.label.modifyForm.submit"/>");
+                categoryProductModal.find('.modal-title').html("<fmt:message key="categoryProducts.label.modifyForm.title"/>");
             } else if (action === 'create' || action === 'reset') {
                 realData.id = '';
                 realData.name = '';
                 realData.description = '';
                 realData.img = undefined;
 
-                categoryProductModal.find('#categoryProductFormSub').html('<fmt:message key="categoryProducts.label.createForm.submit"/>');
-                categoryProductModal.find('.modal-title').html('<fmt:message key="categoryProducts.label.createForm.title"/>');
+                categoryProductModal.find('#categoryProductFormSub').html("<fmt:message key="categoryProducts.label.createForm.submit"/>");
+                categoryProductModal.find('.modal-title').html("<fmt:message key="categoryProducts.label.createForm.title"/>");
             } else {
                 console.error("Action not recognized");
                 return;
@@ -137,7 +136,7 @@
                     html: [
                         $('<button/>', {
                             class: 'btn btn-md btn-primary',
-                            title: '<fmt:message key="categoryProducts.label.modifyCategoryProduct"/>',
+                            title: "<fmt:message key="categoryProducts.label.modifyCategoryProduct"/>",
                             html: $('<i/>', {class: 'far fa-edit'}),
                             'data-toggle': 'modal',
                             'data-target': CATEGORY_PRODUCT_MODAL_ID,
@@ -148,7 +147,7 @@
                         }),
                         $('<button/>', {
                             class: 'btn btn-md btn-danger',
-                            title: '<fmt:message key="categoryProducts.label.deleteCategoryProduct"/>',
+                            title: "<fmt:message key="categoryProducts.label.deleteCategoryProduct"/>",
                             html: $('<i/>', {class: 'far fa-trash-alt'}),
                             click: function () {
                                 $.ajax({
@@ -164,9 +163,9 @@
                                         jqXHR.responseJSON !== null &&
                                         jqXHR.responseJSON['message'] !== undefined
                                     ) {
-                                        showErrorAlert('<fmt:message key="generic.label.error"/>', jqXHR.responseJSON['message'], '<fmt:message key="generic.label.close"/>');
+                                        showErrorAlert("<fmt:message key="generic.label.errorTitle"/>", jqXHR.responseJSON['message'], "<fmt:message key="generic.label.close"/>");
                                     } else {
-                                        showErrorAlert('<fmt:message key="generic.label.error"/>', unknownErrorMessage, '<fmt:message key="generic.label.close"/>');
+                                        showErrorAlert("<fmt:message key="generic.label.errorTitle"/>", unknownErrorMessage, "<fmt:message key="generic.label.close"/>");
                                     }
                                 });
                             }
@@ -178,26 +177,22 @@
 
         tableDiv.on('xhr.dt', function (e, settings, json, xhr) {
             if (json !== null) {
-                resDiv.html("");
-                resDiv.hide();
                 return;
             }
 
-            let err = '<fmt:message key="generic.errors.unknownError"/>';
+            let err = unknownErrorMessage;
 
             try{
                 const errJSON = JSON.parse(xhr.responseText);
 
                 if (errJSON['message'] !== undefined && errJSON['message'] !== null) {
                     err = errJSON['message'];
-                    resDiv.html();
                 }
             } catch(e) {
                 // Se errore durante parse o errore mal formato lascia default
             }
 
-            resDiv.html(err);
-            resDiv.show("slow");
+            showErrorAlert('<fmt:message key="generic.label.errorTitle"/>', err, '<fmt:message key="generic.label.close"/>');
         });
 
         const table = tableDiv.DataTable({
@@ -247,11 +242,15 @@
             searching: false
         });
 
-        tableDiv.find('tfoot').find('input,select').on('keyup change', function () {
-            history.replaceState(undefined, undefined, "categoryProducts?" + tableDiv.find('tfoot').find('input,select').serialize());
-            table.ajax.reload();
-            table.draw();
-        });
+
+        timedChange(
+            tableDiv.find('tfoot'),
+            function () {
+                history.replaceState(undefined, undefined, "categoryProducts?" + tableDiv.find('tfoot').find('input,select').serialize());
+                table.ajax.reload();
+                table.draw();
+            }
+        );
 
         $.fn.dataTable.ext.errMode = 'throw';
 
@@ -273,26 +272,26 @@
                 /.*(jpg|jpeg|png|gif|bmp).*/,
                 ${CategoryProductValidator.IMG_MAX_SIZE},
                 isCreate, {
-                    fileEmptyOrNull: '<fmt:message key="validateCategoryProduct.errors.Img.FILE_EMPTY_OR_NULL"/>',
-                    fileTooBig: '<fmt:message key="validateCategoryProduct.errors.Img.FILE_TOO_BIG"/>',
+                    fileEmptyOrNull: "<fmt:message key="validateCategoryProduct.errors.Img.FILE_EMPTY_OR_NULL"/>",
+                    fileTooBig: "<fmt:message key="validateCategoryProduct.errors.Img.FILE_TOO_BIG"/>",
                     fileContentTypeMissingOrType: "<fmt:message key="validateCategoryProduct.errors.Img.FILE_CONTENT_TYPE_MISSING_OR_EMPTY"/>",
-                    fileOfWrongType: '<fmt:message key="validateCategoryProduct.errors.Img.FILE_OF_WRONG_TYPE"/>',
+                    fileOfWrongType: "<fmt:message key="validateCategoryProduct.errors.Img.FILE_OF_WRONG_TYPE"/>",
                 }
             );
 
             const checkName = validateString(
                 ${CategoryProductValidator.NAME_MAX_LEN},
                 isCreate, {
-                    emptyOrNull: '<fmt:message key="validateCategoryProduct.errors.Name.STRING_EMPTY_OR_NULL"/>',
-                    tooLong: '<fmt:message key="validateCategoryProduct.errors.Name.STRING_TOO_LONG"/>',
+                    emptyOrNull: "<fmt:message key="validateCategoryProduct.errors.Name.STRING_EMPTY_OR_NULL"/>",
+                    tooLong: "<fmt:message key="validateCategoryProduct.errors.Name.STRING_TOO_LONG"/>",
                 }
             );
 
             const checkDescription = validateString(
                 ${CategoryProductValidator.DESCRIPTION_MAX_LEN},
                 isCreate, {
-                    emptyOrNull: '<fmt:message key="validateCategoryProduct.errors.Description.STRING_EMPTY_OR_NULL"/>',
-                    tooLong: '<fmt:message key="validateCategoryProduct.errors.Description.STRING_TOO_LONG"/>',
+                    emptyOrNull: "<fmt:message key="validateCategoryProduct.errors.Description.STRING_EMPTY_OR_NULL"/>",
+                    tooLong: "<fmt:message key="validateCategoryProduct.errors.Description.STRING_TOO_LONG"/>",
                 }
             );
 
@@ -313,6 +312,7 @@
                 });
             });
 
+            /* TODO: In category product basta una singola immagine?
             categoryProductForm.find('.input-group  button.ins-btn').click(function () {
                 const iGr = $(this).parent();
 
@@ -331,6 +331,7 @@
 
                 iGr.parent().find('input[type="hidden"]').val("delete");
             });
+            */
 
             categoryProductForm.find('button.clear-btn, button.del-btn, button.ins-btn').click(function () {
                 // Trigger update
@@ -344,12 +345,20 @@
                 formSubmit(
                     modalUrlJson,
                     categoryProductForm, {
-                        'multipart': true,
-                        'session': true,
-                        'redirectUrl': null,
-                        'unknownErrorMessage': unknownErrorMessage,
-                        'resDiv': modalResDiv,
-                        'successCallback': function () {
+                        multipart: true,
+                        session: true,
+                        redirectUrl: null,
+                        successAlert: {
+                            title: "<fmt:message key="generic.label.successTitle"/>",
+                            message: "<fmt:message key="generic.text.success"/>",
+                            closeLabel: "<fmt:message key="generic.label.close"/>"
+                        },
+                        failAlert: {
+                            title: "<fmt:message key="generic.label.errorTitle"/>",
+                            message: "<fmt:message key="generic.errors.unknownError"/>",
+                            closeLabel: "<fmt:message key="generic.label.close"/>"
+                        },
+                        successCallback: function () {
                             table.ajax.reload();
                             table.draw();
                             categoryProductModal.modal('toggle');

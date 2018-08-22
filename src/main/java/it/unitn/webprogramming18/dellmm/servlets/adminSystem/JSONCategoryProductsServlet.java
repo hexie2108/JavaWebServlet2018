@@ -49,7 +49,7 @@ public class JSONCategoryProductsServlet extends HttpServlet {
     }
 
     private String subImg(HttpServletRequest request, HttpServletResponse response, Path path, String prevImg, InputStream inputStream) throws IOException {
-        String newImgName = UUID.randomUUID().toString();
+        String newImgName = UUID.randomUUID().toString() + ".jpg";
 
         try {
             File file = new File(path.toString(), newImgName.toString());

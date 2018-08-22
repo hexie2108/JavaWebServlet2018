@@ -34,7 +34,7 @@ public class JSONCategoryListsServlet extends HttpServlet {
     private CategoryListDAO categoryListDAO = null;
 
     private String subImg(HttpServletRequest request, HttpServletResponse response, Path path, String prevImg, Part newImg) throws IOException {
-        String newImgName = UUID.randomUUID().toString();
+        String newImgName = UUID.randomUUID().toString() + ".jpg";
 
         try (InputStream fileContent = newImg.getInputStream()) {
             File file = new File(path.toString(), newImgName.toString());
@@ -245,7 +245,6 @@ public class JSONCategoryListsServlet extends HttpServlet {
 
         String sImg2 = null;
         if (img2 != null && img2.getSize() != 0) {
-            System.out.println(img2.getSize());
             sImg2 = subImg(request, response, path, null, img2);
             if (sImg2 == null) {
                 return;

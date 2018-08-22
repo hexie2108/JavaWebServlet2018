@@ -131,11 +131,7 @@
                             </div>
                         </div>
                     </div>
-
                 </form>
-
-                <div class="alert d-none" id="id-modal-res">
-                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal"><fmt:message

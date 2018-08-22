@@ -1,9 +1,9 @@
 .is-invalid ~ div.input-group-prepend > .input-group-text {
-    border-color: #dc3545 !important;
+    border-color: var(--danger) !important;
 }
 
 .is-invalid ~ div.input-group-append > .input-group-text {
-    border-color: #dc3545 !important;
+    border-color: var(--danger) !important;
 }
 
 .error-messages p{
@@ -21,6 +21,16 @@
 .modal.modal-danger .modal-content {
     border-color: var(--danger);
 }
+
+.modal.modal-success .modal-header {
+    background: var(--success);
+    color: var(--white);
+}
+
+.modal.modal-success .modal-content {
+    border-color: var(--success);
+}
+
 
 .form-error-alert {
     display: none;
