@@ -320,100 +320,123 @@ public class JSONCategoryListsServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String orderBy = request.getParameter("order[0][column]");
-        if (orderBy == null || orderBy.trim().isEmpty()) {
-            ServletUtility.sendError(request, response, 400, "datatables.errors.orderByMissing");
-            return;
-        }
-
-        int columnId;
-
-        try {
-            columnId = Integer.parseInt(orderBy);
-        } catch (NumberFormatException e){
-            ServletUtility.sendError(request, response, 400, "datatables.errors.orderByNotInt");
-            return;
-        }
-
-
-        String columnName = request.getParameter("columns[" + columnId + "][name]");
-        if (columnName == null || columnName.trim().isEmpty()) {
-            ServletUtility.sendError(request, response, 400, "datatables.errors.columnNameMissing");
-            return;
-        }
-
+        // Get parameters for ordering(what column)
         CategoryListDAO.OrderableColumns column;
-        switch (columnName) {
-            case "id":
-                column = CategoryListDAO.OrderableColumns.ID;
-                break;
-            case "name":
-                column = CategoryListDAO.OrderableColumns.NAME;
-                break;
-            case "description":
-                column = CategoryListDAO.OrderableColumns.DESCRIPTION;
-                break;
-            default:
-                ServletUtility.sendError(request, response, 400, "datatables.errors.columnNameUnrecognized");
+
+        { // Used to limit orderBy scope
+            // get orderBy string, if missing or empty send error
+            String orderBy = request.getParameter("order[0][column]");
+            if (orderBy == null || orderBy.trim().isEmpty()) {
+                ServletUtility.sendError(request, response, 400, "datatables.errors.orderByMissing");
                 return;
+            }
+
+            // convert orderBy to int, if not possible send error
+            int columnId;
+            try {
+                columnId = Integer.parseInt(orderBy);
+            } catch (NumberFormatException e){
+                ServletUtility.sendError(request, response, 400, "datatables.errors.orderByNotInt");
+                return;
+            }
+
+            // Get name of column(using index previously found), if missing or empty send error
+            String columnName = request.getParameter("columns[" + columnId + "][name]");
+            if (columnName == null || columnName.trim().isEmpty()) {
+                ServletUtility.sendError(request, response, 400, "datatables.errors.columnNameMissing");
+                return;
+            }
+
+            // Get column and save as enum, if not valid send error
+            switch (columnName) {
+                case "id":
+                    column = CategoryListDAO.OrderableColumns.ID;
+                    break;
+                case "name":
+                    column = CategoryListDAO.OrderableColumns.NAME;
+                    break;
+                case "description":
+                    column = CategoryListDAO.OrderableColumns.DESCRIPTION;
+                    break;
+                default:
+                    ServletUtility.sendError(request, response, 400, "datatables.errors.columnNameUnrecognized");
+                    return;
+            }
         }
 
-        String direction = request.getParameter("order[0][dir]");
-        if (direction == null || direction.trim().isEmpty()) {
-            ServletUtility.sendError(request, response, 400, "datatables.errors.dirMissing");
-            return;
-        }
-
+        // get ordering direction
         boolean dir;
-        switch (direction) {
-            case "asc": dir = true; break;
-            case "desc": dir = false; break;
-            default:
-                ServletUtility.sendError(request, response, 400, "datatables.errors.dirUnrecognized");
+
+        { // Used to limit direction scope
+            // Get direction string, if missing or empty send error
+            String direction = request.getParameter("order[0][dir]");
+            if (direction == null || direction.trim().isEmpty()) {
+                ServletUtility.sendError(request, response, 400, "datatables.errors.dirMissing");
                 return;
+            }
+
+            // Convert to boolean(true for ascendent, true for descendent), if not possible send error
+            switch (direction) {
+                case "asc": dir = true; break;
+                case "desc": dir = false; break;
+                default:
+                    ServletUtility.sendError(request, response, 400, "datatables.errors.dirUnrecognized");
+                    return;
+            }
         }
 
-        String offset = request.getParameter("start");
-        if(offset == null || offset.trim().isEmpty()) {
-            ServletUtility.sendError(request, response, 400, "datatables.errors.offsetMissing");
-            return;
-        }
-
-
+        // get parameters for pagination
         int iOffset;
-        try{
-            iOffset = Integer.parseInt(offset);
-        } catch (NumberFormatException e) {
-            ServletUtility.sendError(request, response, 400, "datatables.errors.offsetNotInt");
-            return;
-        }
-
-        String length = request.getParameter("length");
-        if(length == null || length.trim().isEmpty()) {
-            ServletUtility.sendError(request, response, 400, "datatables.errors.lengthMissing");
-            return;
-        }
-
         int iLength;
-        try{
-            iLength = Integer.parseInt(length);
-        } catch (NumberFormatException e) {
-            ServletUtility.sendError(request, response, 400, "datatables.errors.lengthNotInt");
-            return;
+
+        { // Used to limit offset and length scope
+            // Get the offset string, if missing or empty send error
+            String offset = request.getParameter("start");
+            if(offset == null || offset.trim().isEmpty()) {
+                ServletUtility.sendError(request, response, 400, "datatables.errors.offsetMissing");
+                return;
+            }
+
+            // Cast offset to int, if an error occurs send error
+            try{
+                iOffset = Integer.parseInt(offset);
+            } catch (NumberFormatException e) {
+                ServletUtility.sendError(request, response, 400, "datatables.errors.offsetNotInt");
+                return;
+            }
+
+            // Get the length string, if missing or empty send error
+            String length = request.getParameter("length");
+            if(length == null || length.trim().isEmpty()) {
+                ServletUtility.sendError(request, response, 400, "datatables.errors.lengthMissing");
+                return;
+            }
+
+            // Cast length to int, if an error occurs send error
+            try{
+                iLength = Integer.parseInt(length);
+            } catch (NumberFormatException e) {
+                ServletUtility.sendError(request, response, 400, "datatables.errors.lengthNotInt");
+                return;
+            }
         }
 
 
-        String id = request.getParameter("id");
+        // Get parameters for filtering
+        Integer iId;
         String name = request.getParameter("name");
         String description = request.getParameter("description");
 
-        Integer iId;
-        try {
-            iId = id == null || id.trim().isEmpty() ? null : Integer.parseInt(id);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-            ServletUtility.sendError(request, response, 400, "categoryLists.errors.idNotInt");
-            return;
+        { // Used to limit id scope
+            // Get id, cast it to int, if error during cast send error
+            String id = request.getParameter("id");
+            try {
+                iId = id == null || id.trim().isEmpty() ? null : Integer.parseInt(id);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                ServletUtility.sendError(request, response, 400, "categoryLists.errors.idNotInt");
+                return;
+            }
         }
 
         if (name != null && name.trim().isEmpty()) {
