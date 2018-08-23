@@ -1,5 +1,6 @@
 "use strict";
 
+// Extend jQuery objects functions to be able to use a donetyping "event"
 (function($){
     $.fn.extend({
         donetyping: function(callback,timeout){
@@ -41,13 +42,14 @@
     });
 })(jQuery);
 
-const modalAlert = {
-    show: function(type, title, message, closeLabel) {
-        if (type !== 'danger' && type !== 'success') {
-            console.error('type must be error or success');
-            return;
-        }
+/**
+ * Module that can be used to dinamically generate a modal to use as an alert for an error or a successful operation
+ * @type {{error, success}}
+ */
+const modalAlert = (function(){
 
+    // Function to show a modal with a specific type and content
+    function show(type, title, message, closeLabel) {
         const x = $(
             '<div class="modal fade modal-'+ type + ' modal-danger" id="errorAlertBox" role="dialog">' +
             '     <div class="modal-dialog">' +
@@ -69,79 +71,149 @@ const modalAlert = {
         x.on('hidden.bs.modal', function(){
             x.modal('dispose');
         });
-    },
-    error: function(title, message, closeLabel) {
-        modalAlert.show('danger', title, message, closeLabel);
-    },
-    success: function(title, message, closeLabel) {
-        modalAlert.show('success', title, message, closeLabel);
-    },
-};
+    }
 
-const validationUtils = {
-    updateVerifyMessages: function(form, data) {
+
+    /**
+     * Function to show a error modal
+     * @param {!string} title title of the modal
+     * @param {!string} message main content of the modal
+     * @param {!string} closeLabel string to use as close button
+     */
+    function error(title, message, closeLabel) {
+        show('danger', title, message, closeLabel);
+    }
+
+    // Function to show a success modal
+    /**
+     * Function to show a success modal
+     * @param {!string} title title of the modal
+     * @param {!string} message main content of the modal
+     * @param {!string} closeLabel string to use as close button
+     */
+    function success(title, message, closeLabel) {
+        show('success', title, message, closeLabel);
+    }
+
+    return {
+        error: error,
+        success: success
+    };
+})();
+
+/**
+ * Module to update info about validation and general validation
+ * @type {{updateVerifyMessages, clearVerifyMessages, formSubmitWithValidation, validateFile, validateString}}
+ */
+const validationUtils = (function(){
+    /**
+     * Function to update the validation messages in a form given the data that contains the new validation mesages
+     * @param {jQuery} form jQuery object that represents the form
+     * @param {Object.<string, string>} data object that is mapped as key(input name) and message(validation error)
+     * @returns {Boolean} false if there are errors, true otherwise
+     */
+    function updateVerifyMessages(form, data) {
         // Prendi tutti gli <input> che ci sono nella pagina e per ognuno prendine il nome
-        const inputs = form.find('input,textarea,select').map(function () {
+        const inputs = $('input, textarea, select', form).map(function () {
             return this.name;
         }).get();
         // Per ogni input scrivi l'eventuale errore nello span dedicato e restituisci false se ha errori, true altrimenti
         const validityInputs = inputs.map(
             function (key) {
-                const input = form.find("[name=\"" + key + "\"]");
-                const span = form.find("#span" + key);
-
+                const input = $('[name="' + key + '"]', form);
+                const span = $('#span' + key, form);
 
                 if (data.hasOwnProperty(key)) {
+                    // If data has a key that is the same as the name of the input update the validation message
+
+                    // If the content is the same as the new content do nothing, otherwise update
                     const toInsert = "<i class=\"fas fa-exclamation-triangle\"></i> " + String(data[key]);
                     if(toInsert !== span.html()) {
+                        // Hide the validation message using a fast animation and finished the animation update the
+                        // message and mark the input as invalid
                         span.hide('fast', function(){
+                            // Update the text of the validation message
                             span.html("<i class=\"fas fa-exclamation-triangle\"></i> " + String(data[key]));
+
+                            // Show all the borders in red(input-group-prepend, input-group-append and the input)
                             input.closest('.input-group').find('.input-group-prepend, .input-group-append').find('.input-group-text').addClass('border-danger');
                             input.addClass("is-invalid");
+
+                            // Show the validation message with a slow animation
                             span.show("slow");
                         });
                     }
 
+                    // Return false as we found a valid error
                     return false;
-                } else {
-                    span.hide('fast', function(){
-                        span.html('');
-                    })
                 }
 
+                // If data hasn't a key that is the same as the name of the input hide the validation message
+                // with a fast animation and then delete the message
+                span.hide('fast', function(){
+                    span.html('');
+                });
+
+                // Remove red borders
                 input.closest('.input-group').find('.input-group-prepend, .input-group-append').find('.input-group-text').removeClass('border-danger');
                 input.removeClass("is-invalid");
+
+                // Return true as we didn't found a valid error
                 return true;
             }
         );
 
         // Se degli input sono false(hanno errori) allora restituisci false, altrimenti true
         // Se false l'invio del form verrà bloccato altrimenti no
-        return validityInputs.every(v => v);
-    },
-    clearVerifyMessages: function (form) {
+        return validityInputs.every(function(v){return v;});
+    }
+
+    /**
+     * Funcion to clear the validation messages in a form
+     * @param {!jQuery} form form of which we want to clear the validation messages
+     */
+    function clearVerifyMessages(form) {
         // Prendi tutti gli <input> che ci sono nella pagina e per ognuno prendine il nome
-        const inputs = form.find('input,textarea,select').map(function () {
+        const inputs = form.find('input, textarea, select').map(function () {
             return this.name;
         }).get();
         // Per ogni input scrivi l'eventuale errore nello span dedicato e restituisci false se ha errori, true altrimenti
         const validityInputs = inputs.map(
             function (key) {
-                const input = form.find("[name=\"" + key + "\"]");
-                const span = form.find("#span" + key);
+                const input = $('[name="' + key + '"]', form);
+                const span = $("#span" + key, form);
 
+                // Remove content of the validation message, remove all red borders
                 span.html("");
                 input.closest('.input-group').find('.input-group-prepend, .input-group-append').find('.input-group-text').removeClass('border-danger');
                 input.removeClass("is-invalid");
-                return true;
             }
         );
+    }
 
-        // Se degli input sono false(hanno errori) allora restituisci false, altrimenti true
-        // Se false l'invio del form verrà bloccato altrimenti no
-        return validityInputs.every(v => v);
-    },
-    formSubmitWithValidation: function (url, form, options) {
+    /**
+     * @typedef {Object} modalAlertOptions
+     * @property {!string} title string to use as title
+     * @property {!string} message main content of the modal
+     * @property {!string} closeLabel label to use in the close button
+     */
+
+    /**
+     * @typedef {Object} formOptions
+     * @property {Boolean} multipart true to send using enctype/multipart, otherwise it uses default
+     * @property {Boolean} session send cookies
+     * @property {string} redirectUrl redirect to specific url after success(if not defined successAlert must be defined and vice versa)
+     * @property {modalAlertOptions} successAlert settings for the success modal(if not defined redirectUrl must be defined and vice versa)
+     * @property {modalAlertOptions} failAlert settings for the error modal (if error message form the post is standard the main content of the modal is overwritten)
+     */
+
+    /**
+     *
+     * @param {!string} url url to use during post
+     * @param {!jQuery} form form to use(submit and update validation)
+     * @param {!formOptions} options
+     */
+    function formSubmitWithValidation(url, form, options) {
         const multipart = options['multipart'];
         const session = options['session'];
         const redirectUrl = options['redirectUrl'];
@@ -200,8 +272,41 @@ const validationUtils = {
         }).always(function () {
             form.find('[type=submit]').attr("disabled", false);
         });
-    },
-    validateFile: function(contentTypeRegex, maxSize, required, errors) {
+    }
+
+    /**
+     * @name RequiredLambdaType
+     * @function
+     * @param {!jQuery} form jQuery object that represents the form
+     * @param {!string} name name of the input considered
+     * @return {!Boolean} true if the input is required, false otherwise
+     */
+
+    /**
+     * @typedef {Function} ValidationCheckLambda
+     * @param {!Object} data object in which the function saves the errors found
+     * @param {!jQuery} form form to consider
+     * @param {...string} name names of the input used
+     * @return {!Object} returns data
+     */
+
+    /**
+     * @typedef {Object} ValidateFileErrors
+     * @param {!string} fileEmptyOrNull message to show if file is empty or null
+     * @param {!string} fileTooBig message to show if file is too big
+     * @param {!string} fileContentTypeMissingOrType message to show if contentType is null or empty
+     * @param {!string} fileOfWrongType message to show if contentType doesn't respects contentTypeRegex
+     */
+
+    /**
+     * Function to create a custom validator for an input file
+     * @param {RegExp} contentTypeRegex regex that the contentType must match
+     * @param {Number} maxSize maximum size that the file must have
+     * @param {RequiredLambdaType} required function that returns true if the object is to be considered required, false otherwise
+     * @param {ValidateFileErrors} errors
+     * @returns {ValidationCheckLambda|undefined} undefined if an error happens, ValidationCheckLambda otherwise
+     */
+    function validateFile(contentTypeRegex, maxSize, required, errors) {
         let fileEmptyOrNull = errors.fileEmptyOrNull;
         let fileTooBig = errors.fileTooBig;
         let fileContentTypeMissingOrType = errors.fileContentTypeMissingOrType;
@@ -244,7 +349,7 @@ const validationUtils = {
                 return data;
             }
 
-            const input = form.find('[type="file"][name="' + name + '"]');
+            const input = $('[type="file"][name="' + name + '"]', form);
 
             // Se il browser ha l'estensione che permette di accedere alla proprietà files continuo altrimenti no
             // (fatto successivamente dal server)
@@ -270,44 +375,80 @@ const validationUtils = {
 
             return data;
         }
-    },
-    validateString: function(maxLen, required, errors) {
-            const emptyOrNull = errors.emptyOrNull;
-            const tooLong = errors.tooLong;
+    }
 
-            if (emptyOrNull === undefined) {
-                console.error("errors.emptyOrNull undefined");
-                return;
-            }
+   /**
+     * @typedef {Object} ValidateStringErrors
+     * @param {!string} emptyOrNull message to show if input value is empty or null
+     * @param {!string} tooLong message to show if input value is too big
+     */
 
-            if (tooLong === undefined) {
-                console.error("errors.tooLong undefined");
-                return;
-            }
+    /**
+     * Function to create a custom validator for an text input
+     * @param {Number} maxLen maximum length that the input value must have
+     * @param {RequiredLambdaType} required function that returns true if the object is to be considered required, false otherwise
+     * @param {ValidateStringErrors} errors
+     * @returns {ValidationCheckLambda|undefined} undefined if an error happens, ValidationCheckLambda otherwise
+     */
+    function validateString(maxLen, required, errors) {
+        const emptyOrNull = errors.emptyOrNull;
+        const tooLong = errors.tooLong;
 
-            if  (typeof required !== 'function' ) {
-                console.error('required must be a function');
-                return;
-            }
+        if (emptyOrNull === undefined) {
+            console.error("errors.emptyOrNull undefined");
+            return;
+        }
 
-            return function(obj, form, name) {
-                const str = form.find('[name="' + name + '"]').val();
-                if (!str) {
-                    if (required(form, name)) {
-                        obj[name] = emptyOrNull;
-                    }
-                } else if (str.length > maxLen) {
-                    obj[name] = tooLong;
+        if (tooLong === undefined) {
+            console.error("errors.tooLong undefined");
+            return;
+        }
+
+        if  (typeof required !== 'function' ) {
+            console.error('required must be a function');
+            return;
+        }
+
+        return function(obj, form, name) {
+            const str = form.find('[name="' + name + '"]').val();
+            if (!str) {
+                if (required(form, name)) {
+                    obj[name] = emptyOrNull;
                 }
+            } else if (str.length > maxLen) {
+                obj[name] = tooLong;
             }
         }
-};
+    }
 
-const formUtils = {
-    timedChange: function(form, callback, timeout) {
+    return {
+        updateVerifyMessages: updateVerifyMessages,
+        clearVerifyMessages: clearVerifyMessages,
+        formSubmitWithValidation: formSubmitWithValidation,
+        validateFile: validateFile,
+        validateString: validateString,
+    };
+})();
+
+/**
+ * Module in which utils for forms are contained
+ * @type {{timedChange}}
+ */
+const formUtils = (function(){
+    /**
+     * Function to call a callback when the user is not writing in the writing for timeout or change a mouse-based input
+     * @param {!jQuery} form form to consider
+     * @param {!Function} callback
+     * @param {Number|undefined} timeout timeout after which the callback is called(used to prevent to call too often the callback), if not specified a default is used
+     */
+    function timedChange(form, callback, timeout) {
         const radioAndFile = form.find('input[type="radio"], input[type="file"], select');
         radioAndFile.on('blur change',callback);
         form.find('input, textarea').not(radioAndFile).donetyping(callback, timeout);
     }
-};
+
+    return {
+        timedChange: timedChange
+    };
+})();
 
