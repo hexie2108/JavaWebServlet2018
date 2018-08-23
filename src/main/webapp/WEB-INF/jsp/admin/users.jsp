@@ -132,7 +132,7 @@
         return function(obj, form, name) {
             const emailVal = form.find('[name="'+name+'"]').val();
 
-            validateString(${FormValidator.EMAIL_MAX_LEN}, required, {
+            validationUtils.validateString(${FormValidator.EMAIL_MAX_LEN}, required, {
                 emptyOrNull,
                 tooLong
             });
@@ -148,7 +148,6 @@
                     //e verifica lo stato di attivazione dell'account con tale email
 
                     //get valore di email
-                    var result;
                     $.ajax({
                         url: '<c:url value="/service/checkUserService"/>',
                         data: {action: "checkActivationStatus", email: emailVal},
@@ -242,7 +241,7 @@
             return;
         }
 
-        const checkFile = add_file_errors(regexContentType, maxFileLen, () => true, {
+        const checkFile = validationUtils.validateFile(regexContentType, maxFileLen, () => true, {
             fileEmptyOrNull,
             fileTooBig,
             fileContentTypeMissingOrType,
@@ -273,28 +272,6 @@
 
         const unknownError = '<fmt:message key="generic.errors.unknownError"/>';
 
-        $('> thead > tr, tfoot > tr', tableDiv).prepend('<th></th>');
-
-        tableDiv.on('xhr.dt', function (e, settings, json, xhr) {
-            if (json !== null) {
-                return;
-            }
-
-            let err = unknownError;
-
-            try{
-                const errJSON = JSON.parse(xhr.responseText);
-
-                if (errJSON['message'] !== undefined && errJSON['message'] !== null) {
-                    err = errJSON['message'];
-                }
-            } catch(e) {
-                // Se errore durante parse o errore mal formato lascia default
-            }
-
-            showErrorAlert('<fmt:message key="generic.label.errorTitle"/>', err, '<fmt:message key="generic.label.close"/>');
-        });
-
         function ajaxButton(url, data, successCallback) {
             $.ajax({
                 url: url,
@@ -308,14 +285,14 @@
                     jqXHR.responseJSON !== null &&
                     jqXHR.responseJSON['message'] !== undefined
                 ) {
-                    showErrorAlert(
+                    modalAlert.error(
                         '<fmt:message key="generic.label.errorTitle"/>',
                         jqXHR.responseJSON['message'],
                         '<fmt:message key="generic.label.close"/>'
                     );
 
                 } else {
-                    showErrorAlert(
+                    modalAlert.error(
                         '<fmt:message key="generic.label.errorTitle"/>',
                         unknownError,
                         '<fmt:message key="generic.label.close"/>'
@@ -394,6 +371,56 @@
             $(row).data('json', data);
         }
 
+        function format(d) {
+            const ul = $('<ul/>', {
+                class: 'list-unstyled',
+                html: [
+                    $('<li/>', {
+                        html: [$('<b/>', {text: '<fmt:message key="user.label.password"/>: '}), document.createTextNode(d.password)]
+                    })
+                ]
+            });
+
+            if (d.verifyEmailLink !== undefined) {
+                ul.append(
+                    $('<li/>', {
+                        html: [$('<b/>', {text: '<fmt:message key="user.label.verifyEmailLink"/>:  '}), document.createTextNode(d.verifyEmailLink)]
+                    })
+                );
+            }
+
+            if (d.resetPwdEmailLink !== undefined) {
+                ul.append(
+                    $('<li/>', {
+                        html: [$('<b/>', {text: '<fmt:message key="user.label.resetPasswordLink"/>:  '}), document.createTextNode(d.resetPwdEmailLink)]
+                    })
+                )
+            }
+
+            return ul;
+        }
+
+        $('> thead > tr, tfoot > tr', tableDiv).prepend('<th></th>');
+
+        tableDiv.on('xhr.dt', function (e, settings, json, xhr) {
+            if (json !== null) {
+                return;
+            }
+
+            let err = unknownError;
+
+            try{
+                const errJSON = JSON.parse(xhr.responseText);
+
+                if (errJSON['message'] !== undefined && errJSON['message'] !== null) {
+                    err = errJSON['message'];
+                }
+            } catch(e) {
+                // Se errore durante parse o errore mal formato lascia default
+            }
+
+            modalAlert.error('<fmt:message key="generic.label.errorTitle"/>', err, '<fmt:message key="generic.label.close"/>');
+        });
 
         const table = tableDiv.DataTable({
             ajax: {
@@ -471,35 +498,6 @@
             searching: false
         });
 
-        function format(d) {
-            const ul = $('<ul/>', {
-                class: 'list-unstyled',
-                html: [
-                    $('<li/>', {
-                        html: [$('<b/>', {text: '<fmt:message key="user.label.password"/>: '}), document.createTextNode(d.password)]
-                    })
-                ]
-            });
-
-            if (d.verifyEmailLink !== undefined) {
-                ul.append(
-                    $('<li/>', {
-                        html: [$('<b/>', {text: '<fmt:message key="user.label.verifyEmailLink"/>:  '}), document.createTextNode(d.verifyEmailLink)]
-                    })
-                );
-            }
-
-            if (d.resetPwdEmailLink !== undefined) {
-                ul.append(
-                    $('<li/>', {
-                        html: [$('<b/>', {text: '<fmt:message key="user.label.resetPasswordLink"/>:  '}), document.createTextNode(d.resetPwdEmailLink)]
-                    })
-                )
-            }
-
-            return ul;
-        }
-
         tableDiv.find('> tbody').on('click', 'td.details-control', function () {
             const tr = $(this).closest('tr');
             const row = table.row(tr);
@@ -511,8 +509,7 @@
 
                 tr.find('td.details-control i').removeClass("fa-minus-circle");
                 tr.find('td.details-control i').addClass("fa-plus-circle");
-            }
-            else {
+            } else {
                 // Open this row
                 row.child(format(row.data())).show();
                 tr.addClass('shown');
@@ -522,7 +519,7 @@
             }
         });
 
-        timedChange(
+        formUtils.timedChange(
             tableDiv.find('tfoot'),
             function () {
                 history.replaceState(undefined, undefined, "users?" + tableDiv.find('tfoot').find('input,select').serialize());

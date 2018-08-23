@@ -189,9 +189,9 @@
                                         jqXHR.responseJSON !== null &&
                                         jqXHR.responseJSON['message'] !== undefined
                                     ) {
-                                        showErrorAlert("<fmt:message key="generic.label.errorTitle"/>", jqXHR.responseJSON['message'], "<fmt:message key="generic.label.close"/>");
+                                        modalAlert.error("<fmt:message key="generic.label.errorTitle"/>", jqXHR.responseJSON['message'], "<fmt:message key="generic.label.close"/>");
                                     } else {
-                                        showErrorAlert("<fmt:message key="generic.label.errorTitle"/>', unknownErrorMessage, '<fmt:message key="generic.label.close"/>");
+                                        modalAlert.error("<fmt:message key="generic.label.errorTitle"/>', unknownErrorMessage, '<fmt:message key="generic.label.close"/>");
                                     }
                                 });
                             }
@@ -218,7 +218,7 @@
                 // Se errore durante parse o errore mal formato lascia default
             }
 
-            showErrorAlert('<fmt:message key="generic.label.errorTitle"/>', err, '<fmt:message key="generic.label.close"/>');
+            modalAlert.error('<fmt:message key="generic.label.errorTitle"/>', err, '<fmt:message key="generic.label.close"/>');
         });
 
         const table = tableDiv.DataTable({
@@ -278,7 +278,7 @@
             searching: false
         });
 
-        timedChange(
+        formUtils.timedChange(
             tableDiv.find('tfoot'),
             function () {
                 history.replaceState(undefined, undefined, "categoryLists?" + tableDiv.find('tfoot').find('input,select').serialize());
@@ -291,7 +291,7 @@
 
         {
             categoryListModal.on("hidden.bs.modal", function () {
-                clearVerifyMessages(categoryListForm);
+                validationUtils.clearVerifyMessages(categoryListForm);
 
                 categoryListForm[0].reset();
                 categoryListForm.find('input').val("");
@@ -306,7 +306,7 @@
                 return form.find('[name="action"]').val() === 'create' && name === '${CategoryListValidator.IMG1_KEY}';
             };
 
-            const checkFiles = add_file_errors(
+            const checkFiles = validationUtils.validateFile(
                 /.*(jpg|jpeg|png|gif|bmp).*/,
                 ${CategoryListValidator.MAX_LEN_FILE},
                 requiredImg, {
@@ -317,7 +317,7 @@
                 }
             );
 
-            const checkName = validateString(
+            const checkName = validationUtils.validateString(
                 ${CategoryListValidator.NAME_MAX_LEN},
                 isCreate, {
                     emptyOrNull: "<fmt:message key="validateCategoryList.errors.NAME_MISSING"/>",
@@ -325,7 +325,7 @@
                 }
             );
 
-            const checkDescription = validateString(
+            const checkDescription = validationUtils.validateString(
                 ${CategoryListValidator.DESCRIPTION_MAX_LEN},
                 isCreate, {
                     emptyOrNull: "<fmt:message key="validateCategoryList.errors.DESCRIPTION_MISSING"/>",
@@ -343,10 +343,10 @@
                 checkFiles(obj, categoryListForm, '${CategoryListValidator.IMG2_KEY}');
                 checkFiles(obj, categoryListForm, '${CategoryListValidator.IMG3_KEY}');
 
-                updateVerifyMessages(categoryListForm, obj);
+                validationUtils.updateVerifyMessages(categoryListForm, obj)
             }
 
-            timedChange(categoryListForm, validate);
+            formUtils.timedChange(categoryListForm, validate);
 
             $.each(categoryListForm.find('.file-input'), function (index, value) {
                 const k = $(value);
@@ -383,7 +383,7 @@
             categoryListForm.submit(function (e) {
                 e.preventDefault();
 
-                formSubmit(
+                validationUtils.formSubmitWithValidation(
                     modalUrlJson,
                     categoryListForm, {
                         multipart: true,

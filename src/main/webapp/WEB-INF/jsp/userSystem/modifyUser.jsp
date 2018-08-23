@@ -126,7 +126,7 @@
         const successMessage = '<fmt:message key="modifyUser.success"/>';
 
         form.find('input,select').on('blur change', () => {
-            request_user_validation(form, true, URL).done((d) => updateVerifyMessages(form, add_file_errors(form,d)));
+            request_user_validation(form, true, URL).done((d) => validationUtils.updateVerifyMessages(form, validationUtils.validateFile(form,d)));
         });
 
         form.submit(function(e){
@@ -136,7 +136,7 @@
                 $('#customAvatarImg').val("");
             }
 
-            formSubmit(
+            validationUtils.formSubmitWithValidation(
                 urlJSON,
                 form, {
                     'multipart': true,

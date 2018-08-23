@@ -153,7 +153,7 @@
         const progressBar = modifyUserForm.find(".progress-bar");
 
         modifyUserModal.on("hidden.bs.modal", function () {
-            clearVerifyMessages(modifyUserForm);
+            validationUtils.clearVerifyMessages(modifyUserForm);
 
             modifyUserForm[0].reset();
             modifyUserForm.find('#customImgLabel').remove();
@@ -176,12 +176,12 @@
             emailAlreadyActivated: 'alreadyActivated' // TODO: To i18n
         });
 
-        const checkName = validateString(${FormValidator.FIRST_NAME_MAX_LEN},() => false, {
+        const checkName = validationUtils.validateString(${FormValidator.FIRST_NAME_MAX_LEN},() => false, {
             emptyOrNull: '<fmt:message key="validateUser.errors.FIRST_NAME_MISSING"/>',
             tooLong: '<fmt:message key="validateUser.errors.FIRST_NAME_TOO_LONG"/>',
         });
 
-        const checkDescription = validateString(${FormValidator.LAST_NAME_MAX_LEN}, () => false, {
+        const checkDescription = validationUtils.validateString(${FormValidator.LAST_NAME_MAX_LEN}, () => false, {
             emptyOrNull: '<fmt:message key="validateUser.errors.LAST_NAME_MISSING"/>',
             tooLong: '<fmt:message key="validateUser.errors.LAST_NAME_TOO_LONG"/>',
         });
@@ -226,13 +226,13 @@
 
                 checkAvatar(obj, modifyUserForm, '${FormValidator.AVATAR_KEY}', '${FormValidator.AVATAR_IMG_KEY}');
 
-                updateVerifyMessages(modifyUserForm, obj);
+                validationUtils.updateVerifyMessages(modifyUserForm, obj);
 
                 return $.isEmptyObject(obj);
             }
         }
 
-        timedChange(modifyUserForm, validation(true));
+        formUtils.timedChange(modifyUserForm, validation(true));
 
         {
             const pwdInput = $('[name="${FormValidator.FIRST_PWD_KEY}}"]', modifyUserForm );
@@ -273,7 +273,7 @@
             e.preventDefault();
 
             if(strictValidation()) {
-                formSubmit(
+                validationUtils.formSubmitWithValidation(
                     '<c:url value="/admin/users.json"/>',
                     modifyUserForm, {
                         multipart: true,

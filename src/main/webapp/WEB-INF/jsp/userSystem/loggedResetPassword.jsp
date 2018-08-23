@@ -87,14 +87,14 @@
         form.find('input').blur(function () {
             request_user_validation(form, false, url)
                 .done(function (d) {
-                    updateVerifyMessages(form, d);
+                    validationUtils.updateVerifyMessages(form, d);
                 });
         });
 
         form.submit(function (e) {
             e.preventDefault();
 
-            formSubmit(
+            validationUtils.formSubmitWithValidation(
                 urlJSON,
                 form, {
                     'multipart': false,

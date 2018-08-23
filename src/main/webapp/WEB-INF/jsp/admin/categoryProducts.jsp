@@ -163,9 +163,9 @@
                                         jqXHR.responseJSON !== null &&
                                         jqXHR.responseJSON['message'] !== undefined
                                     ) {
-                                        showErrorAlert("<fmt:message key="generic.label.errorTitle"/>", jqXHR.responseJSON['message'], "<fmt:message key="generic.label.close"/>");
+                                        modalAlert.error("<fmt:message key="generic.label.errorTitle"/>", jqXHR.responseJSON['message'], "<fmt:message key="generic.label.close"/>");
                                     } else {
-                                        showErrorAlert("<fmt:message key="generic.label.errorTitle"/>", unknownErrorMessage, "<fmt:message key="generic.label.close"/>");
+                                        modalAlert.error("<fmt:message key="generic.label.errorTitle"/>", unknownErrorMessage, "<fmt:message key="generic.label.close"/>");
                                     }
                                 });
                             }
@@ -192,7 +192,7 @@
                 // Se errore durante parse o errore mal formato lascia default
             }
 
-            showErrorAlert('<fmt:message key="generic.label.errorTitle"/>', err, '<fmt:message key="generic.label.close"/>');
+            modalAlert.error('<fmt:message key="generic.label.errorTitle"/>', err, '<fmt:message key="generic.label.close"/>');
         });
 
         const table = tableDiv.DataTable({
@@ -243,7 +243,7 @@
         });
 
 
-        timedChange(
+        formUtils.timedChange(
             tableDiv.find('tfoot'),
             function () {
                 history.replaceState(undefined, undefined, "categoryProducts?" + tableDiv.find('tfoot').find('input,select').serialize());
@@ -256,7 +256,7 @@
 
         {
             categoryProductModal.on("hidden.bs.modal", function () {
-                clearVerifyMessages(categoryProductForm);
+                validationUtils.clearVerifyMessages(categoryProductForm);
 
                 categoryProductForm[0].reset();
                 categoryProductForm.find('input').val("");
@@ -268,7 +268,7 @@
 
             const isCreate = (form, name) => {return form.find('[name="action"]').val() === 'create';};
 
-            const checkFile = add_file_errors(
+            const checkFile = validationUtils.validateFile(
                 /.*(jpg|jpeg|png|gif|bmp).*/,
                 ${CategoryProductValidator.IMG_MAX_SIZE},
                 isCreate, {
@@ -279,7 +279,7 @@
                 }
             );
 
-            const checkName = validateString(
+            const checkName = validationUtils.validateString(
                 ${CategoryProductValidator.NAME_MAX_LEN},
                 isCreate, {
                     emptyOrNull: "<fmt:message key="validateCategoryProduct.errors.Name.STRING_EMPTY_OR_NULL"/>",
@@ -287,7 +287,7 @@
                 }
             );
 
-            const checkDescription = validateString(
+            const checkDescription = validationUtils.validateString(
                 ${CategoryProductValidator.DESCRIPTION_MAX_LEN},
                 isCreate, {
                     emptyOrNull: "<fmt:message key="validateCategoryProduct.errors.Description.STRING_EMPTY_OR_NULL"/>",
@@ -302,7 +302,7 @@
                 checkDescription(obj, categoryProductForm, "${CategoryProductValidator.DESCRIPTION_KEY}");
                 checkFile(obj, categoryProductForm, '${CategoryProductValidator.IMG_KEY}');
 
-                updateVerifyMessages(categoryProductForm, obj);
+                validationUtils.updateVerifyMessages(categoryProductForm, obj);
             });
 
             $.each(categoryProductForm.find('.file-input'), function (index, value) {
@@ -342,7 +342,7 @@
             categoryProductForm.submit(function (e) {
                 e.preventDefault();
 
-                formSubmit(
+                validationUtils.formSubmitWithValidation(
                     modalUrlJson,
                     categoryProductForm, {
                         multipart: true,
