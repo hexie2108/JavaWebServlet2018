@@ -18,10 +18,9 @@
 
     <link rel="stylesheet" href="<c:url value="/libs/fontawesome-free-5.1.1-web/css/all.min.css"/>" type="text/css"
           media="all">
-    <link rel="stylesheet" href="<c:url value="/css/userPages.css"/>" type="text/css" media="all">
-
 
     <link rel="stylesheet" href="<c:url value="/css/adminPages.css"/>" type="text/css" media="all"/>
+    <link rel="stylesheet" href="<c:url value="/css/user-system-style.css"/>" type="text/css" media="all"/>
 </head>
 <body>
 <%@ include file="../../jspf/i18n_switcher.jsp" %>
@@ -144,32 +143,50 @@
                     </div>
 
                     <div class="form-group" id="avatarDiv">
-                        <c:forEach items="${FormValidator.DEFAULT_AVATARS}" var="av" varStatus="st">
-                            <label>
-                                <input class="d-none img-radio" type="radio" name="${FormValidator.AVATAR_KEY}"
-                                       value="${av}">
-                                <img src="<c:url value="/${pageContext.servletContext.getInitParameter('avatarsFolder')}/${av}"/>"
-                                     class="img-input"
-                                ><i class="far fa-check-circle img-check"></i>
-                            </label>
-                        </c:forEach>
-                        <label>
-                            <input class="d-none img-radio" type="radio" name="${FormValidator.AVATAR_KEY}" value="custom" id="customAvatar">
-                            <img src="<c:url value="/libs/fontawesome-free-5.1.1-web/svgs/regular/plus-square.svg"/>" class="img-input"
-                            ><i class="far fa-check-circle img-check"></i>
-                            <input id="customAvatarImg"
-                                   type="file" name="${FormValidator.AVATAR_IMG_KEY}"
-                                   accept="image/jpg, image/jpeg, image/png, image/bmp, image/gif">
-                        </label>
+                            <c:forEach items="${FormValidator.DEFAULT_AVATARS}" var="av" varStatus="status">
+                                <div class="avatar-box custom-control custom-radio custom-control-inline">
+                                    <input type="radio" class="custom-control-input  img-radio default-avatar" id="avatar-${status.index}" name="${FormValidator.AVATAR_KEY}" value="${av}" ${status.index==0?"checked":""} required="required" />
+                                    <label class="custom-control-label" for="avatar-${status.index}">
+                                        <img class="img-input img-fluid" src="<c:url value="/image/user/${av}"/>" />
+                                        <span class="img-check">
+                                                <i class="far fa-check-circle "></i>
+                                        </span>
+                                    </label>
+
+                                </div>
+                            </c:forEach>
+
+                            <div class="avatar-box custom-control custom-radio custom-control-inline">
+                                <input type="radio" class="custom-control-input  img-radio" id="avatar-custom" name="${FormValidator.AVATAR_KEY}" value="custom"  required="required" />
+                                <label class="custom-control-label" for="avatar-custom">
+                                    <img class="img-input img-fluid" src="<c:url value="/image/base/custom-avatar.svg"/>" />
+                                    <span class="img-check">
+                                            <i class="far fa-check-circle "></i>
+                                    </span>
+                                </label>
+
+                            </div>
                         <div class="error-messages">
                             <p id="span${FormValidator.AVATAR_KEY}"></p>
+                        </div>
+                    </div>
+
+                    <div class="form-group custom-avatar-uploader">
+                        <div class=" custom-file input-group mb-3">
+                            <input type="file" class="custom-file-input"  id="customAvatarImg" name="${FormValidator.AVATAR_IMG_KEY}" accept="image/jpeg, image/png, image/gif, image/bmp">
+                            <label class="custom-file-label input-box" for="customAvatarImg">seleziona file</label>
+                            <%-- serve per ripristinare il segnaposto --%>
+                            <label class="custom-file-label-origin d-none">seleziona file</label>
+                        </div>
+                        <%--parte di suggerimenti --%>
+                        <div class="form-group">
+                            <label>accetta solo file *.jpg, *.png, *.gif, *.bmp</label> <%-- TODO: To i18n --%>
                         </div>
                         <div class="error-messages">
                             <p id="span${FormValidator.AVATAR_IMG_KEY}"></p>
                         </div>
                     </div>
                 </form>
-
                 <div class="alert d-none" id="id-modal-res">
                 </div>
             </div>
@@ -275,11 +292,16 @@
 
                     if (/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\..*$/.test(data.img)) {
                         modifyUserForm.find('#avatarDiv').prepend(
-                            '<label id="customImgLabel">' +
-                            '    <input class="d-none img-radio" required="" type="radio" name="${FormValidator.AVATAR_KEY}" value="" checked>' +
-                            '    <img src="<c:url value="/${pageContext.servletContext.getInitParameter('avatarsFolder')}/"/>' + data.img + '" class="img-input"' +
-                            '        ><i class="far fa-check-circle img-check"></i>' +
-                            '</label>'
+
+                            '<div class="avatar-box custom-control custom-radio custom-control-inline" id="customImgLabel">' +
+                            '   <input type="radio" class="custom-control-input  img-radio" name="${FormValidator.AVATAR_KEY}" value="" checked id="customImgInput"/>' +
+                            '   <label class="custom-control-label" for="customImgInput">' +
+                            '       <img class="img-input img-fluid" src="<c:url value="/${pageContext.servletContext.getInitParameter('avatarsFolder')}/"/>' + data.img + '" />' +
+                            '       <span class="img-check">' +
+                            '           <i class="far fa-check-circle "></i>' +
+                            '       </span>' +
+                            '   </label>' +
+                            '</div>'
                         );
                     } else {
                         modifyUserForm.find('input[name="${FormValidator.AVATAR_KEY}"][value="' + data.img + '"]').prop("checked", true);
@@ -472,8 +494,21 @@
         $.fn.dataTable.ext.errMode = 'throw';
 
         {
+            //elimina gli spazi di input
+            $(".input-group input.input-box", modifyUserForm).change(function () {
+                $(this).val($.trim($(this).val()));
+            });
+
+            //visualizza il nome file nel cutom-file-input di form
+            $(".custom-file-input", modifyUserForm).on("change", function () {
+                //get il nome di file
+                var fileName = $(this)[0].files[0].name;
+                //sostituisce il contenuto del "custom-file-label" label
+                $(this).next(".custom-file-label").html(fileName);
+
+            });
+
             const progressBar = modifyUserForm.find(".progress-bar");
-            const resDiv = $('#id-modal-res');
 
             modifyUserModal.on("hidden.bs.modal", function () {
                 clearVerifyMessages(modifyUserForm);
@@ -722,7 +757,7 @@
 
             const checkAvatar = validateAvatar(
                 /.*(jpg|jpeg|png|gif|bmp).*/,
-                ["","user.jpg", "user-astronaut.jpg", "user-ninja.jpg", "user-secret.jpg"],
+                ["","user.svg", "user-astronaut.svg", "user-ninja.svg", "user-secret.svg"],
                 ${FormValidator.MAX_LEN_FILE},
                 () => false, {
                     fileEmptyOrNull: '<fmt:message key="validateUser.errors.AVATAR_IMG_MISSING"/>',
@@ -736,8 +771,6 @@
 
             function validation(lazy) {
                 return function(){
-                    resetAlert(resDiv);
-
                     const obj = {};
 
                     if(lazy) {
@@ -826,6 +859,18 @@
                     );
                 }
             });
+
+            modifyUserForm.find('[name="${FormValidator.AVATAR_KEY}"]').change((e) => {
+                if (e.target.value === 'custom') {
+                    $(".custom-avatar-uploader", modifyUserForm).show("slow");
+                    $(".custom-file-input", modifyUserForm).attr("required", "required");
+                } else {
+                    $(".custom-avatar-uploader", modifyUserForm).hide("slow");
+                    $(".custom-file-input", modifyUserForm).val("");
+                    $(".custom-file-input", modifyUserForm).removeAttr("required");
+                    $(".custom-file-label", modifyUserForm).html($(".custom-file-label-origin").html());
+                }
+            })
         }
     });
 </script>

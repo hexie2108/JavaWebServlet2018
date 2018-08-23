@@ -92,29 +92,28 @@
 
 /*register.jsp-----------------------------------------------*/
 
-#form-register .avatar-box {
-        width: 10%;
+.avatar-box {
         margin: .5rem;
         padding: 0;
 }
 
-#form-register  .avatar-box .custom-control-label::before{
+.avatar-box .custom-control-label::before{
         display: none;
 }
 
-#form-register .avatar-box .img-input {
-        width: 100%;
+.avatar-box .img-input {
+        height: 3.5rem;
+        width: 3.5rem;
 }
-#form-register .avatar-box .custom-img{
+.avatar-box .custom-img{
         width: 100%;
 }
 
-#form-register .img-check {
+.img-check {
         color: #138496;
         position: absolute;
         font-size: 1.5rem;
         visibility: hidden;
-        position: absolute;
         top: 0;
         right: -10px;
         background: white;
@@ -124,67 +123,64 @@
 }
 
 
-
-
-
-#form-register .img-radio:checked + .custom-control-label  .img-check{
+.img-radio:checked + .custom-control-label  .img-check{
         visibility: visible;
 }
 
 
-#form-register #customAvatar:checked ~ #customAvatarImg {
+#customAvatar:checked ~ #customAvatarImg {
         display: inline-block;
 }
 
-#form-register #customAvatar:not(checked) ~ #customAvatarImg {
+#customAvatar:not(checked) ~ #customAvatarImg {
         display: none;
 }
 
 
-#form-register  .custom-avatar-uploader{
+.custom-avatar-uploader{
         display: none;
 }
 
-#form-register .progress-bar-div{
+.progress-bar-div{
         display: none;
         margin-top: 1rem;
 }
 
-#form-register .progress-bar-div .progress-bar{
+.progress-bar-div .progress-bar{
         height: 1rem;
         width: 0;
 
 }
 
-#form-register .progress-bar-div .password0{
+.progress-bar-div .password0{
         width: 20%;
 
 }
 
-#form-register .progress-bar-div .password1{
+.progress-bar-div .password1{
         width: 40%;
 
 }
 
-#form-register .progress-bar-div .password2{
+.progress-bar-div .password2{
         width: 60%;
 
 }
-#form-register .progress-bar-div .password3{
+.progress-bar-div .password3{
         width: 80%;
 
 }
-#form-register .progress-bar-div .password4{
+.progress-bar-div .password4{
         width: 100%;
 
 }
 
-#form-register .form-group.row .col-sm-6{
+.form-group.row .col-sm-6{
         margin-bottom: .5rem;
         margin-top: .5rem
 }
 
-#form-register .error-messages p{
+.error-messages p{
         display: none;
         color: red;
         padding: .5rem;
