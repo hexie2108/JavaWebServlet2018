@@ -152,14 +152,6 @@
 
         const progressBar = modifyUserForm.find(".progress-bar");
 
-        modifyUserModal.on("hidden.bs.modal", function () {
-            validationUtils.clearVerifyMessages(modifyUserForm);
-
-            modifyUserForm[0].reset();
-            modifyUserForm.find('#customImgLabel').remove();
-            progressBar.css('width', '0');
-        });
-
         const checkEmailLazy = validationUtils.user.validateEmail(true, false, () => false,  '<c:url value="/service/checkUserService"/>', {
             emptyOrNull: '<fmt:message key="validateUser.errors.EMAIL_MISSING"/>',
             tooLong: '<fmt:message key="validateUser.errors.EMAIL_TOO_LONG"/>',
@@ -314,6 +306,12 @@
         });
 
         modifyUserModal.on('show.bs.modal', function (event) {
+            validationUtils.clearVerifyMessages(modifyUserForm);
+
+            modifyUserForm[0].reset();
+            modifyUserForm.find('#customImgLabel').remove();
+            progressBar.css('width', '0');
+
             // Get the button that triggered the modal, get the whole row, get the data that created the row
             const data = $(event.relatedTarget).closest('tr').data('json');
 

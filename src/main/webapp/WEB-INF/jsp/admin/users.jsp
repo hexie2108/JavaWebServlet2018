@@ -84,44 +84,19 @@
 
         const unknownError = '<fmt:message key="generic.errors.unknownError"/>';
 
-        function ajaxButton(url, data, successCallback) {
-            $.ajax({
-                url: url,
-                type: 'POST',
-                data: data,
-                async: false
-            }).done(function () {
-                successCallback();
-            }).fail(function (jqXHR) {
-                if (typeof jqXHR.responseJSON === 'object' &&
-                    jqXHR.responseJSON !== null &&
-                    jqXHR.responseJSON['message'] !== undefined
-                ) {
-                    modalAlert.error(
-                        '<fmt:message key="generic.label.errorTitle"/>',
-                        jqXHR.responseJSON['message'],
-                        '<fmt:message key="generic.label.close"/>'
-                    );
-
-                } else {
-                    modalAlert.error(
-                        '<fmt:message key="generic.label.errorTitle"/>',
-                        unknownError,
-                        '<fmt:message key="generic.label.close"/>'
-                    );
-                }
-            });
-        }
-
         function modifyUserClass(event) {
             const data = $(event.currentTarget).closest('tr').data('json');
 
-            ajaxButton(
+            formUtils.ajaxButton(
                 '<c:url value="/admin/upgradeUserToAdmin.json"/>',
                 {'email': data.email, 'admin': !data.isAdmin},
                 () => {
                     table.ajax.reload();
                     table.draw();
+                }, {
+                    title: "<fmt:message key="generic.label.errorTitle"/>",
+                    message: "<fmt:message key="generic.errors.unknownError"/>",
+                    closeLabel: "<fmt:message key="generic.label.close"/>",
                 }
             );
         }
@@ -129,12 +104,16 @@
         function deleteUser(event) {
             const data = $(event.currentTarget).closest('tr').data('json');
 
-            ajaxButton(
+            formUtils.ajaxButton(
                 '<c:url value="/admin/users.json"/>',
                 {'action': 'delete', 'id': data.id},
                 () => {
                     table.ajax.reload();
                     table.draw();
+                }, {
+                    title: "<fmt:message key="generic.label.errorTitle"/>",
+                    message: "<fmt:message key="generic.errors.unknownError"/>",
+                    closeLabel: "<fmt:message key="generic.label.close"/>",
                 }
             );
         }
@@ -319,20 +298,20 @@
                 row.child.hide();
                 tr.removeClass('shown');
 
-                tr.find('td.details-control i').removeClass("fa-minus-circle");
-                tr.find('td.details-control i').addClass("fa-plus-circle");
+                $('td.details-control i', tr).removeClass("fa-minus-circle");
+                $('td.details-control i', tr).addClass("fa-plus-circle");
             } else {
                 // Open this row
                 row.child(format(row.data())).show();
                 tr.addClass('shown');
 
-                tr.find('td.details-control i').removeClass("fa-plus-circle");
-                tr.find('td.details-control i').addClass("fa-minus-circle");
+                $('td.details-control i', tr).removeClass("fa-plus-circle");
+                $('td.details-control i', tr).addClass("fa-minus-circle");
             }
         });
 
         formUtils.timedChange(
-            tableDiv.find('tfoot'),
+            $('tfoot', tableDiv),
             function () {
                 history.replaceState(undefined, undefined, "users?" + tableDiv.find('tfoot').find('input,select').serialize());
                 table.ajax.reload();

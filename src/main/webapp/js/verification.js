@@ -202,7 +202,7 @@ const validationUtils = (function(){
     }
 
     /**
-     * @typedef {Object} modalAlertOptions
+     * @typedef {Object} ModalAlertOptions
      * @property {!string} title string to use as title
      * @property {!string} message main content of the modal
      * @property {!string} closeLabel label to use in the close button
@@ -213,8 +213,8 @@ const validationUtils = (function(){
      * @property {Boolean} multipart true to send using enctype/multipart, otherwise it uses default
      * @property {Boolean} session send cookies
      * @property {string} redirectUrl redirect to specific url after success(if not defined successAlert must be defined and vice versa)
-     * @property {modalAlertOptions} successAlert settings for the success modal(if not defined redirectUrl must be defined and vice versa)
-     * @property {modalAlertOptions} failAlert settings for the error modal (if error message form the post is standard the main content of the modal is overwritten)
+     * @property {ModalAlertOptions} successAlert settings for the success modal(if not defined redirectUrl must be defined and vice versa)
+     * @property {ModalAlertOptions} failAlert settings for the error modal (if error message form the post is standard the main content of the modal is overwritten)
      */
 
     /**
@@ -597,7 +597,7 @@ const validationUtils = (function(){
                 const password = form.find('[name="' + namePwd1 + '"]').val();
                 const password2 = form.find('[name="' + namePwd2 + '"]').val();
 
-                if (password2 === "") {
+                if (password2 === "" || password2.trim() === "") {
                     obj[namePwd2] = password2Missing;
                 } else if (password2 !== password) {
                     obj[namePwd2] = password2NotSame;
@@ -714,8 +714,45 @@ const formUtils = (function(){
         $('input, textarea', form).not(radioAndFile).donetyping(callback, timeout);
     }
 
+    /**
+     * Functions to do a not asyncronous request, show an error modal if there is an error, or call a success callback
+     * @param {string} url questa è una porva per vedere se il problema si è risolto ma non credo visto che sta usando una marea di cpu
+     * @param {Object} data data to send using post
+     * @param {Function} successCallback callback to call if the funciton is succesful
+     * @param {ModalAlertOptions} failAlert message to show if error occours(message is overwritten if valid error message is sent by the page)
+     */
+    function ajaxButton(url, data, successCallback, failAlert) {
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: data,
+            async: false
+        }).done(function () {
+            successCallback();
+        }).fail(function (jqXHR) {
+            if (typeof jqXHR.responseJSON === 'object' &&
+                jqXHR.responseJSON !== null &&
+                jqXHR.responseJSON['message'] !== undefined
+            ) {
+                modalAlert.error(
+                    failAlert['title'],
+                    jqXHR.responseJSON['message'],
+                    failAlert['closeLabel']
+                );
+            } else {
+                modalAlert.error(
+                    failAlert['title'],
+                    failAlert['message'],
+                    failAlert['closeLabel']
+                );
+            }
+        });
+    }
+
+
     return {
         timedChange: timedChange
+        ajaxButton: ajaxButton
     };
 })();
 

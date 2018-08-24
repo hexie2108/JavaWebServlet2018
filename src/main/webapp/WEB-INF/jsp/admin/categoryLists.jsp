@@ -141,6 +141,8 @@
         }
 
         function format(row, data, index) {
+            $(row).data('json', data);
+
             const map = {
                 3: 'img1',
                 4: 'img2',
@@ -279,9 +281,9 @@
         });
 
         formUtils.timedChange(
-            tableDiv.find('tfoot'),
+            $('tfoot', tableDiv),
             function () {
-                history.replaceState(undefined, undefined, "categoryLists?" + tableDiv.find('tfoot').find('input,select').serialize());
+                history.replaceState(undefined, undefined, "categoryLists?" + $('tfoot', tableDiv).find('input,select').serialize());
                 table.ajax.reload();
                 table.draw();
             }
@@ -358,8 +360,8 @@
             categoryListForm.find('.input-group  button.ins-btn').click(function () {
                 const iGr = $(this).parent();
 
-                iGr.find('> .input-group-append, > input').show();
-                iGr.find('> button.ins-btn').hide();
+                $('> .input-group-append, > input', iGr).show();
+                $('> button.ins-btn', iGr).hide();
 
                 iGr.parent().find('input[type="hidden"]').val("");
             });
@@ -367,16 +369,16 @@
             categoryListForm.find('.input-group button.del-btn').click(function () {
                 const iGr = $(this).parent().parent();
 
-                iGr.find('> .input-group-append, > input').val("");
-                iGr.find('> .input-group-append, > input').hide();
-                iGr.find('> button.ins-btn').show();
+                $('> .input-group-append, > input', iGr).val("");
+                $('> .input-group-append, > input', iGr).hide();
+                $('> button.ins-btn', iGr).show();
 
                 iGr.parent().find('input[type="hidden"]').val("delete");
             });
 
             categoryListForm.find('button.clear-btn, button.del-btn, button.ins-btn').click(function () {
                 // Trigger update
-                categoryListForm.find('input[name="${CategoryListValidator.NAME_KEY}"]').trigger('change');
+                $('input[name="${CategoryListValidator.NAME_KEY}"]', categoryListForm).trigger('change');
             });
 
 
@@ -409,7 +411,7 @@
             });
 
 
-            tableDiv.find('#btnNewCategoryList').click(function () {
+            $('#btnNewCategoryList', tableDiv).click(function () {
                 setModal("create", null);
             });
         }
