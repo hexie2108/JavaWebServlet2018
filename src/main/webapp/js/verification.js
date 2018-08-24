@@ -103,9 +103,19 @@ const modalAlert = (function(){
 
 /**
  * Module to update info about validation and general validation
- * @type {{updateVerifyMessages, clearVerifyMessages, formSubmitWithValidation, validateFile, validateString}}
+ * @type {{updateVerifyMessages, clearVerifyMessages, formSubmitWithValidation, validateFile, validateString, user}}
  */
 const validationUtils = (function(){
+    function checkObject(obj, ar, prefix) {
+        return $.map(ar, function(key){
+            if (obj[key] === undefined) {
+                console.error(prefix + '.' + key + ' is undefined');
+            }
+
+            return obj[key] === undefined;
+        }).some(function(v){return v;});
+    }
+
     /**
      * Function to update the validation messages in a form given the data that contains the new validation mesages
      * @param {jQuery} form jQuery object that represents the form
@@ -174,7 +184,7 @@ const validationUtils = (function(){
      */
     function clearVerifyMessages(form) {
         // Prendi tutti gli <input> che ci sono nella pagina e per ognuno prendine il nome
-        const inputs = form.find('input, textarea, select').map(function () {
+        const inputs = $('input, textarea, select', form).map(function () {
             return this.name;
         }).get();
         // Per ogni input scrivi l'eventuale errore nello span dedicato e restituisci false se ha errori, true altrimenti
@@ -275,8 +285,7 @@ const validationUtils = (function(){
     }
 
     /**
-     * @name RequiredLambdaType
-     * @function
+     * @typedef {Function} RequiredLambdaType
      * @param {!jQuery} form jQuery object that represents the form
      * @param {!string} name name of the input considered
      * @return {!Boolean} true if the input is required, false otherwise
@@ -307,30 +316,15 @@ const validationUtils = (function(){
      * @returns {ValidationCheckLambda|undefined} undefined if an error happens, ValidationCheckLambda otherwise
      */
     function validateFile(contentTypeRegex, maxSize, required, errors) {
-        let fileEmptyOrNull = errors.fileEmptyOrNull;
-        let fileTooBig = errors.fileTooBig;
-        let fileContentTypeMissingOrType = errors.fileContentTypeMissingOrType;
-        let fileOfWrongType = errors.fileOfWrongType;
-
-        if ( fileEmptyOrNull === undefined){
-            console.error('errors.fileEmptyOrNull is null/undefined/empty');
+        const errors_args = ['fileEmptyOrNull', 'fileTooBig', 'fileContentTypeMissingOrType', 'fileOfWrongType'];
+        if (checkObject(errors, errors_args, 'errors')) {
             return;
         }
 
-        if ( fileTooBig === undefined) {
-            console.error('errors.fileTooBig is null/undefined/empty');
-            return;
-        }
-
-        if ( fileContentTypeMissingOrType === undefined) {
-            console.error('errors.fileContentTypeMissingOrType is null/undefined/empty');
-            return;
-        }
-
-        if ( fileOfWrongType === undefined) {
-            console.error('errors.fileOfWrongType is null/undefined/empty');
-            return;
-        }
+        const fileEmptyOrNull = errors.fileEmptyOrNull;
+        const fileTooBig = errors.fileTooBig;
+        const fileContentTypeMissingOrType = errors.fileContentTypeMissingOrType;
+        const fileOfWrongType = errors.fileOfWrongType;
 
         if  (typeof required !== 'function' ) {
             console.error('required must be a function');
@@ -377,7 +371,7 @@ const validationUtils = (function(){
         }
     }
 
-   /**
+    /**
      * @typedef {Object} ValidateStringErrors
      * @param {!string} emptyOrNull message to show if input value is empty or null
      * @param {!string} tooLong message to show if input value is too big
@@ -391,18 +385,12 @@ const validationUtils = (function(){
      * @returns {ValidationCheckLambda|undefined} undefined if an error happens, ValidationCheckLambda otherwise
      */
     function validateString(maxLen, required, errors) {
+        if (checkObject(errors, ['emptyOrNull', 'tooLong'], 'errors')) {
+            return;
+        }
+
         const emptyOrNull = errors.emptyOrNull;
         const tooLong = errors.tooLong;
-
-        if (emptyOrNull === undefined) {
-            console.error("errors.emptyOrNull undefined");
-            return;
-        }
-
-        if (tooLong === undefined) {
-            console.error("errors.tooLong undefined");
-            return;
-        }
 
         if  (typeof required !== 'function' ) {
             console.error('required must be a function');
@@ -410,7 +398,7 @@ const validationUtils = (function(){
         }
 
         return function(obj, form, name) {
-            const str = form.find('[name="' + name + '"]').val();
+            const str = $('[name="' + name + '"]', form).val();
             if (!str) {
                 if (required(form, name)) {
                     obj[name] = emptyOrNull;
@@ -421,12 +409,291 @@ const validationUtils = (function(){
         }
     }
 
+    const user = (function(){
+        /**
+         * @typedef {Object} ValidatePasswordOptions
+         * @property {!Number} minLength minimum length for the password
+         * @property {!Number} maxLength maximum length for the password
+         * @property {!Number} minLower minimum number of lowercase characters in the password
+         * @property {!Number} minUpper minimum number of uppercase characters in the password
+         * @property {!Number} minDigits minimum number of digit characters in the password
+         * @property {!Number} minLower minimum number of symbol characters in the password
+         */
+
+        /**
+         * @typedef {Object} ValidatePasswordErrors
+         * @property {string} passwordMissingOrEmpty message to show if password is missing or empty
+         * @property {string} passwordTooLong message to show if password is too long
+         * @property {string} passwordTooShort message to show if password is too short
+         * @property {string} passwordInvalid message to show if password is invalid(not enough lowercase, uppercase, digits, symbols)
+         */
+
+        /**
+         * Function to validate a password
+         * @param {!RequiredLambdaType} required function that returns true if the object is to be considered required, false otherwise
+         * @param {!ValidatePasswordOptions} options options for the validation
+         * @param {!ValidatePasswordErrors} errors strings to use as errors
+         * @returns {ValidationCheckLambda|undefined} undefined if an error happens, ValidationCheckLambda otherwise
+         */
+        function validatePassword(required, options, errors) {
+
+            const options_args = ['minLength', 'maxLength', 'minLower', 'minUpper', 'minDigits', 'minSymbol'];
+            if (checkObject(options, options_args, 'options')) {
+                return;
+            }
+
+            const errors_args = ['passwordMissingOrEmpty','passwordTooLong', 'passwordTooShort', 'passwordInvalid'];
+            if (checkObject(errors, errors_args, 'errors')) {
+                return;
+            }
+
+            const minLength = options.minLength;
+            const maxLength = options.maxLength;
+            const minLower = options.minLower;
+            const minUpper = options.minUpper;
+            const minDigits = options.minDigits;
+            const minSymbol = options.minSymbol;
+
+            const passwordMissingOrEmpty = errors.passwordMissingOrEmpty;
+            const passwordTooLong = errors.passwordTooLong;
+            const passwordTooShort = errors.passwordTooShort;
+            const passwordInvalid = errors.passwordInvalid;
+
+            return function (obj, form, name) {
+                const password = form.find('[name="' + name + '"]').val();
+
+                //check password
+                //se è vuoto o se supera la lunghezza massima o se è troppo corta
+                if (password === "" || password.trim() === "") {
+                    if (required(form, name)) {
+                        obj[name] = passwordMissingOrEmpty;
+                    }
+                } else if (password.length > maxLength) {
+                    obj[name] = passwordTooLong;
+                } else if (password.length < minLength) {
+                    obj[name] = passwordTooShort;
+                } else {
+                    let lower = 0;
+                    let upper = 0;
+                    let number = 0;
+                    let symbol = 0;
+
+                    for (let i = 0; i < password.length; i++) {
+                        const letter = password.charAt(i);
+
+                        if (letter === letter.toLowerCase() && letter !== letter.toUpperCase()) {
+                            lower++;
+                        } else if (letter !== letter.toLowerCase() && letter === letter.toUpperCase()) {
+                            upper++;
+                        } else if (/\d/.test(letter)) {
+                            number++;
+                        } else if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(letter)) {
+                            symbol++;
+                        }
+                    }
+
+                    //se password non ha un carattere minuscolo, un maiuscolo, un numero e un simbolo, è invalido
+                    if ((lower < minLower) || (upper < minUpper) || (number < minDigits) || (symbol < minSymbol)) {
+                        obj[name] = passwordInvalid;
+                    }
+                }
+            };
+        }
+
+        /**
+         * @typedef {Object} ValidateEmailErrors
+         * @property {string} errorEmptyOrNull message to show if email is null or empty
+         * @property {string} tooLong message to show if email is too long
+         * @property {string} emailInvalid message to show if email is invalid(format)
+         * @property {string} emailNoExists message to show if email doesn't exist
+         * @property {string} emailAlreadyActivated message to show if email is already activated
+         */
+
+        /**
+         * Function to check an email
+         * @param {Boolean} lazy true to check that email isn't already used, false otherwise
+         * @param {Boolean} existing true if the email should exist, false otherwise
+         * @param {!RequiredLambdaType} required function that returns true if the object is to be considered required, false otherwise
+         * @param {string} url url to use to check that if the email is already used
+         * @param {!ValidateEmailErrors} errors messages to use as errors
+         * @returns {ValidationCheckLambda|undefined} undefined if an error happens, ValidationCheckLambda otherwise
+         */
+        function validateEmail(lazy, existing, required, url, errors) {
+            const errors_args = ['emptyOrNull', 'tooLong', 'emailInvalid', 'emailNoExists', 'emailAlreadyActivated'];
+            if (checkObject(errors, errors_args, 'errors')) {
+                return;
+            }
+
+            const emptyOrNull = errors.emptyOrNull;
+            const tooLong = errors.tooLong;
+            const emailInvalid = errors.emailInvalid;
+            const emailNoExists = errors.emailNoExists;
+            const emailAlreadyActivated = errors.emailAlreadyActivated;
+
+            return function(obj, form, name) {
+                const emailVal = form.find('[name="'+name+'"]').val();
+
+                validateString(name, required, {
+                    emptyOrNull,
+                    tooLong
+                });
+
+                if (!lazy && obj[name] === undefined && emailVal !== '') {
+                    //espressione per controllare il formatto di email
+                    const reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/;
+                    //se è vuoto o se supera la lunghezza massima o non rispetta il formatto di email
+                    if (!reg.test(emailVal)) {
+                        obj[name] = emailInvalid;
+                    } else {
+                        //poi bisogna verificare se tale email esiste o no
+                        //e verifica lo stato di attivazione dell'account con tale email
+
+                        //get valore di email
+                        $.ajax({
+                            url: url,
+                            data: {action: "checkActivationStatus", email: emailVal},
+                            type: 'POST',
+                            dataType: "text",
+                            async: false,
+                            cache: false,
+                        }).done(function (data) {
+                            if(existing) {
+                                if (data === "0") {
+                                    // Se l'email dovrebbe esistere ma non esiste visualizza errore
+                                    obj[name] = emailNoExists;
+                                }
+                            } else {
+                                if (data === "1") {
+                                    // Se l'email non dovrebbe esistere ma esiste
+                                    obj[name] = emailAlreadyActivated;
+                                }
+                            }
+                        });
+                    }
+                }
+            };
+        }
+
+        /**
+         * @typedef {Object} ValidatePassword2Error
+         * @property {string} password2Missing message to show when the second password input has missing or empty value
+         * @property {string} password2NotSame message to show if the 2° password is not the same as the 1° one
+         */
+
+        /**
+         * Function to validate the repeated password
+         * @param {!ValidatePasswordErrors} errors messages to show
+         * @returns {ValidationCheckLambda|undefined} undefined if an error happens, ValidationCheckLambda otherwise
+         */
+        function validatePassword2(errors) {
+            if (checkObject(errors, ['password2Missing', 'password2NotSame'], 'errors')) {
+                return;
+            }
+
+            const password2Missing = errors.password2Missing;
+            const password2NotSame = errors.password2NotSame;
+
+            return function(obj, form, namePwd1, namePwd2) {
+                const password = form.find('[name="' + namePwd1 + '"]').val();
+                const password2 = form.find('[name="' + namePwd2 + '"]').val();
+
+                if (password2 === "") {
+                    obj[namePwd2] = password2Missing;
+                } else if (password2 !== password) {
+                    obj[namePwd2] = password2NotSame;
+                }
+            };
+        }
+
+        /**
+         * @typedef {Object} ValidateAvatarErrors
+         * @property {!string} fileEmptyOrNull message to show if the file is empty or null
+         * @property {!string} fileTooBig message to show if the file is too big
+         * @property {!string} fileContentTypeMissingOrType message to show if the fiel's contentType is null or empty
+         * @property {!string} fileOfWrongType message to show if the file is of the wrong type(wrong contentType)
+         * @property {!string} selectValMissing message to show if the select has nothing selected
+         * @property {!string} selectValInvalid message to show if the select has an invalid value
+         */
+
+        /**
+         * Function to validate the avatar
+         * @param {!RegExp} regexContentType regex to match contentType
+         * @param {!string[]} arrayOfDefaultAvatar values permitted as avatar
+         * @param {!Number} maxFileLen maximum size of the file(in bytes)
+         * @param {!RequiredLambdaType} required function that returns true if the object is to be considered required, false otherwise
+         * @param {ValidateAvatarErrors} errors messages to show
+         * @returns {ValidationCheckLambda|undefined} undefined if an error happens, ValidationCheckLambda otherwise
+         */
+        function validateAvatar(regexContentType, arrayOfDefaultAvatar, maxFileLen, required, errors)  {
+            if (maxFileLen === undefined) {
+                console.error('maxFileLen is undefined');
+                return;
+            }
+            if (errors === undefined) {
+                console.error("errors is undefined");
+                return;
+            }
+
+            const errors_args = [
+                'fileEmptyOrNull',
+                'fileTooBig',
+                'fileContentTypeMissingOrType',
+                'fileOfWrongType',
+                'selectValMissing',
+                'selectValInvalid'
+            ];
+
+            if (checkObject(errors, errors_args, 'errors')) {
+                return;
+            }
+
+            const fileEmptyOrNull = errors.fileEmptyOrNull;
+            const fileTooBig = errors.fileTooBig;
+            const fileContentTypeMissingOrType = errors.fileContentTypeMissingOrType;
+            const fileOfWrongType = errors.fileOfWrongType;
+            const selectValMissing = errors.selectValMissing;
+            const selectValInvalid = errors.selectValInvalid;
+
+            const checkFile = validateFile(regexContentType, maxFileLen, (form, name) => true, {
+                fileEmptyOrNull,
+                fileTooBig,
+                fileContentTypeMissingOrType,
+                fileOfWrongType,
+            });
+
+            return function(obj, form, selectName, fileName) {
+                const select = form.find('[name="' + selectName + '"]:checked').val();
+
+                if (select === undefined) {
+                    // if selected value is empty
+                    if (required(form, name)) {
+                        obj[selectName] = selectValMissing;
+                    }
+                } else if (select === "custom") {
+                    // if selected value is custom than check file
+                    checkFile(obj, form, fileName);
+                } else if (arrayOfDefaultAvatar.indexOf(select) === -1) {
+                    // if selected value is not one of the recognized one
+                    obj[selectName] = selectValInvalid;
+                }
+            }
+        }
+
+        return {
+            validateEmail: validateEmail,
+            validateAvatar: validateAvatar,
+            validatePassword: validatePassword,
+            validatePassword2: validatePassword2
+        };
+    })();
+
     return {
         updateVerifyMessages: updateVerifyMessages,
         clearVerifyMessages: clearVerifyMessages,
         formSubmitWithValidation: formSubmitWithValidation,
         validateFile: validateFile,
         validateString: validateString,
+        user
     };
 })();
 
@@ -439,12 +706,12 @@ const formUtils = (function(){
      * Function to call a callback when the user is not writing in the writing for timeout or change a mouse-based input
      * @param {!jQuery} form form to consider
      * @param {!Function} callback
-     * @param {Number|undefined} timeout timeout after which the callback is called(used to prevent to call too often the callback), if not specified a default is used
+     * @param {Number=} timeout timeout after which the callback is called(used to prevent to call too often the callback), if not specified a default is used
      */
     function timedChange(form, callback, timeout) {
-        const radioAndFile = form.find('input[type="radio"], input[type="file"], select');
+        const radioAndFile = $('input[type="radio"], input[type="file"], select', form);
         radioAndFile.on('blur change',callback);
-        form.find('input, textarea').not(radioAndFile).donetyping(callback, timeout);
+        $('input, textarea', form).not(radioAndFile).donetyping(callback, timeout);
     }
 
     return {

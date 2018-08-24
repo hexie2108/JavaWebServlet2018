@@ -160,7 +160,7 @@
             progressBar.css('width', '0');
         });
 
-        const checkEmailLazy = validateEmail(true, () => false,  '<c:url value="/service/checkUserService"/>', {
+        const checkEmailLazy = validationUtils.user.validateEmail(true, false, () => false,  '<c:url value="/service/checkUserService"/>', {
             emptyOrNull: '<fmt:message key="validateUser.errors.EMAIL_MISSING"/>',
             tooLong: '<fmt:message key="validateUser.errors.EMAIL_TOO_LONG"/>',
             emailInvalid: '<fmt:message key="validateUser.errors.EMAIL_NOT_VALID"/>',
@@ -168,7 +168,7 @@
             emailAlreadyActivated: 'alreadyActivated' // TODO: To i18n
         });
 
-        const checkEmailStrict = validateEmail(false, () => false,  '<c:url value="/service/checkUserService"/>', {
+        const checkEmailStrict = validationUtils.user.validateEmail(false, false, () => false,  '<c:url value="/service/checkUserService"/>', {
             emptyOrNull: '<fmt:message key="validateUser.errors.EMAIL_MISSING"/>',
             tooLong: '<fmt:message key="validateUser.errors.EMAIL_TOO_LONG"/>',
             emailInvalid: '<fmt:message key="validateUser.errors.EMAIL_NOT_VALID"/>',
@@ -186,17 +186,21 @@
             tooLong: '<fmt:message key="validateUser.errors.LAST_NAME_TOO_LONG"/>',
         });
 
-        const checkPassword = validatePassword(() => false);
+        const checkPassword = validationUtils.user.validatePassword(() => false, {
+            minLength: 8,
+            maxLength: 44,
+            minLower: 1,
+            minUpper: 1,
+            minDigits: 1,
+            minSymbol: 1,
+        },{
+            passwordMissingOrEmpty:'<fmt:message key="validateUser.errors.PASSWORD_MISSING"/>',
+            passwordTooLong:'<fmt:message key="validateUser.errors.PASSWORD_TOO_LONG"/>',
+            passwordTooShort:'<fmt:message key="validateUser.errors.PASSWORD_TOO_SHORT"/>',
+            passwordInvalid:'<fmt:message key="validateUser.errors.PASSWORD_NOT_VALID"/>',
+        });
 
-        // TODO: move
-        // const checkPassword2 = validatePassword2({
-        //     password2Missing:"<fmt:message key="validateUser.errors.PASSWORD2_MISSING"/>",
-        //     password2NotSame:"<fmt:message key="validateUser.errors.PASSWORD2_NOT_SAME"/>",
-        //
-        // checkPassword2(obj, modifyUserForm, '${FormValidator.FIRST_PWD_KEY}', '${FormValidator.SECOND_PWD_KEY}');
-        // });
-
-        const checkAvatar = validateAvatar(
+        const checkAvatar = validationUtils.user.validateAvatar(
             /.*(jpg|jpeg|png|gif|bmp).*/,
             ["","user.svg", "user-astronaut.svg", "user-ninja.svg", "user-secret.svg"],
             ${FormValidator.MAX_LEN_FILE},
@@ -226,23 +230,21 @@
 
                 checkAvatar(obj, modifyUserForm, '${FormValidator.AVATAR_KEY}', '${FormValidator.AVATAR_IMG_KEY}');
 
-                validationUtils.updateVerifyMessages(modifyUserForm, obj);
-
-                return $.isEmptyObject(obj);
+                return validationUtils.updateVerifyMessages(modifyUserForm, obj);
             }
         }
 
         formUtils.timedChange(modifyUserForm, validation(true));
 
         {
-            const pwdInput = $('[name="${FormValidator.FIRST_PWD_KEY}}"]', modifyUserForm );
+            const pwdInput = $('[name="${FormValidator.FIRST_PWD_KEY}"]', modifyUserForm);
             //visualizza la barra della valutazione di password
             pwdInput.focusin(function () {
-                $(".progress-bar-div").show("slow");
+                $(".progress-bar-div", modifyUserForm).show("slow");
             });
             //nasconde la barra della valutazione di password
             pwdInput.focusout(function () {
-                $(".progress-bar-div").hide("slow");
+                $(".progress-bar-div", modifyUserForm).hide("slow");
             });
 
             pwdInput.on("keyup", function () {
@@ -299,8 +301,7 @@
             }
         });
 
-        modifyUserForm.find('[name="${FormValidator.AVATAR_KEY}"]').change(function(e){
-
+        $('[name="${FormValidator.AVATAR_KEY}"]', modifyUserForm).change(function(e){
             if ($(this).val() === 'custom') {
                 $(".custom-avatar-uploader", modifyUserForm).show("slow");
                 $(".custom-file-input", modifyUserForm).attr("required", "required");
