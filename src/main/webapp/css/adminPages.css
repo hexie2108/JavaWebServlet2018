@@ -1,8 +1,147 @@
+
+
+.admin-page .admin-menu {
+
+        width: 300px;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+
+}
+
+
+
+.admin-page .admin-menu .nav-link{
+        color:white;
+        padding: 1rem;
+        background-color: #17a2b8;
+        transition: .5s;
+}
+
+.admin-page .admin-menu .nav-link:hover{
+
+        background-color: #117a8b;
+}
+
+
+.admin-page .admin-main-container{
+        margin-left: 300px;
+        padding: 2rem;
+}
+
+/*admin home --------------------------------------------------*/
+
+.admin-page .admin-main-container .content{
+
+        border: 1px solid #d0d0d0;
+        padding: 1rem;
+        border-radius: .25rem;
+}
+
+.admin-page .admin-main-container .content .statistics .statistics-head{
+
+        text-align: center;
+}
+.admin-page .admin-main-container .content .statistics .statistics-body .statistics-item{
+
+        border: 1px solid #d0d0d0;
+        padding: 1rem;
+        border-radius: .25rem;
+        width: 47%;
+        display: inline-block;
+        margin: 1%;
+        text-align:  center;
+        vertical-align: top;
+}
+
+.admin-page .admin-main-container .content .statistics .statistics-body .statistics-item .statistics-value{
+        font-size: 2rem;
+        font-weight: bolder;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 .img-table {
-    max-height: 4rem;
-    max-width: 4rem;
-    width: auto;
-    height: auto;
-    display: block;
-    image-orientation: from-image;
+        max-height: 4rem;
+        max-width: 4rem;
+        width: auto;
+        height: auto;
+        display: block;
+        image-orientation: from-image;
+}
+
+
+
+
+
+
+
+/*admin/user.jsp----------------------------------------------------------------*/
+
+#customAvatar:checked ~ #customAvatarImg {
+        display: inline-block;
+}
+
+#customAvatar:not(checked) ~ #customAvatarImg {
+        display: none;
+}
+
+.img-radio:checked ~ .img-check {
+        visibility: visible;
+}
+
+.img-input {
+        width: 3.5rem;
+        height: 3.5rem;
+}
+
+.img-check {
+        margin-left: -1.625rem;
+        z-index: 1;
+        border-radius: 50%;
+
+        color: #00c217;
+        background: white;
+
+        position: absolute;
+
+        margin-top: 0.125rem;
+
+        width: 1.5rem;
+        height: 1.484375rem;
+        font-size: 1.5rem;
+
+        visibility: hidden;
 }

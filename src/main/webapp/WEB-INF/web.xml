@@ -354,25 +354,7 @@
         <url-pattern>/AddUpdateCategoryProductServlet</url-pattern>
     </servlet-mapping>
 
-    <!-- Da togliere ??
-    <servlet>
-        <servlet-name>PrepareAddUpdateListPageServlet</servlet-name>
-        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.PrepareAddUpdateListPageServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>PrepareAddUpdateListPageServlet</servlet-name>
-        <url-pattern>/PrepareAddUpdateListPageServlet</url-pattern>
-    </servlet-mapping>
 
-    <servlet>
-        <servlet-name>PrepareAddUpdateProductServlet</servlet-name>
-        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.PrepareAddUpdateProductPageServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>PrepareAddUpdateProductServlet</servlet-name>
-        <url-pattern>/PrepareAddUpdateProductServlet</url-pattern>
-    </servlet-mapping>
-    -->
 
     <servlet>
         <servlet-name>UpgradeUserToAdminServlet</servlet-name>
@@ -447,6 +429,17 @@
         <servlet-name>UserValidateJS</servlet-name>
         <url-pattern>/js/userValidate.js</url-pattern>
     </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>AdminHomeServlet</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.adminSystem.AdminHomeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminHomeServlet</servlet-name>
+        <url-pattern>/admin/home</url-pattern>
+    </servlet-mapping>
+
 
     <servlet>
         <servlet-name>UsersServlet</servlet-name>
