@@ -242,11 +242,11 @@ public class JSONUsersServlet extends HttpServlet {
 
             // Usa il validator per verifiacare la conformità
             Map<String, String> messages =
-                    RegistrationValidator.partialValidate(userDAO, kv)
+                    UserValidator.partialValidate(userDAO, kv)
                             .entrySet()
                             .stream()
-                            .collect(Collectors.toMap((Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> e.getKey(),
-                                    (Map.Entry<String, RegistrationValidator.ErrorMessage> e) -> RegistrationValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString()
+                            .collect(Collectors.toMap((Map.Entry<String, UserValidator.ErrorMessage> e) -> e.getKey(),
+                                    (Map.Entry<String, UserValidator.ErrorMessage> e) -> UserValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString()
                                     )
                             );
 
