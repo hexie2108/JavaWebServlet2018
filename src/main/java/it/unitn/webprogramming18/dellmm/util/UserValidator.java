@@ -2,19 +2,20 @@ package it.unitn.webprogramming18.dellmm.util;
 
 import it.unitn.webprogramming18.dellmm.db.daos.UserDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
+import org.apache.commons.fileupload.FileItem;
 
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.http.Part;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import javax.mail.internet.AddressException;
 
 /**
  * validatore della registrazione
  */
-public class RegistrationValidator {
+public final class UserValidator {
 
     public static final String FIRST_NAME_KEY = "FirstName",
             LAST_NAME_KEY = "LastName",
@@ -24,6 +25,7 @@ public class RegistrationValidator {
             EMAIL_KEY = "Email",
             AVATAR_KEY = "Avatar",
             AVATAR_IMG_KEY = "AvatarImg";
+
     public static final int MAX_LEN_FILE = 15 * 1000000,
             MIN_LEN_FILE = 0;
 
@@ -31,25 +33,29 @@ public class RegistrationValidator {
     public static final List<String> DEFAULT_AVATARS = Collections.unmodifiableList(Arrays.asList(
             "user.svg",
             "user-astronaut.svg",
-            "user-graduate.svg",
-            "user-md.svg",
             "user-ninja.svg",
             "user-secret.svg"
     ));
+
     public static final String CUSTOM_AVATAR = "custom";
+
     public static final String I18N_ERROR_STRING_PREFIX = "validateUser.errors.";
+
     // --- Configurazioni per la validazione dei campi
-    private static final int FIRST_NAME_MAX_LEN = 44,
+    public static final int FIRST_NAME_MAX_LEN = 44,
             LAST_NAME_MAX_LEN = 44,
             PWD_MAX_LEN = 44,
             EMAIL_MAX_LEN = 44;
-    private static final int PWD_MIN_LEN = 8,
+    public static final int PWD_MIN_LEN = 8,
             PWD_MIN_UPPER = 1,
             PWD_MIN_LOWER = 1,
             PWD_MIN_NUMBER = 1,
             PWD_MIN_SYMBOL = 1;
 
-    // --- Funzioni di validazioneTypeError
+    // Do not permit instantiation
+    private UserValidator(){}
+
+    // --- Funzioni di validazione di supporto
 
     /**
      * verifica il formatto dell'email sia valido
@@ -63,7 +69,7 @@ public class RegistrationValidator {
             InternetAddress addr = new InternetAddress(email);
             addr.validate();
             ris = true;
-        } catch (Exception ignored) {
+        } catch (AddressException ignored) {
         }
 
         return ris;
@@ -79,19 +85,28 @@ public class RegistrationValidator {
      * @return null se valido, altrimenti ErrorMessage
      */
     public static ErrorMessage validateEmail(String email, UserDAO userDAO) {
-        if (email == null || email.isEmpty()) {
+        String pattern = "^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$";
+
+        // Check if email is empty or empty(or only spaces) and if true return an error
+        if (email == null || email.trim().isEmpty()) {
             return ErrorMessage.EMAIL_MISSING;
         }
 
+        // Check if email length is less than maximum and return error if true
         if (email.length() > EMAIL_MAX_LEN) {
             return ErrorMessage.EMAIL_TOO_LONG;
         }
 
-        if (!validateEmailFormat(email)) { // Controllo che la mail abbia un formato valido
+        // Check that mail is a valid email format and is a reasonable email
+        // (not only valid but also exclude some non commonly used types technically valid but not practically used
+        //  for example only top level domain such as a@it b@com)
+        if (!validateEmailFormat(email) || !email.matches(pattern)) {
             return ErrorMessage.EMAIL_NOT_VALID;
-        } else {
+        }
+
+        if(userDAO != null){
             try {
-                if (userDAO != null && userDAO.checkUserRegisteredByEmail(email) != 0) {
+                if (userDAO.checkUserRegisteredByEmail(email) != 0) {
                     return ErrorMessage.EMAIL_ALREADY_USED;
                 }
             } catch (DAOException ignored) {
@@ -109,7 +124,7 @@ public class RegistrationValidator {
      * @return null se valido, altrimenti ErrorMessage
      */
     public static ErrorMessage validateFirstName(String firstName) {
-        if (firstName == null || firstName.isEmpty()) {
+        if (firstName == null || firstName.trim().isEmpty()) {
             return ErrorMessage.FIRST_NAME_MISSING;
         }
 
@@ -127,7 +142,7 @@ public class RegistrationValidator {
      * @return null se valido, altrimenti ErrorMessage
      */
     public static ErrorMessage validateLastName(String lastName) {
-        if (lastName == null || lastName.isEmpty()) {
+        if (lastName == null || lastName.trim().isEmpty()) {
             return ErrorMessage.LAST_NAME_MISSING;
         }
 
@@ -145,7 +160,7 @@ public class RegistrationValidator {
      * @return null se valido, altrimenti ErrorMessage
      */
     public static ErrorMessage validatePassword(String password) {
-        if (password == null || password.isEmpty()) {
+        if (password == null || password.trim().isEmpty()) {
             return ErrorMessage.PASSWORD_MISSING;
         }
 
@@ -170,10 +185,10 @@ public class RegistrationValidator {
         }
 
         if ((password.length() < PWD_MIN_LEN) ||
-                (upper < PWD_MIN_UPPER) ||
-                (lower < PWD_MIN_LOWER) ||
-                (number < PWD_MIN_NUMBER) ||
-                (symbol < PWD_MIN_SYMBOL)) {
+            (upper < PWD_MIN_UPPER) ||
+            (lower < PWD_MIN_LOWER) ||
+            (number < PWD_MIN_NUMBER) ||
+            (symbol < PWD_MIN_SYMBOL)) {
             return ErrorMessage.PASSWORD_NOT_VALID;
         }
 
@@ -191,8 +206,8 @@ public class RegistrationValidator {
     public static ErrorMessage validateSecondPassword(String firstPassword, String secondPassword) {
         if (firstPassword == null
                 || secondPassword == null
-                || firstPassword.isEmpty()
-                || secondPassword.isEmpty()) {
+                || firstPassword.trim().isEmpty()
+                || secondPassword.trim().isEmpty()) {
             return ErrorMessage.PASSWORD2_MISSING;
         }
 
@@ -229,7 +244,7 @@ public class RegistrationValidator {
      */
     public static ErrorMessage validateAvatar(String avatar) {
         // Se avatar è custom allora controllo il file, se nessun controllo segnala errori esco immediatamente
-        if (avatar == null || avatar.isEmpty()) {
+        if (avatar == null || avatar.trim().isEmpty()) {
             return ErrorMessage.AVATAR_MISSING;
         }
 
@@ -247,14 +262,40 @@ public class RegistrationValidator {
      * @param filePart
      * @return
      */
-    public static ErrorMessage validateAvatarImg(Part filePart) {
+    public static ErrorMessage validateCustomAvatarImg(Part filePart) {
         if (filePart == null) {
             return ErrorMessage.AVATAR_IMG_MISSING;
-        } else if (filePart.getSize() <= RegistrationValidator.MIN_LEN_FILE) {
+        }
+
+        if (filePart.getSize() <= UserValidator.MIN_LEN_FILE) {
             return ErrorMessage.AVATAR_IMG_ZERO_DIM;
-        } else if (filePart.getSize() > RegistrationValidator.MAX_LEN_FILE) { // Non permettere dimensioni superiori ai ~15MB
+        }
+
+        if (filePart.getSize() > UserValidator.MAX_LEN_FILE) { // Non permettere dimensioni superiori ai ~15MB
             return ErrorMessage.AVATAR_IMG_TOO_BIG;
-        } else if (!filePart.getContentType().startsWith("image/")) { // Not safe, uses extensions
+        }
+
+        if (!isValidFileExtension(filePart.getContentType())) { // Not safe, uses extensions
+            return ErrorMessage.AVATAR_IMG_NOT_IMG;
+        }
+
+        return null;
+    }
+
+    public static ErrorMessage validateCustomAvatarImg(FileItem filePart) {
+        if (filePart == null) {
+            return ErrorMessage.AVATAR_IMG_MISSING;
+        }
+
+        if (filePart.getSize() <= UserValidator.MIN_LEN_FILE) {
+            return ErrorMessage.AVATAR_IMG_ZERO_DIM;
+        }
+
+        if (filePart.getSize() > UserValidator.MAX_LEN_FILE) { // Non permettere dimensioni superiori ai ~15MB
+            return ErrorMessage.AVATAR_IMG_TOO_BIG;
+        }
+
+        if (!isValidFileExtension(filePart.getContentType())) { // Not safe, uses extensions
             return ErrorMessage.AVATAR_IMG_NOT_IMG;
         }
 
@@ -262,11 +303,27 @@ public class RegistrationValidator {
     }
 
     /**
+     * controlla se il tipo di file corrisponde un tra tipi di file valido
+     *
+     * @param contentType il tipo di file input
+     * @return true se è uno tra tipi file valido, false altrimenti
+     */
+    public static boolean isValidFileExtension(String contentType)  {
+        final String[] validTypes = {"jpg", "jpeg", "png", "gif", "bmp"};
+
+        if (null == contentType || contentType.trim().isEmpty()) {
+            return false;
+        }
+
+        return Arrays.stream(validTypes).anyMatch(contentType::contains);
+    }
+
+    /**
      * filtrare e convalidare hashMap della registrazione
      *
      * @param userDAO DAO per accedere tabella utente
      * @param kv      hashMap della registrazione da filtrare
-     * @return
+     * @return an hashmap that maps an input name and an ErrorMessage
      */
     public static HashMap<String, ErrorMessage> partialValidate(
             UserDAO userDAO,
@@ -341,7 +398,7 @@ public class RegistrationValidator {
         if (kv.containsKey(AVATAR_KEY) && kv.containsKey(AVATAR_IMG_KEY) && kv.get(AVATAR_KEY).equals(CUSTOM_AVATAR)) {
             Part filePart = (Part) kv.get(AVATAR_IMG_KEY);
 
-            ErrorMessage messageValidateAvatarImg = validateAvatarImg(filePart);
+            ErrorMessage messageValidateAvatarImg = validateCustomAvatarImg(filePart);
             if (messageValidateAvatarImg != null) {
                 messages.put(AVATAR_IMG_KEY, messageValidateAvatarImg);
             }
@@ -353,18 +410,17 @@ public class RegistrationValidator {
     /**
      * crea un hashMap per memorizzare tutti i dati della registrazione
      *
-     * @param userDAO
-     * @param firstName
-     * @param lastName
-     * @param email
-     * @param firstPassword
-     * @param secondPassword
-     * @param infPrivacy
-     * @param avatar
-     * @param avatarImg
-     * @return
+     * @param userDAO dao to check that the email is not already used(use null to not check)
+     * @param firstName first name of the user
+     * @param lastName last name of the user
+     * @param email email of the user
+     * @param firstPassword first password
+     * @param secondPassword second password(should be first one repeated)
+     * @param infPrivacy true privacy informative is accepted, false otherwise
+     * @param avatar string that defines the avatar to use("custom" for a custom one or a per-defined set of choices)
+     * @param avatarImg image to validate(if avatar is "custom")
+     * @return an hashmap that maps an input name and an ErrorMessage
      */
-
     public static HashMap<String, ErrorMessage> createValidationMessages(
             UserDAO userDAO,
             String firstName,

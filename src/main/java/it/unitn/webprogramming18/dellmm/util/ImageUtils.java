@@ -1,8 +1,7 @@
 package it.unitn.webprogramming18.dellmm.util;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import javax.imageio.ImageIO;
 
 import net.coobird.thumbnailator.Thumbnails;
@@ -53,7 +52,40 @@ public class ImageUtils {
             builder = Thumbnails.of(image).size(newWidth, newHeight);
         }
         builder.outputFormat("jpg").outputQuality(0.9).toFile(newImg);
-
     }
 
+    private static Thumbnails.Builder convertImg2Build(InputStream istream, int newWidth, int newHeight){
+        // https://github.com/coobird/thumbnailator/issues/24
+        return Thumbnails.of(istream)
+                .crop(Positions.CENTER)
+                .size(newWidth, newHeight)
+                .outputFormat("jpg")
+                .outputQuality(0.9);
+    }
+
+    /**
+     * Function to convert an inputStream that represents an image into a jpg image with specified width and height
+     * using the center of the image(uses a piece as big as possible)
+     * @param istream input stream from which read the image
+     * @param os the stream to output to
+     * @param newWidth the width of the new image
+     * @param newHeight the height of the new image
+     * @throws IOException
+     */
+    public static void convertImg2(InputStream istream, OutputStream os, int newWidth, int newHeight) throws IOException {
+        convertImg2Build(istream, newWidth, newHeight).toOutputStream(os);
+    }
+
+    /**
+     * Function to convert an inputStream that represents an image into a jpg image with specified width and height
+     * using the center of the image(uses a piece as big as possible)
+     * @param istream input stream from which read the image
+     * @param output the file to output to
+     * @param newWidth the width of the new image
+     * @param newHeight the height of the new image
+     * @throws IOException
+     */
+    public static void convertImg2(InputStream istream, File output, int newWidth, int newHeight) throws IOException {
+        convertImg2Build(istream, newWidth, newHeight).toFile(output);
+    }
 }

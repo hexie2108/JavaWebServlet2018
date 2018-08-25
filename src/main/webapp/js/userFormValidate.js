@@ -222,7 +222,7 @@ function validateRegister() {
 
         //check avatar
         //array di avatar 
-        var arrayOfDefaultAvatar = ["user.svg", "user-astronaut.svg", "user-ninja.svg", "user-secret.svg", "custom"];
+        var arrayOfDefaultAvatar = ["user.jpg", "user-astronaut.jpg", "user-ninja.jpg", "user-secret.jpg", "custom"];
         //se è vuoto o è diverso da password
         if (avatar === undefined || arrayOfDefaultAvatar.indexOf(avatar) === -1)
         {

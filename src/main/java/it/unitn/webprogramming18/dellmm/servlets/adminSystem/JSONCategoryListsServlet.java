@@ -6,6 +6,8 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.CategoryList;
 import it.unitn.webprogramming18.dellmm.util.CategoryListValidator;
+import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
+import it.unitn.webprogramming18.dellmm.util.DatatablesUtils;
 import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 
 import javax.servlet.ServletException;
@@ -15,17 +17,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @WebServlet(name = "JSONCategoryListsServlet")
@@ -33,27 +31,16 @@ import java.util.stream.Collectors;
 public class JSONCategoryListsServlet extends HttpServlet {
     private CategoryListDAO categoryListDAO = null;
 
-    private String subImg(HttpServletRequest request, HttpServletResponse response, Path path, String prevImg, Part newImg) throws IOException {
-        String newImgName = UUID.randomUUID().toString();
-
-        try (InputStream fileContent = newImg.getInputStream()) {
-            File file = new File(path.toString(), newImgName.toString());
-            Files.copy(fileContent, file.toPath());
-        } catch (FileAlreadyExistsException ex) { // Molta sfiga
-            ServletUtility.sendError(request, response, 500, "generic.errors.fileCollision");
-            getServletContext().log("File \"" + newImgName.toString() + "\" already exists on the server");
-            return null;
-        } catch (RuntimeException ex) {
-            ServletUtility.sendError(request, response, 500, "generic.errors.unuploudableFile");
-            getServletContext().log("impossible to upload the file", ex);
-            return null;
-        }
-
-        if (prevImg != null) {
-            ServletUtility.deleteFile(path, prevImg, getServletContext());
-        }
-
-        return newImgName;
+    private String subImg(HttpServletRequest request, HttpServletResponse response, Path path, String prevImg, InputStream fileContent) throws IOException {
+        return ServletUtility.insertImage(
+                request,
+                response,
+                path,
+                prevImg,
+                fileContent,
+                ConstantsUtils.IMAGE_OF_CATEGORY_LIST_WIDTH,
+                ConstantsUtils.IMAGE_OF_CATEGORY_LIST_HEIGHT
+        );
     }
 
     private void modifyCategoryList(
@@ -141,8 +128,8 @@ public class JSONCategoryListsServlet extends HttpServlet {
             categoryList.setDescription(description);
         }
 
-        if (img1 != null) {
-            String r = subImg(request, response, path, categoryList.getImg1(), img1);
+        if (img1 != null && img1.getSize() != 0) {
+            String r = subImg(request, response, path, categoryList.getImg1(), img1.getInputStream());
             if (r == null) {
                 return;
             } else {
@@ -154,7 +141,7 @@ public class JSONCategoryListsServlet extends HttpServlet {
             ServletUtility.deleteFile(path, categoryList.getImg2(), getServletContext());
             categoryList.setImg2(null);
         } else if (img2 != null && img2.getSize() != 0) {
-            String r = subImg(request, response, path, categoryList.getImg2(), img2);
+            String r = subImg(request, response, path, categoryList.getImg2(), img2.getInputStream());
             if (r == null) {
                 return;
             } else {
@@ -166,7 +153,7 @@ public class JSONCategoryListsServlet extends HttpServlet {
             ServletUtility.deleteFile(path, categoryList.getImg3(), getServletContext());
             categoryList.setImg3(null);
         } else if (img3 != null && img3.getSize() != 0) {
-            String r = subImg(request, response, path, categoryList.getImg3(), img3);
+            String r = subImg(request, response, path, categoryList.getImg3(), img3.getInputStream());
             if (r == null) {
                 return;
             } else {
@@ -238,15 +225,14 @@ public class JSONCategoryListsServlet extends HttpServlet {
             return;
         }
 
-        String sImg1 = subImg(request, response, path, null, img1);
+        String sImg1 = subImg(request, response, path, null, img1.getInputStream());
         if (sImg1 == null) {
             return;
         }
 
         String sImg2 = null;
         if (img2 != null && img2.getSize() != 0) {
-            System.out.println(img2.getSize());
-            sImg2 = subImg(request, response, path, null, img2);
+            sImg2 = subImg(request, response, path, null, img2.getInputStream());
             if (sImg2 == null) {
                 return;
             }
@@ -254,8 +240,7 @@ public class JSONCategoryListsServlet extends HttpServlet {
 
         String sImg3 = null;
         if (img3 != null && img3.getSize() != 0) {
-            System.out.println(img3.getSize());
-            sImg3 = subImg(request, response, path, null, img3);
+            sImg3 = subImg(request, response, path, null, img3.getInputStream());
             if (sImg3 == null) {
                 return;
             }
@@ -321,17 +306,64 @@ public class JSONCategoryListsServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String id = request.getParameter("id");
+        // Get parameters for ordering(what column)
+        CategoryListDAO.OrderableColumns column;
+
+        { // Used to limit orderBy scope
+            String columnName = DatatablesUtils.getColumnName(request, response);
+            if(columnName == null) {
+                return;
+            }
+
+            // Get column and save as enum, if not valid send error
+            switch (columnName) {
+                case "id":
+                    column = CategoryListDAO.OrderableColumns.ID;
+                    break;
+                case "name":
+                    column = CategoryListDAO.OrderableColumns.NAME;
+                    break;
+                case "description":
+                    column = CategoryListDAO.OrderableColumns.DESCRIPTION;
+                    break;
+                default:
+                    ServletUtility.sendError(request, response, 400, "datatables.errors.columnNameUnrecognized");
+                    return;
+            }
+        }
+
+        // get ordering direction
+        Boolean dir = DatatablesUtils.getDirection(request, response);
+        if(dir == null) {
+            return;
+        }
+
+        // get parameters for pagination
+        Integer iOffset = DatatablesUtils.getOffset(request, response);
+        if (iOffset == null) {
+            return;
+        }
+
+        Integer iLength = DatatablesUtils.getLength(request, response);
+        if (iLength == null) {
+            return;
+        }
+
+        // Get parameters for filtering
+        Integer iId;
         String name = request.getParameter("name");
         String description = request.getParameter("description");
 
-        Integer iId;
-        try {
-            iId = id == null || id.trim().isEmpty() ? null : Integer.parseInt(id);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-            ServletUtility.sendError(request, response, 400, "categoryLists.errors.idNotInt");
-            return;
+        { // Used to limit id scope
+            // Get id, cast it to int, if error during cast send error
+            String id = request.getParameter("id");
+            try {
+                iId = id == null || id.trim().isEmpty() ? null : Integer.parseInt(id);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                ServletUtility.sendError(request, response, 400, "categoryLists.errors.idNotInt");
+                return;
+            }
         }
 
         if (name != null && name.trim().isEmpty()) {
@@ -343,9 +375,22 @@ public class JSONCategoryListsServlet extends HttpServlet {
         }
 
         try {
-            List<CategoryList> categoryLists = categoryListDAO.filter(iId, name, description);
+            List<CategoryList> categoryLists = categoryListDAO.filter(iId, name, description, column,dir ,iOffset ,iLength);
 
-            ServletUtility.sendJSON(request, response, 200, categoryLists);
+            Long totalCount = categoryListDAO.getCount();
+            Long filteredCount = categoryListDAO.getCountFilter(iId, name, description);
+
+            HashMap<String, Object> h = new HashMap<>();
+            h.put("recordsTotal", totalCount);
+            h.put("recordsFiltered", filteredCount);
+            h.put("data", categoryLists);
+
+            ServletUtility.sendJSON(
+                    request,
+                    response,
+                    200,
+                    h
+            );
         } catch (DAOException e) {
             e.printStackTrace();
             ServletUtility.sendError(request, response, 500, "categoryLists.errors.impossibleDbFilter");

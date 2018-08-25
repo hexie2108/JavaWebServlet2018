@@ -198,33 +198,28 @@
                 </div>
 
                 <div class="avatar-group form-group">
-                        <div class="">seleziona avatar:</div>
-                        <div class="">
-                                <c:forEach items="${FormValidator.DEFAULT_AVATARS}" var="av" varStatus="status">
-
-                                        <div class="avatar-box custom-control custom-radio custom-control-inline">
-                                                <input type="radio" class="custom-control-input  img-radio default-avatar" id="avatar-${status.index}" name="${FormValidator.AVATAR_KEY}" value="${av}" ${status.index==0?"checked":""} required="required" />
-                                                <label class="custom-control-label" for="avatar-${status.index}">
-                                                        <img class="img-input img-fluid" src="<c:url value="/image/user/${av}"/>" />
-                                                        <span class="img-check">
+                        <c:forEach items="${FormValidator.DEFAULT_AVATARS}" var="av" varStatus="status">
+                                <div class="avatar-box custom-control custom-radio custom-control-inline">
+                                        <input type="radio" class="custom-control-input  img-radio default-avatar" id="avatar-${status.index}" name="${FormValidator.AVATAR_KEY}" value="${av}" ${status.index==0?"checked":""} required="required" />
+                                        <label class="custom-control-label" for="avatar-${status.index}">
+                                                <img class="img-input img-fluid" src="<c:url value="/image/user/${av}"/>" />
+                                                <span class="img-check">
                                                                 <i class="far fa-check-circle "></i>
                                                         </span>
-                                                </label>
-
-                                        </div>
-
-                                </c:forEach>
-
-                                <div class="avatar-box custom-control custom-radio custom-control-inline">
-                                        <input type="radio" class="custom-control-input  img-radio" id="avatar-custom" name="${FormValidator.AVATAR_KEY}" value="custom"  required="required" />
-                                        <label class="custom-control-label" for="avatar-custom">
-                                                <img class="img-input img-fluid" src="<c:url value="/image/base/custom-avatar.svg"/>" />
-                                                <span class="img-check">
-                                                        <i class="far fa-check-circle "></i>
-                                                </span>
                                         </label>
 
                                 </div>
+                        </c:forEach>
+
+                        <div class="avatar-box custom-control custom-radio custom-control-inline">
+                                <input type="radio" class="custom-control-input  img-radio" id="avatar-custom" name="${FormValidator.AVATAR_KEY}" value="custom"  required="required" />
+                                <label class="custom-control-label" for="avatar-custom">
+                                        <img class="img-input img-fluid" src="<c:url value="/image/base/custom-avatar.svg"/>" />
+                                        <span class="img-check">
+                                                        <i class="far fa-check-circle "></i>
+                                                </span>
+                                </label>
+
                         </div>
                         <div class="error-messages error-avatar">
 

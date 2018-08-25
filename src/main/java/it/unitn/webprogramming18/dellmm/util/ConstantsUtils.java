@@ -46,7 +46,7 @@ public class ConstantsUtils {
     public static final int IMAGE_OF_LIST_HEIGHT = 1000;
 
     public static final int IMAGE_OF_CATEGORY_LIST_WIDTH = 1000;
-    public static final int MAGE_OF_CATEGORY_LIST_HEIGHT = 1000;
+    public static final int IMAGE_OF_CATEGORY_LIST_HEIGHT = 1000;
 
     public static final int IMAGE_OF_PRODUCT_WIDTH = 1000;
     public static final int IMAGE_OF_PRODUCT_HEIGHT = 1000;

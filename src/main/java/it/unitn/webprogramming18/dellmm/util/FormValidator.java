@@ -4,10 +4,8 @@ import it.unitn.webprogramming18.dellmm.db.daos.UserDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 
 import javax.mail.internet.InternetAddress;
-import javax.servlet.http.Part;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import javax.mail.internet.AddressException;
 import org.apache.commons.fileupload.FileItem;
@@ -15,9 +13,7 @@ import org.apache.commons.fileupload.FileItem;
 /**
  * validatore della registrazione
  */
-public class FormValidator
-{
-
+public class FormValidator {
         public static final String FIRST_NAME_KEY = "FirstName",
                     LAST_NAME_KEY = "LastName",
                     INF_PRIVACY_KEY = "InfPrivacy",
@@ -75,20 +71,8 @@ public class FormValidator
          * @param value valore da valutare
          * @return return true valido | false non valido
          */
-        public static boolean validateGeneralInput(String value)
-        {
-
-                boolean ris = true;
-                if (value == null || value.isEmpty())
-                {
-                        ris = false;
-                }
-
-                else if (value.length() > GENERAL_INPUT_MAX_LEN)
-                {
-                        ris = false;
-                }
-                return ris;
+        public static boolean validateGeneralInput(String value) {
+            return ValidatorUtils.validateString(value, GENERAL_INPUT_MAX_LEN) == null;
         }
 
         /**
@@ -97,17 +81,13 @@ public class FormValidator
          * @param email String di email da verificare
          * @return true valido | false non valido
          */
-        private static boolean validateEmailFormat(String email)
-        {
+        private static boolean validateEmailFormat(String email) {
                 boolean ris = true;
 
-                try
-                {
+                try {
                         InternetAddress addr = new InternetAddress(email);
                         addr.validate();
-                }
-                catch (AddressException ex)
-                {
+                } catch (AddressException ex) {
                         ris = false;
                 }
 
@@ -125,15 +105,11 @@ public class FormValidator
         {
                  boolean ris = true;
                 //controlla la sua esistenza
-                try
-                {
-                        if (userDAO != null && userDAO.checkExistenceOfEmail(email))
-                        {
+                try {
+                        if (userDAO != null && userDAO.checkExistenceOfEmail(email)) {
                                 ris = false;
                         }
-                }
-                catch (DAOException ignored)
-                {
+                } catch (DAOException ignored) {
                        ris = false;
                 }
                 return ris;
@@ -145,28 +121,8 @@ public class FormValidator
          * @param email String di email da verificare
          * @return true valido | false non valido
          */
-        public static boolean validateEmail(String email)
-        {
-                String pattern = "^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$";
-                boolean ris = true;
-
-                if (email == null || email.isEmpty())
-                {
-                        ris = false;
-                }
-
-                else if (email.length() > EMAIL_MAX_LEN)
-                {
-                        ris = false;
-                }
-
-                else if (!validateEmailFormat(email) || !email.matches(pattern))
-                {
-                        //se il formato non è valido
-                        ris = false;
-                }
-
-                return ris;
+        public static boolean validateEmail(String email) {
+                return UserValidator.validateEmail(email, null) == null;
         }
 
         /**
@@ -175,20 +131,8 @@ public class FormValidator
          * @param firstName String da verificare
          * @return true valido | false non valido
          */
-        public static boolean validateFirstName(String firstName)
-        {
-                boolean ris = true;
-                if (firstName == null || firstName.isEmpty())
-                {
-                        ris = false;
-                }
-
-                else if (firstName.length() > FIRST_NAME_MAX_LEN)
-                {
-                        ris = false;
-                }
-
-                return ris;
+        public static boolean validateFirstName(String firstName) {
+            return UserValidator.validateFirstName(firstName) == null;
         }
 
         /**
@@ -197,21 +141,8 @@ public class FormValidator
          * @param lastName String da verificare
          * @return true valido | false non valido
          */
-        public static boolean validateLastName(String lastName)
-        {
-                boolean ris = true;
-
-                if (lastName == null || lastName.isEmpty())
-                {
-                        ris = false;
-                }
-
-                else if (lastName.length() > LAST_NAME_MAX_LEN)
-                {
-                        ris = false;
-                }
-
-                return ris;
+        public static boolean validateLastName(String lastName) {
+                return UserValidator.validateLastName(lastName) == null;
         }
 
         /**
@@ -220,58 +151,8 @@ public class FormValidator
          * @param password String da verificare
          * @return true valido | false non valido
          */
-        public static boolean validatePassword(String password)
-        {
-                boolean ris = true;
-
-                if (password == null || password.isEmpty())
-                {
-                        ris = false;
-                }
-
-                else if (password.length() > PWD_MAX_LEN || password.length() < PWD_MIN_LEN)
-                {
-                        ris = false;
-                }
-                else
-                {
-                        //controlla se contiene un minuscolo, un maiuscolo, un numero , un simbolo
-
-                        int upper = 0;
-                        int lower = 0;
-                        int number = 0;
-                        int symbol = 0;
-
-                        for (int i = 0; i < password.length(); i++)
-                        {
-                                if (Character.isLowerCase(password.charAt(i)))
-                                {
-                                        lower++;
-                                }
-                                else if (Character.isUpperCase(password.charAt(i)))
-                                {
-                                        upper++;
-                                }
-                                else if (Character.isDigit(password.charAt(i)))
-                                {
-                                        number++;
-                                }
-                                else if (!Character.isWhitespace(password.charAt(i)))
-                                {
-                                        symbol++;
-                                }
-                        }
-
-                        if ((upper < PWD_MIN_UPPER)
-                                    || (lower < PWD_MIN_LOWER)
-                                    || (number < PWD_MIN_NUMBER)
-                                    || (symbol < PWD_MIN_SYMBOL))
-                        {
-                                ris = false;
-                        }
-                }
-
-                return ris;
+        public static boolean validatePassword(String password) {
+            return UserValidator.validatePassword(password) == null;
         }
 
         /**
@@ -280,23 +161,8 @@ public class FormValidator
          * @param avatar String di avatar
          * @return true valido | false non valido
          */
-        public static boolean validateAvatar(String avatar)
-        {
-                boolean ris = true;
-
-                // Se avatar è custom allora controllo il file, se nessun controllo segnala errori esco immediatamente
-                if (avatar == null || avatar.isEmpty())
-                {
-                        ris = false;
-                }
-
-                // Se avatar non è custom controllo se è tra i valori permessi
-                else if (!avatar.equals(CUSTOM_AVATAR) && DEFAULT_AVATARS.stream().noneMatch(avatar::equals))
-                {
-                        ris = false;
-                }
-
-                return ris;
+        public static boolean validateAvatar(String avatar) {
+            return UserValidator.validateAvatar(avatar) == null;
         }
 
         /**
@@ -305,30 +171,8 @@ public class FormValidator
          * @param fileItem
          * @return true valido | false non valido
          */
-        public static boolean validateCustomAvatarImg(FileItem fileItem)
-        {
-                boolean ris = true;
-
-                if (fileItem == null)
-                {
-                        ris = false;
-                }
-                else if (fileItem.getSize() <= FormValidator.MIN_LEN_FILE)
-                {
-                        ris = false;
-                }
-                else if (fileItem.getSize() > FormValidator.MAX_LEN_FILE)
-                {
-                        // Non permettere dimensioni superiori ai ~15MB
-                        ris = false;
-                }
-                //controlla il tipo di file
-                else if (!isValidFileExtension(fileItem.getContentType()))
-                {
-                        ris = false;
-                }
-
-                return ris;
+        public static boolean validateCustomAvatarImg(FileItem fileItem) {
+            return UserValidator.validateCustomAvatarImg(fileItem) == null;
         }
 
         /**
@@ -337,26 +181,8 @@ public class FormValidator
          * @param contentType il tipo di file input
          * @return true se è uno tra tipi file valido, false altrimenti
          */
-        public static boolean isValidFileExtension(String contentType)
-        {
-                String[] allowTypes = new String[]
-                {
-                        "jpg", "jpeg", "png", "gif", "bmp"
-                };
-                if (null == contentType || "".equals(contentType))
-                {
-                        return false;
-                }
-                for (String type : allowTypes)
-                {
-                        if (contentType.contains(type))
-                        {
-                                return true;
-                        }
-                }
-
-                return false;
-
+        public static boolean isValidFileExtension(String contentType) {
+                return UserValidator.isValidFileExtension(contentType);
         }
 
 }

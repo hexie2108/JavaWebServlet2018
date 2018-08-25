@@ -119,18 +119,41 @@ public interface UserDAO extends DAO<User, Integer> {
          */
         public User generateUser(String first_name, String last_name, String email, String password, String imageName, boolean acceptedPrivacy) throws DAOException;
 
+    public enum OrderableColumns{
+        ID,
+        NAME,
+        SURNAME,
+        EMAIL,
+        ADMIN
+    }
+
     /**
-     * Filter the users
-     *
+     * Get filtered list based on conditions
      * @param id      integer which as string is substring of user id
      * @param email   string which is substring of user email
      * @param name    string which is substring of user name
      * @param surname string which is substring of user surname
      * @param isAdmin true for admin, false for regular users, null for both
+     * @param orderBy column by which data is ordered
+     * @param dir     direction in which the data is ordered(true for ascendent, false for descendent)
+     * @param offset  index of start of data
+     * @param count   number of objects to get
      * @return List of users that respect the conditions
      * @throws DAOException
      */
-    public List<User> filter(Integer id, String email, String name, String surname, Boolean isAdmin) throws DAOException;
+    public List<User> filter(Integer id, String email, String name, String surname, Boolean isAdmin, OrderableColumns orderBy, Boolean dir, Integer offset, Integer count) throws DAOException;
+
+    /**
+     * Get number of object obtained with filer function without the number limit for objects
+     * @param id      integer which as string is substring of user id
+     * @param email   string which is substring of user email
+     * @param name    string which is substring of user name
+     * @param surname string which is substring of user surname
+     * @param isAdmin true for admin, false for regular users, null for both
+     * @return number of objects that respects the conditions
+     * @throws DAOException
+     */
+    public Long getCountFilter(Integer id, String email, String name, String surname, Boolean isAdmin) throws DAOException;
 
         /**
          * Delete user

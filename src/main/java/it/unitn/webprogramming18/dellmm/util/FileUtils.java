@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 import javax.servlet.ServletException;
 
@@ -17,15 +18,10 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
  * @author mikuc
  */
 public class FileUtils {
-
-    // il nome del file temporali
-    private static final String TEMPORALY_FILE_NAME = "temp";
     // size
     private static final int MEMORY_THRESHOLD = 1024 * 1024 * 3;  // 3MB
     private static final int MAX_FILE_SIZE = 1024 * 1024 * 40; // 40MB
     private static final int MAX_REQUEST_SIZE = 1024 * 1024 * 50; // 50MB
-    //formattare la data
-    private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssS");
 
     /**
      * passando l'oggetto file della richiesta, lo ridimensiona e salva su
@@ -40,7 +36,6 @@ public class FileUtils {
      * @throws IOException
      */
     public static String upload(FileItem item, String uploadPath, int width, int height) throws ServletException, IOException {
-
         //crea oggetto file per il percorso
         File uploadDir = new File(uploadPath);
         // se percorso non esiste, crearlo
@@ -50,38 +45,12 @@ public class FileUtils {
             }
         }
 
-        String fileName = null;
-
-        File oldFile = null;
-
-                //get il nome originale di file
-                fileName = new File(item.getName()).getName();
-
-        //combina i percorsi completi e genera due oggetti file
-        oldFile = new File(uploadPath + File.separator + TEMPORALY_FILE_NAME);
-
-        try {
-            //salva file nell'oggetto oldFile temporale
-            item.write(oldFile);
-        } catch (Exception ex) {
-            throw new ServletException(ex.getMessage(), ex);
-        }
-        //ritorna il nome del nuovo file
-        return convertJPG(oldFile, uploadPath, width, height);
-
-    }
-
-    public static String convertJPG(File oldFile, String uploadPath, int width, int height) throws IOException {
-        //genera un nuovo nome per file in base annoMeseGiornoMinutoSecondoMillisecondo
-        String newName = sdf.format(new Date()) + ".jpg";
+        //genera un nuovo nome per file in base a UUID
+        String newName = UUID.randomUUID() + ".jpg";
 
         File newFile = new File(uploadPath + File.separator + newName);
         //ridimensione e genera il nuovo file
-        ImageUtils.convertImg(oldFile, newFile, width, height);
-        //cancella il file temporale
-        if (!oldFile.delete()) {
-            throw new IOException("non riesce eliminare il file temporaneo");
-        }
+        ImageUtils.convertImg2(item.getInputStream(), newFile, width, height);
 
         return newName;
     }
@@ -93,10 +62,8 @@ public class FileUtils {
      * @throws IOException
      */
     public static void deleteFile(String filePath) throws IOException {
-
         File file = new File(filePath);
         file.delete();
-
     }
 
 

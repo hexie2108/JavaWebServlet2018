@@ -1,5 +1,3 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
 <%@ page import="it.unitn.webprogramming18.dellmm.util.CategoryListValidator" %>
 
 <div class="modal fade" id="modifyCategoryListModal">
@@ -25,7 +23,9 @@
                                         key="categoryList.label.name"/></span></div>
                                 <input id="input${CategoryListValidator.NAME_KEY}" class="form-control" placeholder=""
                                        autofocus="" type="text" name="${CategoryListValidator.NAME_KEY}">
-                                <span id="span${CategoryListValidator.NAME_KEY}"></span>
+                            </div>
+                            <div class="error-messages">
+                                <p id="span${CategoryListValidator.NAME_KEY}"></p>
                             </div>
                         </div>
                     </div>
@@ -39,7 +39,9 @@
                                         key="categoryList.label.description"/></span></div>
                                 <textarea id="input${CategoryListValidator.DESCRIPTION_KEY}" class="form-control"
                                           name="${CategoryListValidator.DESCRIPTION_KEY}" rows="4"></textarea>
-                                <span id="span${CategoryListValidator.DESCRIPTION_KEY}"></span>
+                            </div>
+                            <div class="error-messages">
+                                <p id="span${CategoryListValidator.DESCRIPTION_KEY}"></p>
                             </div>
                         </div>
                     </div>
@@ -61,7 +63,9 @@
                                         &times;
                                     </button>
                                 </div>
-                                <span id="span${CategoryListValidator.IMG1_KEY}"></span>
+                            </div>
+                            <div class="error-messages">
+                                <p id="span${CategoryListValidator.IMG1_KEY}"></p>
                             </div>
                         </div>
                     </div>
@@ -90,7 +94,9 @@
                                     <button class="btn btn-danger input-group-text del-btn" type="button"><i
                                             class="fas fa-trash-alt"></i></button>
                                 </div>
-                                <span id="span${CategoryListValidator.IMG2_KEY}"></span>
+                            </div>
+                            <div class="error-messages">
+                                <p id="span${CategoryListValidator.IMG2_KEY}"></p>
                             </div>
                         </div>
                     </div>
@@ -117,15 +123,13 @@
                                     <button class="btn btn-danger input-group-text del-btn" type="button"><i
                                             class="fas fa-trash-alt"></i></button>
                                 </div>
-                                <span id="span${CategoryListValidator.IMG3_KEY}"></span>
+                            </div>
+                            <div class="error-messages">
+                                <p id="span${CategoryListValidator.IMG3_KEY}"></p>
                             </div>
                         </div>
                     </div>
-
                 </form>
-
-                <div class="alert d-none" id="id-modal-res">
-                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal"><fmt:message
@@ -136,4 +140,210 @@
         </div>
     </div>
 </div>
+<script>
+    function initCategoryListModal(table) {
+        const categoryListModal = $('#modifyCategoryListModal');
+        const categoryListForm = categoryListModal.find('#modifyCategoryListForm');
+        const modalUrlJson = '<c:url value="/admin/categoryLists.json"/>';
 
+        categoryListModal.on('show.bs.modal', function (e) {
+            // Clear validation messages
+            validationUtils.clearVerifyMessages(categoryListForm);
+
+            // Reset values
+            categoryListForm[0].reset();
+            categoryListForm.find('input').val("");
+            categoryListForm.find('input[type="text"]').html("");
+
+            // Get action from the data-action in the clicked button
+            const action = $(e.relatedTarget).data('action');
+
+            // Get data-json from the row that contains the clicked button
+            const data = $(e.relatedTarget).closest('tr').data('json');
+
+            let titleLabel;
+            let submitLabel;
+
+            // Set values
+            const realData = {};
+            if (action === 'modify') {
+                realData.id = data.id;
+                realData.name = data.name;
+                realData.description = data.description;
+                realData.img1 = data.img1;
+                realData.img2 = data.img2;
+                realData.img3 = data.img3;
+
+                titleLabel = "<fmt:message key="categoryLists.label.modifyForm.title"/>";
+                submitLabel = "<fmt:message key="categoryLists.label.modifyForm.submit"/>";
+
+            } else if (action === 'create' || action === 'reset') {
+                realData.id = '';
+                realData.name = '';
+                realData.description = '';
+                realData.img1 = undefined;
+                realData.img2 = undefined;
+                realData.img3 = undefined;
+
+                titleLabel = "<fmt:message key="categoryLists.label.createForm.title"/>";
+                submitLabel = "<fmt:message key="categoryLists.label.createForm.submit"/>";
+            } else {
+                console.error("Action not recognized");
+                return;
+            }
+
+            // Set text of title and submit button
+            $('#modifyCategoryListFormSub', categoryListModal).html(submitLabel);
+            $('.modal-title', categoryListModal).html(titleLabel);
+
+            // Set action to do
+            $('input[name="action"]', categoryListForm).val(action);
+
+            // Set values
+            $('input[name="id"]', categoryListForm).val(realData.id);
+            $('input[name="${CategoryListValidator.NAME_KEY}"]', categoryListForm).attr('placeholder', realData.name);
+            $('textarea[name="${CategoryListValidator.DESCRIPTION_KEY}"]', categoryListForm).attr('placeholder', realData.description);
+
+            // Get images
+            const divImg1 = $('#divImg1', categoryListForm);
+            const divImg2 = $('#divImg2', categoryListForm);
+            const divImg3 = $('#divImg3', categoryListForm);
+
+            // Set source of the image(or empty image if img is undefined)
+            $('> img', divImg1).attr("src", realData.img1 || "");
+            $('> img', divImg2).attr("src", realData.img2 || "");
+            $('> img', divImg3).attr("src", realData.img3 || "");
+
+            const m = {
+                'img2': $('> div > .input-group', divImg2),
+                'img3': $('> div > .input-group', divImg3)
+            };
+
+            $.each(m, function (key, value) {
+                if (realData[key]) {
+                    value.find('> .input-group-append, > input').show();
+                    value.find('> button.ins-btn').hide();
+                } else {
+                    value.find('> .input-group-append, > input').hide();
+                    value.find('> button.ins-btn').show();
+                }
+            });
+
+            // Trigger validation using event change
+            $('input[name="${CategoryListValidator.NAME_KEY}"]', categoryListForm).trigger('change');
+
+        });
+
+        const isCreate = (form, name) => {
+            return form.find('[name="action"]').val() === 'create';
+        };
+
+        const requiredImg = (form, name) => {
+            return form.find('[name="action"]').val() === 'create' && name === '${CategoryListValidator.IMG1_KEY}';
+        };
+
+        const checkFiles = validationUtils.validateFile(
+            /.*(jpg|jpeg|png|gif|bmp).*/,
+            ${CategoryListValidator.MAX_LEN_FILE},
+            requiredImg, {
+                fileEmptyOrNull: "<fmt:message key="validateCategoryList.errors.IMG_MISSING"/>",
+                fileTooBig: "<fmt:message key="validateCategoryList.errors.IMG_TOO_BIG"/>",
+                fileContentTypeMissingOrType: "<fmt:message key="validateCategoryList.errors.IMG_CONTENT_TYPE_MISSING"/>",
+                fileOfWrongType: "<fmt:message key="validateCategoryList.errors.IMG_NOT_IMG"/>",
+            }
+        );
+
+        const checkName = validationUtils.validateString(
+            ${CategoryListValidator.NAME_MAX_LEN},
+            isCreate, {
+                emptyOrNull: "<fmt:message key="validateCategoryList.errors.NAME_MISSING"/>",
+                tooLong: "<fmt:message key="validateCategoryList.errors.NAME_TOO_LONG"/>",
+            }
+        );
+
+        const checkDescription = validationUtils.validateString(
+            ${CategoryListValidator.DESCRIPTION_MAX_LEN},
+            isCreate, {
+                emptyOrNull: "<fmt:message key="validateCategoryList.errors.DESCRIPTION_MISSING"/>",
+                tooLong: "<fmt:message key="validateCategoryList.errors.DESCRIPTION_TOO_LONG"/>",
+            }
+        );
+
+        $.each(categoryListForm.find('.file-input'), function (index, value) {
+            const k = $(value);
+            k.find('+ div').find('>button.clear-btn').click(function () {
+                k.val("");
+            });
+        });
+
+        categoryListForm.find('.input-group button.ins-btn').click(function () {
+            const iGr = $(this).parent();
+
+            $('> .input-group-append, > input', iGr).show();
+            $('> button.ins-btn', iGr).hide();
+
+            iGr.parent().find('input[type="hidden"]').val("");
+        });
+
+        categoryListForm.find('.input-group button.del-btn').click(function () {
+            const iGr = $(this).parent().parent();
+
+            $('> .input-group-append, > input', iGr).val("");
+            $('> .input-group-append, > input', iGr).hide();
+            $('> button.ins-btn', iGr).show();
+
+            iGr.parent().find('input[type="hidden"]').val("delete");
+        });
+
+        categoryListForm.find('button.clear-btn, button.del-btn, button.ins-btn').click(function () {
+            // Trigger update
+            $('input[name="${CategoryListValidator.NAME_KEY}"]', categoryListForm).trigger('change');
+        });
+
+
+        function validate(){
+            const obj = {};
+
+            checkName(obj, categoryListForm, "${CategoryListValidator.NAME_KEY}");
+            checkDescription(obj, categoryListForm, "${CategoryListValidator.DESCRIPTION_KEY}");
+
+            checkFiles(obj, categoryListForm, '${CategoryListValidator.IMG1_KEY}');
+            checkFiles(obj, categoryListForm, '${CategoryListValidator.IMG2_KEY}');
+            checkFiles(obj, categoryListForm, '${CategoryListValidator.IMG3_KEY}');
+
+            return validationUtils.updateVerifyMessages(categoryListForm, obj)
+        }
+
+        formUtils.timedChange(categoryListForm, validate);
+
+        categoryListForm.submit(function (e) {
+            e.preventDefault();
+
+            if (validate()) {
+                validationUtils.formSubmitWithValidation(
+                    modalUrlJson,
+                    categoryListForm, {
+                        multipart: true,
+                        session: true,
+                        redirectUrl: null,
+                        successAlert: {
+                            title: "<fmt:message key="generic.label.successTitle"/>",
+                            message: "<fmt:message key="generic.text.success"/>",
+                            closeLabel: "<fmt:message key="generic.label.close"/>"
+                        },
+                        failAlert: {
+                            title: "<fmt:message key="generic.label.errorTitle"/>",
+                            message: "<fmt:message key="generic.errors.unknownError"/>",
+                            closeLabel: "<fmt:message key="generic.label.close"/>"
+                        },
+                        successCallback: function () {
+                            table.ajax.reload();
+                            table.draw();
+                            categoryListModal.modal('toggle');
+                        }
+                    }
+                );
+            }
+        });
+    }
+</script>

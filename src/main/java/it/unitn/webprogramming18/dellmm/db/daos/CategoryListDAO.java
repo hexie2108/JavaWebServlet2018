@@ -65,16 +65,36 @@ public interface CategoryListDAO extends DAO<CategoryList, Integer> {
     public CategoryList update(CategoryList categoryList) throws DAOException;
 
 
+    public enum OrderableColumns{
+        ID,
+        NAME,
+        DESCRIPTION
+    }
+
     /**
      * Filter the categoryList with the conditions passed(null for none, always search for substring not whole string)
      *
      * @param id          substring of the ids to search
      * @param name        substring of the names to search
      * @param description substring of the descriptions to search
+     * @param orderBy     column that you are ordering for
+     * @param dir         direction of the sort(true: ascendent, false: descendent)
+     * @param offset      offset from which read
+     * @param count       count of the objects to retrive
      * @return The filtered list
      * @throws DAOException
      */
-    public List<CategoryList> filter(Integer id, String name, String description) throws DAOException;
+    public List<CategoryList> filter(Integer id, String name, String description, OrderableColumns orderBy, Boolean dir, Integer offset, Integer count) throws DAOException;
+
+    /**
+     * Get a count of all categoryLists with the condition passed(without the limit of length of filter function)
+     * @param id          substring of the ids to search
+     * @param name        substring of the names to search
+     * @param description substring of the descriptions to search
+     * @return number of categoryLists that respects the conditions passed
+     * @throws DAOException
+     */
+    public Long getCountFilter(Integer id, String name, String description) throws DAOException;
 
     /**
      * Delete the categoryList with specified id

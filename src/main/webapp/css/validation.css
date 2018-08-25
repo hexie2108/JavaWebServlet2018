@@ -1,0 +1,48 @@
+.is-invalid ~ div.input-group-prepend > .input-group-text {
+    border-color: var(--danger) !important;
+}
+
+.is-invalid ~ div.input-group-append > .input-group-text {
+    border-color: var(--danger) !important;
+}
+
+.error-messages p{
+    display: none;
+    color: red;
+    padding: .5rem;
+    margin: 0;
+}
+
+.modal.modal-danger .modal-header {
+    background: var(--danger);
+    color: var(--white);
+}
+
+.modal.modal-danger .modal-content {
+    border-color: var(--danger);
+}
+
+.modal.modal-success .modal-header {
+    background: var(--success);
+    color: var(--white);
+}
+
+.modal.modal-success .modal-content {
+    border-color: var(--success);
+}
+
+
+.form-error-alert {
+    display: none;
+}
+
+.progress.progress-bar-div {
+    margin-top: 1rem;
+    display: none;
+}
+
+.progress.progress-bar-div .progress-bar{
+    height: 100%;
+    width: 0;
+}
+

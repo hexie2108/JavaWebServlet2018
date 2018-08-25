@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<%@ include file="header.jsp" %>
+<%@ include file="header.jsp"%>
 
 <div class="content">
     <form method="GET" id="filterForm"></form>
@@ -9,13 +9,11 @@
         <table class="table dt-responsive nowrap w-100" id="categoryTable">
             <thead>
             <tr>
-                <th><fmt:message key="categoryList.label.id"/></th>
-                <th><fmt:message key="categoryList.label.name"/></th>
-                <th><fmt:message key="categoryList.label.description"/></th>
-                <th><fmt:message key="categoryList.label.img1"/></th>
-                <th><fmt:message key="categoryList.label.img2"/></th>
-                <th><fmt:message key="categoryList.label.img3"/></th>
-                <th><fmt:message key="generic.label.actions"/></th>
+                <th><fmt:message key="categoryProduct.label.id"/></th>
+                <th><fmt:message key="categoryProduct.label.logo"/></th>
+                <th><fmt:message key="categoryProduct.label.name"/></th>
+                <th><fmt:message key="categoryProduct.label.description"/></th>
+                <th><fmt:message key="categoryProducts.label.actions"/></th>
             </tr>
             </thead>
             <tbody>
@@ -23,24 +21,22 @@
             <tfoot>
             <tr>
                 <td><input class="form-control" type="number" name="id" form="filterForm" value="${param['id']}"/></td>
+                <td></td>
                 <td><input class="form-control" type="text" name="name" form="filterForm" value="${param['name']}"/></td>
                 <td><input class="form-control" type="text" name="description" form="filterForm"
                            value="${param['description']}"/></td>
-                <td></td>
-                <td></td>
-                <td></td>
                 <td>
-                    <button class="btn btn-primary" id="btnNewCategoryList" data-toggle="modal"
-                            data-target="#modifyCategoryListModal" data-action="create"><i class="fas fa-plus"></i></button>
+                    <button class="btn btn-primary" id="btnNewCategoryProduct" data-toggle="modal"
+                            data-target="#categoryProductModal" data-action="create"><i class="fas fa-plus"></i></button>
                 </td>
             </tr>
             </tfoot>
         </table>
-        <div class="alert alert-danger d-none" id="id-res">
+        <div class="alert alert-danger form-error-alert" id="id-res">
         </div>
     </div>
 
-    <%@include file="modules/modifyCategoryList.jsp" %>
+    <%@include file="modules/modifyCategoryProduct.jsp" %>
 </div>
 
 <!-- Custom verification utilities -->
@@ -55,18 +51,18 @@
     $(document).ready(function () {
         const tableDiv = $('#categoryTable');
 
-        const prefixUrl = '<c:url value="/${pageContext.servletContext.getInitParameter('categoryListImgsFolder')}/"/>';
-        const CATEGORY_LIST_MODAL_ID = '#modifyCategoryListModal';
+        const prefixUrl = '<c:url value="/${pageContext.servletContext.getInitParameter('categoryProductImgsFolder')}/"/>';
+        const CATEGORY_PRODUCT_MODAL_ID = '#categoryProductModal';
 
         const unknownErrorMessage = "<fmt:message key="generic.errors.unknownError"/>";
 
-        function deleteCategoryList(e) {
+        function deleteCategoryProduct(e) {
             const data = $(e.currentTarget).closest('tr').data('json');
 
             formUtils.ajaxButton(
-                '<c:url value="/admin/categoryLists.json"/>', {
-                    'action': 'delete',
-                    'id': data.id
+                '<c:url value="/admin/categoryProducts.json"/>', {
+                    action: 'delete',
+                    id: data.id
                 }, function(){
                     table.ajax.reload();
                     table.draw();
@@ -82,9 +78,7 @@
             $(row).data('json', data);
 
             const map = {
-                3: 'img1',
-                4: 'img2',
-                5: 'img3'
+                1: 'img',
             };
 
             $.each(map, function (key, val) {
@@ -94,29 +88,27 @@
                             src: prefixUrl + data[val],
                             class: "img-responsive img-table"
                         })
-                    );
+                    )
                 }
             });
 
-            $('td', row).eq(6).html(
+            $('td', row).eq(4).html(
                 $('<div/>', {
-                    class: 'btn-group',
                     html: [
                         $('<button/>', {
                             class: 'btn btn-md btn-primary',
-                            title: "<fmt:message key="categoryLists.label.modifyCategoryList"/>",
+                            title: "<fmt:message key="categoryProducts.label.modifyCategoryProduct"/>",
                             html: $('<i/>', {class: 'far fa-edit'}),
                             'data-toggle': 'modal',
-                            'data-target': CATEGORY_LIST_MODAL_ID,
+                            'data-target': CATEGORY_PRODUCT_MODAL_ID,
                             'data-action': 'modify',
                             type: 'button',
                         }),
                         $('<button/>', {
                             class: 'btn btn-md btn-danger',
-                            title: "<fmt:message key="categoryLists.label.deleteCategoryList"/>",
+                            title: "<fmt:message key="categoryProducts.label.deleteCategoryProduct"/>",
                             html: $('<i/>', {class: 'far fa-trash-alt'}),
-                            click: deleteCategoryList,
-                            type: 'button'
+                            click: deleteCategoryProduct
                         }),
                     ]
                 })
@@ -145,7 +137,7 @@
 
         const table = tableDiv.DataTable({
             ajax: {
-                url: '<c:url value="/admin/categoryLists.json"/>',
+                url: '<c:url value="/admin/categoryProducts.json"/>',
                 dataType: "json",
                 type: "get",
                 cache: "false",
@@ -169,28 +161,18 @@
                     name: 'id'
                 }, {
                     target: 1,
-                    data: 'name',
-                    name: 'name'
+                    data: 'img',
+                    orderable: false
                 }, {
                     target: 2,
+                    data: 'name',
+                    name: 'name',
+                }, {
+                    target: 3,
                     data: 'description',
                     name: 'description'
                 }, {
-                    target: 3,
-                    data: 'img1',
-                    orderable: false,
-                }, {
                     target: 4,
-                    data: 'img2',
-                    orderable: false,
-                    defaultContent: '',
-                }, {
-                    target: 5,
-                    data: 'img3',
-                    orderable: false,
-                    defaultContent: '',
-                }, {
-                    target: 6,
                     data: null,
                     orderable: false,
                     defaultContent: '',
@@ -200,10 +182,11 @@
             searching: false
         });
 
+
         formUtils.timedChange(
-            $('tfoot', tableDiv),
+            tableDiv.find('tfoot'),
             function () {
-                history.replaceState(undefined, undefined, "categoryLists?" + $('tfoot', tableDiv).find('input,select').serialize());
+                history.replaceState(undefined, undefined, "categoryProducts?" + tableDiv.find('tfoot').find('input,select').serialize());
                 table.ajax.reload();
                 table.draw();
             }
@@ -211,8 +194,8 @@
 
         $.fn.dataTable.ext.errMode = 'throw';
 
-        initCategoryListModal(table);
+        initCategoryProductModal(table);
     });
 </script>
 
-<%@ include file="footer.jsp"%>
+<%@include file="footer.jsp"%>

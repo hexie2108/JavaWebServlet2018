@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="<c:url value="/css/userPages.css"/>">
 </head>
 <body>
-<%@ include file="../jspf/i18n_switcher.jsp"%>
+<%@ include file="../../jspf/i18n_switcher.jsp"%>
 <nav class="navbar navbar-default navbar-static-top">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -96,7 +96,7 @@
                     ><i class="far fa-check-circle img-check"></i>
                     <input id="customAvatarImg"
                            type="file" name="${FormValidator.AVATAR_IMG_KEY}"
-                           accept="image/*">
+                           accept="image/png, image/jpg, image/jpeg, image/bmp, image/gif">
                 </label>
                 <div class="form-control d-none" id="inputAvatar"></div>
                 <span id="spanAvatar"></span>
@@ -126,7 +126,7 @@
         const successMessage = '<fmt:message key="modifyUser.success"/>';
 
         form.find('input,select').on('blur change', () => {
-            request_user_validation(form, true, URL).done((d) => updateVerifyMessages(form, add_file_errors(form,d)));
+            request_user_validation(form, true, URL).done((d) => validationUtils.updateVerifyMessages(form, validationUtils.validateFile(form,d)));
         });
 
         form.submit(function(e){
@@ -136,7 +136,7 @@
                 $('#customAvatarImg').val("");
             }
 
-            formSubmit(
+            validationUtils.formSubmitWithValidation(
                 urlJSON,
                 form, {
                     'multipart': true,

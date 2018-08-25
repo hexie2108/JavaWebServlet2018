@@ -5,8 +5,7 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
-import it.unitn.webprogramming18.dellmm.util.FormValidator;
-import it.unitn.webprogramming18.dellmm.util.ServletUtility;
+import it.unitn.webprogramming18.dellmm.util.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -18,20 +17,27 @@ import javax.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @WebServlet(name = "JSONUsersServlet")
 @MultipartConfig
 public class JSONUsersServlet extends HttpServlet {
     private UserDAO userDAO = null;
+
+    private String subImg(HttpServletRequest request, HttpServletResponse response, Path path, String prevImg, InputStream inputStream) throws IOException {
+        // If prevImg is one of default's set prevImg to null to prevent deletion of the file
+        if (prevImg != null && FormValidator.DEFAULT_AVATARS.stream().anyMatch(prevImg::equals)) {
+            prevImg = null;
+        }
+
+        return ServletUtility.insertImage(request, response, path, prevImg, inputStream, ConstantsUtils.IMAGE_OF_USER_WIDTH, ConstantsUtils.IMAGE_OF_USER_HEIGHT);
+    }
 
     @Override
     public void init() throws ServletException {
@@ -49,19 +55,70 @@ public class JSONUsersServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String id = request.getParameter("id");
+        // Get parameters for ordering(what column)
+        UserDAO.OrderableColumns column;
+
+        { // Used to limit orderBy scope
+            String columnName = DatatablesUtils.getColumnName(request, response);
+            if(columnName == null) {
+                return;
+            }
+
+            // Get column and save as enum, if not valid send error
+            switch (columnName) {
+                case "id":
+                    column = UserDAO.OrderableColumns.ID;
+                    break;
+                case "name":
+                    column = UserDAO.OrderableColumns.NAME;
+                    break;
+                case "surname":
+                    column = UserDAO.OrderableColumns.SURNAME;
+                    break;
+                case "email":
+                    column = UserDAO.OrderableColumns.EMAIL;
+                    break;
+                case "admin":
+                    column = UserDAO.OrderableColumns.ADMIN;
+                    break;
+                default:
+                    ServletUtility.sendError(request, response, 400, "datatables.errors.columnNameUnrecognized");
+                    return;
+            }
+        }
+
+        // get ordering direction
+        Boolean dir = DatatablesUtils.getDirection(request, response);
+        if(dir == null) {
+            return;
+        }
+
+        // get parameters for pagination
+        Integer iOffset = DatatablesUtils.getOffset(request, response);
+        if (iOffset == null) {
+            return;
+        }
+
+        Integer iLength = DatatablesUtils.getLength(request, response);
+        if (iLength == null) {
+            return;
+        }
+
+        Integer iId;
         String email = request.getParameter("email");
         String name = request.getParameter("name");
         String surname = request.getParameter("surname");
         String admin = request.getParameter("admin");
 
-        Integer iId;
-        try {
-            iId = id == null || id.trim().isEmpty() ? null : Integer.parseInt(id);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-            ServletUtility.sendError(request, response, 400, "users.errors.idNotInt");
-            return;
+        {
+            String id = request.getParameter("id");
+            try {
+                iId = id == null || id.trim().isEmpty() ? null : Integer.parseInt(id);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                ServletUtility.sendError(request, response, 400, "users.errors.idNotInt");
+                return;
+            }
         }
 
         if (email != null && email.trim().isEmpty()) {
@@ -80,9 +137,21 @@ public class JSONUsersServlet extends HttpServlet {
 
 
         try {
-            List<User> users = userDAO.filter(iId, email, name, surname, bAdmin);
+            List<User> users = userDAO.filter(iId, email, name, surname, bAdmin, column, dir, iOffset, iLength);
+            Long totalCount = userDAO.getCount();
+            Long filteredCount = userDAO.getCountFilter(iId, email, name, surname, bAdmin);
 
-            ServletUtility.sendJSON(request, response, 200, users);
+            HashMap<String, Object> h = new HashMap<>();
+            h.put("recordsTotal", totalCount);
+            h.put("recordsFiltered", filteredCount);
+            h.put("data", users);
+
+            ServletUtility.sendJSON(
+                    request,
+                    response,
+                    200,
+                    h
+            );
         } catch (DAOException e) {
             e.printStackTrace();
             ServletUtility.sendError(request, response, 500, "users.errors.impossibleDbFilter");
@@ -171,13 +240,13 @@ public class JSONUsersServlet extends HttpServlet {
                 password = "";
             }
 
-            /* Usa il validator per verifiacare la conformità
+            // Usa il validator per verifiacare la conformità
             Map<String, String> messages =
-                    FormValidator.partialValidate(userDAO, kv)
+                    UserValidator.partialValidate(userDAO, kv)
                             .entrySet()
                             .stream()
-                            .collect(Collectors.toMap((Map.Entry<String, FormValidator.ErrorMessage> e) -> e.getKey(),
-                                    (Map.Entry<String, FormValidator.ErrorMessage> e) -> FormValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString()
+                            .collect(Collectors.toMap((Map.Entry<String, UserValidator.ErrorMessage> e) -> e.getKey(),
+                                    (Map.Entry<String, UserValidator.ErrorMessage> e) -> UserValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString()
                                     )
                             );
 
@@ -185,8 +254,6 @@ public class JSONUsersServlet extends HttpServlet {
                 ServletUtility.sendValidationError(request, response, 400, messages);
                 return;
             }
-
-*/
 
 
             User user;
@@ -218,35 +285,10 @@ public class JSONUsersServlet extends HttpServlet {
                 String avatarName = avatar;
 
                 if(avatar.equals(FormValidator.CUSTOM_AVATAR)) {
-                    avatarName = UUID.randomUUID().toString();
-
-                    try (InputStream fileContent = avatarImg.getInputStream()) {
-                        File file = new File(path.toString(), avatarName.toString());
-                        Files.copy(fileContent, file.toPath());
-                    } catch (FileAlreadyExistsException ex) { // Molta sfiga
-                        ServletUtility.sendError(request, response, 500, "generic.errors.fileCollision");
-                        getServletContext().log("File \"" + avatarName.toString() + "\" already exists on the server");
-                        return;
-                    } catch (RuntimeException ex) {
-                        ServletUtility.sendError(request, response, 500, "generic.errors.unuploudableFile");
-                        getServletContext().log("impossible to upload the file", ex);
-                        return;
-                    }
+                    avatarName = subImg(request, response, path, user.getImg(), avatarImg.getInputStream());
                 }
-
-                String oldImg = user.getImg();
 
                 user.setImg(avatarName);
-
-                if (FormValidator.DEFAULT_AVATARS.stream().noneMatch(oldImg::equals) ) {
-                    Path toDelete = Paths.get(path.toString(), oldImg);
-                    try {
-                        Files.delete(toDelete);
-                    } catch (IOException e) {
-                        // If we can't delete the old image we just log and continue
-                        getServletContext().log("File " + toDelete.toString() + " cannot be delete");
-                    }
-                }
             }
 
             try {
@@ -268,9 +310,5 @@ public class JSONUsersServlet extends HttpServlet {
 
             ServletUtility.sendJSON(request, response, 200, new HashMap<>());
         }
-    }
-
-    @Override
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     }
 }

@@ -32,8 +32,6 @@ public class AdminUserOnlyFilter implements Filter {
                         session.getAttribute("user") != null &&
                         ((User) session.getAttribute("user")).isIsAdmin();
 
-        System.out.println(authorized);
-
         // Se l'utente non è autenticato
         if (!authorized) {
             refuse(request, response);
