@@ -15,14 +15,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.*;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @WebServlet(name = "JSONCategoryProductsServlet")
@@ -30,9 +27,17 @@ import java.util.stream.Collectors;
 public class JSONCategoryProductsServlet extends HttpServlet {
     private CategoryProductDAO categoryProductDAO = null;
 
-    private static final int
-        IMG_WIDTH = 1000,
-        IMG_HEIGHT = 1000;
+    private String subImg(HttpServletRequest request, HttpServletResponse response, Path path, String prevImg, InputStream inputStream) throws IOException {
+        return ServletUtility.insertImage(
+                request,
+                response,
+                path,
+                prevImg,
+                inputStream,
+                ConstantsUtils.IMAGE_OF_CATEGORY_PRODUCT_WIDTH,
+                ConstantsUtils.IMAGE_OF_CATEGORY_PRODUCT_HEIGHT
+        );
+    }
 
     @Override
     public void init() throws ServletException {
@@ -46,29 +51,6 @@ public class JSONCategoryProductsServlet extends HttpServlet {
         } catch (DAOFactoryException ex) {
             throw new ServletException("Impossible to get UserDAO for user storage system", ex);
         }
-    }
-
-    private String subImg(HttpServletRequest request, HttpServletResponse response, Path path, String prevImg, InputStream inputStream) throws IOException {
-        String newImgName = UUID.randomUUID().toString() + ".jpg";
-
-        try {
-            File file = new File(path.toString(), newImgName.toString());
-            Files.copy(inputStream, file.toPath());
-        } catch (FileAlreadyExistsException ex) { // Molta sfiga
-            ServletUtility.sendError(request, response, 500, "generic.errors.fileCollision");
-            getServletContext().log("File \"" + newImgName.toString() + "\" already exists on the server");
-            return null;
-        } catch (RuntimeException ex) {
-            ServletUtility.sendError(request, response, 500, "generic.errors.unuploudableFile");
-            getServletContext().log("impossible to upload the file", ex);
-            return null;
-        }
-
-        if (prevImg != null) {
-            ServletUtility.deleteFile(path, prevImg, getServletContext());
-        }
-
-        return newImgName;
     }
 
     @Override
@@ -254,10 +236,7 @@ public class JSONCategoryProductsServlet extends HttpServlet {
         }
 
         if (img != null && img.getSize() != 0) {
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
-            ImageUtils.convertImg2(img.getInputStream(), os, IMG_WIDTH, IMG_HEIGHT);
-
-            String r = subImg(request, response, path, categoryProduct.getImg(), new ByteArrayInputStream(os.toByteArray()));
+            String r = subImg(request, response, path, categoryProduct.getImg(), img.getInputStream());
             if (r == null) {
                 return;
             } else {
@@ -328,11 +307,7 @@ public class JSONCategoryProductsServlet extends HttpServlet {
             return;
         }
 
-
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        ImageUtils.convertImg2(img.getInputStream(), os, IMG_WIDTH, IMG_HEIGHT);
-
-        String r = subImg(request, response, path, null, new ByteArrayInputStream(os.toByteArray()));
+        String r = subImg(request, response, path, null, img.getInputStream());
         if (r == null) {
             return;
         }
@@ -342,7 +317,6 @@ public class JSONCategoryProductsServlet extends HttpServlet {
         categoryProduct.setName(name);
         categoryProduct.setDescription(description);
         categoryProduct.setImg(r);
-
 
         try {
             categoryProductDAO.insert(categoryProduct);

@@ -6,17 +6,16 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.UUID;
 import java.util.stream.Collectors;
-
 
 public interface ServletUtility {
 
@@ -127,4 +126,37 @@ public interface ServletUtility {
             ctx.log("File " + toDelete.toString() + " cannot be delete");
         }
     }
+    static String insertImage(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Path path,
+            String prevImg,
+            InputStream inputStream,
+            int width,
+            int height) throws IOException {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        ImageUtils.convertImg2(inputStream, os, width, height);
+
+        String newImgName = UUID.randomUUID().toString() + ".jpg";
+
+        try {
+            File file = new File(path.toString(), newImgName);
+            Files.copy(new ByteArrayInputStream(os.toByteArray()), file.toPath());
+        } catch (FileAlreadyExistsException ex) { // Molta sfiga
+            ServletUtility.sendError(request, response, 500, "generic.errors.fileCollision");
+            request.getServletContext().log("File \"" + newImgName + "\" already exists on the server");
+            return null;
+        } catch (RuntimeException ex) {
+            ServletUtility.sendError(request, response, 500, "generic.errors.unuploudableFile");
+            request.getServletContext().log("impossible to upload the file", ex);
+            return null;
+        }
+
+        if (prevImg != null) {
+            ServletUtility.deleteFile(path, prevImg, request.getServletContext());
+        }
+
+        return newImgName;
+    }
+
 }

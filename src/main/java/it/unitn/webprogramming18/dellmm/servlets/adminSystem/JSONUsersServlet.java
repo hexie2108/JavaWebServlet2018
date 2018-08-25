@@ -1,15 +1,11 @@
 package it.unitn.webprogramming18.dellmm.servlets.adminSystem;
 
-import it.unitn.webprogramming18.dellmm.db.daos.CategoryProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.UserDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
-import it.unitn.webprogramming18.dellmm.util.DatatablesUtils;
-import it.unitn.webprogramming18.dellmm.util.FormValidator;
-import it.unitn.webprogramming18.dellmm.util.RegistrationValidator;
-import it.unitn.webprogramming18.dellmm.util.ServletUtility;
+import it.unitn.webprogramming18.dellmm.util.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -21,20 +17,27 @@ import javax.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @WebServlet(name = "JSONUsersServlet")
 @MultipartConfig
 public class JSONUsersServlet extends HttpServlet {
     private UserDAO userDAO = null;
+
+    private String subImg(HttpServletRequest request, HttpServletResponse response, Path path, String prevImg, InputStream inputStream) throws IOException {
+        // If prevImg is one of default's set prevImg to null to prevent deletion of the file
+        if (prevImg != null && FormValidator.DEFAULT_AVATARS.stream().anyMatch(prevImg::equals)) {
+            prevImg = null;
+        }
+
+        return ServletUtility.insertImage(request, response, path, prevImg, inputStream, ConstantsUtils.IMAGE_OF_USER_WIDTH, ConstantsUtils.IMAGE_OF_USER_HEIGHT);
+    }
 
     @Override
     public void init() throws ServletException {
@@ -282,35 +285,10 @@ public class JSONUsersServlet extends HttpServlet {
                 String avatarName = avatar;
 
                 if(avatar.equals(FormValidator.CUSTOM_AVATAR)) {
-                    avatarName = UUID.randomUUID().toString() + ".jpg";
-
-                    try (InputStream fileContent = avatarImg.getInputStream()) {
-                        File file = new File(path.toString(), avatarName.toString());
-                        Files.copy(fileContent, file.toPath());
-                    } catch (FileAlreadyExistsException ex) { // Molta sfiga
-                        ServletUtility.sendError(request, response, 500, "generic.errors.fileCollision");
-                        getServletContext().log("File \"" + avatarName.toString() + "\" already exists on the server");
-                        return;
-                    } catch (RuntimeException ex) {
-                        ServletUtility.sendError(request, response, 500, "generic.errors.unuploudableFile");
-                        getServletContext().log("impossible to upload the file", ex);
-                        return;
-                    }
+                    avatarName = subImg(request, response, path, user.getImg(), avatarImg.getInputStream());
                 }
-
-                String oldImg = user.getImg();
 
                 user.setImg(avatarName);
-
-                if (FormValidator.DEFAULT_AVATARS.stream().noneMatch(oldImg::equals) ) {
-                    Path toDelete = Paths.get(path.toString(), oldImg);
-                    try {
-                        Files.delete(toDelete);
-                    } catch (IOException e) {
-                        // If we can't delete the old image we just log and continue
-                        getServletContext().log("File " + toDelete.toString() + " cannot be delete");
-                    }
-                }
             }
 
             try {
@@ -332,9 +310,5 @@ public class JSONUsersServlet extends HttpServlet {
 
             ServletUtility.sendJSON(request, response, 200, new HashMap<>());
         }
-    }
-
-    @Override
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     }
 }
