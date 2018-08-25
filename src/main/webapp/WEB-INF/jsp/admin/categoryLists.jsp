@@ -51,7 +51,7 @@
             <td></td>
             <td>
                 <button class="btn btn-primary" id="btnNewCategoryList" data-toggle="modal"
-                        data-target="#modifyCategoryListModal"><i class="fas fa-plus"></i></button>
+                        data-target="#modifyCategoryListModal" data-action="create"><i class="fas fa-plus"></i></button>
             </td>
         </tr>
         </tfoot>
@@ -74,70 +74,24 @@
         const prefixUrl = '<c:url value="/${pageContext.servletContext.getInitParameter('categoryListImgsFolder')}/"/>';
         const CATEGORY_LIST_MODAL_ID = '#modifyCategoryListModal';
 
-        const categoryListModal = $('#modifyCategoryListModal');
-        const categoryListForm = categoryListModal.find('#modifyCategoryListForm');
-
-        const modalUrlJson = '<c:url value="/admin/categoryLists.json"/>';
         const unknownErrorMessage = "<fmt:message key="generic.errors.unknownError"/>";
 
-        function setModal(action, data) {
-            const realData = {};
-            if (action === 'modify') {
-                realData.id = data.id;
-                realData.name = data.name;
-                realData.description = data.description;
-                realData.img1 = data.img1;
-                realData.img2 = data.img2;
-                realData.img3 = data.img3;
+        function deleteCategoryList(e) {
+            const data = $(e.currentTarget).closest('tr').data('json');
 
-                categoryListModal.find('#modifyCategoryListFormSub').html("<fmt:message key="categoryLists.label.modifyForm.submit"/>");
-                categoryListModal.find('.modal-title').html("<fmt:message key="categoryLists.label.modifyForm.title"/>");
-            } else if (action === 'create' || action === 'reset') {
-                realData.id = '';
-                realData.name = '';
-                realData.description = '';
-                realData.img1 = undefined;
-                realData.img2 = undefined;
-                realData.img3 = undefined;
-
-                categoryListModal.find('#modifyCategoryListFormSub').html("<fmt:message key="categoryLists.label.createForm.submit"/>");
-                categoryListModal.find('.modal-title').html("<fmt:message key="categoryLists.label.createForm.title"/>");
-            } else {
-                console.error("Action not recognized");
-                return;
-            }
-
-            categoryListForm.find('input[name="action"]').val(action);
-
-            categoryListForm.find('input[name="id"]').val(realData.id);
-            categoryListForm.find('input[name="${CategoryListValidator.NAME_KEY}"]').attr('placeholder', realData.name);
-            categoryListForm.find('textarea[name="${CategoryListValidator.DESCRIPTION_KEY}"]').attr('placeholder', realData.description);
-
-            const divImg1 = categoryListForm.find('#divImg1');
-            const divImg2 = categoryListForm.find('#divImg2');
-            const divImg3 = categoryListForm.find('#divImg3');
-
-            divImg1.find('> img').attr("src", realData.img1 || "");
-            divImg2.find('> img').attr("src", realData.img2 || "");
-            divImg3.find('> img').attr("src", realData.img3 || "");
-
-            const m = {
-                'img2': divImg2.find('> div > .input-group'),
-                'img3': divImg3.find('> div > .input-group')
-            };
-
-            $.each(m, function (key, value) {
-                if (realData[key]) {
-                    value.find('> .input-group-append, > input').show();
-                    value.find('> button.ins-btn').hide();
-                } else {
-                    value.find('> .input-group-append, > input').hide();
-                    value.find('> button.ins-btn').show();
+            formUtils.ajaxButton(
+                '<c:url value="/admin/categoryLists.json"/>', {
+                    'action': 'delete',
+                    'id': data.id
+                }, function(){
+                    table.ajax.reload();
+                    table.draw();
+                }, {
+                    title: "<fmt:message key="generic.label.errorTitle"/>",
+                    message: unknownErrorMessage,
+                    closeLabel: "<fmt:message key="generic.label.close"/>"
                 }
-            });
-
-            // Trigger validation using event change
-            categoryListForm.find('input[name="${CategoryListValidator.NAME_KEY}"]').trigger('change');
+            );
         }
 
         function format(row, data, index) {
@@ -156,12 +110,13 @@
                             src: prefixUrl + data[val],
                             class: "img-responsive img-table"
                         })
-                    )
+                    );
                 }
             });
 
             $('td', row).eq(6).html(
                 $('<div/>', {
+                    class: 'btn-group',
                     html: [
                         $('<button/>', {
                             class: 'btn btn-md btn-primary',
@@ -169,34 +124,15 @@
                             html: $('<i/>', {class: 'far fa-edit'}),
                             'data-toggle': 'modal',
                             'data-target': CATEGORY_LIST_MODAL_ID,
+                            'data-action': 'modify',
                             type: 'button',
-                            click: function () {
-                                setModal('modify', data);
-                            }
                         }),
                         $('<button/>', {
                             class: 'btn btn-md btn-danger',
                             title: "<fmt:message key="categoryLists.label.deleteCategoryList"/>",
                             html: $('<i/>', {class: 'far fa-trash-alt'}),
-                            click: function () {
-                                $.ajax({
-                                    url: '<c:url value="/admin/categoryLists.json"/>',
-                                    type: 'POST',
-                                    data: {'action': 'delete', 'id': data.id}
-                                }).done(function () {
-                                    table.ajax.reload();
-                                    table.draw();
-                                }).fail(function (jqXHR) {
-                                    if (typeof jqXHR.responseJSON === 'object' &&
-                                        jqXHR.responseJSON !== null &&
-                                        jqXHR.responseJSON['message'] !== undefined
-                                    ) {
-                                        modalAlert.error("<fmt:message key="generic.label.errorTitle"/>", jqXHR.responseJSON['message'], "<fmt:message key="generic.label.close"/>");
-                                    } else {
-                                        modalAlert.error("<fmt:message key="generic.label.errorTitle"/>', unknownErrorMessage, '<fmt:message key="generic.label.close"/>");
-                                    }
-                                });
-                            }
+                            click: deleteCategoryList,
+                            type: 'button'
                         }),
                     ]
                 })
@@ -291,130 +227,7 @@
 
         $.fn.dataTable.ext.errMode = 'throw';
 
-        {
-            categoryListModal.on("hidden.bs.modal", function () {
-                validationUtils.clearVerifyMessages(categoryListForm);
-
-                categoryListForm[0].reset();
-                categoryListForm.find('input').val("");
-                categoryListForm.find('input[type="text"]').html("");
-            });
-
-            const isCreate = (form, name) => {
-                return form.find('[name="action"]').val() === 'create';
-            };
-
-            const requiredImg = (form, name) => {
-                return form.find('[name="action"]').val() === 'create' && name === '${CategoryListValidator.IMG1_KEY}';
-            };
-
-            const checkFiles = validationUtils.validateFile(
-                /.*(jpg|jpeg|png|gif|bmp).*/,
-                ${CategoryListValidator.MAX_LEN_FILE},
-                requiredImg, {
-                    fileEmptyOrNull: "<fmt:message key="validateCategoryList.errors.IMG_MISSING"/>",
-                    fileTooBig: "<fmt:message key="validateCategoryList.errors.IMG_TOO_BIG"/>",
-                    fileContentTypeMissingOrType: "<fmt:message key="validateCategoryList.errors.IMG_CONTENT_TYPE_MISSING"/>",
-                    fileOfWrongType: "<fmt:message key="validateCategoryList.errors.IMG_NOT_IMG"/>",
-                }
-            );
-
-            const checkName = validationUtils.validateString(
-                ${CategoryListValidator.NAME_MAX_LEN},
-                isCreate, {
-                    emptyOrNull: "<fmt:message key="validateCategoryList.errors.NAME_MISSING"/>",
-                    tooLong: "<fmt:message key="validateCategoryList.errors.NAME_TOO_LONG"/>",
-                }
-            );
-
-            const checkDescription = validationUtils.validateString(
-                ${CategoryListValidator.DESCRIPTION_MAX_LEN},
-                isCreate, {
-                    emptyOrNull: "<fmt:message key="validateCategoryList.errors.DESCRIPTION_MISSING"/>",
-                    tooLong: "<fmt:message key="validateCategoryList.errors.DESCRIPTION_TOO_LONG"/>",
-                }
-            );
-
-            function validate(){
-                const obj = {};
-
-                checkName(obj, categoryListForm, "${CategoryListValidator.NAME_KEY}");
-                checkDescription(obj, categoryListForm, "${CategoryListValidator.DESCRIPTION_KEY}");
-
-                checkFiles(obj, categoryListForm, '${CategoryListValidator.IMG1_KEY}');
-                checkFiles(obj, categoryListForm, '${CategoryListValidator.IMG2_KEY}');
-                checkFiles(obj, categoryListForm, '${CategoryListValidator.IMG3_KEY}');
-
-                validationUtils.updateVerifyMessages(categoryListForm, obj)
-            }
-
-            formUtils.timedChange(categoryListForm, validate);
-
-            $.each(categoryListForm.find('.file-input'), function (index, value) {
-                const k = $(value);
-                k.find('+ div').find('>button.clear-btn').click(function () {
-                    k.val("");
-                });
-            });
-
-            categoryListForm.find('.input-group  button.ins-btn').click(function () {
-                const iGr = $(this).parent();
-
-                $('> .input-group-append, > input', iGr).show();
-                $('> button.ins-btn', iGr).hide();
-
-                iGr.parent().find('input[type="hidden"]').val("");
-            });
-
-            categoryListForm.find('.input-group button.del-btn').click(function () {
-                const iGr = $(this).parent().parent();
-
-                $('> .input-group-append, > input', iGr).val("");
-                $('> .input-group-append, > input', iGr).hide();
-                $('> button.ins-btn', iGr).show();
-
-                iGr.parent().find('input[type="hidden"]').val("delete");
-            });
-
-            categoryListForm.find('button.clear-btn, button.del-btn, button.ins-btn').click(function () {
-                // Trigger update
-                $('input[name="${CategoryListValidator.NAME_KEY}"]', categoryListForm).trigger('change');
-            });
-
-
-            categoryListForm.submit(function (e) {
-                e.preventDefault();
-
-                validationUtils.formSubmitWithValidation(
-                    modalUrlJson,
-                    categoryListForm, {
-                        multipart: true,
-                        session: true,
-                        redirectUrl: null,
-                        successAlert: {
-                            title: "<fmt:message key="generic.label.successTitle"/>",
-                            message: "<fmt:message key="generic.text.success"/>",
-                            closeLabel: "<fmt:message key="generic.label.close"/>"
-                        },
-                        failAlert: {
-                            title: "<fmt:message key="generic.label.errorTitle"/>",
-                            message: "<fmt:message key="generic.errors.unknownError"/>",
-                            closeLabel: "<fmt:message key="generic.label.close"/>"
-                        },
-                        successCallback: function () {
-                            table.ajax.reload();
-                            table.draw();
-                            categoryListModal.modal('toggle');
-                        }
-                    }
-                );
-            });
-
-
-            $('#btnNewCategoryList', tableDiv).click(function () {
-                setModal("create", null);
-            });
-        }
+        initCategoryListModal(table);
     });
 </script>
 </body>

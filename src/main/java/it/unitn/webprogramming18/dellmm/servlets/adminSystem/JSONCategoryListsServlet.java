@@ -142,7 +142,7 @@ public class JSONCategoryListsServlet extends HttpServlet {
             categoryList.setDescription(description);
         }
 
-        if (img1 != null) {
+        if (img1 != null && img1.getSize() != 0) {
             String r = subImg(request, response, path, categoryList.getImg1(), img1);
             if (r == null) {
                 return;

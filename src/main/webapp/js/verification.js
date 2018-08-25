@@ -215,6 +215,7 @@ const validationUtils = (function(){
      * @property {string} redirectUrl redirect to specific url after success(if not defined successAlert must be defined and vice versa)
      * @property {ModalAlertOptions} successAlert settings for the success modal(if not defined redirectUrl must be defined and vice versa)
      * @property {ModalAlertOptions} failAlert settings for the error modal (if error message form the post is standard the main content of the modal is overwritten)
+     * @property {Function} successCallback callback to call if the post is successful
      */
 
     /**
@@ -699,7 +700,7 @@ const validationUtils = (function(){
 
 /**
  * Module in which utils for forms are contained
- * @type {{timedChange}}
+ * @type {{timedChange, ajaxButton}}
  */
 const formUtils = (function(){
     /**
@@ -722,14 +723,20 @@ const formUtils = (function(){
      * @param {ModalAlertOptions} failAlert message to show if error occours(message is overwritten if valid error message is sent by the page)
      */
     function ajaxButton(url, data, successCallback, failAlert) {
-        $.ajax({
+        const rq = $.ajax({
             url: url,
             type: 'POST',
             data: data,
             async: false
-        }).done(function () {
-            successCallback();
-        }).fail(function (jqXHR) {
+        });
+
+        if (successCallback !== undefined) {
+            rq.done(function () {
+                successCallback();
+            });
+        }
+
+        rq.fail(function (jqXHR) {
             if (typeof jqXHR.responseJSON === 'object' &&
                 jqXHR.responseJSON !== null &&
                 jqXHR.responseJSON['message'] !== undefined
@@ -749,9 +756,8 @@ const formUtils = (function(){
         });
     }
 
-
     return {
-        timedChange: timedChange
+        timedChange: timedChange,
         ajaxButton: ajaxButton
     };
 })();

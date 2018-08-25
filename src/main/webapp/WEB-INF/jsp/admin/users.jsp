@@ -105,9 +105,10 @@
             const data = $(event.currentTarget).closest('tr').data('json');
 
             formUtils.ajaxButton(
-                '<c:url value="/admin/users.json"/>',
-                {'action': 'delete', 'id': data.id},
-                () => {
+                '<c:url value="/admin/users.json"/>', {
+                    'action': 'delete',
+                    'id': data.id
+                }, function(){
                     table.ajax.reload();
                     table.draw();
                 }, {
