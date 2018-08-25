@@ -1,81 +1,66 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<%@ page import="it.unitn.webprogramming18.dellmm.util.FormValidator"%>
+<%@ include file="header.jsp"%>
 
-<%@ include file="../../jspf/i18n.jsp" %>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><fmt:message key="users.title"/></title>
+<link rel="stylesheet" href="<c:url value="/css/user-system-style.css"/>" type="text/css" media="all"/>
 
-    <script src="<c:url value="/libs/jquery/jquery-3.3.1.min.js"/>"></script>
-    <script src="<c:url value="/libs/bootstrap-4.1.1-dist/js/bootstrap.bundle.min.js"/>"></script>
-    <link rel="stylesheet" href="<c:url value="/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css"/>">
-
-    <link rel="stylesheet" href="<c:url value="/libs/fontawesome-free-5.1.1-web/css/all.min.css"/>" type="text/css"
-          media="all">
-
-    <link rel="stylesheet" href="<c:url value="/css/adminPages.css"/>" type="text/css" media="all"/>
-    <link rel="stylesheet" href="<c:url value="/css/user-system-style.css"/>" type="text/css" media="all"/>
-</head>
-<body>
-<%@ include file="../../jspf/i18n_switcher.jsp" %>
-
-<form method="GET" id="filterForm"></form>
-<div class="table-responsive">
-    <table class="table dt-responsive nowrap w-100" id="userTable">
-        <thead>
-        <tr>
-            <th><fmt:message key="user.label.id"/></th>
-            <th><fmt:message key="user.label.image"/></th>
-            <th><fmt:message key="user.label.name"/></th>
-            <th><fmt:message key="user.label.surname"/></th>
-            <th><fmt:message key="user.label.email"/></th>
-            <th><fmt:message key="user.label.password"/></th>
-            <th><fmt:message key="user.label.isAdmin"/></th>
-            <th><fmt:message key="user.label.verifyEmailLink"/></th>
-            <th><fmt:message key="user.label.resetPasswordLink"/></th>
-            <th><fmt:message key="generic.label.actions"/></th>
-        </tr>
-        </thead>
-        <tbody>
-        </tbody>
-        <tfoot>
-        <tr>
-            <td><input class="form-control" size="6" type="number" name="id" form="filterForm" value="${param['id']}"/>
-            </td>
-            <td></td>
-            <td><input class="form-control" type="text" name="name" form="filterForm" value="${param['name']}"/></td>
-            <td><input class="form-control" type="text" name="surname" form="filterForm" value="${param['surname']}"/>
-            </td>
-            <td><input class="form-control" type="text" name="email" form="filterForm" value="${param['email']}"/></td>
-            <td></td>
-            <td>
-                <select name="admin" form="filterForm">
-                    <option value="" ${param['admin'].equals("")?'selected':''}>--</option>
-                    <option value="true" ${param['admin'].equals("true")?'selected':''}><fmt:message
-                            key="users.label.true"/></option>
-                    <option value="false" ${param['admin'].equals("false")?'selected':''}><fmt:message
-                            key="users.label.false"/></option>
-                </select>
-            </td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        </tfoot>
-    </table>
+<div class="content">
+    <form method="GET" id="filterForm"></form>
+    <div class="table-responsive">
+        <table class="table dt-responsive nowrap w-100" id="userTable">
+            <thead>
+            <tr>
+                <th><fmt:message key="user.label.id"/></th>
+                <th><fmt:message key="user.label.image"/></th>
+                <th><fmt:message key="user.label.name"/></th>
+                <th><fmt:message key="user.label.surname"/></th>
+                <th><fmt:message key="user.label.email"/></th>
+                <th><fmt:message key="user.label.password"/></th>
+                <th><fmt:message key="user.label.isAdmin"/></th>
+                <th><fmt:message key="user.label.verifyEmailLink"/></th>
+                <th><fmt:message key="user.label.resetPasswordLink"/></th>
+                <th><fmt:message key="generic.label.actions"/></th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td><input class="form-control" size="6" type="number" name="id" form="filterForm" value="${param['id']}"/>
+                </td>
+                <td></td>
+                <td><input class="form-control" type="text" name="name" form="filterForm" value="${param['name']}"/></td>
+                <td><input class="form-control" type="text" name="surname" form="filterForm" value="${param['surname']}"/>
+                </td>
+                <td><input class="form-control" type="text" name="email" form="filterForm" value="${param['email']}"/></td>
+                <td></td>
+                <td>
+                    <select name="admin" form="filterForm">
+                        <option value="" ${param['admin'].equals("")?'selected':''}>--</option>
+                        <option value="true" ${param['admin'].equals("true")?'selected':''}><fmt:message
+                                key="users.label.true"/></option>
+                        <option value="false" ${param['admin'].equals("false")?'selected':''}><fmt:message
+                                key="users.label.false"/></option>
+                    </select>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+    <%@ include file="modules/modifyUser.jsp"%>
 </div>
-<%@ include file="modules/modifyUser.jsp"%>
-<link rel="stylesheet" type="text/css" href="<c:url value="/libs/DataTables/datatables.min.css"/>"/>
-<script src="<c:url value="/libs/DataTables/datatables.min.js"/>"></script>
 
+<!-- Custom verification utilities -->
 <link rel="stylesheet" type="text/css" href="<c:url value="/css/validation.css"/>"/>
 <script src="<c:url value="/js/verification.js"/>"></script>
+
+<!-- Custom datatables utilities -->
+<link rel="stylesheet" type="text/css" href="<c:url value="/libs/DataTables/datatables.min.css"/>"/>
+<script src="<c:url value="/libs/DataTables/datatables.min.js"/>"></script>
 
 <script src="<c:url value="/libs/zxcvbn/zxcvbn.js"/>"></script>
 <script>
@@ -325,5 +310,5 @@
         initUserModal(table);
     });
 </script>
-</body>
-</html>
+
+<%@include file="footer.jsp"%>

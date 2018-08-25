@@ -47,7 +47,6 @@
 
                 <!-- Latest compiled and minified JavaScript -->
                 <script src="<c:url value="/libs/bootstrap-select-1.13.1/js/bootstrap-select.min.js"/>"></script>
-
         </head>
 
         <body class="admin-page">
@@ -79,14 +78,14 @@
 
 
                                                                 <li class="nav-item">
-                                                                        <a class="nav-link" href="#">
+                                                                        <a class="nav-link" href="<c:url value="/admin/categoryLists"/>">
                                                                                 <i class="fas fa-sitemap"></i> gestisce le categorie di lista
                                                                         </a>
                                                                 </li>
 
 
                                                                 <li class="nav-item">
-                                                                        <a class="nav-link" href="#">
+                                                                        <a class="nav-link" href="<c:url value="/admin/categoryProducts"/>">
                                                                                 <i class="fas fa-store"></i> gestisce le categorie di prodotto
                                                                         </a>
                                                                 </li>

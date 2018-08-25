@@ -1,5 +1,3 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
 <%@ page import="it.unitn.webprogramming18.dellmm.util.CategoryProductValidator" %>
 
 <div class="modal fade" id="categoryProductModal">
@@ -91,7 +89,7 @@
     function initCategoryProductModal(table){
         const modalUrlJson = '<c:url value="/admin/categoryProducts.json"/>';
 
-        const categoryProductModal = $(CATEGORY_PRODUCT_MODAL_ID);
+        const categoryProductModal = $('#categoryProductModal');
         const categoryProductForm = $('#categoryProductForm', categoryProductModal);
 
         categoryProductModal.on("show.bs.modal", function (e) {
@@ -190,27 +188,6 @@
                 k.val("");
             });
         });
-
-        /* TODO: In category product basta una singola immagine?
-        categoryProductForm.find('.input-group  button.ins-btn').click(function () {
-            const iGr = $(this).parent();
-
-            iGr.find('> .input-group-append, > input').show();
-            iGr.find('> button.ins-btn').hide();
-
-            iGr.parent().find('input[type="hidden"]').val("");
-        });
-
-        categoryProductForm.find('.input-group button.del-btn').click(function () {
-            const iGr = $(this).parent().parent();
-
-            iGr.find('> .input-group-append, > input').val("");
-            iGr.find('> .input-group-append, > input').hide();
-            iGr.find('> button.ins-btn').show();
-
-            iGr.parent().find('input[type="hidden"]').val("delete");
-        });
-        */
 
         categoryProductForm.find('button.clear-btn, button.del-btn, button.ins-btn').click(function () {
             // Trigger update

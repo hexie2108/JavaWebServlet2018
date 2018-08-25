@@ -1,5 +1,3 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
 <%@ page import="it.unitn.webprogramming18.dellmm.util.FormValidator"%>
 
 <div class="modal fade" id="modifyUserModal">

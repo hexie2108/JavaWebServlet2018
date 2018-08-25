@@ -1,72 +1,56 @@
-<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<%@ page import="it.unitn.webprogramming18.dellmm.util.ConstantsUtils" %>
+<%@ include file="header.jsp" %>
 
-<%@ include file="../../jspf/i18n.jsp" %>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><fmt:message key="listCategories.title"/></title>
-
-    <script src="<c:url value="/libs/jquery/jquery-3.3.1.min.js"/>"></script>
-    <script src="<c:url value="/libs/bootstrap-4.1.1-dist/js/bootstrap.bundle.min.js"/>"></script>
-    <link rel="stylesheet" href="<c:url value="/libs/bootstrap-4.1.1-dist/css/bootstrap.min.css"/>">
-
-    <link rel="stylesheet" href="<c:url value="/libs/fontawesome-free-5.1.1-web/css/all.min.css"/>" type="text/css"
-          media="all">
-
-    <link rel="stylesheet" href="<c:url value="/css/adminPages.css"/>" type="text/css" media="all"/>
-</head>
-<body>
-<%@ include file="../../jspf/i18n_switcher.jsp" %>
-
-<form method="GET" id="filterForm"></form>
-<div class="table-responsive">
-    <table class="table dt-responsive nowrap w-100" id="categoryTable">
-        <thead>
-        <tr>
-            <th><fmt:message key="categoryList.label.id"/></th>
-            <th><fmt:message key="categoryList.label.name"/></th>
-            <th><fmt:message key="categoryList.label.description"/></th>
-            <th><fmt:message key="categoryList.label.img1"/></th>
-            <th><fmt:message key="categoryList.label.img2"/></th>
-            <th><fmt:message key="categoryList.label.img3"/></th>
-            <th><fmt:message key="generic.label.actions"/></th>
-        </tr>
-        </thead>
-        <tbody>
-        </tbody>
-        <tfoot>
-        <tr>
-            <td><input class="form-control" type="number" name="id" form="filterForm" value="${param['id']}"/></td>
-            <td><input class="form-control" type="text" name="name" form="filterForm" value="${param['name']}"/></td>
-            <td><input class="form-control" type="text" name="description" form="filterForm"
-                       value="${param['description']}"/></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>
-                <button class="btn btn-primary" id="btnNewCategoryList" data-toggle="modal"
-                        data-target="#modifyCategoryListModal" data-action="create"><i class="fas fa-plus"></i></button>
-            </td>
-        </tr>
-        </tfoot>
-    </table>
-    <div class="alert alert-danger d-none" id="id-res">
+<div class="content">
+    <form method="GET" id="filterForm"></form>
+    <div class="table-responsive">
+        <table class="table dt-responsive nowrap w-100" id="categoryTable">
+            <thead>
+            <tr>
+                <th><fmt:message key="categoryList.label.id"/></th>
+                <th><fmt:message key="categoryList.label.name"/></th>
+                <th><fmt:message key="categoryList.label.description"/></th>
+                <th><fmt:message key="categoryList.label.img1"/></th>
+                <th><fmt:message key="categoryList.label.img2"/></th>
+                <th><fmt:message key="categoryList.label.img3"/></th>
+                <th><fmt:message key="generic.label.actions"/></th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td><input class="form-control" type="number" name="id" form="filterForm" value="${param['id']}"/></td>
+                <td><input class="form-control" type="text" name="name" form="filterForm" value="${param['name']}"/></td>
+                <td><input class="form-control" type="text" name="description" form="filterForm"
+                           value="${param['description']}"/></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                    <button class="btn btn-primary" id="btnNewCategoryList" data-toggle="modal"
+                            data-target="#modifyCategoryListModal" data-action="create"><i class="fas fa-plus"></i></button>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+        <div class="alert alert-danger d-none" id="id-res">
+        </div>
     </div>
+
+    <%@include file="modules/modifyCategoryList.jsp" %>
 </div>
 
-<%@include file="modules/modifyCategoryList.jsp" %>
-
-<link rel="stylesheet" type="text/css" href="<c:url value="/libs/DataTables/datatables.min.css"/>"/>
+<!-- Custom verification utilities -->
+<link rel="stylesheet" type="text/css" href="<c:url value="/css/validation.css"/>"/>
 <script src="<c:url value="/js/verification.js"/>"></script>
+
+<!-- Custom datatables utilities -->
+<link rel="stylesheet" type="text/css" href="<c:url value="/libs/DataTables/datatables.min.css"/>"/>
 <script src="<c:url value="/libs/DataTables/datatables.min.js"/>"></script>
 
-<link rel="stylesheet" type="text/css" href="<c:url value="/css/validation.css"/>"/>
 <script>
     $(document).ready(function () {
         const tableDiv = $('#categoryTable');
@@ -230,5 +214,5 @@
         initCategoryListModal(table);
     });
 </script>
-</body>
-</html>
+
+<%@ include file="footer.jsp"%>
