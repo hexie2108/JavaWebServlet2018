@@ -1,0 +1,85 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package it.unitn.webprogramming18.dellmm.email;
+
+import it.unitn.webprogramming18.dellmm.db.daos.LogDAO;
+import it.unitn.webprogramming18.dellmm.db.daos.ProductDAO;
+import it.unitn.webprogramming18.dellmm.db.daos.UserDAO;
+import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCLogDAO;
+import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCProductDAO;
+import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCUserDAO;
+import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
+import it.unitn.webprogramming18.dellmm.javaBeans.Log;
+import it.unitn.webprogramming18.dellmm.javaBeans.Product;
+import it.unitn.webprogramming18.dellmm.javaBeans.User;
+import java.io.UnsupportedEncodingException;
+import java.sql.Timestamp;
+import java.util.List;
+import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.mail.MessagingException;
+import javax.servlet.ServletException;
+
+/**
+ *
+ * @author mikuc
+ */
+public class SendMailOfSuggestionForRepeatitivePurchasesTask extends TimerTask
+
+{
+
+        private final LogDAO logDAO;
+        private final UserDAO userDAO;
+        private final ProductDAO prodoctDAO;
+        private final EmailFactory emailFactory;
+        private Log log;
+        private User user;
+        private List<Product> listProduct;
+        private final int predictionDay = 1;
+        private Timestamp currentTime;
+        private String basepath;
+
+        public SendMailOfSuggestionForRepeatitivePurchasesTask(EmailFactory emailFactoryMain, String basepath)
+        {
+                this.logDAO = new JDBCLogDAO();
+                this.userDAO = new JDBCUserDAO();
+                this.prodoctDAO = new JDBCProductDAO();
+                this.emailFactory = emailFactoryMain;
+                this.basepath = basepath;
+        }
+
+        @Override
+        public void run()
+        {
+                currentTime = new Timestamp(System.currentTimeMillis());
+
+                try
+                {
+                        log = logDAO.getLogNotEmailYet(currentTime, 1);
+                       
+                        //se ci sono log che può mandare email per riaquisto
+                        if (log != null)
+                        {
+                                //get user
+                                 user = userDAO.getByPrimaryKey(log.getUserId());
+                                //get la lista di prodotto che soddisfa la condizione di notifica
+                                listProduct = prodoctDAO.getListProductFromLogNotEmailYetByUserId(log.getUserId(), currentTime, predictionDay);
+                                //set stato email di log in true per evitare rinvio
+                                logDAO.setEmailStatusTrueByUserId(log.getUserId());
+                                //invia email
+                                emailFactory.sendEmailOfSuggestionForRepeatitivePurchases(user, basepath, listProduct);
+                                
+                        }
+                }
+                catch (DAOException | MessagingException | UnsupportedEncodingException ex)
+                {
+                        Logger.getLogger(SendMailOfSuggestionForRepeatitivePurchasesTask.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+        }
+
+}

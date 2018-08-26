@@ -1,6 +1,7 @@
 package it.unitn.webprogramming18.dellmm.email;
 
 import it.unitn.webprogramming18.dellmm.email.exceptions.EmailFactoryException;
+import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.i18n;
 
@@ -10,6 +11,7 @@ import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
@@ -127,13 +129,14 @@ public class EmailFactory
         private String getBasePath(HttpServletRequest request) {
                 return request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
         }
-        
+
         /**
          * metodo per inviare email di registrazione
+         *
          * @param user
          * @param request
          * @throws MessagingException
-         * @throws UnsupportedEncodingException 
+         * @throws UnsupportedEncodingException
          */
         public void sendEmailOfRegistration(User user, HttpServletRequest request) throws MessagingException, UnsupportedEncodingException {
                 ResourceBundle bundle = i18n.getBundle(request);
@@ -147,24 +150,44 @@ public class EmailFactory
                 sendMail(serviceName, emailSubject, content, user.getEmail());
 
         }
-        
+
         /**
          * metodo per inviare email di reset password
+         *
          * @param user
          * @param request
          * @throws MessagingException
          * @throws UnsupportedEncodingException 
          */
-        public void sendEmailOfRestPassword(User user, HttpServletRequest request) throws MessagingException, UnsupportedEncodingException {
-            ResourceBundle bundle = i18n.getBundle(request);
+        public void sendEmailOfRestPassword(User user, HttpServletRequest request) throws MessagingException, UnsupportedEncodingException
+        {
+                ResourceBundle bundle = i18n.getBundle(request);
 
-            String serviceName = "admin";
-            String emailSubject = bundle.getString("emailFactory.resetPasswordEmail.subject");
+                String serviceName = "admin";
+                String emailSubject = bundle.getString("emailFactory.resetPasswordEmail.subject");
 
-            String url = getBasePath(request) + "/resetPassword?Email="+URLEncoder.encode(user.getEmail(), "UTF-8")+"&resetPwdLink=" + URLEncoder.encode(user.getResetPwdEmailLink(), "UTF-8");
+                String url = getBasePath(request) + "/resetPassword?Email=" + URLEncoder.encode(user.getEmail(), "UTF-8") + "&resetPwdLink=" + URLEncoder.encode(user.getResetPwdEmailLink(), "UTF-8");
 
-            Multipart content = MessageFacotry.messageOfResetPassword(user, url, bundle);
-            sendMail(serviceName, emailSubject, content, user.getEmail());
+                Multipart content = MessageFacotry.messageOfResetPassword(user, url, bundle);
+                sendMail(serviceName, emailSubject, content, user.getEmail());
+        }
+
+        /**
+         * metodo per inviare email di suggerimento di riaquisto
+         *
+         * @param user
+         * @param basepath
+         * @param listProduct
+         * @throws MessagingException
+         * @throws UnsupportedEncodingException
+         */
+        public void sendEmailOfSuggestionForRepeatitivePurchases(User user, String basepath, List<Product> listProduct) throws MessagingException, UnsupportedEncodingException
+        {
+                String serviceName = "admin";
+                String emailSubject = "Suggerimento per riacquisto";
+                Multipart content = MessageFacotry.messageOfSuggestionForRepeatitivePurchases(user, basepath, listProduct);
+                sendMail(serviceName, emailSubject, content, user.getEmail());
+
         }
         
 }

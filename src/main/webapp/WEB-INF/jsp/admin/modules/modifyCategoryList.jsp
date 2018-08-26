@@ -1,4 +1,6 @@
 <%@ page import="it.unitn.webprogramming18.dellmm.util.CategoryListValidator" %>
+<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
+
 
 <div class="modal fade" id="modifyCategoryListModal">
     <div class="modal-dialog modal-lg" role="document">

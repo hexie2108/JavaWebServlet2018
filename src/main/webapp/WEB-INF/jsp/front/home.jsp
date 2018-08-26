@@ -19,7 +19,7 @@
 
             <div class="product-list-head">
                 <h1 class="list-title">
-                    i prodotti ${a}
+                    i prodotti
                 </h1>
             </div>
 

@@ -51,8 +51,8 @@ public class LoginService extends HttpServlet
     {
 
         //Language bundle
-        ResourceBundle rb = i18n.getBundle(request);  
-        
+        ResourceBundle rb = i18n.getBundle(request);
+
         //get i parametri necessari
         String email = request.getParameter(FormValidator.EMAIL_KEY);
         String password = request.getParameter(FormValidator.FIRST_PWD_KEY);
@@ -115,27 +115,34 @@ public class LoginService extends HttpServlet
                 //memorizza il tempo di l'ultimo login in secondo e fastLoginKey
                 userDAO.updateLastLoginTimeAndFastLoginKey(user.getId(), currentTimeMills, fastLoginkey);
 
-                //memorizza la key in cookie
-                //crea o aggiorna cookie della categoria per la lista locale
-                Cookie cookie = new Cookie("autoLoginKey", fastLoginkey);
-                cookie.setPath(getServletContext().getContextPath());
-                //set la vita di cookie per 30 giorni
-                cookie.setMaxAge(60 * 60 * 24 * 30);
-                response.addCookie(cookie);
-            }
-            catch (DAOException ex)
-            {
-                throw new ServletException(ex.getMessage(), ex);
-            }
-            catch (UnsupportedEncodingException ex)
-            {
-                throw new ServletException("errore durente la codifica dei caratteri", ex);
-            }
-            catch (NoSuchAlgorithmException ex)
-            {
-                throw new ServletException("errore per la mancanza dell'algoritmo MD5 in ambiente di esecuzione", ex);
-            }
-        }
+                                //memorizza la key in cookie
+                                //crea o aggiorna cookie della categoria per la lista locale
+                                Cookie cookie = new Cookie("autoLoginKey", fastLoginkey);
+                                cookie.setPath(getServletContext().getContextPath());
+                                //set la vita di cookie per 30 giorni
+                                cookie.setMaxAge(60 * 60 * 24 * 30);
+                                response.addCookie(cookie);
+                        }
+                        catch (DAOException ex)
+                        {
+                                throw new ServletException(ex.getMessage(), ex);
+                        }
+                        catch (UnsupportedEncodingException ex)
+                        {
+                                throw new ServletException("errore durente la codifica dei caratteri", ex);
+                        }
+                        catch (NoSuchAlgorithmException ex)
+                        {
+                                throw new ServletException("errore per la mancanza dell'algoritmo MD5 in ambiente di esecuzione", ex);
+                        }
+                }
+
+                //check se utente ha accettato Privacy
+                //se non ha ancora fatto, visualizza popup di privacy
+                if(!user.isAcceptedPrivacy()){
+                        request.getSession().setAttribute("result", "privacy");
+                }
+
 
         // Se nextUrl è vuoto o nullo, usa pagina di default(index)
         if (prevUrl == null || prevUrl.isEmpty())

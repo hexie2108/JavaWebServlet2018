@@ -46,12 +46,17 @@ public class FormValidator {
                     "user-ninja.svg",
                     "user-secret.svg"
         ));
-        
+
         //array di pagina di userSystem
-        public static final String[] pageNameOfUserSystem = {
-                    "register",
-                    "forgotPassword",
-                    "resetPassword"
+        public static final String[] pageNameOfUserSystem =
+        {
+                "login",
+                "register",
+                "forgotPassword",
+                "resetPassword",
+                "resendEmail",
+                "activateUser",
+                "service"
         };
 
         //custom avatar
@@ -61,8 +66,6 @@ public class FormValidator {
 
         public static final String PREV_URL_KEY = "prevUrl",
                     REMEMBER_KEY = "remember";
-
-        
 
         // --- Funzioni di validazione
         /**

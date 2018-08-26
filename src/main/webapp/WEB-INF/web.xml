@@ -24,6 +24,11 @@
         <param-name>dbpwd</param-name>
         <param-value>passworddacambiare</param-value>
     </context-param>
+     <context-param>
+        <description>il dominio per link contenuto nel email</description>
+        <param-name>domainForEmailLink</param-name>
+        <param-value>http://localhost:8084</param-value>
+    </context-param>
 
     <!--IMG FOLDERS SETTINGS-->
     <context-param>

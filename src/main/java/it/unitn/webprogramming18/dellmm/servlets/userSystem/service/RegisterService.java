@@ -125,8 +125,8 @@ public class RegisterService extends HttpServlet {
         }
 
         //Language bundle
-        ResourceBundle rb = i18n.getBundle(request); 
-        
+        ResourceBundle rb = i18n.getBundle(request);
+
         //check tutti parametri necessari
         if(!FormValidator.validateEmail(email)){
             ServletUtility.sendError(request, response, 400, rb.getString("validateUser.errors.EMAIL_NOT_VALID")); //email non è valido
@@ -134,7 +134,7 @@ public class RegisterService extends HttpServlet {
         }
         if(!FormValidator.checkEmailRepeat(email, userDAO)) {
             ServletUtility.sendError(request, response, 400, rb.getString("validateUser.errors.EMAIL_ALREADY_USED")); //email già presente
-            return;            
+            return;
         }
         if(!FormValidator.validateFirstName(firstName)){
             ServletUtility.sendError(request, response, 400, rb.getString("validateUser.errors.FIRST_NAME_NOT_VALID")); //il first name non è valido

@@ -1,115 +1,124 @@
 /*body*/
 
 .front-page .content {
-    min-height: 650px;
+        min-height: 650px;
 }
 
 /*label che visualizza il nome file*/
 .custom-file-label {
-    overflow: hidden;
+        overflow: hidden;
 }
 
 /*header.jsp----------------------------------------------------------------------------*/
 
 .front-page header .top-windows {
 
-    margin-top: 55px;
-    position: relative;
-    height: 250px;
-    background-image: url(../image/base/top-bg.jpg);
-    background-size: 100% auto;
-    background-position: bottom center;
-    background-repeat: no-repeat;
+        margin-top: 55px;
+        position: relative;
+        height: 250px;
+        background-image: url(../image/base/top-bg.jpg);
+        background-size: 100% auto;
+        background-position: bottom center;
+        background-repeat: no-repeat;
 }
 
 .front-page header .top-windows .search-section {
-    position: absolute;
-    bottom: 0;
+        position: absolute;
+        bottom: 0;
 
 }
 
 .front-page header .site-logo-section {
-    float: left;
-    margin-left: 1%;
+        float: left;
+        margin-left: 1%;
 }
 
 .front-page header .site-logo-section a {
-    color: white;
-    text-decoration: none;
+        color: white;
+        text-decoration: none;
 }
 
 .front-page header .site-logo-section .logo {
-    width: 55px;
+        width: 55px;
 
 }
 
 .front-page header .site-logo-section .site-title {
-    vertical-align: middle;
+        vertical-align: middle;
 }
 
 .front-page header .site-top-menu {
-    margin-right: 1%;
+        margin-right: 1%;
 }
 
-.front-page .main-container {
 
+.front-page header .site-top-menu .navbar-nav .profile {
+        height: 40px;
 }
+
+.front-page header .site-top-menu .navbar-nav .profile .avatar{
+        height: 100%;
+        border-radius: 50%;
+        vertical-align: bottom;
+}
+
+
 
 /*breadcrumb----------------------------------------------------------------------------*/
 .breadcrumbs {
 
-    display: inline-block;
-    margin: 20px 0;
+        display: inline-block;
+        margin: 20px 0;
 }
 
 .breadcrumbs span {
-    margin: 0.25rem;
+        margin: 0.25rem;
 }
 
 .breadcrumbs a {
-    text-decoration: none;
+        text-decoration: none;
 }
 
 /*slider.jps----------------------------------------------------------------------------*/
 .front-page #slider {
 
-    height: 400px;
+        height: 400px;
 }
 
 .front-page #slider .carousel-inner {
-    height: 400px;
+        height: 400px;
 
 }
 
 .front-page #slider .carousel-inner .carousel-item {
 
-    text-align: center;
+        text-align: center;
 }
 
 .front-page #slider .carousel-inner .carousel-item img {
-    height: 400px;
+        height: 400px;
 }
 
 .front-page #slider .carousel-inner .carousel-item .carousel-caption {
-    bottom: 0px;
-    padding-top: 10px;
-    padding-bottom: 25px;
-    background-color: rgba(0, 0, 0, 0.43);
-    right: 0;
-    left: 0;
+        bottom: 0px;
+        padding-top: 10px;
+        padding-bottom: 25px;
+        background-color: rgba(0, 0, 0, 0.43);
+        right: 0;
+        left: 0;
 }
 
 .front-page #slider .carousel-inner .carousel-item .carousel-caption span {
-    text-decoration: none;
-    font-size: 20px;
-    color: white;
-    font-weight: bold;
+        text-decoration: none;
+        font-size: 20px;
+        color: white;
+        font-weight: bold;
 
 }
 
 .front-page #slider .carousel-indicators {
 
-    bottom: -5px;
+        bottom: -5px;
 
 }
 
@@ -121,281 +130,281 @@
 
 .front-page .category-main-section .category-logo {
 
-    width: 100px;
+        width: 100px;
 
 }
 
 /*search.jsp-----------------------------------------------------------*/
 .front-page .order-manage {
-    margin: 10px 0;
+        margin: 10px 0;
 
 }
 
 /* productList.jsp -------------------------------------------------------*/
 
 .front-page .product-list .list-item .list-item-cat {
-    position: absolute;
-    right: 0;
-    top: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
 
 }
 
 .front-page .product-list .list-item .list-item-cat a {
-    color: white;
-    text-decoration: none;
-    transition: .15s;
-    background-color: rgb(23, 162, 184);
-    border-radius: 0 .25rem 0 .25rem;
-    font-size: 0.9rem;
-    padding: 2px;
+        color: white;
+        text-decoration: none;
+        transition: .15s;
+        background-color: rgb(23, 162, 184);
+        border-radius: 0 .25rem 0 .25rem;
+        font-size: 0.9rem;
+        padding: 2px;
 }
 
 .front-page .product-list .list-item .list-item-cat a:hover {
-    background-color: #138496;
+        background-color: #138496;
 }
 
 .front-page .main-section .product-list .list-item {
-    width: 31%;
+        width: 31%;
 }
 
 .front-page .category-main-section .product-list .list-item, .front-page .search-main-section .product-list .list-item {
-    width: 31%;
+        width: 31%;
 }
 
 .front-page .product-list .list-item .list-item-title {
-    text-align: center;
-    font-weight: bold;
+        text-align: center;
+        font-weight: bold;
 }
 
 .front-page .product-list .list-item .list-item-info {
-    height: 40px;
-    line-height: 40px;
-    margin: 2px 2px;
+        height: 40px;
+        line-height: 40px;
+        margin: 2px 2px;
 }
 
 .front-page .product-list .list-item .list-item-info .list-item-logo {
-    height: 25px;
+        height: 25px;
 
 }
 
 .front-page .product-list .list-item .list-item-info .list-item-logo .list-item-logo-img {
-    height: auto;
-    max-height: 100%;
+        height: auto;
+        max-height: 100%;
 }
 
 .front-page .product-list .list-item .list-item-add {
-    position: absolute;
-    bottom: 0;
-    right: 0;
+        position: absolute;
+        bottom: 0;
+        right: 0;
 
 }
 
 .front-page .product-list .list-item .list-item-add-button {
-    font-size: 0.9rem;
-    border-radius: .25rem 0 .25rem 0;
+        font-size: 0.9rem;
+        border-radius: .25rem 0 .25rem 0;
 }
 
 .front-page .category-main-section .product-list .list-item .hiddin-cat {
-    display: none;
+        display: none;
 }
 
 .front-page .product-list .list-item .list-item-description {
-    height: 75px;
-    overflow-y: hidden;
+        height: 75px;
+        overflow-y: hidden;
 }
 
 .pagination-box {
 
-    margin: 20px 0;
+        margin: 20px 0;
 }
 
 .pagination-box .pagination .page-item {
-    width: 10%;
+        width: 10%;
 }
 
 .pagination-box .pagination .page-item.page-previous {
-    width: 25%;
+        width: 25%;
 }
 
 .pagination-box .pagination .page-item.page-next {
-    width: 25%;
+        width: 25%;
 }
 
 .pagination-box .pagination .page-item .page-link {
-    text-align: center;
-    color: #17a2b8;
+        text-align: center;
+        color: #17a2b8;
 }
 
 .pagination-box .pagination .page-item.active .page-link {
 
-    background-color: #17a2b8;
-    border-color: #17a2b8;
-    color: white;
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+        color: white;
 }
 
 /*floatBoxForShoppingList.jsp------------------------------------------------------------*/
 .front-page .list-button-float-box {
-    position: fixed;
-    right: 5%;
-    top: 0;
-    margin-top: 250px;
-    z-index: 1020;
+        position: fixed;
+        right: 5%;
+        top: 0;
+        margin-top: 250px;
+        z-index: 1020;
 }
 
 .front-page #list-float-box {
 
-    position: fixed;
-    right: 0;
-    top: 0;
-    z-index: 1025;
-    height: 100%;
-    width: 300px;
-    background-color: white;
-    box-shadow: 5px -10px 10px 1px #17a2b8;
+        position: fixed;
+        right: 0;
+        top: 0;
+        z-index: 1025;
+        height: 100%;
+        width: 300px;
+        background-color: white;
+        box-shadow: 5px -10px 10px 1px #17a2b8;
 }
 
 .front-page #list-float-box .list-body {
 
-    margin-top: 50px;
-    padding: 20px
+        margin-top: 50px;
+        padding: 20px
 
 }
 
 .front-page #list-float-box .list-body .list-content {
-    text-align: center;
-    overflow-x: hidden;
-    height: 660px;
+        text-align: center;
+        overflow-x: hidden;
+        height: 660px;
 }
 
 .front-page #list-float-box .list-body .list-content table tbody tr.bought-item {
-    background-color: #f5f5f5;
+        background-color: #f5f5f5;
 }
 
 .front-page #list-float-box .list-body .list-content table tbody td {
-    text-align: center;
-    line-height: 50px;
+        text-align: center;
+        line-height: 50px;
 }
 
 .front-page #list-float-box .list-body .list-content table tbody td.td-img img {
-    width: 50px;
+        width: 50px;
 }
 
 .front-page #list-float-box .list-body .list-content table tbody td.td-buttons {
-    width: 70px;
+        width: 70px;
 }
 
 .front-page #list-float-box .list-body .list-content table tbody td.td-buttons a {
 
-    width: 40%;
-    display: inline-block;
+        width: 40%;
+        display: inline-block;
 
 }
 
 @media (max-height: 900px) {
-    .front-page #list-float-box .list-body .list-content {
-        height: 500px;
-    }
+        .front-page #list-float-box .list-body .list-content {
+                height: 500px;
+        }
 }
 
 @media (max-height: 800px) {
-    .front-page #list-float-box .list-body .list-content {
-        height: 400px;
-    }
+        .front-page #list-float-box .list-body .list-content {
+                height: 400px;
+        }
 }
 
 @media (max-height: 700px) {
-    .front-page #list-float-box .list-body .list-content {
-        height: 300px;
-    }
+        .front-page #list-float-box .list-body .list-content {
+                height: 300px;
+        }
 }
 
 @media (max-height: 600px) {
-    .front-page #list-float-box .list-body .list-content {
-        height: 250px;
-    }
+        .front-page #list-float-box .list-body .list-content {
+                height: 250px;
+        }
 }
 
 @media (max-height: 500px) {
-    .front-page #list-float-box .list-body .list-content {
-        height: 200px;
-    }
+        .front-page #list-float-box .list-body .list-content {
+                height: 200px;
+        }
 }
 
 /*floatBoxForAddProductInShoppingList.jsp AND floatBoxForViewProductFromShoppingList.jsp-------------------------------------- */
 @media (min-width: 800px) {
-    .custom-modal .modal-dialog {
-        max-width: 600px;
-    }
+        .custom-modal .modal-dialog {
+                max-width: 600px;
+        }
 }
 
 .custom-modal .left-body {
-    width: 50%;
-    display: inline-block;
-    vertical-align: top;
-    padding: 5px;
+        width: 50%;
+        display: inline-block;
+        vertical-align: top;
+        padding: 5px;
 }
 
 .custom-modal .left-body .item-logo {
-    text-align: center;
-    margin-top: .5rem;
-    margin-bottom: .5rem;
+        text-align: center;
+        margin-top: .5rem;
+        margin-bottom: .5rem;
 }
 
 .custom-modal .left-body .item-logo-img-box {
-    height: 50px;
+        height: 50px;
 
 }
 
 .custom-modal .left-body .item-logo-img {
-    height: 100%;
-    width: auto;
+        height: 100%;
+        width: auto;
 }
 
 .custom-modal .right-body {
-    width: 49%;
-    display: inline-block;
-    padding: 5px;
+        width: 49%;
+        display: inline-block;
+        padding: 5px;
 }
 
 .custom-modal .right-body .item-description p.item-description-text {
-    max-height: 250px;
-    overflow-y: hidden;
+        max-height: 250px;
+        overflow-y: hidden;
 }
 
 .custom-modal .right-body .item-information {
-    margin-bottom: 2rem;
+        margin-bottom: 2rem;
 
 }
 
 .custom-modal .right-body .add-box button, .custom-modal .right-body .add-box a {
-    width: 100%;
-    margin-bottom: 1rem;
+        width: 100%;
+        margin-bottom: 1rem;
 }
 
 /*mylists.jsp tutte le liste-------------------------------------------------------------------------------------------------*/
 
 .mylists-main-section {
-    min-height: 500px;
+        min-height: 500px;
 }
 
 .mylists-main-section .add-list-box {
 
-    margin-top: 2rem;
+        margin-top: 2rem;
 }
 
 .mylists-main-section .my-lists {
 
-    margin: 30px 0;
+        margin: 30px 0;
 }
 
 .mylists-main-section .list-item {
 
-    border: 1px solid #d0d0d0;
-    padding: 5px;
-    border-radius: .25rem;
-    margin: 20px 0;
-    position: relative;
-    min-height: 160px;
+        border: 1px solid #d0d0d0;
+        padding: 5px;
+        border-radius: .25rem;
+        margin: 20px 0;
+        position: relative;
+        min-height: 160px;
 }
 
 .mylists-main-section .list-item .list-head {
@@ -403,333 +412,450 @@
 }
 
 .mylists-main-section .list-item .list-head .list-left-head {
-    display: inline-block;
-    width: 80%;
-    vertical-align: top;
+        display: inline-block;
+        width: 80%;
+        vertical-align: top;
 
 }
 
 .mylists-main-section .list-item .list-head .list-right-head {
-    display: inline-block;
-    width: 19%;
+        display: inline-block;
+        width: 19%;
 
 }
 
 .mylists-main-section .list-item .list-head .list-right-head .button {
-    width: 100%;
-    margin: 5px 0px;
-    color: #fff;
-    background-color: #6c757d;
-    text-align: center;
-    display: inline-block;
-    border: 1px solid transparent;
-    padding: .375rem .75rem;
-    border-radius: .25rem;
+        width: 100%;
+        margin: 5px 0px;
+        color: #fff;
+        background-color: #6c757d;
+        text-align: center;
+        display: inline-block;
+        border: 1px solid transparent;
+        padding: .375rem .75rem;
+        border-radius: .25rem;
 }
 
 .mylists-main-section .list-item .list-head .list-right-head .permission {
-    margin: 10px 0;
-    text-align: center;
+        margin: 10px 0;
+        text-align: center;
 }
 
 .mylists-main-section .list-item .list-head .list-right-head .permission span {
-    display: inline-block;
-    width: 20%;
+        display: inline-block;
+        width: 20%;
 }
 
 .mylists-main-section .list-item .list-head .list-info {
 
-    display: inline-block;
+        display: inline-block;
 }
 
 .mylists-main-section .list-item .list-head .list-info span {
-    display: block;
-    margin: 5px 0;
+        display: block;
+        margin: 5px 0;
 }
 
 .mylists-main-section .list-item .list-head .list-logo {
-    width: 150px;
-    height: 100px;
-    display: inline-block;
-    vertical-align: top;
+        width: 150px;
+        height: 100px;
+        display: inline-block;
+        vertical-align: top;
 }
 
 .mylists-main-section .list-item .list-head .list-logo img {
-    height: 100%;
+        height: 100%;
 
 }
 
 .mylists-main-section .list-item .list-body {
-    padding: 5px;
-    margin-top: 10px;
-    margin-bottom: 30px;
+        padding: 5px;
+        margin-top: 10px;
+        margin-bottom: 30px;
 
 }
 
 .mylists-main-section .list-item .list-body .list-product {
-    width: 10%;
-    display: inline-block;
-    margin: 0 1%;
+        width: 10%;
+        display: inline-block;
+        margin: 0 1%;
 
 }
 
 .mylists-main-section .list-item .list-body .bought-item {
-    border: 1px solid #d0d0d0;
+        border: 1px solid #d0d0d0;
 
 }
 
 .mylists-main-section .list-item .list-body .item-empty {
-    text-align: center;
+        text-align: center;
 }
 
 .mylists-main-section .list-item .list-detail-link {
-    position: absolute;
-    right: 0;
-    bottom: 0;
+        position: absolute;
+        right: 0;
+        bottom: 0;
 }
 
 .mylists-main-section .list-item .list-detail-link a {
-    width: 200px;
-    display: inline-block;
-    border-radius: .25rem 0 .25rem 0;
+        width: 200px;
+        display: inline-block;
+        border-radius: .25rem 0 .25rem 0;
 }
 
 /*mylist.jsp singola lista specificata------------------------------------------------------------------------------------------------*/
 
 .mylist {
 
-    position: relative;
+        position: relative;
 
 }
 
 .mylist .list-left-body {
-    width: 20%;
-    display: inline-block;
-    vertical-align: top;
-    border: 1px solid #d0d0d0;
-    border-radius: .25rem;
-    padding: 10px;
+        width: 20%;
+        display: inline-block;
+        vertical-align: top;
+        border: 1px solid #d0d0d0;
+        border-radius: .25rem;
+        padding: 10px;
 }
 
 .mylist .list-left-body .list-head .list-modify {
-    text-align: center;
+        text-align: center;
 
 }
 
 .mylist .list-left-body .list-head .list-modify .btn {
-    width: 100%;
+        width: 100%;
 }
 
 .mylist .list-left-body .list-head .list-modify .delete {
-    margin-top: 1rem;
+        margin-top: 1rem;
 }
 
 .mylist .list-left-body .list-permission {
-    margin-top: 20px;
+        margin-top: 20px;
 }
 
 .mylist .list-left-body .list-sharing {
-    margin-top: 20px;
-    text-align: center;
+        margin-top: 20px;
+        text-align: center;
 }
 
 .mylist .list-left-body .list-sharing .btn {
-    width: 100%;
+        width: 100%;
 }
 
 .mylist .list-right-body {
-    width: 78%;
-    display: inline-block;
-    margin-left: 1%;
+        width: 78%;
+        display: inline-block;
+        margin-left: 1%;
 }
 
 .mylist .list-right-body .list-item {
-    margin-bottom: 10px;
-    border: 1px solid #d0d0d0;
-    border-radius: .25rem;
-    padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #d0d0d0;
+        border-radius: .25rem;
+        padding: 10px;
 }
 
 .mylist .list-right-body .list-item.item-bought {
-    background-color: #f5f5f5;
+        background-color: #f5f5f5;
 }
 
 .mylist .list-right-body .list-item.item-empty {
-    text-align: center;
+        text-align: center;
 }
 
 .mylist .list-right-body .list-item div {
-    display: inline-block;
-    text-align: center;
-    vertical-align: middle;
+        display: inline-block;
+        text-align: center;
+        vertical-align: middle;
 }
 
 .mylist .list-right-body .list-item .item-img {
-    width: 15%;
+        width: 15%;
 }
 
 .mylist .list-right-body .list-item .item-name {
-    width: 20%;
+        width: 20%;
 
 }
 
 .mylist .list-right-body .list-item .item-cat {
-    width: 15%;
+        width: 15%;
 }
 
 .mylist .list-right-body .list-item .item-logo {
-    width: 10%;
+        width: 10%;
 }
 
 .mylist .list-right-body .list-item .item-description {
-    width: 20%;
+        width: 20%;
 }
 
 .mylist .list-right-body .list-item .item-manage {
-    width: 14%;
+        width: 14%;
 }
 
 .mylist .list-right-body .list-item .item-manage a {
-    width: 100%;
-    margin: 2px 0;
+        width: 100%;
+        margin: 2px 0;
 }
 
 /*comment.jsp*/
 
 .comments {
-    margin-top: 2rem;
+        margin-top: 2rem;
 }
 
 .comments .list-comment .comment-item {
-    margin-bottom: 10px;
-    border: 1px solid #d0d0d0;
-    border-radius: .25rem;
-    padding: 10px;
-    position: relative;
+        margin-bottom: 10px;
+        border: 1px solid #d0d0d0;
+        border-radius: .25rem;
+        padding: 10px;
+        position: relative;
 }
 
 .comments .list-comment h2 {
-    margin: 20px 0;
+        margin: 20px 0;
 }
 
 .comments .list-comment .comment-item .comment-info {
-    font-weight: bold;
+        font-weight: bold;
 }
 
 .comments .list-comment .comment-item .comment-info .user-img {
-    width: 10%;
-    display: inline-block;
-    margin-right: 2%;
+        width: 10%;
+        display: inline-block;
+        margin-right: 2%;
 }
 
 .comments .list-comment .comment-item .comment-info .user-img img {
 
-    border-radius: 50%
+        border-radius: 50%
 }
 
 .comments .list-comment .comment-item .comment-text {
-    margin-top: 1rem;
-    padding: 0 10px;
+        margin-top: 1rem;
+        padding: 0 10px;
 }
 
 .comments .list-comment .my-comment .comment-delete {
-    position: absolute;
-    top: 0;
-    right: 0;
+        position: absolute;
+        top: 0;
+        right: 0;
 }
 
 .comments .list-comment .my-comment .comment-delete a {
-    border-radius: 0 .25rem 0 .25rem;
+        border-radius: 0 .25rem 0 .25rem;
 }
 
 .comments .edit-comment {
-    margin-top: 20px;
+        margin-top: 20px;
 }
 
 /*floatBoxForSharing.jsp------------------------------------------------------------------------------------*/
 
 #boxSharing .sharing-list {
-    margin-top: 20px;
+        margin-top: 20px;
 }
 
 #boxSharing .sharing-list .item-empty {
-    text-align: center;
+        text-align: center;
 }
 
 #boxSharing .sharing-list .list-item {
-    margin-bottom: 10px;
-    border: 1px solid #d0d0d0;
-    border-radius: .25rem;
-    padding: 10px;
-    position: relative;
+        margin-bottom: 10px;
+        border: 1px solid #d0d0d0;
+        border-radius: .25rem;
+        padding: 10px;
+        position: relative;
 }
 
 #boxSharing .sharing-list .user-info {
-    width: 50%;
-    display: inline-block;
+        width: 50%;
+        display: inline-block;
 
 }
 
 #boxSharing .sharing-list .user-info .user-img {
-    width: 15%;
-    display: inline-block;
+        width: 15%;
+        display: inline-block;
 }
 
 #boxSharing .sharing-list .user-info .user-img img {
-    border-radius: 50%;
+        border-radius: 50%;
 }
 
 #boxSharing .sharing-list .user-info span {
 
-    display: inline-block;
-    width: 80%;
-    white-space: nowrap;
-    overflow: hidden;
-    line-height: 100%;
-    margin-left: .25rem;
+        display: inline-block;
+        width: 80%;
+        white-space: nowrap;
+        overflow: hidden;
+        line-height: 100%;
+        margin-left: .25rem;
 }
 
 #boxSharing .sharing-list .sharing-option {
-    width: 49%;
-    display: inline-block;
+        width: 49%;
+        display: inline-block;
 }
 
 #boxSharing .sharing-list .sharing-option .form-submit {
 
-    margin: 10px auto 0;
+        margin: 10px auto 0;
 }
 
 #boxSharing .sharing-list .sharing-option .custom-checkbox {
-    width: 25%;
-    margin: 0;
+        width: 25%;
+        margin: 0;
 }
 
 #boxSharing .sharing-list .sharing-option label i {
-    margin-right: .50rem;
+        margin-right: .50rem;
 }
 
 #boxSharing .sharing-body .form-inline .custom-checkbox {
-    width: 45%;
+        width: 45%;
 }
 
 #boxSharing .sharing-body .form-inline .custom-checkbox .custom-control-label i {
 
-    margin-right: 0.5rem;
+        margin-right: 0.5rem;
 }
 
 #boxSharing .sharing-body .form-inline .form-check input {
-    right: 0;
-    position: absolute;
+        right: 0;
+        position: absolute;
 }
 
 #boxSharing .sharing-body .form-inline .input-group {
 
-    width: 100%;
-    margin-top: 1rem;
+        width: 100%;
+        margin-top: 1rem;
 }
 
 /*updateList.jsp---------------------------------------------------------------------------------*/
 
 form .custom-file-input-old-image {
-    width: 15%;
+        width: 15%;
+}
+
+
+
+
+
+
+
+/*modifyUser.jsp-----------------------------------------------------------------------------------------------------*/
+
+/*register.jsp-----------------------------------------------*/
+
+.user-modify #form-register  .avatars{
+        max-width: 500px;
+}
+
+.user-modify #form-register .avatar-box {
+        width: 12%;
+        margin: .5rem;
+        padding: 0;
+}
+
+.user-modify #form-register  .avatar-box .custom-control-label::before{
+        display: none;
+}
+
+.user-modify #form-register .avatar-box .img-input {
+        width: 100%;
+}
+.user-modify #form-register .avatar-box .custom-img{
+        width: 100%;
+}
+
+.user-modify #form-register .img-check {
+        color: #138496;
+        position: absolute;
+        font-size: 1.5rem;
+        visibility: hidden;
+        position: absolute;
+        top: 0;
+        right: -10px;
+        background: white;
+        border-radius: 50%;
+        opacity: .8;
+        line-height: 1.5rem;
+}
+
+
+
+
+
+.user-modify #form-register .img-radio:checked + .custom-control-label  .img-check{
+        visibility: visible;
+}
+
+
+.user-modify #form-register #customAvatar:checked ~ #customAvatarImg {
+        display: inline-block;
+}
+
+.user-modify #form-register #customAvatar:not(checked) ~ #customAvatarImg {
+        display: none;
+}
+
+
+.user-modify #form-register  .custom-avatar-uploader{
+        display: none;
+}
+
+.user-modify #form-register .progress-bar-div{
+        display: none;
+        margin-top: 1rem;
+}
+
+.user-modify #form-register .progress-bar-div .progress-bar{
+        height: 1rem;
+        width: 0;
+
+}
+
+.user-modify #form-register .progress-bar-div .password0{
+        width: 20%;
+
+}
+
+.user-modify #form-register .progress-bar-div .password1{
+        width: 40%;
+
+}
+
+.user-modify #form-register .progress-bar-div .password2{
+        width: 60%;
+
+}
+.user-modify #form-register .progress-bar-div .password3{
+        width: 80%;
+
+}
+.user-modify #form-register .progress-bar-div .password4{
+        width: 100%;
+
+}
+
+.user-modify #form-register .form-group.row .col-sm-6{
+        margin-bottom: .5rem;
+        margin-top: .5rem
+}
+
+.user-modify #form-register .error-messages p{
+        display: none;
+        color: red;
+        padding: .5rem;
+        margin: 0;
+}
+
+.user-modify .current-avatar img{
+        border-radius: 50%;
 }

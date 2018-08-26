@@ -23,6 +23,7 @@ public class LoginServlet extends HttpServlet
                 String prevUrl = null;
 
                 prevUrl = request.getParameter(FormValidator.PREV_URL_KEY);
+                //controlla se l'accesso sono dovuto dal filtro di login check
                 //se non c'è preUrl dal parametro, set preUrl come URL di provenienza
                 if (prevUrl == null)
                 {
@@ -33,15 +34,18 @@ public class LoginServlet extends HttpServlet
                                 if (prevUrl != null && prevUrl.contains(FormValidator.pageNameOfUserSystem[i]))
                                 {
                                         prevUrl = null;
-                                        i = 99;
                                 }
                         }
+                }
+                //se parametro non è vuoto, significa la pagina di provenienza sono accessibile solo da utente autenticato, quindi url per bottone cancell deve essere home del sito
+                else{
+                        request.setAttribute("cancell", "cancell");
                 }
 
                 //se è nullo, set la provenienza come string vuota
                 if (prevUrl == null)
                 {
-                        prevUrl = "";
+                        prevUrl = getServletContext().getContextPath();
                 }
 
                 //set il titolo della pagina

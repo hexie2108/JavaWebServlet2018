@@ -21,13 +21,14 @@ public class JDBCLogDAO extends JDBCDAO<Log, Integer> implements LogDAO {
     private Log getLogFromResultSet(ResultSet rs) throws SQLException {
         Log log = new Log();
 
-        log.setId(rs.getInt("id"));
-        log.setProductId(rs.getInt("productId"));
-        log.setUserId(rs.getInt("userId"));
-        log.setLast1(rs.getTimestamp("last1"));
-        log.setLast2(rs.getTimestamp("last2"));
-        log.setLast3(rs.getTimestamp("last3"));
-        log.setLast4(rs.getTimestamp("last4"));
+                log.setId(rs.getInt("id"));
+                log.setProductId(rs.getInt("productId"));
+                log.setUserId(rs.getInt("userId"));
+                log.setLast1(rs.getTimestamp("last1"));
+                log.setLast2(rs.getTimestamp("last2"));
+                log.setLast3(rs.getTimestamp("last3"));
+                log.setLast4(rs.getTimestamp("last4"));
+                log.setEmailStatus(rs.getBoolean("emailStatus"));
 
         return log;
     }
@@ -55,16 +56,18 @@ public class JDBCLogDAO extends JDBCDAO<Log, Integer> implements LogDAO {
             throw new DAOException("log bean is null");
         }
 
-        Connection CON = CP.getConnection();
-        try (PreparedStatement stm = CON.prepareStatement("INSERT INTO Log (productId, userId, last1, last2, last3, last4) VALUES (?,?,?,?,?,?)",
-                Statement.RETURN_GENERATED_KEYS)) {
+                CON = C3p0Util.getConnection();
+                try (PreparedStatement stm = CON.prepareStatement("INSERT INTO Log (productId, userId, last1, last2, last3, last4, emailStatus) VALUES (?,?,?,?,?,?,?)",
+                            Statement.RETURN_GENERATED_KEYS))
+                {
 
-            stm.setInt(1, log.getProductId());
-            stm.setInt(2, log.getUserId());
-            stm.setTimestamp(3, log.getLast1());
-            stm.setTimestamp(4, log.getLast2());
-            stm.setTimestamp(5, log.getLast3());
-            stm.setTimestamp(6, log.getLast4());
+                        stm.setInt(1, log.getProductId());
+                        stm.setInt(2, log.getUserId());
+                        stm.setTimestamp(3, log.getLast1());
+                        stm.setTimestamp(4, log.getLast2());
+                        stm.setTimestamp(5, log.getLast3());
+                        stm.setTimestamp(6, log.getLast4());
+                        stm.setBoolean(7, log.isEmailStatus());
 
             stm.executeUpdate();
 
@@ -131,24 +134,27 @@ public class JDBCLogDAO extends JDBCDAO<Log, Integer> implements LogDAO {
             throw new DAOException("parameter not valid", new IllegalArgumentException("The passed log is null"));
         }
 
-        Connection CON = CP.getConnection();
-        try (PreparedStatement stm = CON.prepareStatement(
-                "UPDATE Log SET "
-                        + " productId =?, "
-                        + " userId =?, "
-                        + " last1 =?, "
-                        + " last2 =?, "
-                        + " last3 =?, "
-                        + " last4 =?  "
-                        + " WHERE id = ? "
-        )) {
-            stm.setInt(1, log.getProductId());
-            stm.setInt(2, log.getUserId());
-            stm.setTimestamp(3, log.getLast1());
-            stm.setTimestamp(4, log.getLast2());
-            stm.setTimestamp(5, log.getLast3());
-            stm.setTimestamp(6, log.getLast4());
-            stm.setInt(7, log.getId());
+                CON = C3p0Util.getConnection();
+                try (PreparedStatement stm = CON.prepareStatement(
+                            "UPDATE Log SET "
+                            + " productId =?, "
+                            + " userId =?, "
+                            + " last1 =?, "
+                            + " last2 =?, "
+                            + " last3 =?, "
+                            + " last4 =?, "
+                            + " emailStatus =? "
+                            + " WHERE id = ? "
+                ))
+                {
+                        stm.setInt(1, log.getProductId());
+                        stm.setInt(2, log.getUserId());
+                        stm.setTimestamp(3, log.getLast1());
+                        stm.setTimestamp(4, log.getLast2());
+                        stm.setTimestamp(5, log.getLast3());
+                        stm.setTimestamp(6, log.getLast4());
+                        stm.setBoolean(7, log.isEmailStatus());
+                        stm.setInt(8, log.getId());
 
             if (stm.executeUpdate() != 1) {
                 throw new DAOException("Impossible to update the log");
@@ -228,25 +234,99 @@ public class JDBCLogDAO extends JDBCDAO<Log, Integer> implements LogDAO {
                         return log;
                     }
 
-                    //Entry does not exist
-                } else {
-                    log = new Log();
-                    Timestamp nullts = null;
-                    log.setProductId(productId);
-                    log.setUserId(userId);
-                    log.setLast1(timestamp);
-                    log.setLast2(nullts);
-                    log.setLast3(nullts);
-                    log.setLast4(nullts);
-                    insert(log);
-                    return log;
+                                        //Entry does not exist
+                                }
+                                else
+                                {
+                                        log = new Log();
+                                        Timestamp nullts = null;
+                                        log.setProductId(productId);
+                                        log.setUserId(userId);
+                                        log.setLast1(timestamp);
+                                        log.setLast2(nullts);
+                                        log.setLast3(nullts);
+                                        log.setLast4(nullts);
+                                        insert(log);
+                                        return log;
+                                }
+                        }
                 }
-            }
-        } catch (SQLException ex) {
-            throw new DAOException("Impossible to get the log for the passed userId and productId", ex);
-        } finally {
-            ConnectionPool.close(CON);
+                catch (SQLException ex)
+                {
+                        throw new DAOException("Impossible to get the log for the passed userId and productId", ex);
+                }
+                finally
+                {
+                        C3p0Util.close(CON);
+                }
         }
-    }
+
+        @Override
+        public Log getLogNotEmailYet(Timestamp currentTime, Integer predictionDay) throws DAOException
+        {
+                Log log = null;
+                if (currentTime == null || predictionDay == null)
+                {
+                        throw new DAOException("currentTime or predictionDay is null");
+                }
+
+                CON = C3p0Util.getConnection();
+                //get log in cui, stato di email è false, esiste almeno 2 aquisti storici, e il tempo previsto di riaquisto è minore di 24 ore
+                try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Log WHERE emailStatus = 0 AND (last2 IS NOT NULL) AND ( (TIME_TO_SEC( TIMEDIFF( last1, last2 )) - TIME_TO_SEC( TIMEDIFF( ?, last1 ))) BETWEEN 0 AND 60*60*24*? )"))
+                {
+                        stm.setTimestamp(1, currentTime);
+                        stm.setInt(2, predictionDay);
+                        try (ResultSet rs = stm.executeQuery())
+                        {
+                                if (rs.next())
+                                {
+                                        log = getLogFromResultSet(rs);
+                                }
+                        }
+                }
+                catch (SQLException ex)
+                {
+                        throw new DAOException("Impossible to get the log not email yet", ex);
+                }
+                finally
+                {
+                        C3p0Util.close(CON);
+                }
+
+                return log;
+
+        }
+
+        @Override
+        public void setEmailStatusTrueByUserId(Integer userId) throws DAOException
+        {
+                if (userId == null)
+                {
+                        throw new DAOException("arguments (userId ) are null");
+                }
+
+                CON = C3p0Util.getConnection();
+                try (PreparedStatement stm = CON.prepareStatement(
+                            "UPDATE Log SET emailStatus = 1 WHERE userId = ? AND emailStatus = 0"
+                ))
+                {
+                        stm.setInt(1, userId);
+
+                        //non si sa perché in thread continua saltare questo errore di update, ma update sono risulati correttamente
+                       if (stm.executeUpdate() == 0)
+                        {
+                                throw new DAOException("Impossible to update the log user:"+userId);
+                        }
+                }
+                catch (SQLException ex)
+                {
+                        throw new DAOException("Impossible to update the log", ex);
+                }
+                finally
+                {
+                        C3p0Util.close(CON);
+                }
+
+        }
 
 }

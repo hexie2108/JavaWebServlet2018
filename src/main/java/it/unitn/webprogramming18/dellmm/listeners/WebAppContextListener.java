@@ -10,7 +10,11 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.jdbc.JDBCDAOFactory;
 import it.unitn.webprogramming18.dellmm.email.EmailFactory;
+import it.unitn.webprogramming18.dellmm.email.SendMailOfSuggestionForRepeatitivePurchasesTask;
 import it.unitn.webprogramming18.dellmm.email.exceptions.EmailFactoryException;
+import java.util.Timer;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -41,6 +45,7 @@ public class WebAppContextListener implements ServletContextListener {
         final String dbpwd = sce.getServletContext().getInitParameter("dbpwd");
 
         /*inizializza c3p0*/
+        C3p0Util.initDBPool(dburl, dbuser, dbpwd);
 
         try {
             JDBCDAOFactory.configure(dburl, dbuser, dbpwd);
@@ -57,18 +62,34 @@ public class WebAppContextListener implements ServletContextListener {
         final String smtpUsername = sce.getServletContext().getInitParameter("smtpUsername");
         final String smtpPassword = sce.getServletContext().getInitParameter("smtpPassword");
 
-        try {
-            EmailFactory.configure(smtpHostname, smtpPort, smtpUsername, smtpPassword);
-            EmailFactory emailFactory = EmailFactory.getInstance();
+                EmailFactory emailFactory = null;
+                try
+                {
+                        EmailFactory.configure(smtpHostname, smtpPort, smtpUsername, smtpPassword);
+                        emailFactory = EmailFactory.getInstance();
 
-            sce.getServletContext().setAttribute("emailFactory", emailFactory);
-        } catch (EmailFactoryException ex) {
-            Logger.getLogger(getClass().getName()).severe(ex.toString());
+                        sce.getServletContext().setAttribute("emailFactory", emailFactory);
+                }
+                catch (EmailFactoryException ex)
+                {
+                        Logger.getLogger(getClass().getName()).severe(ex.toString());
 
-            throw new RuntimeException(ex);
+                        throw new RuntimeException(ex);
+                }
+
+                /*---------------suggerimento per riaquisto---------------------------*/
+                //genera url
+                String basepath = sce.getServletContext().getInitParameter("domainForEmailLink") + sce.getServletContext().getContextPath();
+
+                //crea task per invaire email
+                SendMailOfSuggestionForRepeatitivePurchasesTask task = new SendMailOfSuggestionForRepeatitivePurchasesTask(emailFactory, basepath);
+                //crea esecutore con 5 thread
+                ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(5);
+
+                //iniza esegue tast, dopo 5minuti dall'avvio di tomcat, e poi ripete ogni 24ore
+                executor.scheduleAtFixedRate(task, 60 * 5, 60 * 60 * 24, TimeUnit.SECONDS);
+
         }
-
-    }
 
     /**
      * The servlet container call this method when destroyes the

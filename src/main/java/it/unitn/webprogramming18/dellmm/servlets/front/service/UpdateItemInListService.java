@@ -70,7 +70,7 @@ public class UpdateItemInListService extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+
         //Language bundle
         ResourceBundle rb = i18n.getBundle(request);
 
@@ -97,13 +97,13 @@ public class UpdateItemInListService extends HttpServlet {
         } catch (DAOException ex) {
             throw new ServletException(ex.getMessage(), ex);
         }
-        
+
         //se il permesso è  vuoto
         if (permission == null) {
             ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.noPermissionOnList"));
             return;
         }
-        
+
         //in caso di inserimento
         if (action.equals("insert")) {
             if (permission.isAddObject()) {
@@ -160,7 +160,7 @@ public class UpdateItemInListService extends HttpServlet {
                     throw new ServletException(ex.getMessage(), ex);
                 }
                 result = "DeleteOk";
-            } else { 
+            } else {
                 ServletUtility.sendError(request, response, 400, rb.getString("permission.deleteItemNotAllowed")); //Not allowed delete item in list
                 return;
             }
@@ -178,57 +178,67 @@ public class UpdateItemInListService extends HttpServlet {
                 productInList.setStatus(true);
                 productInListDAO.update(productInList);
 
-                //get log di tale utente con tale prodotto
-                log = logDAO.getUserProductLogByIds(user.getId(), Integer.parseInt(productId));
+                                //get log di tale utente con tale prodotto
+                                log = logDAO.getUserProductLogByIds(user.getId(), Integer.parseInt(productId));
 
-                //se non esiste un log vecchio
-                if (log == null) {
-                    //inserisce un nuovo
-                    log = new Log();
-                    log.setProductId(Integer.parseInt(productId));
-                    log.setUserId(user.getId());
-                    log.setLast1(new Timestamp(System.currentTimeMillis()));
-                    logDAO.insert(log);
+                                //se non esiste un log vecchio
+                                if (log == null)
+                                {
+                                        //inserisce un nuovo
+                                        log = new Log();
+                                        log.setProductId(Integer.parseInt(productId));
+                                        log.setUserId(user.getId());
+                                        log.setLast1(new Timestamp(System.currentTimeMillis()));
+                                        log.setEmailStatus(false);
+                                        logDAO.insert(log);
+                                }
+                                //se esiste già un log, bisogna aggiornare i vari tempi di acquisto
+                                else
+                                {
+                                        //caso del secondo aquisto
+                                        if (log.getLast2() == null)
+                                        {
+                                                log.setLast2(log.getLast1());
+                                        }
+
+                                        //caso del terzo aquisto
+                                        else if (log.getLast3() == null)
+                                        {
+                                                log.setLast3(log.getLast2());
+                                                log.setLast2(log.getLast1());
+                                        }
+
+                                        //caso del quarto aquisto e in poi
+                                        else
+                                        {
+                                                log.setLast4(log.getLast3());
+                                                log.setLast3(log.getLast2());
+                                                log.setLast2(log.getLast1());
+                                        }
+
+                                        log.setLast1(new Timestamp(System.currentTimeMillis()));
+                                        log.setEmailStatus(false);
+                                        logDAO.update(log);
+                                }
+
+                        }
+                        catch (DAOException ex)
+                        {
+                                throw new ServletException(ex.getMessage(), ex);
+                        }
+                        result = "BoughtOk";
+
                 }
-                //se esiste già un log, bisogna aggiornare i vari tempi di acquisto
-                else {
-                    //caso del secondo aquisto
-                    if (log.getLast2() == null) {
-                        log.setLast2(log.getLast1());
-                    }
 
-                    //caso del terzo aquisto
-                    else if (log.getLast3() == null) {
-                        log.setLast3(log.getLast2());
-                        log.setLast2(log.getLast1());
-                    }
-
-                    //caso del quarto aquisto e in poi
-                    else {
-                        log.setLast4(log.getLast3());
-                        log.setLast3(log.getLast2());
-                        log.setLast2(log.getLast1());
-                    }
-
-                    log.setLast1(new Timestamp(System.currentTimeMillis()));
-                    logDAO.update(log);
+                //ritorna alla pagina di provenienza
+                String prevUrl = request.getHeader("Referer");
+                if (prevUrl == null)
+                {
+                        prevUrl = getServletContext().getContextPath();
                 }
-
-            } catch (DAOException ex) {
-                throw new ServletException(ex.getMessage(), ex);
-            }
-            result = "BoughtOk";
-
+                //passare lo risultato  di inserimento
+                request.getSession().setAttribute("result", result);
+                response.sendRedirect(response.encodeRedirectURL(prevUrl));
         }
-
-        //ritorna alla pagina di provenienza
-        String prevUrl = request.getHeader("Referer");
-        if (prevUrl == null) {
-            prevUrl = getServletContext().getContextPath();
-        }
-        //passare lo risultato  di inserimento
-        request.getSession().setAttribute("result", result);
-        response.sendRedirect(response.encodeRedirectURL(prevUrl));
-    }
 
 }

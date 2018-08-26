@@ -303,6 +303,9 @@
 <div class="link-utils">     
         <div class="content-top">
                 <a class=" " href="<c:url value="/resendEmail"/>">Richiede il rinvio di email</a>
+                <a id="" class="float-right" href="${prevUrl}">
+                        <i class="fas fa-arrow-left"></i> <fmt:message key="login.label.cancel"/>
+                </a>
         </div>
         <div class="content-divider">
                 <span class="content-divider-text">
