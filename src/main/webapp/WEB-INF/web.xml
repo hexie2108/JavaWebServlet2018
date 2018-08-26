@@ -638,6 +638,15 @@
         <url-pattern>/service/acceptPrivacyService</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>ModifyUserService</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.service.ModifyUserService</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ModifyUserService</servlet-name>
+        <url-pattern>/service/modifyUserService</url-pattern>
+    </servlet-mapping>
+
     <!-- SERVE STATIC FOLDERS -->
     <servlet-mapping>
         <servlet-name>default</servlet-name>
