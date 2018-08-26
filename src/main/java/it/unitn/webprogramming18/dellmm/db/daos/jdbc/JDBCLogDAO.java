@@ -56,7 +56,7 @@ public class JDBCLogDAO extends JDBCDAO<Log, Integer> implements LogDAO {
             throw new DAOException("log bean is null");
         }
 
-                CON = C3p0Util.getConnection();
+                Connection CON = CP.getConnection();
                 try (PreparedStatement stm = CON.prepareStatement("INSERT INTO Log (productId, userId, last1, last2, last3, last4, emailStatus) VALUES (?,?,?,?,?,?,?)",
                             Statement.RETURN_GENERATED_KEYS))
                 {
@@ -134,7 +134,7 @@ public class JDBCLogDAO extends JDBCDAO<Log, Integer> implements LogDAO {
             throw new DAOException("parameter not valid", new IllegalArgumentException("The passed log is null"));
         }
 
-                CON = C3p0Util.getConnection();
+                Connection CON = CP.getConnection();
                 try (PreparedStatement stm = CON.prepareStatement(
                             "UPDATE Log SET "
                             + " productId =?, "
@@ -257,7 +257,7 @@ public class JDBCLogDAO extends JDBCDAO<Log, Integer> implements LogDAO {
                 }
                 finally
                 {
-                        C3p0Util.close(CON);
+                        ConnectionPool.close(CON);
                 }
         }
 
@@ -270,7 +270,7 @@ public class JDBCLogDAO extends JDBCDAO<Log, Integer> implements LogDAO {
                         throw new DAOException("currentTime or predictionDay is null");
                 }
 
-                CON = C3p0Util.getConnection();
+                Connection CON = CP.getConnection();
                 //get log in cui, stato di email è false, esiste almeno 2 aquisti storici, e il tempo previsto di riaquisto è minore di 24 ore
                 try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Log WHERE emailStatus = 0 AND (last2 IS NOT NULL) AND ( (TIME_TO_SEC( TIMEDIFF( last1, last2 )) - TIME_TO_SEC( TIMEDIFF( ?, last1 ))) BETWEEN 0 AND 60*60*24*? )"))
                 {
@@ -290,7 +290,7 @@ public class JDBCLogDAO extends JDBCDAO<Log, Integer> implements LogDAO {
                 }
                 finally
                 {
-                        C3p0Util.close(CON);
+                        ConnectionPool.close(CON);
                 }
 
                 return log;
@@ -305,7 +305,7 @@ public class JDBCLogDAO extends JDBCDAO<Log, Integer> implements LogDAO {
                         throw new DAOException("arguments (userId ) are null");
                 }
 
-                CON = C3p0Util.getConnection();
+                Connection CON = CP.getConnection();
                 try (PreparedStatement stm = CON.prepareStatement(
                             "UPDATE Log SET emailStatus = 1 WHERE userId = ? AND emailStatus = 0"
                 ))
@@ -324,7 +324,7 @@ public class JDBCLogDAO extends JDBCDAO<Log, Integer> implements LogDAO {
                 }
                 finally
                 {
-                        C3p0Util.close(CON);
+                        ConnectionPool.close(CON);
                 }
 
         }

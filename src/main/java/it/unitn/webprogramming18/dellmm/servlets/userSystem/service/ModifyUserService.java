@@ -1,8 +1,9 @@
 package it.unitn.webprogramming18.dellmm.servlets.userSystem.service;
 
 import it.unitn.webprogramming18.dellmm.db.daos.UserDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCUserDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
+import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
+import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
 import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
 import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
@@ -17,10 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import javax.mail.MessagingException;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -32,11 +31,17 @@ public class ModifyUserService extends HttpServlet
         private UserDAO userDAO;
 
         @Override
-        public void init() throws ServletException
-        {
+        public void init() throws ServletException {
+                DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
+                if (daoFactory == null) {
+                        throw new ServletException("Impossible to get db factory for user storage system");
+                }
 
-                userDAO = new JDBCUserDAO();
-
+                try {
+                        userDAO = daoFactory.getDAO(UserDAO.class);
+                } catch (DAOFactoryException ex) {
+                        throw new ServletException("Impossible to get UserDAO for user storage system", ex);
+                }
         }
 
         @Override

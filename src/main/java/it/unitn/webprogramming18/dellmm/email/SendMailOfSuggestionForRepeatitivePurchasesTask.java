@@ -12,6 +12,8 @@ import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCLogDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCUserDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
+import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
+import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.Log;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
@@ -34,7 +36,7 @@ public class SendMailOfSuggestionForRepeatitivePurchasesTask extends TimerTask
 
         private final LogDAO logDAO;
         private final UserDAO userDAO;
-        private final ProductDAO prodoctDAO;
+        private final ProductDAO productDAO;
         private final EmailFactory emailFactory;
         private Log log;
         private User user;
@@ -43,13 +45,21 @@ public class SendMailOfSuggestionForRepeatitivePurchasesTask extends TimerTask
         private Timestamp currentTime;
         private String basepath;
 
-        public SendMailOfSuggestionForRepeatitivePurchasesTask(EmailFactory emailFactoryMain, String basepath)
-        {
-                this.logDAO = new JDBCLogDAO();
-                this.userDAO = new JDBCUserDAO();
-                this.prodoctDAO = new JDBCProductDAO();
-                this.emailFactory = emailFactoryMain;
-                this.basepath = basepath;
+        public SendMailOfSuggestionForRepeatitivePurchasesTask(EmailFactory emailFactoryMain, String basepath, DAOFactory daoFactory) throws Exception {
+            if (daoFactory == null) {
+                    throw new Exception("Impossible to get db factory for user storage system");
+            }
+
+            try {
+                userDAO = daoFactory.getDAO(UserDAO.class);
+                logDAO = daoFactory.getDAO(LogDAO.class);
+                productDAO = daoFactory.getDAO(ProductDAO.class);
+            } catch (DAOFactoryException ex) {
+                throw new Exception("Impossible to get UserDAO, LogDAO or ProductDAO for user storage system", ex);
+            }
+
+            this.emailFactory = emailFactoryMain;
+            this.basepath = basepath;
         }
 
         @Override
@@ -67,7 +77,7 @@ public class SendMailOfSuggestionForRepeatitivePurchasesTask extends TimerTask
                                 //get user
                                  user = userDAO.getByPrimaryKey(log.getUserId());
                                 //get la lista di prodotto che soddisfa la condizione di notifica
-                                listProduct = prodoctDAO.getListProductFromLogNotEmailYetByUserId(log.getUserId(), currentTime, predictionDay);
+                                listProduct = productDAO.getListProductFromLogNotEmailYetByUserId(log.getUserId(), currentTime, predictionDay);
                                 //set stato email di log in true per evitare rinvio
                                 logDAO.setEmailStatusTrueByUserId(log.getUserId());
                                 //invia email

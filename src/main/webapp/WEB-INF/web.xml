@@ -628,6 +628,15 @@
         <servlet-name>CheckUserService</servlet-name>
         <url-pattern>/service/checkUserService</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>AcceptPrivacyService</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.service.AcceptPrivacyService</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AcceptPrivacyService</servlet-name>
+        <url-pattern>/service/acceptPrivacyService</url-pattern>
+    </servlet-mapping>
 
     <!-- SERVE STATIC FOLDERS -->
     <servlet-mapping>
