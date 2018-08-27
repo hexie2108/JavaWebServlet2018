@@ -150,3 +150,22 @@
         <c:remove var="result" scope="session"/>
 
 </c:if>
+
+
+<%-- popup di privacy--%>
+<c:if test="${empty cookie.acceptedPrivacy}">
+
+        <div class="popup-privacy fixed-bottom">
+
+                <div class="text">
+                        Questo sito utilizza cookie tecnici e di profilazione propri e di terze parti per le sue funzionalità e per inviarti pubblicità, contenuti e servizi più vicini ai tuoi gusti e interessi.
+                </div>
+                <div class="text-right mb-1">
+                        <button class="btn btn-info" onclick="acceptedPrivacy();">
+                                accetta
+                        </button>
+                </div>
+
+        </div>
+        
+</c:if>

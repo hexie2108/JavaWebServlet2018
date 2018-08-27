@@ -27,71 +27,84 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author mikuc
  */
-public class ChangeListService extends HttpServlet {
+public class ChangeListService extends HttpServlet
+{
 
-    private PermissionDAO permissionDAO;
+        private PermissionDAO permissionDAO;
 
-    /**
-     * inizializza DAO
-     *
-     * @throws ServletException
-     */
-    @Override
-    public void init() throws ServletException {
-        DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
-        if (daoFactory == null) {
-            throw new ServletException("Impossible to get db factory for user storage system");
+        /**
+         * inizializza DAO
+         *
+         * @throws ServletException
+         */
+        @Override
+        public void init() throws ServletException
+        {
+                DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
+                if (daoFactory == null)
+                {
+                        throw new ServletException("Impossible to get db factory for user storage system");
+                }
+
+                try
+                {
+                        permissionDAO = daoFactory.getDAO(PermissionDAO.class);
+                }
+                catch (DAOFactoryException ex)
+                {
+                        throw new ServletException("Impossible to get PermissionDAO for user storage system", ex);
+                }
+
         }
 
-        try {
-            permissionDAO = daoFactory.getDAO(PermissionDAO.class);
-        } catch (DAOFactoryException ex) {
-            throw new ServletException("Impossible to get PermissionDAO for user storage system", ex);
+        @Override
+        protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+        {
+                //invoca doGet
+                doGet(request, response);
         }
 
-    }
+        @Override
+        protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+        {
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //invoca doGet
-        doGet(request, response);
-    }
+                ResourceBundle rb = i18n.getBundle(request);
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
-        ResourceBundle rb = i18n.getBundle(request);
-        
-        //get id lista
-        String listId = request.getParameter("listId");
-        //se listId è nullo
-        CheckErrorUtils.isNull(listId, "manca il parametro id lista");
+                //get id lista
+                String listId = request.getParameter("listId");
+                //se listId è nullo
+                CheckErrorUtils.isNull(listId, "manca il parametro id lista");
 
-        //get user corrente
-        User user = (User) request.getSession().getAttribute("user");
-        //get permesso dell'utente su tale lista
-        Permission permission;
-        try {
-            permission = permissionDAO.getUserPermissionOnListByIds(user.getId(), Integer.parseInt(listId));
-            //se il permesso è  vuoto
-            if (permission == null) {
-                ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.noPermissionOnList"));
-                return;
-            }
-        } catch (DAOException ex) {
-            throw new ServletException(ex.getMessage(), ex);
+                //get user corrente
+                User user = (User) request.getSession().getAttribute("user");
+                //get permesso dell'utente su tale lista
+                Permission permission;
+                try
+                {
+                        permission = permissionDAO.getUserPermissionOnListByIds(user.getId(), Integer.parseInt(listId));
+                        //se il permesso è  vuoto
+                        if (permission == null)
+                        {
+                                ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.noPermissionOnList"));
+                                return;
+                        }
+                }
+                catch (DAOException ex)
+                {
+                        throw new ServletException(ex.getMessage(), ex);
+                }
+
+                //memorizza  id della nuova lista
+                request.getSession().setAttribute("myListId", Integer.parseInt(listId));
+
+                //ritorna alla pagina di provenienza
+                String prevUrl = request.getHeader("Referer");
+                if (prevUrl == null)
+                {
+                        prevUrl = getServletContext().getContextPath();
+                }
+                response.sendRedirect(response.encodeRedirectURL(prevUrl));
+
         }
-
-        //memorizza  id della nuova lista
-        request.getSession().setAttribute("myListId", Integer.parseInt(listId));
-
-        //ritorna alla pagina di provenienza
-        String prevUrl = request.getHeader("Referer");
-        if (prevUrl == null) {
-            prevUrl = getServletContext().getContextPath();
-        }
-        response.sendRedirect(response.encodeRedirectURL(prevUrl));
-
-    }
 
 }

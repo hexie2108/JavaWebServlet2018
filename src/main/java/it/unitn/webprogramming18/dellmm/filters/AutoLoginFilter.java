@@ -24,6 +24,7 @@ import javax.servlet.http.HttpSession;
 
 /**
  * filtro che occupa la funziona di fast login
+ * negozio
  *
  * @author mikuc
  */
@@ -100,7 +101,12 @@ public class AutoLoginFilter implements Filter
                                         this.response.addCookie(cookie);
                                 }
                         }
+
+                     
+
                 }
+
+              
 
                 chain.doFilter(request, response);
         }
@@ -111,17 +117,22 @@ public class AutoLoginFilter implements Filter
         }
 
         @Override
-        public void init(FilterConfig filterConfig) throws ServletException {
-            DAOFactory daoFactory = (DAOFactory) filterConfig.getServletContext().getAttribute("daoFactory");
-            if (daoFactory == null) {
-                    throw new ServletException("Impossible to get db factory for user storage system");
-            }
+        public void init(FilterConfig filterConfig) throws ServletException
+        {
+                DAOFactory daoFactory = (DAOFactory) filterConfig.getServletContext().getAttribute("daoFactory");
+                if (daoFactory == null)
+                {
+                        throw new ServletException("Impossible to get db factory for user storage system");
+                }
 
-            try {
-                    userDAO = daoFactory.getDAO(UserDAO.class);
-            } catch (DAOFactoryException ex) {
-                    throw new ServletException("Impossible to get UserDAO for user storage system", ex);
-            }
+                try
+                {
+                        userDAO = daoFactory.getDAO(UserDAO.class);
+                }
+                catch (DAOFactoryException ex)
+                {
+                        throw new ServletException("Impossible to get UserDAO for user storage system", ex);
+                }
         }
 
 }

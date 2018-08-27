@@ -80,6 +80,12 @@
                                                 <nav class="navbar navbar-expand-sm navbar-dark">
                                                         <ul class="navbar-nav ">
 
+                                                                <li id="link-notifica" class="nav-item ${not empty cookie.notifica.value? "d-block":""}">
+                                                                        <a class="nav-link" href="<c:url value="/map"/>">
+                                                                                <i class="fa fa-envelope"></i> 1 NOTIFICA
+                                                                        </a>
+                                                                </li>
+
                                                                 <%-- se è utente anonimo--%>
                                                                 <c:if test="${empty sessionScope.user}">
 
@@ -106,11 +112,7 @@
                                                                                 </a>
                                                                         </li>
 
-                                                                        <li class="nav-item">
-                                                                                <a class="nav-link" href="#">
-                                                                                        <i class="fa fa-envelope"></i> NOTIFICA
-                                                                                </a>
-                                                                        </li>
+
 
                                                                         <li class="nav-item">
                                                                                 <a class="nav-link profile" href="<c:url value="/modifyUser"/>">

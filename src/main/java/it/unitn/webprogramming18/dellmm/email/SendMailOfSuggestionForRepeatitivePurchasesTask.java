@@ -45,21 +45,26 @@ public class SendMailOfSuggestionForRepeatitivePurchasesTask extends TimerTask
         private Timestamp currentTime;
         private String basepath;
 
-        public SendMailOfSuggestionForRepeatitivePurchasesTask(EmailFactory emailFactoryMain, String basepath, DAOFactory daoFactory) throws Exception {
-            if (daoFactory == null) {
-                    throw new Exception("Impossible to get db factory for user storage system");
-            }
+        public SendMailOfSuggestionForRepeatitivePurchasesTask(EmailFactory emailFactoryMain, String basepath, DAOFactory daoFactory) throws Exception
+        {
+                if (daoFactory == null)
+                {
+                        throw new Exception("Impossible to get db factory for user storage system");
+                }
 
-            try {
-                userDAO = daoFactory.getDAO(UserDAO.class);
-                logDAO = daoFactory.getDAO(LogDAO.class);
-                productDAO = daoFactory.getDAO(ProductDAO.class);
-            } catch (DAOFactoryException ex) {
-                throw new Exception("Impossible to get UserDAO, LogDAO or ProductDAO for user storage system", ex);
-            }
+                try
+                {
+                        userDAO = daoFactory.getDAO(UserDAO.class);
+                        logDAO = daoFactory.getDAO(LogDAO.class);
+                        productDAO = daoFactory.getDAO(ProductDAO.class);
+                }
+                catch (DAOFactoryException ex)
+                {
+                        throw new Exception("Impossible to get UserDAO, LogDAO or ProductDAO for user storage system", ex);
+                }
 
-            this.emailFactory = emailFactoryMain;
-            this.basepath = basepath;
+                this.emailFactory = emailFactoryMain;
+                this.basepath = basepath;
         }
 
         @Override
@@ -70,19 +75,19 @@ public class SendMailOfSuggestionForRepeatitivePurchasesTask extends TimerTask
                 try
                 {
                         log = logDAO.getLogNotEmailYet(currentTime, 1);
-                       
+
                         //se ci sono log che può mandare email per riaquisto
                         if (log != null)
                         {
                                 //get user
-                                 user = userDAO.getByPrimaryKey(log.getUserId());
+                                user = userDAO.getByPrimaryKey(log.getUserId());
                                 //get la lista di prodotto che soddisfa la condizione di notifica
                                 listProduct = productDAO.getListProductFromLogNotEmailYetByUserId(log.getUserId(), currentTime, predictionDay);
                                 //set stato email di log in true per evitare rinvio
                                 logDAO.setEmailStatusTrueByUserId(log.getUserId());
                                 //invia email
                                 emailFactory.sendEmailOfSuggestionForRepeatitivePurchases(user, basepath, listProduct);
-                                
+
                         }
                 }
                 catch (DAOException | MessagingException | UnsupportedEncodingException ex)
