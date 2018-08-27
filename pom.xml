@@ -73,9 +73,15 @@
             <artifactId>thumbnailator</artifactId>
             <version>0.4.8</version>
         </dependency>
+        <dependency>
+            <groupId>info.debatty</groupId>
+            <artifactId>java-string-similarity</artifactId>
+            <version>RELEASE</version>
+        </dependency>
 
 
-        </dependencies>
+
+    </dependencies>
 
         <build>
                 <plugins>

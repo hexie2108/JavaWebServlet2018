@@ -5,6 +5,7 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import java.sql.Timestamp;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface ProductDAO extends DAO<Product, Integer> {
@@ -183,6 +184,9 @@ public interface ProductDAO extends DAO<Product, Integer> {
          * @return  lista di prodotto
          */
         public List<Product> getListProductFromLogNotEmailYetByUserId(Integer userId, Timestamp currentTime,  Integer predictionDay)  throws DAOException;
-    
+
+
+    public HashMap<String, Double> getNameTokensFiltered(String query, Integer requester) throws DAOException;
+
     
 }

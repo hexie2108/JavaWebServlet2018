@@ -646,6 +646,15 @@
         <servlet-name>ModifyUserService</servlet-name>
         <url-pattern>/service/modifyUserService</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>TmpService</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.another.PrepareAutocompleteDataServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TmpService</servlet-name>
+        <url-pattern>/tmp</url-pattern>
+    </servlet-mapping>
 
     <!-- SERVE STATIC FOLDERS -->
     <servlet-mapping>

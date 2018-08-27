@@ -11,16 +11,17 @@ import it.unitn.webprogramming18.dellmm.db.daos.ProductInListDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
+import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import info.debatty.java.stringsimilarity.JaroWinkler;
 
 /**
  * @author luca_morgese
@@ -28,7 +29,8 @@ import javax.servlet.http.HttpServletResponse;
 public class PrepareAutocompleteDataServlet extends HttpServlet {
 
     private ProductDAO productDAO;
-    private ProductInListDAO productInListDAO;
+
+    private static final double CONSIDER_TYPO = 0.8;
 
     @Override
     public void init() throws ServletException {
@@ -39,7 +41,6 @@ public class PrepareAutocompleteDataServlet extends HttpServlet {
 
         try {
             productDAO = daoFactory.getDAO(ProductDAO.class);
-            productInListDAO = daoFactory.getDAO(ProductInListDAO.class);
         } catch (DAOFactoryException ex) {
             throw new ServletException("Impossible to get ProductDAO or ProductInListDAO for user storage system", ex);
         }
@@ -55,30 +56,57 @@ public class PrepareAutocompleteDataServlet extends HttpServlet {
      * @throws IOException      if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setHeader("Cache-Control", "no-cache");
-        response.setHeader("Pragma", "no-cache");
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("application/json");
+        try {
+            String query = request.getParameter("q");
+            HashMap<String, Double> dbRis = productDAO.getNameTokensFiltered(query, null);
 
+            String[] queryTokens = query.split("[\\s\\p{Punct}]");
 
-        HashMap<String, java.io.Serializable> productEntry;
-        List<HashMap<String, java.io.Serializable>> productEntries = new ArrayList();
-        HashMap<String, List<HashMap<String, java.io.Serializable>>> jsonData = new HashMap();
+            JaroWinkler jw = new JaroWinkler();
 
-        for (int i = 0; i < 10; i++) {
-            productEntry = new HashMap();
-            productEntry.put("id", i + 1);
-            productEntry.put("text", "name" + i);
+            StringBuilder stringBuilder  = new StringBuilder();
 
-            productEntries.add(productEntry);
+            for(String k: dbRis.keySet()) {
+                System.out.println(k);
+            }
 
+            for(String token: queryTokens) {
+                AbstractMap.Entry<String, Double> l =
+                        dbRis
+                            .entrySet()
+                            .stream()
+                            .map(e -> new AbstractMap.SimpleEntry<String, Double>(e.getKey(), jw.similarity(e.getKey(), token)))
+                            .max(Map.Entry.comparingByValue()).orElse(null);
+
+                if (l != null) {
+                    System.out.println(l.getKey());
+                    System.out.println(l.getValue());
+                }
+
+                if (l != null && l.getValue() > CONSIDER_TYPO) {
+
+                    dbRis.remove(l.getKey());
+                    stringBuilder.append(l.getKey());
+                } else {
+                    stringBuilder.append(token);
+                }
+
+                stringBuilder.append(" ");
+            }
+
+            String prefix = stringBuilder.toString();
+
+            List<String> toSend = dbRis.entrySet()
+                    .stream()
+                    .sorted(HashMap.Entry.comparingByValue())
+                    .map(e -> prefix + e.getKey())
+                    .collect(Collectors.toList());
+
+            ServletUtility.sendJSON(request, response, 200, toSend);
+        } catch (DAOException e) {
+            e.printStackTrace();
+            ServletUtility.sendError(request, response, 500, "da");
         }
-
-        jsonData.put("results", productEntries);
-
-        PrintWriter out = response.getWriter();
-        Gson gson = new Gson();
-        out.print(gson.toJson(productEntries));
 
         //request.getRequestDispatcher("/WEB-INF/searchTest.jsp").forward(request, response);
         //response.sendRedirect("/WEB-INF/searchTest.jsp");

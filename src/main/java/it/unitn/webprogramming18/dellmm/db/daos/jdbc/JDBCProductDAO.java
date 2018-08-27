@@ -5,12 +5,10 @@ import it.unitn.webprogramming18.dellmm.db.utils.ConnectionPool;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.jdbc.JDBCDAO;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
+import it.unitn.webprogramming18.dellmm.javaBeans.User;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * The JDBC implementation of the {@link ProductDAO} interface.
@@ -618,4 +616,51 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
 
     }
 
+    public HashMap<String, Double> getNameTokensFiltered(String query, Integer requester) throws DAOException {
+        HashMap<String, Double> r = new HashMap<>();
+
+        if (query == null) {
+            throw new DAOException("parameter not valid", new IllegalArgumentException("The query parameter is null"));
+        }
+
+        Connection CON = CP.getConnection();
+
+        try (PreparedStatement stm = CON.prepareStatement(
+                "SELECT * " +
+                "FROM (" +
+                    "SELECT Product.name, MATCH(Product.name, Product.description) AGAINST (? IN NATURAL  LANGUAGE  MODE) as rev " +
+                    "FROM Product LEFT JOIN List ON Product.privateListId = List.id " +
+                    "WHERE List.ownerId IS NULL OR List.ownerId=?) AS P " +
+                "WHERE P.rev > " + MIN_RELEVANCE
+        )) {
+            stm.setString(1, query);
+
+            if (requester == null) {
+                stm.setNull(2, Types.INTEGER);
+            } else {
+                stm.setInt(2, requester);
+            }
+
+            try (ResultSet rs = stm.executeQuery()) {
+                while (rs.next()) {
+                    String name = rs.getString(1);
+                    Double rev = rs.getDouble(2);
+
+                    for(String token: name.split("[\\s\\p{Punct}]")) {
+                        if(r.containsKey(token)) {
+                            r.put(token, r.get(token) + rev);
+                        } else {
+                            r.put(token, rev);
+                        }
+                    }
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Impossible to get the list of name, rev of product", ex);
+        } finally {
+            ConnectionPool.close(CON);
+        }
+
+        return r;
+    }
 }
