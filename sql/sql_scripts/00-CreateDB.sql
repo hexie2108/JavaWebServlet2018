@@ -106,7 +106,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Product` (
   PRIMARY KEY (`id`),
   INDEX `fk_Product_CategoryProduct1_idx` (`categoryProductId` ASC),
   INDEX `_idx` (`privateListId` ASC),
-  FULLTEXT INDEX `fulltext_idx` (`name` ASC, `description` ASC),
+  FULLTEXT INDEX `fulltext_idx` (`name`, `description`) WITH PARSER ngram,
   CONSTRAINT `fk_Product_CategoryProduct1`
     FOREIGN KEY (`categoryProductId`)
     REFERENCES `mydb`.`CategoryProduct` (`id`)

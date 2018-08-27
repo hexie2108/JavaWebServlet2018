@@ -176,17 +176,22 @@ public interface ProductDAO extends DAO<Product, Integer> {
     public void deleteProductById(Integer productId) throws DAOException;
     
     
-        /**
-         * get lista di prodotto dal log , in cui non è stato ancora inviato email , di un specifico utente
-         * @param userId id utente
-         * @param currentTime user corrente
-         * @param predictionDay se la previsione di riaqsuito è minore tale numero di giorno,  invoca funzione
-         * @return  lista di prodotto
-         */
-        public List<Product> getListProductFromLogNotEmailYetByUserId(Integer userId, Timestamp currentTime,  Integer predictionDay)  throws DAOException;
+    /**
+     * get lista di prodotto dal log , in cui non è stato ancora inviato email , di un specifico utente
+     * @param userId id utente
+     * @param currentTime user corrente
+     * @param predictionDay se la previsione di riaqsuito è minore tale numero di giorno,  invoca funzione
+     * @return  lista di prodotto
+     */
+    public List<Product> getListProductFromLogNotEmailYetByUserId(Integer userId, Timestamp currentTime,  Integer predictionDay)  throws DAOException;
 
-
-    public HashMap<String, Double> getNameTokensFiltered(String query, Integer requester) throws DAOException;
-
-    
+    /**
+     * Get a list of common tokens in the products name that can be found with a query(with a relevance score) using a specific list(or null for no specific list)
+     * @param query string to search
+     * @param list id of the list(optional) to use together with the default products
+     * @param categories list of categories to consider(if empty all are considered)
+     * @return list of common tokens in the products name(with a relevance score)
+     * @throws DAOException
+     */
+    public HashMap<String, Double> getNameTokensFiltered(String query, Integer list, List<Integer> categories) throws DAOException;
 }

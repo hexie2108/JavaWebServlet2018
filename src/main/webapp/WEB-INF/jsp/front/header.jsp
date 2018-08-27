@@ -50,6 +50,36 @@
 
                 <!-- Latest compiled and minified JavaScript -->
                 <script src="<c:url value="/libs/bootstrap-select-1.13.1/js/bootstrap-select.min.js"/>"></script>
+
+                <!-- Autocompletion search(using autcomplete jquery) -->
+                <script src="<c:url value="/libs/typeahead.js/typeahead.jquery.min.js"/>"></script>
+                <script src="<c:url value="/libs/typeahead.js/typeahead.bundle.min.js"/>"></script>
+                <script src="<c:url value="/libs/typeahead.js/bloodhound.min.js"/>"></script>
+
+                <link rel="stylesheet" href="<c:url value="/libs/typeahead.js/typeahead.css"/>" type="text/css" media="all"/>
+                <script>
+                        $(document).ready(function(){
+                            const products = new Bloodhound({
+                                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                                datumTokenizer: Bloodhound.tokenizers.whitespace,
+                                remote: {
+                                    url: '<c:url value="/service/autocompleteProduct.json"/>?',
+                                    replace: function(url, uriEncodedQuery) {
+                                        return url + $('#search-form').serialize();
+                                    }
+                                }
+                            });
+
+                            // Initialize the Bloodhound suggestion engine
+                            products.initialize();
+
+
+                            $('[name="searchWords"]').typeahead(null, {
+                                name: 'dsa',
+                                source: products.ttAdapter()
+                            });
+                        });
+                </script>
         </head>
 
         <body class="front-page">
@@ -154,10 +184,12 @@
                                                                                 <option value="${category.id}" ${paramValues.catId.stream().anyMatch((e) -> e.equals(category.id.toString())).get()?'selected':''}>${category.name}</option>
                                                                         </c:forEach>
                                                                 </select>
-                                                                <input type="search" class="form-control" name="searchWords" placeholder="cerchi qualcosa?"
-                                                                       required="required" value="${not empty param.searchWords?param.searchWords:''}">
-                                                                <div class="input-group-append">
-                                                                        <button type="submit" class="btn btn-info"><i class="fas fa-search"></i> CERCA</button>
+                                                                <div class="col-7 p-0">
+                                                                        <input type="search" class="form-control typeahead" name="searchWords" placeholder="cerchi qualcosa?"
+                                                                               required="required" value="${not empty param.searchWords?param.searchWords:''}">
+                                                                </div>
+                                                                <div class="input-group-append col-2 p-0">
+                                                                        <button type="submit" class="btn btn-info w-100"><i class="fas fa-search"></i> CERCA</button>
                                                                 </div>
                                                         </div>
                                                 </form>

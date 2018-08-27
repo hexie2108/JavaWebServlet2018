@@ -18,7 +18,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
         super(cp);
     }
 
-    private final static double MIN_RELEVANCE = 0.375;
+    private final static double MIN_RELEVANCE = 0.85;
 
     private Product getProductFromResultSet(ResultSet rs) throws SQLException {
         Product product = new Product();
@@ -376,7 +376,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
                             "ON Product.categoryProductId = CategoryProduct.id " +
                             "WHERE Product.privateListId IS NULL AND MATCH(Product.name, Product.description) AGAINST (? IN NATURAL  LANGUAGE  MODE) > " + MIN_RELEVANCE + " " +
                                 (!categories.isEmpty()?" AND Product.categoryProductId IN " + sbSql.toString():" ") +
-                            "ORDER BY CategoryProduct.name " + sqlDirection + " " +
+                            " ORDER BY CategoryProduct.name " + sqlDirection + " " +
                             "LIMIT ?,? ";
         } else if (order.equalsIgnoreCase("productName")) {
             sql =
@@ -385,8 +385,8 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
                             "WHERE privateListId IS NULL " +
                                 "AND MATCH(name, description) AGAINST (? IN NATURAL  LANGUAGE  MODE) > " + MIN_RELEVANCE + " " +
                                 (!categories.isEmpty()?" AND categoryProductId IN " + sbSql.toString(): " ") +
-                            " BY name " + sqlDirection + " " +
-                            "LIMIT ?,?";
+                            " ORDER BY name " + sqlDirection + " " +
+                            " LIMIT ?,?";
         } else {
             sql =
                     "SELECT P.* " +
@@ -397,8 +397,8 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
                                 (!categories.isEmpty()?" AND categoryProductId IN "+ sbSql.toString(): " ") +
                             " ) AS P " +
                             "WHERE rev > " + MIN_RELEVANCE + " " +
-                            "ORDER BY rev " + sqlDirection + " " +
-                            "LIMIT ?,?";
+                            " ORDER BY rev " + sqlDirection + " " +
+                            " LIMIT ?,?";
         }
 
         try (PreparedStatement stm = CON.prepareStatement(sql)) {
@@ -616,12 +616,22 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
 
     }
 
-    public HashMap<String, Double> getNameTokensFiltered(String query, Integer requester) throws DAOException {
+    public HashMap<String, Double> getNameTokensFiltered(String query, Integer listId, List<Integer> categories) throws DAOException {
         HashMap<String, Double> r = new HashMap<>();
 
         if (query == null) {
             throw new DAOException("parameter not valid", new IllegalArgumentException("The query parameter is null"));
         }
+
+        StringBuilder sbSql = new StringBuilder( 1024 );
+        sbSql.append(" ( ");
+
+        for( int i=0; i < categories.size(); i++ ) {
+            if( i > 0 ) sbSql.append( "," );
+            sbSql.append( " ?" );
+        } // for
+        sbSql.append( " ) " );
+
 
         Connection CON = CP.getConnection();
 
@@ -629,16 +639,25 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
                 "SELECT * " +
                 "FROM (" +
                     "SELECT Product.name, MATCH(Product.name, Product.description) AGAINST (? IN NATURAL  LANGUAGE  MODE) as rev " +
-                    "FROM Product LEFT JOIN List ON Product.privateListId = List.id " +
-                    "WHERE List.ownerId IS NULL OR List.ownerId=?) AS P " +
+                    "FROM Product " +
+                    "WHERE (Product.privateListId IS NULL OR Product.privateListId=?) " +
+                    (!categories.isEmpty()?" AND Product.categoryProductId IN " + sbSql.toString():" ") +
+                    " ) AS P " +
                 "WHERE P.rev > " + MIN_RELEVANCE
         )) {
             stm.setString(1, query);
 
-            if (requester == null) {
+            if (listId == null) {
                 stm.setNull(2, Types.INTEGER);
             } else {
-                stm.setInt(2, requester);
+                stm.setInt(2, listId);
+            }
+
+            int i = 3;
+
+            for(Integer cat : categories) {
+                stm.setInt(i, cat);
+                i++;
             }
 
             try (ResultSet rs = stm.executeQuery()) {

@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -57,60 +58,95 @@ public class PrepareAutocompleteDataServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            String query = request.getParameter("q");
-            HashMap<String, Double> dbRis = productDAO.getNameTokensFiltered(query, null);
+            String query = request.getParameter("searchWords");
+            Integer listId = null;
+
+            {
+                Object list = ((HttpServletRequest) request).getSession().getAttribute("myListId");
+                listId = list == null? null: (Integer) list;
+            }
+
+            List<Integer> categories;
+            try{
+                String[] catId = request.getParameterValues("catId");
+                if(catId == null) {
+                    categories = new ArrayList<Integer>();
+                } else {
+                    categories = Arrays.stream(catId).map(Integer::parseInt).collect(Collectors.toList());
+                }
+            } catch (NumberFormatException e) {
+                ServletUtility.sendError(request, response, 400, ""); // TODO: to i18n
+                return;
+            }
+
+            HashMap<String, Double> dbRis = productDAO.getNameTokensFiltered(query, listId, categories);
 
             String[] queryTokens = query.split("[\\s\\p{Punct}]");
 
             JaroWinkler jw = new JaroWinkler();
 
-            StringBuilder stringBuilder  = new StringBuilder();
+            Map<String, Double> prefix = new HashMap<>();
 
-            for(String k: dbRis.keySet()) {
-                System.out.println(k);
+            prefix.put("", 1.);
+
+            for(int i=0; i<queryTokens.length; i++) {
+                final String token = queryTokens[i];
+
+                Stream<AbstractMap.SimpleEntry<String, Double> > stream =
+                        dbRis
+                        .entrySet()
+                        .stream()
+                        .map(e -> new AbstractMap.SimpleEntry<>(e.getKey(), jw.similarity(e.getKey(), token)));
+
+                if (i != queryTokens.length -1) {
+                    stream = stream.filter(e -> e.getValue() > CONSIDER_TYPO);
+                } else {
+                    stream = stream.filter(e -> e.getValue() > CONSIDER_TYPO*2/5);
+                }
+
+                Map<String, Double> l =
+                        stream
+                            .sorted((e1, e2) -> Double.compare(e2.getValue(), e1.getValue()))
+                            .limit(3)
+                            .collect(Collectors.toMap(
+                                    (AbstractMap.SimpleEntry<String,Double> e) -> e.getKey(),
+                                    (AbstractMap.SimpleEntry<String,Double> e) -> e.getValue()
+                            ));
+
+                for(String k: l.keySet()) {
+                    dbRis.remove(k);
+                }
+
+                prefix = prefix.entrySet()
+                            .stream()
+                            .flatMap(p -> l.entrySet().stream().map(w -> new AbstractMap.SimpleEntry<>(p.getKey() + " " + w.getKey(), p.getValue()*w.getValue())))
+                            .sorted((e1, e2) -> Double.compare(e2.getValue(), e1.getValue()))
+                            .limit(15)
+                            .collect(Collectors.toMap(
+                                    e -> e.getKey(),
+                                    e -> e.getValue()
+                            ));
             }
 
-            for(String token: queryTokens) {
-                AbstractMap.Entry<String, Double> l =
-                        dbRis
+            prefix = Stream.concat(
+                        prefix.entrySet().stream(),
+                        prefix
                             .entrySet()
                             .stream()
-                            .map(e -> new AbstractMap.SimpleEntry<String, Double>(e.getKey(), jw.similarity(e.getKey(), token)))
-                            .max(Map.Entry.comparingByValue()).orElse(null);
+                            .flatMap(p -> dbRis.entrySet().stream().map(w -> new AbstractMap.SimpleEntry<>(p.getKey() + " " + w.getKey(), p.getValue()*w.getValue() * 0.25)))
+                            .sorted((e1, e2) -> Double.compare(e2.getValue(), e1.getValue()))
+                            .limit(15)
+            ).collect(Collectors.toMap(
+                    e -> e.getKey(),
+                    e -> e.getValue()
+            ));
 
-                if (l != null) {
-                    System.out.println(l.getKey());
-                    System.out.println(l.getValue());
-                }
+            ServletUtility.sendJSON(request, response, 200, prefix.entrySet().stream().sorted((e1, e2) -> Double.compare(e2.getValue(), e1.getValue())) .map(e -> e.getKey()).collect(Collectors.toList()));
 
-                if (l != null && l.getValue() > CONSIDER_TYPO) {
-
-                    dbRis.remove(l.getKey());
-                    stringBuilder.append(l.getKey());
-                } else {
-                    stringBuilder.append(token);
-                }
-
-                stringBuilder.append(" ");
-            }
-
-            String prefix = stringBuilder.toString();
-
-            List<String> toSend = dbRis.entrySet()
-                    .stream()
-                    .sorted(HashMap.Entry.comparingByValue())
-                    .map(e -> prefix + e.getKey())
-                    .collect(Collectors.toList());
-
-            ServletUtility.sendJSON(request, response, 200, toSend);
         } catch (DAOException e) {
             e.printStackTrace();
             ServletUtility.sendError(request, response, 500, "da");
         }
-
-        //request.getRequestDispatcher("/WEB-INF/searchTest.jsp").forward(request, response);
-        //response.sendRedirect("/WEB-INF/searchTest.jsp");
-
     }
 
     /**
