@@ -34,9 +34,11 @@
             <c:forEach begin="${pageScope.begin}" end="${pageScope.end}" var="i">
                 <li class="page-item ${i+1==pageScope.currPage? "active":""}">
                     <c:url var="linkUrl" value="">
-                        <c:forEach items="${param}" var="entryParam">
+                        <c:forEach items="${paramValues}" var="entryParam">
                             <c:if test="${entryParam.key != 'page'}">
-                                <c:param name="${entryParam.key}" value="${entryParam.value}"/>
+                                <c:forEach var="value" items="${entryParam.value}">
+                                    <c:param name="${entryParam.key}" value="${value}"/>
+                                </c:forEach>
                             </c:if>
                         </c:forEach>
                         <c:param name="page" value="${i+1}"/>
@@ -49,9 +51,11 @@
                 <%-- link di successivo --%>
                 <li class="page-item page-next">
                     <c:url var="linkUrl" value="">
-                        <c:forEach items="${param}" var="entryParam">
+                        <c:forEach items="${paramValues}" var="entryParam">
                             <c:if test="${entryParam.key != 'page'}">
-                                <c:param name="${entryParam.key}" value="${entryParam.value}"/>
+                                <c:forEach var="value" items="${entryParam.value}">
+                                    <c:param name="${entryParam.key}" value="${value}"/>
+                                </c:forEach>
                             </c:if>
                         </c:forEach>
                         <c:param name="page" value="${pageScope.currPage+1}"/>

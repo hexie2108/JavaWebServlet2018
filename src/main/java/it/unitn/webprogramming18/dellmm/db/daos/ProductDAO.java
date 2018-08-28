@@ -124,10 +124,11 @@ public interface ProductDAO extends DAO<Product, Integer> {
      * get il numero del prodotto pubblico con nome corrisondente
      *
      * @param name nome da ricercare
+     * @param categories array of the categories in which the product can be
      * @return il numero del prodotto pubblico con nome corrisondente
      * @throws DAOException
      */
-    public Integer getCountOfPublicProductByNameSearch(String name) throws DAOException;
+    public Long getCountSearch(String name, List<Integer> categories) throws DAOException;
 
 
     /**

@@ -5,7 +5,6 @@ import it.unitn.webprogramming18.dellmm.db.utils.ConnectionPool;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.jdbc.JDBCDAO;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
-import it.unitn.webprogramming18.dellmm.javaBeans.User;
 
 import java.sql.*;
 import java.util.*;
@@ -430,34 +429,57 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
 
 
     @Override
-    public Integer getCountOfPublicProductByNameSearch(String name) throws DAOException {
-        Integer number = null;
+    public Long getCountSearch(String toSearch, List<Integer> categories) throws DAOException {
+        final String[] validOrder = {"categoryName", "productName", "relevance"};
+        final String[] validDirection = {"asc", "desc"};
 
-        if (name == null) {
-            throw new DAOException("parameter not valid", new IllegalArgumentException("The passed parameters is not valid"));
+        if (toSearch == null) {
+            throw new DAOException("parameter not valid", new IllegalArgumentException("The toSearch parameter is null"));
         }
+
+        if (categories.stream().anyMatch(Objects::isNull)) {
+            throw new DAOException("parameter not valid", new IllegalArgumentException("The catId parameters is not valid(must be a list of numbers)"));
+        }
+
+        StringBuilder sbSql = new StringBuilder( 1024 );
+        sbSql.append(" ( ");
+
+        for( int i=0; i < categories.size(); i++ ) {
+            if( i > 0 ) sbSql.append( "," );
+            sbSql.append( " ?" );
+        } // for
+        sbSql.append( " ) " );
 
         Connection CON = CP.getConnection();
 
-        //try-with-resource, libera risorse in ogni caso
-        try (PreparedStatement stmt = CON.prepareStatement(
-                "SELECT COUNT(*) " +
-                "FROM Product " +
-                "WHERE privateListId IS NULL AND  MATCH(Product.name, Product.description) AGAINST (? IN NATURAL  LANGUAGE  MODE) >= " + MIN_RELEVANCE + " "
-        )) {
-            stmt.setString(1, "%" + name + "%");
-            ResultSet counter = stmt.executeQuery();
-            if (counter.next()) {
-                number = counter.getInt(1);
+        String sql =
+            "SELECT COUNT(*) " +
+                    "FROM Product " +
+                    "WHERE privateListId IS NULL " +
+                    "AND MATCH(name, description) AGAINST (? IN NATURAL  LANGUAGE  MODE) >= " + MIN_RELEVANCE + " " +
+                    (!categories.isEmpty()?" AND categoryProductId IN " + sbSql.toString(): " ");
+
+        try (PreparedStatement stm = CON.prepareStatement(sql)) {
+            stm.setString(1, toSearch);
+            int i = 2;
+
+            for(Integer cat : categories) {
+                stm.setInt(i, cat);
+                i++;
             }
 
+            try (ResultSet rs = stm.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getLong(1);
+                }
+            }
         } catch (SQLException ex) {
-            throw new DAOException("Impossible to count product of search", ex);
+            throw new DAOException("Impossible to get the list of product", ex);
         } finally {
             ConnectionPool.close(CON);
         }
 
-        return number;
+        return 0L;
     }
 
     @Override

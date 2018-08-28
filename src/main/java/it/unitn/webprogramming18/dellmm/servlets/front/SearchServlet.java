@@ -15,7 +15,6 @@ import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 import it.unitn.webprogramming18.dellmm.util.i18n;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -127,7 +126,7 @@ public class SearchServlet extends HttpServlet {
             //get la lista di prodotto secondo la parola ricercata
             productList = productDAO.search(searchWords, order, direction, categories, startPosition, numebrProductForList);
             //get il numero totale di pagine
-            totalNumberOfPage = (int) Math.ceil(productDAO.getCountOfPublicProductByNameSearch(searchWords) * 1.0 / numebrProductForList);
+            totalNumberOfPage = (int) Math.ceil(productDAO.getCountSearch(searchWords, categories) * 1.0 / numebrProductForList);
 
         } catch (DAOException ex) {
             throw new ServletException(ex.getMessage(), ex);
