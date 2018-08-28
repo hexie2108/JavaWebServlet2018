@@ -19,6 +19,9 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
 
     private final static double MIN_RELEVANCE = 0.4;
 
+    private static final String[] VALID_ORDER= {"categoryName", "productName", "relevance"};
+    private static final String[] VALID_DIRECTION = {"asc", "desc"};
+
     private Product getProductFromResultSet(ResultSet rs) throws SQLException {
         Product product = new Product();
 
@@ -325,19 +328,16 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
             Integer index,
             Integer number
     ) throws DAOException {
-        final String[] validOrder = {"categoryName", "productName", "relevance"};
-        final String[] validDirection = {"asc", "desc"};
-
         if (toSearch == null) {
             throw new DAOException("parameter not valid", new IllegalArgumentException("The toSearch parameter is null"));
         }
 
-        if (order == null || Arrays.stream(validOrder).noneMatch(order::equals)) {
-            throw new DAOException("parameter not valid", new IllegalArgumentException("The order parameter is not one of " + Arrays.toString(validOrder)));
+        if (order == null || Arrays.stream(VALID_ORDER).noneMatch(order::equals)) {
+            throw new DAOException("parameter not valid", new IllegalArgumentException("The order parameter is not one of " + Arrays.toString(VALID_ORDER)));
         }
 
-        if (direction == null || Arrays.stream(validDirection).noneMatch(direction::equals)) {
-            throw new DAOException("parameter not valid", new IllegalArgumentException("The direction parameter is not one of " + Arrays.toString(validDirection)));
+        if (direction == null || Arrays.stream(VALID_DIRECTION).noneMatch(direction::equals)) {
+            throw new DAOException("parameter not valid", new IllegalArgumentException("The direction parameter is not one of " + Arrays.toString(VALID_DIRECTION)));
         }
 
         if (index == null || index < 0) {
@@ -430,8 +430,6 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
 
     @Override
     public Long getCountSearch(String toSearch, List<Integer> categories) throws DAOException {
-        final String[] validOrder = {"categoryName", "productName", "relevance"};
-        final String[] validDirection = {"asc", "desc"};
 
         if (toSearch == null) {
             throw new DAOException("parameter not valid", new IllegalArgumentException("The toSearch parameter is null"));
