@@ -18,7 +18,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
         super(cp);
     }
 
-    private final static double MIN_RELEVANCE = 0.85;
+    private final static double MIN_RELEVANCE = 0.4;
 
     private Product getProductFromResultSet(ResultSet rs) throws SQLException {
         Product product = new Product();
@@ -638,7 +638,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
         try (PreparedStatement stm = CON.prepareStatement(
                 "SELECT * " +
                 "FROM (" +
-                    "SELECT Product.name, MATCH(Product.name, Product.description) AGAINST (? IN NATURAL  LANGUAGE  MODE) as rev " +
+                    "SELECT Product.name, MATCH(Product.name, Product.description) AGAINST (? IN NATURAL LANGUAGE MODE) as rev " +
                     "FROM Product " +
                     "WHERE (Product.privateListId IS NULL OR Product.privateListId=?) " +
                     (!categories.isEmpty()?" AND Product.categoryProductId IN " + sbSql.toString():" ") +

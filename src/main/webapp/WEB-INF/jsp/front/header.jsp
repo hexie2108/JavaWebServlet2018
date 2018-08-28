@@ -54,29 +54,29 @@
                 <!-- Autocompletion search(using autcomplete jquery) -->
                 <script src="<c:url value="/libs/typeahead.js/typeahead.jquery.min.js"/>"></script>
                 <script src="<c:url value="/libs/typeahead.js/typeahead.bundle.min.js"/>"></script>
-                <script src="<c:url value="/libs/typeahead.js/bloodhound.min.js"/>"></script>
 
                 <link rel="stylesheet" href="<c:url value="/libs/typeahead.js/typeahead.css"/>" type="text/css" media="all"/>
                 <script>
                         $(document).ready(function(){
-                            const products = new Bloodhound({
-                                queryTokenizer: Bloodhound.tokenizers.whitespace,
-                                datumTokenizer: Bloodhound.tokenizers.whitespace,
-                                remote: {
-                                    url: '<c:url value="/service/autocompleteProduct.json"/>?',
-                                    replace: function(url, uriEncodedQuery) {
-                                        return url + $('#search-form').serialize();
-                                    }
+                            $.fn.serializeAndEncode = function() {
+                                return $.map(this.serializeArray(), function(val) {
+                                    return [val.name, encodeURIComponent(val.value)].join('=');
+                                }).join('&');
+                            };
+
+                            $('[name="searchWords"]').typeahead({
+                                highlight: true,
+                                hint: true
+                            }, {
+                                source: function(query, syncResults, asyncResults){
+                                    $.ajax({
+                                        url: '<c:url value="/service/autocompleteProduct.json"/>',
+                                        method: 'GET',
+                                        data: $('#search-form').serializeAndEncode()
+                                    }).done(function(data){
+                                        asyncResults(data);
+                                    });
                                 }
-                            });
-
-                            // Initialize the Bloodhound suggestion engine
-                            products.initialize();
-
-
-                            $('[name="searchWords"]').typeahead(null, {
-                                name: 'dsa',
-                                source: products.ttAdapter()
                             });
                         });
                 </script>
