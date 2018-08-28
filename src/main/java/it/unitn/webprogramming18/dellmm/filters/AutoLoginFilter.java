@@ -27,25 +27,20 @@ import javax.servlet.http.HttpSession;
  *
  * @author mikuc
  */
-public class AutoLoginFilter implements Filter
-{
-
+public class AutoLoginFilter implements Filter {
         private UserDAO userDAO;
-        private String fastLoginkey = null;
-        private Cookie[] cookies = null;
-        private User user = null;
-
-        private HttpServletRequest request = null;
-        private HttpServletResponse response = null;
 
         @Override
-        public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
-        {
-                this.request = (HttpServletRequest) request;
-                this.response = (HttpServletResponse) response;
+        public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+                HttpServletRequest request = (HttpServletRequest) req;;
+                HttpServletResponse response = (HttpServletResponse) res;
+
+                String fastLoginkey = null;
+                Cookie[] cookies = null;
+                User user = null;
 
                 //get la sessione
-                HttpSession session = this.request.getSession();
+                HttpSession session = request.getSession();
 
                 // Se  l'utente non è autenticato
                 if (session.getAttribute("user") == null)
@@ -54,7 +49,7 @@ public class AutoLoginFilter implements Filter
                         //inizializza variabile a null;
                         fastLoginkey = null;
                         //get la cookie dell'utente
-                        cookies = this.request.getCookies();
+                        cookies = request.getCookies();
                         //se utente ha la cookie di auto login key
                         if (cookies != null && cookies.length > 0)
                         {
@@ -94,15 +89,15 @@ public class AutoLoginFilter implements Filter
                                 {
                                         //crea un cookie vuoto con time 0 per eliminare cookie vecchio
                                         Cookie cookie = new Cookie("autoLoginKey", "");
-                                        cookie.setPath(request.getServletContext().getContextPath());
+                                        cookie.setPath(req.getServletContext().getContextPath());
                                         //set la vita di cookie per 0 secondi
                                         cookie.setMaxAge(0);
-                                        this.response.addCookie(cookie);
+                                        response.addCookie(cookie);
                                 }
                         }
                 }
 
-                chain.doFilter(request, response);
+                chain.doFilter(req, res);
         }
 
         @Override
