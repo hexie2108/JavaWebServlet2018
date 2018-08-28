@@ -86,10 +86,6 @@ public class HomeServlet extends HttpServlet {
         request.setAttribute("categoryListForSlider", categoryListForSlider);
         //set la lista di prodotto nella richesta
         request.setAttribute(ConstantsUtils.PRODUCT_LIST, productList);
-        //set il numero di pagine resti
-        request.setAttribute(ConstantsUtils.NUMBER_OF_PAGE_REST, (totalNumberOfPage - Integer.parseInt(page)));
-        //set url per la paginazione
-        request.setAttribute(ConstantsUtils.PATH_FOR_PAGINATION, request.getContextPath() + "?");
 
         //inoltra a jsp
         request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);

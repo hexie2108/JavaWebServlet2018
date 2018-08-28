@@ -7,100 +7,59 @@
 
 
 <div class="pagination-box">
-
     <%-- se il numero di pagina resti è >= 0 --%>
-    <c:if test="${numberOfPageRest>=0}">
-
+    <c:if test="${requestScope.nPages > 0}">
         <ul class="pagination">
-
-                <%-- se non è nella prima pagina --%>
-            <c:if test="${not empty param.page && param.page>1}">
-
+            <c:set var="currPage" scope="page" value="${empty param.page?1: param.page}"/>
+            <c:if test="${pageScope.currPage>1}">
                 <%-- link di precedente --%>
                 <li class="page-item page-previous">
-                    <a class="page-link " href="${pathForPagination}page=${param.page-1}">
-                        precedente
-                    </a>
+                    <c:url var="linkUrl" value="">
+                        <c:forEach items="${paramValues}" var="entryParam">
+                            <c:if test="${entryParam.key != 'page'}">
+                                <c:forEach var="value" items="${entryParam.value}">
+                                    <c:param name="${entryParam.key}" value="${value}"/>
+                                </c:forEach>
+                            </c:if>
+                        </c:forEach>
+                        <c:param name="page" value="${pageScope.currPage-1}"/>
+                    </c:url>
+                    <a class="page-link " href="${linkUrl}">precedente</a>
                 </li>
-
             </c:if>
 
-                <%-- le logiche per settare le indici di paginazione --%>
-            <c:choose>
-                <c:when test="${(empty param.page || param.page==1)&& numberOfPageRest <4}">
-                    <c:set var="end" value="${numberOfPageRest}"/>
-                </c:when>
-                <c:when test="${(empty param.page || param.page==1) && numberOfPageRest >=4}">
-                    <c:set var="end" value="4"/>
-                </c:when>
-                <c:when test="${not empty param.page && param.page < 3 && numberOfPageRest <3}">
-                    <c:set var="end" value="${numberOfPageRest+1}"/>
-                </c:when>
-                <c:when test="${not empty param.page && numberOfPageRest >1}">
-                    <c:set var="end" value="4"/>
-                </c:when>
-                <c:otherwise>
-                    <c:set var="end" value="${numberOfPageRest+2}"/>
-                </c:otherwise>
-            </c:choose>
+            <c:set scope="page" var="begin" value="${(pageScope.currPage - 3 > 0)? pageScope.currPage - 3: 0}"/>
+            <c:set scope="page" var="end" value="${(pageScope.begin + 4) > requestScope.nPages-1?requestScope.nPages-1: (pageScope.begin + 4)}"/>
 
-                <%-- stampa le indici di paginazione --%>
-            <c:forEach begin="0" end="${end}" var="i">
-
-                <%-- caso della prima pagina --%>
-                <c:if test="${empty param.page}">
-
-                    <li class="page-item ${ i==0 ? "active":""}">
-
-                        <a class="page-link " href="${pathForPagination}page=${i+1}">
-                                ${ i+1}
-                        </a>
-
-                    </li>
-
-                </c:if>
-
-                <%-- caso della seconda e terza pagina --%>
-                <c:if test="${not empty param.page && param.page<3}">
-
-                    <li class="page-item ${ (i+1)==param.page ? "active":""}">
-
-                        <a class="page-link " href="${pathForPagination}page=${i+1}">
-                                ${ i+1}
-                        </a>
-                    </li>
-
-                </c:if>
-
-                <%-- caso delle pagine successive --%>
-                <c:if test="${not empty param.page && param.page>2}">
-
-                    <li class="page-item ${i==2 ? "active":""}">
-                        <a class="page-link " href="${pathForPagination}page=${param.page-2+i}">
-                                ${param.page-2+i}
-                        </a>
-                    </li>
-
-                </c:if>
-
-
+            <c:forEach begin="${pageScope.begin}" end="${pageScope.end}" var="i">
+                <li class="page-item ${i+1==pageScope.currPage? "active":""}">
+                    <c:url var="linkUrl" value="">
+                        <c:forEach items="${param}" var="entryParam">
+                            <c:if test="${entryParam.key != 'page'}">
+                                <c:param name="${entryParam.key}" value="${entryParam.value}"/>
+                            </c:if>
+                        </c:forEach>
+                        <c:param name="page" value="${i+1}"/>
+                    </c:url>
+                    <a class="page-link " href="${linkUrl}">${i+1}</a>
+                </li>
             </c:forEach>
 
-                <%-- se non è sull'ultima pagina--%>
-            <c:if test="${numberOfPageRest != 0}">
-
+            <c:if test="${pageScope.currPage != requestScope.nPages}">
                 <%-- link di successivo --%>
                 <li class="page-item page-next">
-                    <a class="page-link " href="${pathForPagination}page=${empty param.page?2:param.page+1}">
-                        successivo
-                    </a>
+                    <c:url var="linkUrl" value="">
+                        <c:forEach items="${param}" var="entryParam">
+                            <c:if test="${entryParam.key != 'page'}">
+                                <c:param name="${entryParam.key}" value="${entryParam.value}"/>
+                            </c:if>
+                        </c:forEach>
+                        <c:param name="page" value="${pageScope.currPage+1}"/>
+                    </c:url>
+                    <a class="page-link " href="${linkUrl}">successivo</a>
                 </li>
-
             </c:if>
-
         </ul>
-
     </c:if>
-
 </div>
 

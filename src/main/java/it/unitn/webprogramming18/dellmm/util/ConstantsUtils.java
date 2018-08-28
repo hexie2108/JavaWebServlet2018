@@ -17,6 +17,7 @@ public class ConstantsUtils {
     public static final String PRODUCT_LIST = "productList";
     public static final String PATH_FOR_PAGINATION = "pathForPagination";
     public static final String NUMBER_OF_PAGE_REST = "numberOfPageRest";
+    public static final String NUMBER_OF_PAGES = "nPages";
 
     //numeri di categoria e prodotto da visualizzare in varie pagina
     public static final int NUMBER_CATEGORY_FOR_SLIDER = 4;

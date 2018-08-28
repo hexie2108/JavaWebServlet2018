@@ -374,7 +374,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
                     "SELECT Product.* " +
                             "FROM Product JOIN CategoryProduct " +
                             "ON Product.categoryProductId = CategoryProduct.id " +
-                            "WHERE Product.privateListId IS NULL AND MATCH(Product.name, Product.description) AGAINST (? IN NATURAL  LANGUAGE  MODE) > " + MIN_RELEVANCE + " " +
+                            "WHERE Product.privateListId IS NULL AND MATCH(Product.name, Product.description) AGAINST (? IN NATURAL  LANGUAGE  MODE) >= " + MIN_RELEVANCE + " " +
                                 (!categories.isEmpty()?" AND Product.categoryProductId IN " + sbSql.toString():" ") +
                             " ORDER BY CategoryProduct.name " + sqlDirection + " " +
                             "LIMIT ?,? ";
@@ -383,7 +383,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
                     "SELECT * " +
                             "FROM Product " +
                             "WHERE privateListId IS NULL " +
-                                "AND MATCH(name, description) AGAINST (? IN NATURAL  LANGUAGE  MODE) > " + MIN_RELEVANCE + " " +
+                                "AND MATCH(name, description) AGAINST (? IN NATURAL  LANGUAGE  MODE) >= " + MIN_RELEVANCE + " " +
                                 (!categories.isEmpty()?" AND categoryProductId IN " + sbSql.toString(): " ") +
                             " ORDER BY name " + sqlDirection + " " +
                             " LIMIT ?,?";
@@ -396,7 +396,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
                             "WHERE privateListId IS NULL " +
                                 (!categories.isEmpty()?" AND categoryProductId IN "+ sbSql.toString(): " ") +
                             " ) AS P " +
-                            "WHERE rev > " + MIN_RELEVANCE + " " +
+                            "WHERE rev >= " + MIN_RELEVANCE + " " +
                             " ORDER BY rev " + sqlDirection + " " +
                             " LIMIT ?,?";
         }
@@ -443,7 +443,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
         try (PreparedStatement stmt = CON.prepareStatement(
                 "SELECT COUNT(*) " +
                 "FROM Product " +
-                "WHERE privateListId IS NULL AND  MATCH(Product.name, Product.description) AGAINST (? IN NATURAL  LANGUAGE  MODE) > " + MIN_RELEVANCE + " "
+                "WHERE privateListId IS NULL AND  MATCH(Product.name, Product.description) AGAINST (? IN NATURAL  LANGUAGE  MODE) >= " + MIN_RELEVANCE + " "
         )) {
             stmt.setString(1, "%" + name + "%");
             ResultSet counter = stmt.executeQuery();
@@ -643,7 +643,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
                     "WHERE (Product.privateListId IS NULL OR Product.privateListId=?) " +
                     (!categories.isEmpty()?" AND Product.categoryProductId IN " + sbSql.toString():" ") +
                     " ) AS P " +
-                "WHERE P.rev > " + MIN_RELEVANCE
+                "WHERE P.rev >= " + MIN_RELEVANCE
         )) {
             stm.setString(1, query);
 
