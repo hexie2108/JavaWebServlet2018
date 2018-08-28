@@ -196,7 +196,7 @@ function deleteProductLocal() {
 function acceptedPrivacy() {
 
         document.getElementsByClassName("popup-privacy")[0].style.display = "none";
-        setCookie('acceptedPrivacy', 1, 30);
+        setCookie('acceptedPrivacy', 1, 365);
 
 }
 
@@ -227,8 +227,8 @@ function setCookieInMinute(cname, cvalue, exminutes) {
         var d = new Date();
         d.setTime(d.getTime() + (exminutes * 60 * 1000));
         var expires = "expires=" + d.toGMTString();
-        document.cookie = cname + "=" + cvalue + "; " + expires+"; path=/";
-        
+        document.cookie = cname + "=" + cvalue + "; " + expires;
+
 }
 
 /**
@@ -372,8 +372,8 @@ function initMap() {
  * @returns {undefined}
  */
 
- var map;
- var infoWindow;
+var map;
+var infoWindow;
 function creaMap(position) {
 
         var user_lat = position.coords.latitude;
@@ -385,8 +385,8 @@ function creaMap(position) {
                 zoom: 18,
                 minZoom: 16
         });
-       
-        
+
+
         //crea l'indicatore dell'utente attuale
         var myPosition = new google.maps.Marker({
                 map: map,
@@ -407,7 +407,7 @@ function creaMap(position) {
 
         //aggancia l'evento clic su l'indicatore dell'utente
         google.maps.event.addListener(myPosition, 'click', function () {
-                infoWindow.setContent("<h3>sei qui</h3>");
+                infoWindow.setContent("<b>sei qui</b>");
                 infoWindow.open(map, this);
         });
 
@@ -442,14 +442,14 @@ function creaMap(position) {
                                         radius: '1000',
                                         keyword: listCategoryName[i]
                                 };
-                                   service.nearbySearch(request, showMarker);
+                                service.nearbySearch(request, showMarker);
                         }
                 }
 
         }
-        
-         //set cookie di checked che dura 10minuti
-         setCookieInMinute('notifica', 1, -1);
+
+        //set cookie di checked che dura 10minuti
+        setCookieInMinute('notifica', 1, -1);
 }
 
 
@@ -482,7 +482,7 @@ function createMarker(place) {
         });
 
         google.maps.event.addListener(marker, 'click', function () {
-                infoWindow.setContent("<h3>" + place.name + "</h3><p>" + place.vicinity + "</p>");
+                infoWindow.setContent("<p><b>" + place.name + "</b></p><p>" + place.vicinity + "</p>");
                 infoWindow.open(map, this);
         });
 }
@@ -508,3 +508,57 @@ function errorHandler(error) {
                         break;
         }
 }
+
+
+
+/**
+ * validatore del form di sharing, che controlla se esiste davvero tale email in DB
+ * @returns {Boolean}
+ */
+function validateSharing() {
+
+        //get input del form
+        var email = $("#inputEmail").val();
+
+
+        //nasconde tutti gli errori
+        $(".sharing-body .error-messages p").hide();
+        //rimuove tutti classe border-danger da inpu di form
+        $("#inputEmail").removeClass("border-danger");
+
+
+        //check esistenza di email
+
+        var url = location.href;
+        var index = url.indexOf("mylist");
+        url = url.substring(0, index);
+        var repeat;
+        $.ajax({
+                url: url + "service/checkUserService",
+                data: {action: "existence", email: email},
+                type: 'POST',
+                dataType: "text",
+                async: false,
+                cache: false,
+                error: function () {
+                        alert('error to check email repeat, retry submit');
+                },
+                success: function (data) {
+                        repeat = data;
+                }
+        });
+
+        if (repeat === "0")
+        {
+                var errorType = ".no-exist";
+                $(".sharing-body .error-messages " + errorType).show("slow");
+                $("#inputEmail").addClass("border-danger");
+                $("#inputEmail").focus();
+                return false;
+        }
+
+        return true;
+}
+
+
+

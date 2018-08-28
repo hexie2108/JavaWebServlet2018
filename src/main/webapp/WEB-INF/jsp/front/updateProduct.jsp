@@ -111,7 +111,7 @@
 
                                         <div class="form-group">
 
-                                                <button type="submit" class="btn btn-info w-50">inserisce</button>
+                                                <button type="submit" class="submit-button-front-page btn btn-info ">inserisce</button>
 
                                         </div>
 

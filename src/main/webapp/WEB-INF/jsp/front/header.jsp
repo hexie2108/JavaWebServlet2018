@@ -50,6 +50,36 @@
 
                 <!-- Latest compiled and minified JavaScript -->
                 <script src="<c:url value="/libs/bootstrap-select-1.13.1/js/bootstrap-select.min.js"/>"></script>
+
+                <!-- Autocompletion search(using autcomplete jquery) -->
+                <script src="<c:url value="/libs/typeahead.js/typeahead.jquery.min.js"/>"></script>
+                <script src="<c:url value="/libs/typeahead.js/typeahead.bundle.min.js"/>"></script>
+
+                <link rel="stylesheet" href="<c:url value="/libs/typeahead.js/typeahead.css"/>" type="text/css" media="all"/>
+                <script>
+                        $(document).ready(function () {
+                                $.fn.serializeAndEncode = function () {
+                                        return $.map(this.serializeArray(), function (val) {
+                                                return [val.name, encodeURIComponent(val.value)].join('=');
+                                        }).join('&');
+                                };
+
+                                $('[name="searchWords"]').typeahead({
+                                        highlight: true,
+                                        hint: true
+                                }, {
+                                        source: function (query, syncResults, asyncResults) {
+                                                $.ajax({
+                                                        url: '<c:url value="/service/autocompleteProduct.json"/>',
+                                                        method: 'GET',
+                                                        data: $('#search-form').serializeAndEncode()
+                                                }).done(function (data) {
+                                                        asyncResults(data);
+                                                });
+                                        }
+                                });
+                        });
+                </script>
         </head>
 
         <body class="front-page">
@@ -67,8 +97,8 @@
                                         <div class="site-logo-section">
 
                                                 <a href="<c:url value="/"/>" title="home">
-                                                        <img class="logo d-inline" src="<c:url value="/image/base/logo.png"/>" alt="logo"/>
-                                                        <h2 class="site-title d-inline">
+                                                        <img class="logo" src="<c:url value="/image/base/logo.png"/>" alt="logo"/>
+                                                        <h2 class="site-title">
                                                                 Il nome del sito
                                                         </h2>
                                                 </a>
@@ -77,12 +107,12 @@
 
                                         <%-- menu top--%>
                                         <div class="site-top-menu float-right">
-                                                <nav class="navbar navbar-expand-sm navbar-dark">
+                                                <nav class="navbar navbar-expand navbar-dark">
                                                         <ul class="navbar-nav ">
 
                                                                 <li id="link-notifica" class="nav-item ${not empty cookie.notifica.value? "d-block":""}">
                                                                         <a class="nav-link" href="<c:url value="/map"/>">
-                                                                                <i class="fa fa-envelope"></i> 1 NOTIFICA
+                                                                                <i class="fa fa-envelope"></i> <span>1 NOTIFICA</span>
                                                                         </a>
                                                                 </li>
 
@@ -91,13 +121,13 @@
 
                                                                         <li class="nav-item">
                                                                                 <a class="nav-link" href="<c:url value="/register"/>">
-                                                                                        <i class="fas fa-user-plus"></i> ISCRIVERSI
+                                                                                        <i class="fas fa-user-plus"></i> <span>ISCRIVERSI</span>
                                                                                 </a>
                                                                         </li>
 
                                                                         <li class="nav-item">
                                                                                 <a class="nav-link" href="<c:url value="/login"/>">
-                                                                                        <i class="fas fa-sign-in-alt"></i> LOGIN
+                                                                                        <i class="fas fa-sign-in-alt"></i> <span>LOGIN</span>
                                                                                 </a>
                                                                         </li>
 
@@ -108,7 +138,7 @@
 
                                                                         <li class="nav-item">
                                                                                 <a class="nav-link" href="<c:url value="/mylists"/>">
-                                                                                        <i class="fas fa-list"></i> MIE LISTE
+                                                                                        <i class="fas fa-list"></i> <span>MIE LISTE</span>
                                                                                 </a>
                                                                         </li>
 
@@ -116,21 +146,21 @@
 
                                                                         <li class="nav-item">
                                                                                 <a class="nav-link profile" href="<c:url value="/modifyUser"/>">
-                                                                                        <img class="avatar img-fluid" src="<c:url value="/image/user/${sessionScope.user.img}"/>" alt="avatar"/> PROFILO
+                                                                                        <img class="avatar img-fluid" src="<c:url value="/image/user/${sessionScope.user.img}"/>" alt="avatar"/> <span>PROFILO</span>
                                                                                 </a>
                                                                         </li>
 
                                                                         <c:if test="${sessionScope.user.isAdmin}">
                                                                                 <li class="nav-item">
                                                                                         <a class="nav-link" href="<c:url value="/admin/home"/>">
-                                                                                                <i class="fas fa-tachometer-alt"></i> ADMIN
+                                                                                                <i class="fas fa-tachometer-alt"></i> <span>ADMIN</span>
                                                                                         </a>
                                                                                 </li>
                                                                         </c:if>
 
                                                                         <li class="nav-item">
                                                                                 <a class="nav-link" href="<c:url value="/logout"/>">
-                                                                                        <i class="fas fa-sign-out-alt"></i> LOGOUT
+                                                                                        <i class="fas fa-sign-out-alt"></i> <span>LOGOUT</span>
                                                                                 </a>
                                                                         </li>
 
@@ -156,11 +186,13 @@
                                                                                 <option value="${category.id}" ${paramValues.catId.stream().anyMatch((e) -> e.equals(category.id.toString())).get()?'selected':''}>${category.name}</option>
                                                                         </c:forEach>
                                                                 </select>
-                                                                <input type="search" class="form-control" name="searchWords" placeholder="cerchi qualcosa?"
+                                                                <div class="col-7 p-0">
+                                                                        <input type="search" class="form-control typeahead" name="searchWords" placeholder="cerchi qualcosa?"
                                                                        required="required" value="${not empty param.searchWords?param.searchWords:''}">
-                                                                <div class="input-group-append">
-                                                                        <button type="submit" class="btn btn-info"><i class="fas fa-search"></i> CERCA</button>
                                                                 </div>
+                                                                <div class="input-group-append col-2 p-0">
+                                                                        <button type="submit" class="btn btn-info w-100"><i class="fas fa-search"></i> CERCA</button>
+                                                        </div>
                                                         </div>
                                                 </form>
 
@@ -172,13 +204,18 @@
                                         <nav class="navbar navbar-expand-sm bg-info navbar-dark">
                                                 <ul class="navbar-nav nav-justified justify-content-center w-100">
 
-                                                        <li class="nav-item active">
+                                                        <li class="nav-item mobile-menu">
+                                                                <a id="mobile-menu-active-link" class="nav-link" href="javascript:;" title="mobile-menu">
+                                                                       <i class="fas fa-caret-square-down"></i> MENU
+                                                                </a>
+                                                        </li>
+                                                        <li class="nav-item desktop-item">
                                                                 <a class="nav-link " href="<c:url value="/"/>" title="home">
                                                                         HOME
                                                                 </a>
                                                         </li>
 
-                                                        <li class="nav-item dropdown">
+                                                        <li class="nav-item dropdown desktop-item">
                                                                 <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
                                                                         CATEGORIA
                                                                 </a>
@@ -191,22 +228,12 @@
                                                                 </div>
                                                         </li>
 
-                                                        <li class="nav-item">
+                                                        <li class="nav-item desktop-item">
                                                                 <a class="nav-link" href="<c:url value="/updateProduct"/>">
                                                                         AGGIUNGE PRODOTTO
                                                                 </a>
                                                         </li>
 
-                                                        <li class="nav-item">
-                                                                <a class="nav-link" href="#">
-                                                                        link3
-                                                                </a>
-                                                        </li>
-                                                        <li class="nav-item">
-                                                                <a class="nav-link" href="#">
-                                                                        link4
-                                                                </a>
-                                                        </li>
 
                                                 </ul>
                                         </nav>

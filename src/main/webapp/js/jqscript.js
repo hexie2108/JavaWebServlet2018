@@ -18,6 +18,27 @@ $(document).ready(function () {
                 noneResultsText: 'No result matched {0}'
         });
 
+        $('#mobile-menu-active-link').click(function () {
+                if ($(this).hasClass("actived"))
+                {
+                        $(this).removeClass("actived");
+                }
+                else
+                {
+                        $(this).addClass("actived");
+                }
+                if ($(".front-page header .menu-nav .navbar-nav .nav-item.desktop-item").hasClass("show-item"))
+                {
+                        $(".front-page header .menu-nav .navbar-nav .nav-item.desktop-item").removeClass("show-item");
+                }
+                else
+                {
+                        $(".front-page header .menu-nav .navbar-nav .nav-item.desktop-item").addClass("show-item");
+                }
+               
+        });
+
+
 
 });
 

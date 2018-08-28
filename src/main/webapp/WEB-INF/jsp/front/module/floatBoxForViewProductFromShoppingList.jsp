@@ -74,7 +74,7 @@
 
                             <%--  form per eliminare il prodotto dalla cookie --%>
                             <form action="<c:url value="/service/updateItemInListUnloggedUserOnlyService"/>"
-                                  method="GET">
+                                  method="GET" onsubmit="if(!confirm('sei sicuro?')) return false;">
 
                                 <input class="productIdFromList" type="hidden" name="productId" value="1"/>
                                 <input type="hidden" name="action" value="delete"/>
@@ -110,7 +110,7 @@
                             <div class="formToDelete">
 
                                 <form action="<c:url value="/service/updateItemInListService"/>"
-                                      method="GET">
+                                      method="GET" onsubmit="if(!confirm('sei sicuro?')) return false;">
 
                                     <input class="productIdFromList" type="hidden" name="productId" value="1"/>
                                     <input class="listIdFromList" type="hidden" name="listId"/>

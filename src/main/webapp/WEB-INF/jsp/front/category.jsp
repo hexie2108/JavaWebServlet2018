@@ -29,7 +29,7 @@
                 </div>
 
                 <%-- image di categoria attuale--%>
-                <div class="category-image-section d-inline">
+                <div class="category-image-section">
                         <img class="category-logo " src="<c:url value="/image/categoryProduct/${categoria.img}"/>"
                              alt="${categoria.name}"/>
                 </div>

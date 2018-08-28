@@ -17,9 +17,9 @@
 
         <div class="product-list">
 
-            <div class="product-list-head">
+            <div class="product-list-head mt-2 mb-2">
                 <h1 class="list-title">
-                    i prodotti
+                    i prodotti recenti
                 </h1>
             </div>
 

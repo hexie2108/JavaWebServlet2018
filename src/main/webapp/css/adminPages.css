@@ -1,5 +1,8 @@
 
+* {
+        transition: .3s;
 
+}
 .admin-page .admin-menu {
 
         width: 300px;
@@ -9,6 +12,24 @@
 
 }
 
+.admin-page .mobile-menu-bar{
+        display: none;
+        height: 40px;
+        z-index: 1040;
+}
+
+.admin-page .mobile-menu-bar a{
+        text-decoration: none;
+        line-height: 40px;
+        height: 40px;
+        display: block;
+        width: 100px;
+        text-align: center;
+}
+
+.admin-page .mobile-menu-bar .actived {
+        background-color: #117a8b;
+}
 
 
 .admin-page .admin-menu .nav-link{
@@ -17,6 +38,10 @@
         background-color: #17a2b8;
         transition: .5s;
 }
+.admin-page  .nav-link b{
+        font-weight: normal;
+        margin-left: .5rem;
+}
 
 .admin-page .admin-menu .nav-link:hover{
 
@@ -24,10 +49,19 @@
 }
 
 
+
+
+
 .admin-page .admin-main-container{
         margin-left: 300px;
         padding: 2rem;
 }
+
+.admin-page .admin-main-container .language-switch{
+
+        text-align: right;
+}
+
 
 /*admin home --------------------------------------------------*/
 
@@ -42,6 +76,13 @@
 
         text-align: center;
 }
+
+.admin-page .admin-main-container .content .statistics  .statistics-body{
+
+        display: flex;
+        flex-wrap: wrap;
+}
+
 .admin-page .admin-main-container .content .statistics .statistics-body .statistics-item{
 
         border: 1px solid #d0d0d0;
@@ -144,4 +185,70 @@
         font-size: 1.5rem;
 
         visibility: hidden;
+}
+
+
+@media (max-width: 900px){
+
+
+
+        .admin-page .admin-menu{
+                width: 60px;
+        }
+
+        .admin-page .admin-menu .nav-link{
+                text-align: center;
+        }
+
+        .admin-page .admin-menu .nav-link b {
+                display: none;
+        }
+        .admin-page .admin-main-container{
+                margin-left: 60px;
+        }
+
+}
+
+
+@media (max-width: 500px){
+
+        .admin-page .admin-menu{
+                display: none;
+        }
+        .admin-page .mobile-menu-bar{
+                display: block;
+
+        }
+
+        .admin-page .mobile-menu-bar a{
+                color: white;
+        }
+
+        .admin-page .show-menu{
+                display: block;
+        }
+
+        .admin-page .admin-main-container{
+                margin-left: 0;
+                margin-top: 1rem;
+
+        }
+
+        .admin-page .admin-menu{
+                width: 300px;
+                margin-top: 2.5rem;
+        }
+        .admin-page .admin-menu .nav-link {
+                text-align: left;
+        }
+         .admin-page .admin-menu .nav-link b {
+                display: inline;
+        }
+
+
+
+
+
+
+
 }

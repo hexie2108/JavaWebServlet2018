@@ -60,7 +60,7 @@
             <div class="site-logo-section">
 
                 <a href="<c:url value="/"/>" title="home">
-                    <img class="logo d-inline" src="<c:url value="/image/base/logo.png"/>" alt="logo"/>
+                    <img class="logo" src="<c:url value="/image/base/logo.png"/>" alt="logo"/>
                     <h2 class="site-title d-inline ">
                         Il nome del sito
                     </h2>

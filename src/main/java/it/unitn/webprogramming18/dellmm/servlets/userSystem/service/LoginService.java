@@ -156,6 +156,12 @@ public class LoginService extends HttpServlet
                 //set la vita di cookie per 0 secondi
                 NearShopChecked.setMaxAge(0);
                 response.addCookie(NearShopChecked);
+                //eliminare cookie di  notifica
+                Cookie notifica = new Cookie("notifica", "");
+                notifica.setPath(getServletContext().getContextPath());
+                //set la vita di cookie per 0 secondi
+                notifica.setMaxAge(0);
+                response.addCookie(notifica);
 
                 // Se nextUrl è vuoto o nullo, usa pagina di default(index)
                 if (prevUrl == null || prevUrl.isEmpty())

@@ -215,7 +215,7 @@
 
                                         <%-- link per eliminare il prodotto dalla cookie--%>
                                         <a href="<c:url value="/service/updateItemInListUnloggedUserOnlyService?action=delete&productId=${product.id}"/>"
-                                           title="elimina">
+                                           title="elimina" onclick="if(!confirm('sei sicuro?')) return false;">
                                             <i class="fas fa-ban"></i>
                                         </a>
 
@@ -235,7 +235,7 @@
 
                                             <%-- link per eliminare il prodotto--%>
                                             <a href="<c:url value="/service/updateItemInListService?action=delete&productId=${product.id}&listId=${sessionScope.myListId}"/>"
-                                               title="elimina">
+                                               title="elimina" onclick="if(!confirm('sei sicuro?')) return false;">
                                                 <i class="fas fa-ban"></i>
                                             </a>
 

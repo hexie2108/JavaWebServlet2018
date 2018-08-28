@@ -38,10 +38,10 @@
                         <div class="btn-group">
                                 <button class="btn btn-info dropdown-toggle" data-toggle="dropdown" href="#">
                                         <c:choose>
-                                                <c:when test="${(param.order == 'productName' || empty param.order) && (param.direction == 'asc')}">
+                                                <c:when test="${(param.order == 'productName'                     ) && (param.direction == 'asc')}">
                                                         nome <i class="fas fa-sort-alpha-down"></i>
                                                 </c:when>
-                                                <c:when test="${(param.order == 'productName' || empty param.order) && (empty param.direction || param.direction == 'desc')}">
+                                                <c:when test="${(param.order == 'productName'                     ) && (empty param.direction || param.direction == 'desc')}">
                                                         nome <i class="fas fa-sort-alpha-up"></i>
                                                 </c:when>
                                                 <c:when test="${(param.order == 'categoryName'                    ) && (param.direction == 'asc')}">
@@ -50,10 +50,10 @@
                                                 <c:when test="${(param.order == 'categoryName'                    ) && (empty param.direction ||param.direction == 'desc')}">
                                                         categoria <i class="fas fa-sort-alpha-up"></i>
                                                 </c:when>
-                                                <c:when test="${(param.order == 'relevance'                       ) && (empty param.direction || param.direction == 'asc')}">
+                                                <c:when test="${(param.order == 'relevance'  || empty param.order ) && (empty param.direction || param.direction == 'asc')}">
                                                         rilevanza <i class="fas fa-sort-amount-down"></i>
                                                 </c:when>
-                                                <c:when test="${(param.order == 'relevance'                       ) && (param.direction == 'desc')}">
+                                                <c:when test="${(param.order == 'relevance'  || empty param.order ) && (param.direction == 'desc')}">
                                                         rilevanza <i class="fas fa-sort-amount-up"></i>
                                                 </c:when>
                                         </c:choose>

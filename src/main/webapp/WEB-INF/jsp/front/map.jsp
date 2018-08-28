@@ -12,12 +12,12 @@
 
 <jsp:include page="/WEB-INF/jsp/front/header.jsp"/>
 
-<div class="map main-section w-100">
+<div class="map main-section w-100 p-4">
 
         <div class="content">
 
                 <h2 class="mb-2 mt-2">
-                        Trova i negozi vicini a te
+                      <i class="fas fa-map-marked-alt"></i>  Trova i negozi vicini a te
                 </h2>
                 <p id="errText">
 

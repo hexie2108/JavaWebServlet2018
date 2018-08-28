@@ -53,28 +53,44 @@
                                                         <%-- tutte le informazioni della lista--%>
                                                         <div class="list-left-head">
 
-                                                                <div class="list-logo">
-                                                                        <img class="img-fluid"
-                                                                             src="<c:url value="/image/list/${list.img}"/>" alt="logo"/>
-                                                                </div>
+
 
                                                                 <div class="list-info">
+                                                                        <div class="list-logo">
+                                                                                <img class="img-fluid"
+                                                                                     src="<c:url value="/image/list/${list.img}"/>" alt="logo"/>
+                                                                        </div>
 
-                                                                        <span class="list-name">
-                                                                                <i class="fas fa-info-circle"></i> <b>nome:</b> ${list.name}
-                                                                        </span>
 
-                                                                        <span class="list-category">
-                                                                                <i class="fas fa-sitemap"> <b></i> categoria: </b>
-                                                                                <%-- get il nome della categoria di lista--%>
-                                                                                <custom:getListCategoryByListCategoryId
-                                                                                        listCategoryId="${list.categoryList}"/>
-                                                                                ${categoryOfList.name}
-                                                                        </span>
+                                                                        <div class="list-name">
+
+                                                                                <p class="name">
+                                                                                        <i class="fas fa-info-circle"></i> <b>nome:</b> 
+                                                                                </p>
+                                                                                <p class="value">
+                                                                                        ${list.name}
+                                                                                </p>
+                                                                        </div>
+                                                                        <div class="list-category">
+                                                                                <p class="name">
+                                                                                        <i class="fas fa-sitemap"> <b></i> categoria: </b>
+                                                                                </p>
+                                                                                <p class="value">
+                                                                                        <%-- get il nome della categoria di lista--%>
+                                                                                        <custom:getListCategoryByListCategoryId
+                                                                                                listCategoryId="${list.categoryList}"/>
+                                                                                        ${categoryOfList.name}
+                                                                                </p>
+                                                                        </div>
 
                                                                         <div class="list-description">
-                                                                                <i class="far fa-file-alt"></i> <b>descrizione: </b>
-                                                                                ${list.description}
+                                                                                <p class="name">
+                                                                                        <i class="far fa-file-alt"></i> <b>descrizione: </b>
+                                                                                </p>
+                                                                                <p class="value">
+                                                                                        ${list.description}
+                                                                                </p>
+
                                                                         </div>
 
                                                                 </div>
@@ -85,10 +101,10 @@
                                                         <div class="list-right-head">
 
                                                                 <span class="button">
-                                                                        <i class="fas fa-share-alt"></i> ${ownedListsMap.get(list).get("numberOfShared")} condivisione
+                                                                        <i class="fas fa-share-alt"></i> ${ownedListsMap.get(list).get("numberOfShared")} <b>condivisione</b>
                                                                 </span>
                                                                 <span class="button">
-                                                                        <i class="fas fa-comments"></i> ${ownedListsMap.get(list).get("numberComment")} commenti
+                                                                        <i class="fas fa-comments"></i> ${ownedListsMap.get(list).get("numberComment")} <b>commenti</b>
                                                                 </span>
 
                                                         </div>
@@ -203,31 +219,49 @@
                                                         <%-- tutte le informazioni della lista--%>
                                                         <div class="list-left-head">
 
-                                                                <div class="list-logo">
-                                                                        <img class="img-fluid"
-                                                                             src="<c:url value="/image/list/${list.img}"/>" alt="logo"/>
-                                                                </div>
+
 
                                                                 <div class="list-info">
 
-                                                                        <span class="list-name">
-                                                                                <b><i class="fas fa-info-circle"></i> nome:</b> ${list.name}
-                                                                        </span>
+                                                                        <div class="list-logo">
+                                                                                <img class="img-fluid"
+                                                                                     src="<c:url value="/image/list/${list.img}"/>" alt="logo"/>
+                                                                        </div>
 
-                                                                        <span class="list-category">
-                                                                                <b><i class="fas fa-sitemap"></i> categoria:</b> 
-                                                                                <%-- get il nome della categoria di lista--%>
-                                                                                <custom:getListCategoryByListCategoryId
-                                                                                        listCategoryId="${list.categoryList}"/>
-                                                                                ${categoryOfList.name}
+                                                                        <div class="list-name">
 
-                                                                        </span>
+                                                                                <p class="name">
+                                                                                        <i class="fas fa-info-circle"></i> <b>nome:</b> 
+                                                                                </p>
+                                                                                <p class="value">
+                                                                                        ${list.name}
+                                                                                </p>
+                                                                        </div>
+                                                                        <div class="list-category">
+                                                                                <p class="name">
+                                                                                        <i class="fas fa-sitemap"> <b></i> categoria: </b>
+                                                                                </p>
+                                                                                <p class="value">
+                                                                                        <%-- get il nome della categoria di lista--%>
+                                                                                        <custom:getListCategoryByListCategoryId
+                                                                                                listCategoryId="${list.categoryList}"/>
+                                                                                        ${categoryOfList.name}
+                                                                                </p>
+                                                                        </div>
 
                                                                         <div class="list-description">
-                                                                                <b><i class="far fa-file-alt"></i> descrizione: </b> ${list.description}
+                                                                                <p class="name">
+                                                                                        <i class="far fa-file-alt"></i> <b>descrizione: </b>
+                                                                                </p>
+                                                                                <p class="value">
+                                                                                        ${list.description}
+                                                                                </p>
+
                                                                         </div>
 
                                                                 </div>
+
+
 
                                                         </div>
 
@@ -253,7 +287,7 @@
                                                                 </div>
 
                                                                 <span class="button">
-                                                                        <i class="fas fa-comments"></i> ${sharedListsMap.get(list).get("numberComment")} commenti
+                                                                        <i class="fas fa-comments"></i> ${sharedListsMap.get(list).get("numberComment")} <b>commenti</b>
                                                                 </span>
 
                                                         </div>

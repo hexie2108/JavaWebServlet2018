@@ -151,6 +151,8 @@ public class ModifyUserService extends HttpServlet
                         user.setSurname(lastName);
 
                         userDAO.update(user);
+                        //set user aggiornato
+                        request.getSession().setAttribute("user", user);
                 }
                 catch (DAOException ex)
                 {

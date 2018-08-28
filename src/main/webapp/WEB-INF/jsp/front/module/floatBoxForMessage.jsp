@@ -49,12 +49,17 @@
                                                         <c:when test="${sessionScope.result == 'sharingInsertOk'}">
                                                                 complimenti
                                                         </c:when>
+                                                        <c:when test="${sessionScope.result == 'sharingInsertError'}">
+                                                                errore
+                                                        </c:when>  
                                                         <c:when test="${sessionScope.result == 'sharingUpdateOk'}">
                                                                 complimenti
                                                         </c:when>
                                                         <c:when test="${sessionScope.result == 'sharingDeleteOk'}">
                                                                 complimenti
                                                         </c:when>
+
+
                                                         <c:when test="${sessionScope.result == 'ListInsertOk'}">
                                                                 complimenti
                                                         </c:when>
@@ -109,6 +114,9 @@
                                                         <c:when test="${sessionScope.result == 'sharingInsertOk'}">
                                                                 la condivisione è stato inserito correttamente
                                                         </c:when>
+                                                        <c:when test="${sessionScope.result == 'sharingInsertError'}">
+                                                                non esiste l'utente che tale email
+                                                        </c:when> 
                                                         <c:when test="${sessionScope.result == 'sharingUpdateOk'}">
                                                                 la condivisione è stato aggiornato correttamente
                                                         </c:when>
@@ -167,5 +175,5 @@
                 </div>
 
         </div>
-        
+
 </c:if>

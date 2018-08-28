@@ -56,6 +56,13 @@
                         <%-- la sezione di header--%>
                         <header class="header">
 
+                                <%-- barra top per mobile--%>
+                                <div class="mobile-menu-bar fixed-top  bg-info">
+                                        <a id="mobile-menu-active-link" class="" href="javascript:;" title="mobile-menu">
+                                                <i class="fas fa-caret-square-down"></i> MENU
+                                        </a>
+                                </div>
+
 
                                 <%-- barra laterale--%>
                                 <div class="asider-left">
@@ -70,42 +77,44 @@
 
                                                         <ul class="navbar-nav w-100">
 
+
+
                                                                 <li class="nav-item">
                                                                         <a class="nav-link" href="<c:url value="/admin/home"/>">
-                                                                                <i class="fas fa-tachometer-alt"></i>  dashboard
+                                                                                <i class="fas fa-tachometer-alt"></i>  <b>dashboard</b>
                                                                         </a>
                                                                 </li>
 
 
                                                                 <li class="nav-item">
                                                                         <a class="nav-link" href="<c:url value="/admin/categoryLists"/>">
-                                                                                <i class="fas fa-sitemap"></i> gestisce le categorie di lista
+                                                                                <i class="fas fa-sitemap"></i> <b>gestisce le categorie di lista</b>
                                                                         </a>
                                                                 </li>
 
 
                                                                 <li class="nav-item">
                                                                         <a class="nav-link" href="<c:url value="/admin/categoryProducts"/>">
-                                                                                <i class="fas fa-store"></i> gestisce le categorie di prodotto
+                                                                                <i class="fas fa-store"></i> <b>gestisce le categorie di prodotto</b>
                                                                         </a>
                                                                 </li>
 
 
                                                                 <li class="nav-item">
                                                                         <a class="nav-link" href="<c:url value="/"/>">
-                                                                                <i class="fas fa-shopping-basket"></i> gestisce i prodotti
+                                                                                <i class="fas fa-shopping-basket"></i> <b>gestisce i prodotti</b>
                                                                         </a>
                                                                 </li>
 
                                                                 <li class="nav-item">
                                                                         <a class="nav-link" href="<c:url value="/admin/users"/>">
-                                                                                <i class="fas fa-users"></i> gestisce gli utente
+                                                                                <i class="fas fa-users"></i> <b>gestisce gli utente</b>
                                                                         </a>
                                                                 </li>
 
                                                                 <li class="nav-item">
                                                                         <a class="nav-link" href="<c:url value="/"/>">
-                                                                                <i class="fas fa-sign-out-alt"></i> ritorna a home
+                                                                                <i class="fas fa-sign-out-alt"></i> <b>ritorna a home</b>
                                                                         </a>
                                                                 </li>
 

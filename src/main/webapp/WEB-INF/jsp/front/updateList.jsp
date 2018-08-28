@@ -93,11 +93,11 @@
                                         <c:if test="${not empty list}">
                                                 <input type="hidden" name="action" value="update"/>
                                                 <input type="hidden" name="listId" value="${list.id}"/>
-                                                <button type="submit" class="btn btn-info w-50">aggiorna</button>
+                                                <button class="submit-button-front-page btn btn-info" type="submit" >aggiorna</button>
                                         </c:if>
                                         <c:if test="${empty list}">
                                                 <input type="hidden" name="action" value="insert"/>
-                                                <button type="submit" class="btn btn-info w-50">crea</button>
+                                                <button class="ubmit-button-front-page btn btn-info" type="submit" >crea</button>
                                         </c:if>
                                 </div>
 

@@ -154,7 +154,6 @@
                 <url-pattern>/modifyUser</url-pattern>
                 <url-pattern>/modifyUser.json</url-pattern>
 
-                <url-pattern>/resendEmail</url-pattern>
 
                 <url-pattern>/alreadyLoggedIn</url-pattern>
 
@@ -650,6 +649,15 @@
         <servlet-mapping>
                 <servlet-name>AcceptPrivacyService</servlet-name>
                 <url-pattern>/service/acceptPrivacyService</url-pattern>
+        </servlet-mapping>
+        
+        <servlet>
+                <servlet-name>ModifyUserService</servlet-name>
+                <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.service.ModifyUserService</servlet-class>
+        </servlet>
+        <servlet-mapping>
+                <servlet-name>ModifyUserService</servlet-name>
+                <url-pattern>/service/modifyUserService</url-pattern>
         </servlet-mapping>
 
         <!-- SERVE STATIC FOLDERS -->

@@ -12,7 +12,7 @@ la lista di prodotto
     <%-- stampa la lista di prodotto --%>
     <c:forEach var="product" items="${productList}">
 
-        <div id="item-${product.id}" class="list-item card d-inline-flex m-2 p-2">
+        <div id="item-${product.id}" class="list-item card p-2">
 
                 <%-- img di  prodotto --%>
             <img class="list-item-img img-fluid card-img-top"
