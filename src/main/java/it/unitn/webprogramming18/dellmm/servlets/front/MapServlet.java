@@ -6,8 +6,10 @@
 package it.unitn.webprogramming18.dellmm.servlets.front;
 
 import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
+import it.unitn.webprogramming18.dellmm.util.i18n;
 
 import java.io.IOException;
+import java.util.ResourceBundle;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +28,8 @@ public class MapServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         //set titolo della pagina
-        request.setAttribute(ConstantsUtils.HEAD_TITLE, "Trova i negozi vicini a te");
+        ResourceBundle bundle = i18n.getBundle(request);
+        request.setAttribute(ConstantsUtils.HEAD_TITLE,  bundle.getString("frontPage.title.map"));
         request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
 
     }

@@ -104,7 +104,7 @@ public class UpdateListService extends HttpServlet
 
                         //get id lista
                         listId = request.getParameter("listId");
-                        CheckErrorUtils.isNull(listId, "manca il parametro id lista");
+                        CheckErrorUtils.isNull(listId, rb.getString("error.missingListId"));
 
                         //get user corrente
                         user = (User) request.getSession().getAttribute("user");
@@ -114,7 +114,7 @@ public class UpdateListService extends HttpServlet
                                 //get beans di lista da DB
                                 shoppingList = listDAO.getByPrimaryKey(Integer.parseInt(listId));
                                 //se lista è nullo
-                                CheckErrorUtils.isNull(shoppingList, "non eiste la lista con tale id lista");
+                                CheckErrorUtils.isNull(shoppingList, rb.getString("error.ListNotExist"));
 
                                 //get permesso dell'utente su tale lista
                                 permission = permissionDAO.getUserPermissionOnListByIds(user.getId(), Integer.parseInt(listId));
@@ -172,7 +172,7 @@ public class UpdateListService extends HttpServlet
                 //se valore di action è sconosciuto
                 else
                 {
-                        throw new ServletException("valore di action non riconosciuto");
+                        throw new ServletException(rb.getString("errors.unrecognizedAction"));
                 }
 
         }
@@ -188,7 +188,7 @@ public class UpdateListService extends HttpServlet
                 ResourceBundle rb = i18n.getBundle(request);
 
                 // usa un metodo statico per controllare se la richiesta è codificato in formato multipart/form-data
-                CheckErrorUtils.isFalse(ServletFileUpload.isMultipartContent(request), "la richiesta non è stata codificata in formato multipart/form-data");
+                CheckErrorUtils.isFalse(ServletFileUpload.isMultipartContent(request), rb.getString("error.notMultipart"));
 
                 List<FileItem> items = null;
                 try
@@ -198,7 +198,7 @@ public class UpdateListService extends HttpServlet
                 }
                 catch (FileUploadException ex)
                 {
-                        throw new ServletException("Errore durante analisi della richiesta");
+                        throw new ServletException(rb.getString("error.parseRequest"));
                 }
 
                 String listName = null;
@@ -343,7 +343,7 @@ public class UpdateListService extends HttpServlet
                 else if (action.equals("update"))
                 {
                         //se manca id lista da aggiornare
-                        CheckErrorUtils.isNull(listId, "manca il parametro id lista");
+                        CheckErrorUtils.isNull(listId, rb.getString("error.parseRequest"));
 
                         //get permesso dell'utente su tale lista
                         try
@@ -365,7 +365,7 @@ public class UpdateListService extends HttpServlet
                                 //get beans di lista da DB
                                 shoppingList = listDAO.getByPrimaryKey(Integer.parseInt(listId));
                                 //se la lista è nulla
-                                CheckErrorUtils.isNull(shoppingList, "non eiste la lista con tale id lista");
+                                CheckErrorUtils.isNull(shoppingList, rb.getString("error.ListNotExist"));
 
                                 shoppingList.setName(listName);
                                 shoppingList.setCategoryList(Integer.parseInt(listCategory));
@@ -402,7 +402,7 @@ public class UpdateListService extends HttpServlet
                 //se valore di action è sconosciuto
                 else
                 {
-                        throw new ServletException("valore di action non riconosciuto");
+                        throw new ServletException(rb.getString("errors.unrecognizedAction"));
                 }
 
                 //passare lo risultato  di operazione

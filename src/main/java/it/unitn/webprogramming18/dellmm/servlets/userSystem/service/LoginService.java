@@ -87,13 +87,12 @@ public class LoginService extends HttpServlet
                 }
                 catch (UnsupportedEncodingException ex)
                 {
-                        throw new ServletException("errore durente la codifica dei caratteri", ex);
+                        throw new ServletException(rb.getString("errors.unsupportedEncoding"), ex);
                 }
                 catch (NoSuchAlgorithmException ex)
                 {
-                        throw new ServletException("errore per la mancanza dell'algoritmo MD5 in ambiente di esecuzione", ex);
+                        throw new ServletException(rb.getString("errros.noSuchAlgorithmMD5"), ex);
                 }
-
                 if (user == null)
                 {
                         ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.noUserWithSuchEmailAndPwd")); //No user con email o pwd
@@ -135,11 +134,11 @@ public class LoginService extends HttpServlet
                         }
                         catch (UnsupportedEncodingException ex)
                         {
-                                throw new ServletException("errore durente la codifica dei caratteri", ex);
+                                throw new ServletException(rb.getString("errors.unsupportedEncoding"), ex);
                         }
                         catch (NoSuchAlgorithmException ex)
                         {
-                                throw new ServletException("errore per la mancanza dell'algoritmo MD5 in ambiente di esecuzione", ex);
+                                throw new ServletException(rb.getString("errros.noSuchAlgorithmMD5"), ex);
                         }
                 }
 

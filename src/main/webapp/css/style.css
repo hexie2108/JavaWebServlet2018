@@ -1,9 +1,5 @@
 /*body*/
 
-* {
-        transition: .3s;
-
-}
 
 .front-page .content {
         min-height: 650px;
@@ -73,9 +69,7 @@
         margin-left: .5rem;
 }
 
-.front-page header .site-top-menu {
-        margin-right: 1%;
-}
+
 
 
 .front-page header .site-top-menu .navbar-nav .profile {
@@ -106,7 +100,9 @@
         background-color: #117a8b;
 }
 
-
+.front-page header .site-top-menu .navbar-nav .nav-item .nav-link{
+        transition: none;
+}
 
 
 /*footer.jsp ---------------------------------------------------*/
@@ -415,6 +411,9 @@
 
 #boxAddItem, #boxShowItem, #boxShowMessage, #boxSharing{
         padding-right: 0 !important;
+}
+#boxShowMessage .error{
+        color: red;
 }
 
 
@@ -918,7 +917,7 @@ form .custom-file-input-old-image {
         opacity: .8;
         line-height: 1.5rem;
         transition: none;
-       
+
 }
 .user-modify #form-register .img-check i{
         transition: none;
@@ -1080,13 +1079,21 @@ form .custom-file-input-old-image {
                 margin: .75rem 0;
         }
 
+        .front-page header .site-logo-section .site-title{
+                font-size: 1.25rem;
+        }
+        .front-page header .site-top-menu .navbar-nav .nav-item span{
+                font-size: .75rem;
+        }
+
 }
 
 @media (max-width: 900px){
 
         .front-page header .site-logo-section .site-title{
-                font-size: 1.25rem;
+                font-size: 1rem;
         }
+
 
 
 }
@@ -1098,6 +1105,9 @@ form .custom-file-input-old-image {
 
         }
         .front-page header .site-top-menu .navbar-nav .nav-item span{
+                display:none;
+        }
+        .front-page header .site-top-menu .navbar-nav .language-switch span{
                 display:none;
         }
 
@@ -1191,6 +1201,9 @@ form .custom-file-input-old-image {
         .submit-button-front-page{
                 width: 100%;
         }
+        .front-page header .site-logo-section .logo {
+                display: none;
+        }
 }
 
 @media (max-width: 575px){
@@ -1223,9 +1236,7 @@ form .custom-file-input-old-image {
                 bottom: 0;
                 margin-bottom: 10%;
         }
-        .front-page header .site-logo-section .logo {
-                display: none;
-        }
+
 
         .mylists-main-section .list-item .list-head .list-left-head{
                 width: 100%;
@@ -1271,13 +1282,15 @@ form .custom-file-input-old-image {
                 font-size: .8rem;
         }
 
+        .front-page header .site-logo-section .site-title{
+                display:none;
+        }
+
 }
 
 
 @media (max-width: 450px){
-        .front-page header .site-logo-section .site-title{
-                display:none;
-        }
+
 
         .custom-modal .left-body{
                 width:100%;

@@ -5,44 +5,66 @@ import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import javax.servlet.http.Cookie;
 
-public class i18n {
-    public static final HashMap<String, String> SUPPORTED_LANGUAGES = new HashMap() {{
-        put("en", "English");
-        put("it", "Italiano");
-    }};
-    private static final String BUNDLE_NAME = "text";
+public class i18n
+{
 
-    public static Locale getLocale(HttpServletRequest request) {
-        String language = request.getParameter("language");
-        HttpSession session = request.getSession(true);
+        public static final HashMap<String, String> SUPPORTED_LANGUAGES = new HashMap()
+        {
+                {
+                        put("en", "English");
+                        put("it", "Italiano");
+                }
+        };
+        private static final String BUNDLE_NAME = "text";
 
-        Locale locale;
+        public static Locale getLocale(HttpServletRequest request)
+        {
+                String language=null;
 
-        if (language != null) {
-            locale = Locale.forLanguageTag(language);
-        } else if (session.getAttribute("language") != null) {
-            language = (String) session.getAttribute("language");
-            locale = Locale.forLanguageTag(language);
-        } else {
-            locale = request.getLocale();
+                //get la cookie dell'utente
+                Cookie[] cookies = request.getCookies();
+                //se utente ha la cookie di auto login key
+                if (cookies != null && cookies.length > 0)
+                {
+                        for (Cookie cookie : cookies)
+                        {
+                                if (cookie.getName().equals("language"))
+                                {
+                                        language = cookie.getValue();
+                                }
+                        }
+                }
+
+                Locale locale;
+                //se cookie language non è vuoto
+                if (language != null)
+                {
+                        locale = Locale.forLanguageTag(language);
+                }
+                //altrimento si prende quella di browser
+                else
+                {
+                        locale = request.getLocale();
+                }
+                //se la lingua ottenuta non è supportato, usa inglese come defualt
+                if (SUPPORTED_LANGUAGES.get(locale.getLanguage()) == null)
+                {
+                        // Se il locale non è tra quelli supportati
+                        locale = Locale.forLanguageTag("en");
+                }
+
+                return locale;
         }
 
-        if (SUPPORTED_LANGUAGES.get(locale.getLanguage()) == null) {
-            // Se il locale non è tra quelli supportati
-            locale = Locale.forLanguageTag("en");
+        public static ResourceBundle getBundle(Locale locale)
+        {
+                return ResourceBundle.getBundle("text", locale);
         }
 
-        session.setAttribute("language", locale.getLanguage());
-
-        return locale;
-    }
-
-    public static ResourceBundle getBundle(Locale locale) {
-        return ResourceBundle.getBundle("text", locale);
-    }
-
-    public static ResourceBundle getBundle(HttpServletRequest request) {
-        return getBundle(getLocale(request));
-    }
+        public static ResourceBundle getBundle(HttpServletRequest request)
+        {
+                return getBundle(getLocale(request));
+        }
 }

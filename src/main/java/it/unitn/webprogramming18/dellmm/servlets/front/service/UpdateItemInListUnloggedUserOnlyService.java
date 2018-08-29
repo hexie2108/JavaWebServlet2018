@@ -58,7 +58,7 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet
                         //get id prodotto da aggiungere
                         String productId = request.getParameter("productId");
                         //se id prodotto è nullo
-                        CheckErrorUtils.isNull(productId, "manca il parametro productId");
+                        CheckErrorUtils.isNull(productId, rb.getString("error.missingProductId"));
 
                         //get la cookie della lista locale
                         Cookie cookOfList = null;
@@ -133,7 +133,7 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet
                         //get id prodotto da eliminare
                         String productId = request.getParameter("productId");
                         //se id prodotto è nullo
-                        CheckErrorUtils.isNull(productId, "manca il parametro productId");
+                        CheckErrorUtils.isNull(productId, rb.getString("error.missingProductId"));
 
                         //get la cookie della lista locale
                         Cookie cookOfList = null;
@@ -208,7 +208,7 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet
                         //se id è vuota
                         if (categoryList == null || categoryList.equals("-1"))
                         {
-                                throw new ServletException("manca il parametro id categoria della lista");
+                                throw new ServletException(rb.getString("error.missingCategoryListId"));
                         }
                         //crea o aggiorna cookie della categoria per la lista locale
                         Cookie cookOfListCategory = new Cookie("localShoppingListCategory", categoryList);

@@ -2,8 +2,6 @@ package it.unitn.webprogramming18.dellmm.util;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.UUID;
 
 import javax.servlet.ServletException;

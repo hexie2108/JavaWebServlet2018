@@ -8,9 +8,6 @@ package it.unitn.webprogramming18.dellmm.email;
 import it.unitn.webprogramming18.dellmm.db.daos.LogDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.UserDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCLogDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCProductDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCUserDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
@@ -24,7 +21,6 @@ import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.MessagingException;
-import javax.servlet.ServletException;
 
 /**
  *

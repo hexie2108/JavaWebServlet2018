@@ -2,11 +2,13 @@ package it.unitn.webprogramming18.dellmm.servlets.userSystem;
 
 import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
 import it.unitn.webprogramming18.dellmm.util.FormValidator;
+import it.unitn.webprogramming18.dellmm.util.i18n;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ResourceBundle;
 
 public class RegisterServlet extends HttpServlet
 {
@@ -35,8 +37,9 @@ public class RegisterServlet extends HttpServlet
                         prevUrl = getServletContext().getContextPath();
                 }
 
+                ResourceBundle rb = i18n.getBundle(request);
                 //set il titolo della pagina
-                request.setAttribute(ConstantsUtils.HEAD_TITLE, "registrazione");
+                request.setAttribute(ConstantsUtils.HEAD_TITLE, rb.getString("login.label.register"));
                 //set url di provenienza
                 request.setAttribute(FormValidator.PREV_URL_KEY, prevUrl);
                 //inoltra a jsp

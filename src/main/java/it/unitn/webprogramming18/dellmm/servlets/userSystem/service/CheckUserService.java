@@ -10,7 +10,6 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
-import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
 import it.unitn.webprogramming18.dellmm.util.MD5Utils;
 import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 import it.unitn.webprogramming18.dellmm.util.i18n;
@@ -111,11 +110,11 @@ public class CheckUserService extends HttpServlet
             }
             catch (UnsupportedEncodingException ex)
             {
-                throw new ServletException("errore durente la codifica dei caratteri", ex);
+                throw new ServletException(rb.getString("errors.unsupportedEncoding"), ex);
             }
             catch (NoSuchAlgorithmException ex)
             {
-                throw new ServletException("errore per la mancanza dell'algoritmo MD5 in ambiente di esecuzione", ex);
+                throw new ServletException(rb.getString("errros.noSuchAlgorithmMD5"), ex);
             }
 
             //in caso, email e password non corrisponde
@@ -176,7 +175,7 @@ public class CheckUserService extends HttpServlet
         //se valore di action è sconosciuto
         else
         {
-            throw new ServletException("valore di action non riconosciuto");
+            throw new ServletException(rb.getString("errors.unrecognizedAction"));
 
         }
     }

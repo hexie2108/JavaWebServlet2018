@@ -23,8 +23,8 @@
                 </title>
 
                 <%--icone del sito--%>
-                <link rel="icon" href="<c:url value="/favicon.ico"/>" type="image/vnd.microsoft.icon">
-                <link rel="shortcut icon" href="<c:url value="/favicon.ico"/>" type="image/vnd.microsoft.icon">
+                <link rel="icon" href="<c:url value="/image/base/favicon.ico"/>" type="image/vnd.microsoft.icon">
+                <link rel="shortcut icon" href="<c:url value="/image/base/favicon.ico"/>" type="image/vnd.microsoft.icon">
 
                 <%--jquery--%>
                 <script type="text/javascript" src="<c:url value="/libs/jquery/jquery-3.3.1.min.js"/>"></script>

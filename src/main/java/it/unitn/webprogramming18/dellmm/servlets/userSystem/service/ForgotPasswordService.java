@@ -89,11 +89,11 @@ public class ForgotPasswordService extends HttpServlet
 
         catch (MessagingException ex)
         {
-            throw new ServletException("errore durente la creazione e l'invio del email per la registrazione", ex);
+            throw new ServletException(rb.getString("errors.createAndSendEmail"), ex);
         }
         catch (UnsupportedEncodingException ex)
         {
-            throw new ServletException("errore durente la codifica dei caratteri", ex);
+            throw new ServletException(rb.getString("errros.noSuchAlgorithmMD5"), ex);
         }
 
         //ritorna alla pagina di login

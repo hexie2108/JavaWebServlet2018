@@ -562,3 +562,14 @@ function validateSharing() {
 
 
 
+/**
+ * funziona che cambia la lingua di visualizzazione  e aggiorna la pagina
+ * @param {type} language
+ * @returns {undefined}
+ */
+function changeLanguage(language){
+        setCookie('language',language,30);
+        location.reload();
+}
+
+

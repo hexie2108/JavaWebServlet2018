@@ -66,7 +66,7 @@ public class SharingService extends HttpServlet {
         //get id lista
         String listId = request.getParameter("listId");
         //se id lista è nullo
-        CheckErrorUtils.isNull(listId, "manca il parametro listId");
+        CheckErrorUtils.isNull(listId, rb.getString("error.missingListId"));
 
         //solo il proprietario della lista può manipolare sulla condivisione
         //quindi ogni volta deve controllare prima se utente corrente è il proprietario della lista
@@ -77,7 +77,7 @@ public class SharingService extends HttpServlet {
             //get shoppingList bean
             shoppingList = listDAO.getByPrimaryKey(Integer.parseInt(listId));
             //se lista è nullo
-            CheckErrorUtils.isNull(shoppingList, "non eiste la lista con tale id lista");
+            CheckErrorUtils.isNull(shoppingList, rb.getString("error.ListNotExist"));
         } catch (DAOException ex) {
             throw new ServletException(ex.getMessage(), ex);
         }
@@ -161,14 +161,14 @@ public class SharingService extends HttpServlet {
             //get id permesso
             String permissionId = request.getParameter("permissionId");
             //se il permissionId è  nullo
-            CheckErrorUtils.isNull(permissionId, "manca il parametro permissionId");
+            CheckErrorUtils.isNull(permissionId, rb.getString("error.missingPermissionId"));
 
             //get beans di permesso
             Permission permission = null;
             try {
                 permission = permissionDAO.getByPrimaryKey(Integer.parseInt(permissionId));
                 //se il permesso è  nullo
-                CheckErrorUtils.isNull(permissionId, "non esiste il permesso con tale id");
+                CheckErrorUtils.isNull(permissionId, rb.getString("error.PermissionNotExist"));
             } catch (DAOException ex) {
                 throw new ServletException(ex.getMessage(), ex);
             }
@@ -217,7 +217,7 @@ public class SharingService extends HttpServlet {
             //get id permesso
             String permissionId = request.getParameter("permissionId");
             //se il permissionId è  nullo
-            CheckErrorUtils.isNull(permissionId, "manca il parametro permissionId");
+            CheckErrorUtils.isNull(permissionId, rb.getString("error.missingPermissionId"));
 
             //elimina il permesso
             try {
@@ -232,7 +232,7 @@ public class SharingService extends HttpServlet {
 
         //se valore di action è sconosciuto
         else {
-            throw new ServletException("valore di action non riconosciuto");
+            throw new ServletException(rb.getString("errors.unrecognizedAction"));
         }
 
         //ritorna alla pagina di provenienza

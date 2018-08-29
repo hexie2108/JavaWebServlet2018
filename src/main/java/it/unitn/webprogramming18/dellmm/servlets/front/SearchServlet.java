@@ -62,7 +62,9 @@ public class SearchServlet extends HttpServlet
                 //get parola ricercata
                 String searchWords = request.getParameter("searchWords");
 
+                 //Language bundle
                 ResourceBundle rb = i18n.getBundle(request);
+               
 
                 //se parola non esiste
                 if (searchWords == null)
@@ -156,7 +158,8 @@ public class SearchServlet extends HttpServlet
                 }
 
                 //set titolo della pagina nella richesta
-                request.setAttribute(ConstantsUtils.HEAD_TITLE, "Search: " + searchWords);
+                 ResourceBundle bundle = i18n.getBundle(request); 
+                request.setAttribute(ConstantsUtils.HEAD_TITLE, bundle.getString("frontPage.title.search") + ": " + searchWords);
                 //set la lista di prodotto nella richesta
                 request.setAttribute(ConstantsUtils.PRODUCT_LIST, productList);
                 //set il numero di pagine resti

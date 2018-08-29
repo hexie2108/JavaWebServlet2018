@@ -6,6 +6,7 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="custom" uri="/WEB-INF/custom.tld" %>
+<%@ include file="/WEB-INF/jspf/i18n.jsp"%>
 
 <%@ page import="java.util.Arrays" %>
 
@@ -20,12 +21,19 @@
 
                 <%--titolo della pagina--%>
                 <title>
-                        <c:out value="${head_title}" default="non hai ancora un titolo"/>
+                        <c:out value="${head_title}${param.head_title}" default="non hai ancora un titolo"/>
                 </title>
 
                 <%--icone del sito--%>
-                <link rel="icon" href="<c:url value="/favicon.ico"/>" type="image/vnd.microsoft.icon">
-                <link rel="shortcut icon" href="<c:url value="/favicon.ico"/>" type="image/vnd.microsoft.icon">
+                <link rel="icon" href="<c:url value="/image/base/favicon.ico"/>" type="image/vnd.microsoft.icon">
+                <link rel="shortcut icon" href="<c:url value="/image/base/favicon.ico"/>" type="image/vnd.microsoft.icon">
+
+                <%--se utente non ha attivato JS , verrà rindirizzata alla pagina di avviso--%>
+                <c:if test="${empty param.noscript}">
+                        <noscript>
+                        <meta http-equiv="refresh" content="0;url=<c:url value="/noscript"><c:param name="noscript" value="1"></c:param><c:param name="head_title" value="no script"></c:param></c:url>">
+                                        </noscript>
+                </c:if>
 
                 <%--jquery--%>
                 <script type="text/javascript" src="<c:url value="/libs/jquery/jquery-3.3.1.min.js"/>"></script>
@@ -166,6 +174,8 @@
 
                                                                 </c:if>
 
+                                                                <jsp:include page="/WEB-INF/jspf/i18n_switcher.jsp"/>       
+
                                                         </ul>
                                                 </nav>
                                         </div>
@@ -188,11 +198,11 @@
                                                                 </select>
                                                                 <div class="col-7 p-0">
                                                                         <input type="search" class="form-control typeahead" name="searchWords" placeholder="cerchi qualcosa?"
-                                                                       required="required" value="${not empty param.searchWords?param.searchWords:''}">
+                                                                               required="required" value="${not empty param.searchWords?param.searchWords:''}">
                                                                 </div>
                                                                 <div class="input-group-append col-2 p-0">
                                                                         <button type="submit" class="btn btn-info w-100"><i class="fas fa-search"></i> CERCA</button>
-                                                        </div>
+                                                                </div>
                                                         </div>
                                                 </form>
 
@@ -206,7 +216,7 @@
 
                                                         <li class="nav-item mobile-menu">
                                                                 <a id="mobile-menu-active-link" class="nav-link" href="javascript:;" title="mobile-menu">
-                                                                       <i class="fas fa-caret-square-down"></i> MENU
+                                                                        <i class="fas fa-caret-square-down"></i> MENU
                                                                 </a>
                                                         </li>
                                                         <li class="nav-item desktop-item">

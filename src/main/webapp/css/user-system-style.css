@@ -48,6 +48,7 @@
 
 .user-system .language-switch{
         float: right;
+        margin-right: 10px;
         margin-top: -45px;
 }
 

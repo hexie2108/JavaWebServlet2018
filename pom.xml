@@ -2,51 +2,51 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+        <modelVersion>4.0.0</modelVersion>
 
-    <groupId>it.unitn.webprogramming18</groupId>
-    <artifactId>dellmm</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <packaging>war</packaging>
+        <groupId>it.unitn.webprogramming18</groupId>
+        <artifactId>dellmm</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <packaging>war</packaging>
 
-    <name>dellmm-master</name>
-    <properties>
-        <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
-
-    <dependencies>
+        <name>dellmm-final</name>
+        <properties>
+                <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
+                <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        </properties>
 
 
-        <!-- Frontend -->
-        <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-web-api</artifactId>
-            <version>7.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>jstl</groupId>
-            <artifactId>jstl</artifactId>
-            <version>1.2</version>
-        </dependency>
-
-        <!-- DB -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.46</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.mchange</groupId>
-            <artifactId>c3p0</artifactId>
-            <version>0.9.5.2</version>
-        </dependency>
+        <dependencies>
 
 
-        <!-- Email -->
+                <!-- Frontend -->
+                <dependency>
+                        <groupId>javax</groupId>
+                        <artifactId>javaee-web-api</artifactId>
+                        <version>7.0</version>
+                </dependency>
+
+                <dependency>
+                        <groupId>jstl</groupId>
+                        <artifactId>jstl</artifactId>
+                        <version>1.2</version>
+                </dependency>
+
+                <!-- DB -->
+                <dependency>
+                        <groupId>mysql</groupId>
+                        <artifactId>mysql-connector-java</artifactId>
+                        <version>5.1.46</version>
+                </dependency>
+
+                <dependency>
+                        <groupId>com.mchange</groupId>
+                        <artifactId>c3p0</artifactId>
+                        <version>0.9.5.2</version>
+                </dependency>
+
+
+                <!-- Email -->
                 <dependency>
                         <groupId>com.sun.mail</groupId>
                         <artifactId>javax.mail</artifactId>
@@ -55,24 +55,30 @@
                 </dependency>
 
 
-        <!-- toJSON -->
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.8.1</version>
-        </dependency>
+                <!-- toJSON -->
+                <dependency>
+                        <groupId>com.google.code.gson</groupId>
+                        <artifactId>gson</artifactId>
+                        <version>2.8.1</version>
+                </dependency>
 
-        <!-- other -->
-        <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <version>1.3.3</version>
-        </dependency>
-        <dependency>
-            <groupId>net.coobird</groupId>
-            <artifactId>thumbnailator</artifactId>
-            <version>0.4.8</version>
-        </dependency>
+                <!-- other -->
+                <dependency>
+                        <groupId>commons-fileupload</groupId>
+                        <artifactId>commons-fileupload</artifactId>
+                        <version>1.3.3</version>
+                </dependency>
+                <dependency>
+                        <groupId>net.coobird</groupId>
+                        <artifactId>thumbnailator</artifactId>
+                        <version>0.4.8</version>
+                </dependency>
+                <dependency>
+                        <groupId>info.debatty</groupId>
+                        <artifactId>java-string-similarity</artifactId>
+                        <version>RELEASE</version>
+                </dependency>
+
 
 
         </dependencies>
