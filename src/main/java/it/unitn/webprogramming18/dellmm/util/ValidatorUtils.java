@@ -106,6 +106,7 @@ public class ValidatorUtils {
         FILE_TOO_BIG,
         FILE_CONTENT_TYPE_MISSING_OR_EMPTY,
         FILE_OF_WRONG_TYPE,
-        OBJECT_WRONG_TYPE
+        OBJECT_WRONG_TYPE,
+        NOT_PRESENT
     }
 }

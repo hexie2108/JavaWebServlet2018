@@ -19,7 +19,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
 import java.util.List;
@@ -172,9 +174,10 @@ public class JSONCategoryListsServlet extends HttpServlet {
         ServletUtility.sendJSON(request, response, 200, new HashMap<>());
     }
 
-    private void deleteCategoryList(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Integer id;
+    private void deleteCategoryList(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        Path path = ServletUtility.getFolder(getServletContext(), "categoryListImgsFolder");
 
+        Integer id;
         try {
             String sId = request.getParameter("id");
             id = sId == null ? null : Integer.parseInt(sId);
@@ -184,7 +187,15 @@ public class JSONCategoryListsServlet extends HttpServlet {
         }
 
         try {
+            // Get category list to later delete its images
+            CategoryList categoryList = categoryListDAO.getByPrimaryKey(id);
+
+            // Delete category list
             categoryListDAO.delete(id);
+
+            Files.delete(Paths.get(path.toString(), categoryList.getImg1()));
+            Files.delete(Paths.get(path.toString(), categoryList.getImg2()));
+            Files.delete(Paths.get(path.toString(), categoryList.getImg3()));
         } catch (DAOException e) {
             if (e.getCause() instanceof SQLIntegrityConstraintViolationException) {
                 ServletUtility.sendError(request, response, 500, "categoryList.errors.otherListDepend");

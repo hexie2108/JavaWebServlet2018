@@ -648,13 +648,32 @@
     </servlet-mapping>
     
     <servlet>
-        <servlet-name>TmpService</servlet-name>
+        <servlet-name>AutocompleteProductServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.another.PrepareAutocompleteDataServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>TmpService</servlet-name>
+        <servlet-name>AutocompleteProductServlet</servlet-name>
         <url-pattern>/service/autocompleteProduct.json</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ProductsServlet</servlet-name>
+        <jsp-file>/WEB-INF/jsp/admin/products.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ProductsServlet</servlet-name>
+        <url-pattern>/admin/products</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>JSONProductsServlet</servlet-name>
+        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.adminSystem.JSONProductsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>JSONProductsServlet</servlet-name>
+        <url-pattern>/admin/products.json</url-pattern>
+    </servlet-mapping>
+
 
     <!-- SERVE STATIC FOLDERS -->
     <servlet-mapping>
