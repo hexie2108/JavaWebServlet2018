@@ -182,21 +182,7 @@ public class JSONUsersServlet extends HttpServlet {
             ServletUtility.sendError(request, response, 400, "users.errors.missingAction");
         } else if (action.equalsIgnoreCase("modify")) {
             // Ottieni configurazione cartella avatars
-            String avatarsFolder = getServletContext().getInitParameter("avatarsFolder");
-            if (avatarsFolder == null) {
-                throw new ServletException("Avatars folder not configured");
-            }
-
-            String realContextPath = request.getServletContext().getRealPath(File.separator);
-            if (!realContextPath.endsWith("/")) {
-                realContextPath += "/";
-            }
-
-            Path path = Paths.get(realContextPath + avatarsFolder);
-
-            if (!Files.exists(path)) {
-                Files.createDirectories(path);
-            }
+            Path path = ServletUtility.getFolder(getServletContext(),"avatarsFolder");
 
             // Ottieni tutti i parametri
             String firstName = request.getParameter(FormValidator.FIRST_NAME_KEY);
@@ -286,6 +272,8 @@ public class JSONUsersServlet extends HttpServlet {
 
                 if(avatar.equals(FormValidator.CUSTOM_AVATAR)) {
                     avatarName = subImg(request, response, path, user.getImg(), avatarImg.getInputStream());
+                } else if (FormValidator.DEFAULT_AVATARS.stream().noneMatch(user.getImg()::equals)) {
+                    Files.delete(Paths.get(path.toString(), user.getImg()));
                 }
 
                 user.setImg(avatarName);
@@ -300,8 +288,18 @@ public class JSONUsersServlet extends HttpServlet {
 
             ServletUtility.sendJSON(request, response, 200, new HashMap<>());
         } else if (action.equalsIgnoreCase("delete")) {
+            Path path = ServletUtility.getFolder(getServletContext(),"avatarsFolder");
+
             try {
+                // Get user to later delete its avatar image
+                User user = userDAO.getByPrimaryKey(iId);
+                // Delete the user
                 userDAO.delete(iId);
+
+                // Delete user images(if not a default one)
+                if (FormValidator.DEFAULT_AVATARS.stream().noneMatch(user.getImg()::equals)) {
+                    Files.delete(Paths.get(path.toString(), user.getImg()));
+                }
             } catch (DAOException e) {
                 e.printStackTrace();
                 ServletUtility.sendError(request, response, 400, "users.errors.impossibleDeleteUser");

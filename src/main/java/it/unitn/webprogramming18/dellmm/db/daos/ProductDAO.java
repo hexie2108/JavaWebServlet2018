@@ -5,6 +5,7 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import java.sql.Timestamp;
 
+import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.List;
 
@@ -106,6 +107,44 @@ public interface ProductDAO extends DAO<Product, Integer> {
      * @throws DAOException
      */
     public List<Product> getPublicProductListByNameSearch(String name, String order, Integer index, Integer number) throws DAOException;
+
+    public enum OrderableColumns{
+        ID,
+        NAME,
+        DESCRIPTION,
+        CATEGORY_NAME,
+        PRIVATE_LIST_ID
+    };
+
+    /**
+     * Filter all products(public and private) given a set of constraints
+     * @param id substring of the id to search
+     * @param name string that must be in the name(substring)
+     * @param description string that must be in the description(substring)
+     * @param categories list of categories id in which the product can be(if empty all categories are considered)
+     * @param publicOnly true to show only public objects, false to show both public and private
+     * @param privateListId substring of the list id(for a private object) if not null only private object are shown
+     * @param order set the column used to order the results
+     * @param direction true for ascendent order, false for descendent order
+     * @param start index from which start
+     * @param length number of objects to retrieve
+     * @return list of the objects that respect specified conditions
+     * @throws DAOException
+     */
+    public List<AbstractMap.SimpleEntry<Product, String>> filter(Integer id, String name, String description, List<Integer> categories, Boolean publicOnly, Integer privateListId, OrderableColumns order, Boolean direction, Integer start, Integer length) throws DAOException;
+
+    /**
+     * Get number of products(public and private) that respects given a set of constraints
+     * @param id substring of the id to search
+     * @param name string that must be in the name(substring)
+     * @param description string that must be in the description(substring)
+     * @param categories list of categories id in which the product can be(if empty all categories are considered)
+     * @param publicOnly true to show only public objects, false to show both public and private
+     * @param privateListId substring of the list id(for a private object) if not null only private object are shown
+     * @return number of the objects that respect specified conditions
+     * @throws DAOException
+     */
+    public Long getCountFilter(Integer id, String name, String description, List<Integer> categories, Boolean publicOnly, Integer privateListId) throws DAOException;
 
     /**
      * Finds all public product given a text to search in the name or description of the product(with incomplete name, misspelling, ...)
