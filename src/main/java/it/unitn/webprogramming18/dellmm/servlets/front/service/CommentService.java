@@ -58,7 +58,7 @@ public class CommentService extends HttpServlet {
         String action = request.getParameter("action");
         //se azione è nullo 
         if(action == null){
-            ServletUtility.sendError(request, response, 400, rb.getString("users.errors.missingAction")); //manca il parametro action
+            ServletUtility.sendError(request, response, 400, "users.errors.missingAction"); //manca il parametro action
             return;
 	}
 
@@ -72,12 +72,12 @@ public class CommentService extends HttpServlet {
             CheckErrorUtils.isNull(listId, rb.getString("error.ListNotExist"));
             //se manca testo di commento
             if(commentText == null){
-		ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.nullTextParameter")); //manca il parametro commentText
+		ServletUtility.sendError(request, response, 400, "servlet.errors.nullTextParameter"); //manca il parametro commentText
 		return;
             }
             //se il  testo di commento è vuoto
             if ("".equals(commentText)) {
-		ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.emptyTextParameter")); //manca il parametro commentText
+		ServletUtility.sendError(request, response, 400, "servlet.errors.emptyTextParameter"); //manca il parametro commentText
 		return;
             }
 
@@ -89,7 +89,7 @@ public class CommentService extends HttpServlet {
                 permission = permissionDAO.getUserPermissionOnListByIds(user.getId(), Integer.parseInt(listId));
                 //se il permesso è  vuoto
                 if(permission == null){
-                    ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.noPermissionOnList")); //non hai nessun permesso su tale lista
+                    ServletUtility.sendError(request, response, 400, "servlet.errors.noPermissionOnList"); //non hai nessun permesso su tale lista
                     return;
                 }
 
@@ -135,7 +135,7 @@ public class CommentService extends HttpServlet {
                 }
                 //altrimenti errore
                 else {
-                    ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.nonCommentAuthor"));
+                    ServletUtility.sendError(request, response, 400, "servlet.errors.nonCommentAuthor");
                     return;
                 }
             } catch (DAOException ex) {
