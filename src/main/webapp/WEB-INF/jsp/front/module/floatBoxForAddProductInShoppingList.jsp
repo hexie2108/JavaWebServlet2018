@@ -74,10 +74,10 @@
                                                         <form action="<c:url value="/service/updateItemInListUnloggedUserOnlyService"/>"
                                                               method="GET">
                                                                 <label for="select-list" class="d-block font-weight-bold">
-                                                                        <i class="fas fa-list"></i> <fmt:message key="SelectTheList" />:
+                                                                        <i class="fas fa-list"></i> <fmt:message key="selectTheList" />:
                                                                 </label>
                                                                 <select id="select-list" class="form-control custom-select w-100" name="listId">
-                                                                        <option value="default"><fmt:message key="DefaultList" /></option>
+                                                                        <option value="default"><fmt:message key="defaultList" /></option>
                                                                 </select>
                                                                 <div class="operation mt-3">
 
@@ -103,7 +103,7 @@
                                                                       method="GET">
 
                                                                         <label for="select-list" class="d-block font-weight-bold">
-                                                                                <i class="fas fa-list"></i> <fmt:message key="SelectTheList" />:
+                                                                                <i class="fas fa-list"></i> <fmt:message key="selectTheList" />:
                                                                         </label>
                                                                         <select id="select-list" class="form-control custom-select w-100" name="listId">
 

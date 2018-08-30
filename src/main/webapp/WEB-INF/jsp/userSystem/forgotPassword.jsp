@@ -30,7 +30,7 @@
                                 <i class="fas fa-exclamation-triangle"></i> <fmt:message key="validateUser.errors.EMAIL_NOT_VALID"/>
                         </p>
                         <p class="no-existence">
-                                <i class="fas fa-exclamation-triangle"></i>  non esiste un utente con tale email
+                                <i class="fas fa-exclamation-triangle"></i>  <fmt:message key="validateUser.errors.EMAIL_NOT_EXISTING"/>
                         </p>
 
                 </div>

@@ -4,7 +4,7 @@
 
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@include file="/WEB-INF/jspf/i18n.jsp"%>
 
 <jsp:include page="/WEB-INF/jsp/front/header.jsp"/>
 
@@ -20,12 +20,17 @@
                         </a>
                         <span>&gt;</span>
                         <span>
-                                <i class="fas fa-store"></i> categoria
+                                <i class="fas fa-store"></i> <fmt:message key="category" />
                         </span>
                         <span>&gt;</span>
                         <span>
                                 ${categoria.name}
                         </span>
+                        <c:if test="${not empty param.page && param.page > 1}">
+                                <span>
+                                        ${param.page}° <fmt:message key="page" />
+                                </span>
+                        </c:if>
                 </div>
 
                 <%-- image di categoria attuale--%>

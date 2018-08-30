@@ -5,7 +5,7 @@ la lista di prodotto
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="custom" uri="/WEB-INF/custom.tld" %>
-
+<%@include file="/WEB-INF/jspf/i18n.jsp"%>
 
 <div class="list-body">
 
@@ -44,7 +44,7 @@ la lista di prodotto
             <div class="list-item-info">
                 <div class="list-item-logo  d-inline-block w-50">
                     <img class="list-item-logo-img img-fluid"
-                         src="<c:url value="/image/productLogo/${product.logo}"/>" alt="logo"/>
+                         src="<c:url value="/image/productLogo/${product.logo}"/>" alt="<fmt:message key="logo"/>">
                 </div>
             </div>
 
@@ -52,7 +52,7 @@ la lista di prodotto
             <div class="list-item-add">
                 <button class="list-item-add-button btn btn-info" data-toggle="modal" data-target="#boxAddItem"
                         onclick="setProductIdForAddInList(${product.id})">
-                    <i class="fas fa-cart-plus"></i> Aggiunge
+                    <i class="fas fa-cart-plus"></i> <fmt:message key="add"/>
                 </button>
             </div>
 

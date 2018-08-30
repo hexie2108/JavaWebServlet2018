@@ -92,16 +92,21 @@
 
 .front-page header .menu-nav .navbar-nav .nav-item  .nav-link{
         color: #fff;
+        text-transform: uppercase;
 }
+.front-page header .site-top-menu .navbar-nav  span{
+
+        text-transform: uppercase;
+}
+
 .front-page header .menu-nav .navbar-nav .nav-item.mobile-menu{
         display: none;
 }
 .front-page header .menu-nav .navbar-nav .nav-item.mobile-menu .actived{
         background-color: #117a8b;
 }
-
-.front-page header .site-top-menu .navbar-nav .nav-item .nav-link{
-        transition: none;
+.front-page header .search-button{
+        text-transform: uppercase;
 }
 
 
@@ -545,7 +550,7 @@
 }
 .mylists-main-section .list-item .list-head .list-info div {
         padding: 1%;
-        width: 33%;
+        width: 25%;
         flex-grow: 1;
 }
 
@@ -852,7 +857,7 @@
         width: 100%;
         margin-top: 1rem;
 }
-#boxSharing .sharing-body .form-inline  .error-messages .no-exist{
+#boxSharing .sharing-body .form-inline  .error-messages p{
         margin-top: 1rem;
         color: red;
         display: none;
@@ -1036,8 +1041,8 @@ form .custom-file-input-old-image {
 
         }
         .mylists-main-section .list-item .list-head .list-info .list-logo {
-                width: 30%;
-
+                width: 40%;
+                    margin: auto;
         }
 
         .mylists-main-section .list-item .list-head .list-info div.list-description{
@@ -1082,7 +1087,7 @@ form .custom-file-input-old-image {
         .front-page header .site-logo-section .site-title{
                 font-size: 1.25rem;
         }
-        .front-page header .site-top-menu .navbar-nav .nav-item span{
+        .front-page header .site-top-menu .navbar-nav span{
                 font-size: .75rem;
         }
 
@@ -1104,11 +1109,14 @@ form .custom-file-input-old-image {
                 margin: 0 .5rem;
 
         }
-        .front-page header .site-top-menu .navbar-nav .nav-item span{
+        .front-page header .site-top-menu .navbar-nav  span{
                 display:none;
         }
         .front-page header .site-top-menu .navbar-nav .language-switch span{
                 display:none;
+        }
+        .language-switch .dropdown-menu{
+                left: -50px;
         }
 
 }
@@ -1245,7 +1253,7 @@ form .custom-file-input-old-image {
                 width: 100%;
         }
         .mylists-main-section .list-item .list-head .list-right-head .button{
-                width: 49%;
+                width: 48%;
         }
         .mylists-main-section .list-item .list-head .list-info div .name b{
 
@@ -1324,6 +1332,10 @@ form .custom-file-input-old-image {
         #boxSharing .sharing-list .sharing-option .custom-checkbox{
                 width: 48%;
                 margin: 1%;
+        }
+        
+        .front-page header .site-top-menu .navbar-nav .nav-item{
+                    margin: 0 .25rem;
         }
 
 }

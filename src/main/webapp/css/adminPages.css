@@ -56,7 +56,8 @@
 
 .admin-page .admin-main-container .language-switch{
 
-        text-align: right;
+        float: right;
+        margin-bottom: 1rem;
 }
 
 
@@ -238,7 +239,7 @@
         .admin-page .admin-menu .nav-link {
                 text-align: left;
         }
-         .admin-page .admin-menu .nav-link b {
+        .admin-page .admin-menu .nav-link b {
                 display: inline;
         }
 

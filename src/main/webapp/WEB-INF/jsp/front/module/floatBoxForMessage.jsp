@@ -67,6 +67,11 @@
                                                         <c:when test="${sessionScope.result == 'ListDeleteOk'}">
                                                                 <i class="fas fa-check-circle"></i> <fmt:message key="congratulations" />
                                                         </c:when>
+
+                                                        <c:when test="${sessionScope.result == 'ProductInsertOk'}">
+                                                                <i class="fas fa-check-circle"></i>  <fmt:message key="congratulations" />
+                                                        </c:when>
+
                                                         <c:when test="${sessionScope.result == 'privacy'}">
                                                                 <i class="fas fa-info-circle"></i>   <fmt:message key="processingOfPersonalData" />
                                                         </c:when>
@@ -126,13 +131,16 @@
                                                                 <fmt:message key="listInsertOk" />
                                                         </c:when>
                                                         <c:when test="${sessionScope.result == 'ListUpdateOk'}">
-                                                                 <fmt:message key="listUpdateOk" />
+                                                                <fmt:message key="listUpdateOk" />
                                                         </c:when>
                                                         <c:when test="${sessionScope.result == 'ListDeleteOk'}">
-                                                                 <fmt:message key="listDeleteOk" />
+                                                                <fmt:message key="listDeleteOk" />
                                                         </c:when>
                                                         <c:when test="${sessionScope.result == 'privacy'}">
                                                                 <fmt:message key="processingOfPersonalDataContent" />
+                                                        </c:when>
+                                                        <c:when test="${sessionScope.result == 'ProductInsertOk'}">
+                                                                <fmt:message key="productInsertOk" />
                                                         </c:when>
                                                 </c:choose>
 

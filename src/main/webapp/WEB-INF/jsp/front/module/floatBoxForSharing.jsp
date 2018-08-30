@@ -5,6 +5,7 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="custom" uri="/WEB-INF/custom.tld" %>
+<%@include file="/WEB-INF/jspf/i18n.jsp"%>
 
 
 <div class="modal fade" id="boxSharing">
@@ -14,7 +15,7 @@
                         <%-- box-head --%>
                         <div class="modal-header">
                                 <h4 class="modal-title">
-                                        <i class="fas fa-share-alt"></i> condividere la lista
+                                        <i class="fas fa-share-alt"></i> <fmt:message key="shareTheList" />
                                 </h4>
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
@@ -32,33 +33,33 @@
                                                 <div class="custom-control custom-control-inline custom-checkbox  justify-content-start">
                                                         <input type="checkbox" class="custom-control-input" id="modifyList" name="modifyList"
                                                                value="1"/>
-                                                        <label class="custom-control-label" title="modifica la lista" for="modifyList">
-                                                                <i class="fas fa-edit"></i> modifica la lista
+                                                        <label class="custom-control-label" title="<fmt:message key="editTheList" />" for="modifyList">
+                                                                <i class="fas fa-edit"></i> <fmt:message key="editTheList" />
                                                         </label>
                                                 </div>
 
                                                 <div class="custom-control custom-control-inline custom-checkbox  justify-content-start">
                                                         <input type="checkbox" class="custom-control-input" id="addObject" name="addObject"
                                                                value="1"/>
-                                                        <label class="custom-control-label" title="aggiunge il prodotto" for="addObject">
-                                                                <i class="fas fa-cart-plus"></i> aggiunge il prodotto
+                                                        <label class="custom-control-label" title="<fmt:message key="addTheProduct" />" for="addObject">
+                                                                <i class="fas fa-cart-plus"></i> <fmt:message key="addTheProduct" />
                                                         </label>
                                                 </div>
 
                                                 <div class="custom-control custom-control-inline custom-checkbox  justify-content-start">
                                                         <input type="checkbox" class="custom-control-input" id="deleteList" name="deleteList"
                                                                value="1"/>
-                                                        <label class="custom-control-label" title="elimina la lista" for="deleteList">
-                                                                <i class="fas fa-trash-alt"></i> elimina la lista
+                                                        <label class="custom-control-label" title="<fmt:message key="deleteTheList" />" for="deleteList">
+                                                                <i class="fas fa-trash-alt"></i> <fmt:message key="deleteTheList" />
                                                         </label>
                                                 </div>
 
                                                 <div class="custom-control custom-control-inline custom-checkbox justify-content-start"
-                                                     title="elimina il prodotto">
+                                                    >
                                                         <input type="checkbox" class="custom-control-input" id="deleteObject" name="deleteObject"
                                                                value="1"/>
-                                                        <label class="custom-control-label" title="elimina il prodotto" for="deleteObject">
-                                                                <i class="fas fa-ban"></i> elimina il prodotto
+                                                        <label class="custom-control-label" title="<fmt:message key="deleteTheProduct" />" for="deleteObject">
+                                                                <i class="fas fa-ban"></i> <fmt:message key="deleteTheProduct" />
                                                         </label>
                                                 </div>
 
@@ -69,14 +70,17 @@
                                                                placeholder="email dell'utente da condividere" required="required"/>
                                                         <div class="input-group-append">
                                                                 <input type="hidden" name="action" value="insert">
-                                                                <input type="hidden" name="listId" value="${list.id}">
-                                                                <input class="btn btn-info" type="submit" value="condivide"/>
+                                                                <input id="InputHiddenlistId" type="hidden" name="listId" value="${list.id}">
+                                                                <input class="btn btn-info" type="submit" value="<fmt:message key="sharing" />"/>
                                                         </div>
 
                                                 </div>
                                                 <div class="error-messages">
                                                         <p class="no-exist">
-                                                                <i class="fas fa-exclamation-triangle"></i> non esiste l'utente con tale l'email
+                                                                <i class="fas fa-exclamation-triangle"></i> <fmt:message key="validateUser.errors.EMAIL_NOT_EXISTING" />
+                                                        </p>
+                                                        <p class="already-shared">
+                                                                <i class="fas fa-exclamation-triangle"></i> <fmt:message key="this user has already been shared" />
                                                         </p>
                                                 </div>
 
@@ -91,7 +95,7 @@
                                         <c:if test="${not empty generalPermissionsOnList}">
 
                                                 <%-- stampa il numero di utente condiviso --%>
-                                                <h2>${generalPermissionsOnList.size()} utenti condivisi</h2>
+                                                <h2>${generalPermissionsOnList.size()} <fmt:message key="sharedUsers" /></h2>
 
                                                 <%-- stampa la lista di condivisione --%>
                                                 <c:forEach var="permission" items="${generalPermissionsOnList}">
@@ -124,7 +128,7 @@
                                                                                         <input type="checkbox" class="custom-control-input"
                                                                                                id="modifyList+${permission.userId}" name="modifyList"
                                                                                                value="1" ${permission.modifyList?"checked=\"checked\"":""} />
-                                                                                        <label class="custom-control-label" title="modifica la lista"
+                                                                                        <label class="custom-control-label" title="<fmt:message key="editTheList" />"
                                                                                                for="modifyList+${permission.userId}">
                                                                                                 <i class="fas fa-edit"></i>
                                                                                         </label>
@@ -133,7 +137,7 @@
                                                                                         <input type="checkbox" class="custom-control-input"
                                                                                                id="deleteList+${permission.userId}" name="deleteList"
                                                                                                value="1" ${permission.deleteList?"checked=\"checked\"":""} />
-                                                                                        <label class="custom-control-label" title="elimina la lista"
+                                                                                        <label class="custom-control-label" title="<fmt:message key="deleteTheList" />"
                                                                                                for="deleteList+${permission.userId}">
                                                                                                 <i class="fas fa-trash-alt"></i>
                                                                                         </label>
@@ -142,7 +146,7 @@
                                                                                         <input type="checkbox" class="custom-control-input"
                                                                                                id="addObject+${permission.userId}" name="addObject"
                                                                                                value="1" ${permission.addObject?"checked=\"checked\"":""} />
-                                                                                        <label class="custom-control-label" title="aggiunge il prodotto"
+                                                                                        <label class="custom-control-label" title="<fmt:message key="addTheProduct" />"
                                                                                                for="addObject+${permission.userId}">
                                                                                                 <i class="fas fa-cart-plus"></i>
                                                                                         </label>
@@ -152,7 +156,7 @@
                                                                                         <input type="checkbox" class="custom-control-input"
                                                                                                id="deleteObject+${permission.userId}" name="deleteObject"
                                                                                                value="1" ${permission.deleteObject?"checked=\"checked\"":""} />
-                                                                                        <label class="custom-control-label" title="elimina il prodotto"
+                                                                                        <label class="custom-control-label" title="<fmt:message key="deleteTheProduct" />"
                                                                                                for="deleteObject+${permission.userId}">
                                                                                                 <i class="fas fa-ban"></i>
                                                                                         </label>
@@ -163,9 +167,9 @@
                                                                                         <input type="hidden" name="action" value="update">
                                                                                         <input type="hidden" name="permissionId" value="${permission.id}">
                                                                                         <input type="hidden" name="listId" value="${list.id}">
-                                                                                        <input class="btn btn-info" type="submit" value="modifica"/>
+                                                                                        <input class="btn btn-info" type="submit" value="<fmt:message key="modify" />"/>
                                                                                         <a class="btn btn-danger"
-                                                                                           href="<c:url value="/service/sharingService?action=delete&permissionId=${permission.id}&listId=${list.id}"/>" onclick="if(!confirm('sei sicuro?')) return false;">elimina</a>
+                                                                                           href="<c:url value="/service/sharingService?action=delete&permissionId=${permission.id}&listId=${list.id}"/>" onclick="if(!confirm('<fmt:message key="are you sure?" />')) return false;"><fmt:message key="delete" /></a>
                                                                                 </div>
 
                                                                         </form>
@@ -183,7 +187,7 @@
 
                                                 <%-- stampa l'avviso --%>
                                                 <div class="item-empty">
-                                                        <h4>non hai ancora fatto la condivisione</h4>
+                                                        <h4><fmt:message key="you have not yet shared" /></h4>
                                                 </div>
 
                                         </c:if>

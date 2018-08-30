@@ -9,6 +9,7 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="custom" uri="/WEB-INF/custom.tld" %>
+<%@ include file="/WEB-INF/jspf/i18n.jsp"%>
 
 <jsp:include page="/WEB-INF/jsp/front/header.jsp"/>
 
@@ -17,7 +18,7 @@
         <div class="content">
 
                 <h2 class="mb-2 mt-2">
-                      <i class="fas fa-map-marked-alt"></i>  Trova i negozi vicini a te
+                        <i class="fas fa-map-marked-alt"></i>  <fmt:message key="frontPage.title.map"/>
                 </h2>
                 <p id="errText">
 

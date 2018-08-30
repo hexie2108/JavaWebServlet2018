@@ -5,6 +5,7 @@
 
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@taglib prefix="custom" uri="/WEB-INF/custom.tld" %>
 <%@ include file="/WEB-INF/jspf/i18n.jsp"%>
 
@@ -21,7 +22,7 @@
 
                 <%--titolo della pagina--%>
                 <title>
-                        <c:out value="${head_title}${param.head_title}" default="non hai ancora un titolo"/>
+                        <c:out value="${head_title}${param.head_title}" default="no title"/>
                 </title>
 
                 <%--icone del sito--%>
@@ -32,7 +33,7 @@
                 <c:if test="${empty param.noscript}">
                         <noscript>
                         <meta http-equiv="refresh" content="0;url=<c:url value="/noscript"><c:param name="noscript" value="1"></c:param><c:param name="head_title" value="no script"></c:param></c:url>">
-                                        </noscript>
+                         </noscript>
                 </c:if>
 
                 <%--jquery--%>
@@ -64,6 +65,7 @@
                 <script src="<c:url value="/libs/typeahead.js/typeahead.bundle.min.js"/>"></script>
 
                 <link rel="stylesheet" href="<c:url value="/libs/typeahead.js/typeahead.css"/>" type="text/css" media="all"/>
+                
                 <script>
                         $(document).ready(function () {
                                 $.fn.serializeAndEncode = function () {
@@ -88,6 +90,7 @@
                                 });
                         });
                 </script>
+                
         </head>
 
         <body class="front-page">
@@ -104,10 +107,10 @@
                                         <%-- logo di sito--%>
                                         <div class="site-logo-section">
 
-                                                <a href="<c:url value="/"/>" title="home">
-                                                        <img class="logo" src="<c:url value="/image/base/logo.png"/>" alt="logo"/>
+                                                <a href="<c:url value="/"/>" title="<fmt:message key="home" />">
+                                                        <img class="logo" src="<c:url value="/image/base/logo.png"/>" alt="<fmt:message key="logo" />"/>
                                                         <h2 class="site-title">
-                                                                Il nome del sito
+                                                                ${initParam.siteName}
                                                         </h2>
                                                 </a>
 
@@ -120,7 +123,7 @@
 
                                                                 <li id="link-notifica" class="nav-item ${not empty cookie.notifica.value? "d-block":""}">
                                                                         <a class="nav-link" href="<c:url value="/map"/>">
-                                                                                <i class="fa fa-envelope"></i> <span>1 NOTIFICA</span>
+                                                                                <i class="fa fa-envelope"></i> <span><fmt:message key="NOTIFICATION" /></span>
                                                                         </a>
                                                                 </li>
 
@@ -129,13 +132,13 @@
 
                                                                         <li class="nav-item">
                                                                                 <a class="nav-link" href="<c:url value="/register"/>">
-                                                                                        <i class="fas fa-user-plus"></i> <span>ISCRIVERSI</span>
+                                                                                        <i class="fas fa-user-plus"></i> <span><fmt:message key="REGISTER" /></span>
                                                                                 </a>
                                                                         </li>
 
                                                                         <li class="nav-item">
                                                                                 <a class="nav-link" href="<c:url value="/login"/>">
-                                                                                        <i class="fas fa-sign-in-alt"></i> <span>LOGIN</span>
+                                                                                        <i class="fas fa-sign-in-alt"></i> <span><fmt:message key="LOGIN" /></span>
                                                                                 </a>
                                                                         </li>
 
@@ -146,7 +149,7 @@
 
                                                                         <li class="nav-item">
                                                                                 <a class="nav-link" href="<c:url value="/mylists"/>">
-                                                                                        <i class="fas fa-list"></i> <span>MIE LISTE</span>
+                                                                                        <i class="fas fa-list"></i> <span><fmt:message key="my lists" /></span>
                                                                                 </a>
                                                                         </li>
 
@@ -154,21 +157,21 @@
 
                                                                         <li class="nav-item">
                                                                                 <a class="nav-link profile" href="<c:url value="/modifyUser"/>">
-                                                                                        <img class="avatar img-fluid" src="<c:url value="/image/user/${sessionScope.user.img}"/>" alt="avatar"/> <span>PROFILO</span>
+                                                                                        <img class="avatar img-fluid" src="<c:url value="/image/user/${sessionScope.user.img}"/>" alt="avatar"/> <span><fmt:message key="PROFILE" /></span>
                                                                                 </a>
                                                                         </li>
 
                                                                         <c:if test="${sessionScope.user.isAdmin}">
                                                                                 <li class="nav-item">
                                                                                         <a class="nav-link" href="<c:url value="/admin/home"/>">
-                                                                                                <i class="fas fa-tachometer-alt"></i> <span>ADMIN</span>
+                                                                                                <i class="fas fa-tachometer-alt"></i> <span><fmt:message key="ADMIN" /></span>
                                                                                         </a>
                                                                                 </li>
                                                                         </c:if>
 
                                                                         <li class="nav-item">
                                                                                 <a class="nav-link" href="<c:url value="/logout"/>">
-                                                                                        <i class="fas fa-sign-out-alt"></i> <span>LOGOUT</span>
+                                                                                        <i class="fas fa-sign-out-alt"></i> <span><fmt:message key="LOGOUT" /></span>
                                                                                 </a>
                                                                         </li>
 
@@ -197,11 +200,11 @@
                                                                         </c:forEach>
                                                                 </select>
                                                                 <div class="col-7 p-0">
-                                                                        <input type="search" class="form-control typeahead" name="searchWords" placeholder="cerchi qualcosa?"
+                                                                        <input type="search" class="form-control typeahead" name="searchWords" placeholder="<fmt:message key="looking for something" />?"
                                                                                required="required" value="${not empty param.searchWords?param.searchWords:''}">
                                                                 </div>
                                                                 <div class="input-group-append col-2 p-0">
-                                                                        <button type="submit" class="btn btn-info w-100"><i class="fas fa-search"></i> CERCA</button>
+                                                                        <button type="submit" class="btn btn-info search-button w-100"><i class="fas fa-search"></i> <fmt:message key="search" /></button>
                                                                 </div>
                                                         </div>
                                                 </form>
@@ -216,18 +219,18 @@
 
                                                         <li class="nav-item mobile-menu">
                                                                 <a id="mobile-menu-active-link" class="nav-link" href="javascript:;" title="mobile-menu">
-                                                                        <i class="fas fa-caret-square-down"></i> MENU
+                                                                        <i class="fas fa-caret-square-down"></i> <fmt:message key="MENU" />
                                                                 </a>
                                                         </li>
                                                         <li class="nav-item desktop-item">
-                                                                <a class="nav-link " href="<c:url value="/"/>" title="home">
-                                                                        HOME
+                                                                <a class="nav-link " href="<c:url value="/"/>" title="<fmt:message key="home" />">
+                                                                        <fmt:message key="home" />
                                                                 </a>
                                                         </li>
 
                                                         <li class="nav-item dropdown desktop-item">
                                                                 <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
-                                                                        CATEGORIA
+                                                                        <fmt:message key="category" />
                                                                 </a>
                                                                 <div class="dropdown-menu">
                                                                         <%--get tutte le categorie di prodotto--%>
@@ -240,7 +243,7 @@
 
                                                         <li class="nav-item desktop-item">
                                                                 <a class="nav-link" href="<c:url value="/updateProduct"/>">
-                                                                        AGGIUNGE PRODOTTO
+                                                                        <fmt:message key="addTheProduct" />
                                                                 </a>
                                                         </li>
 

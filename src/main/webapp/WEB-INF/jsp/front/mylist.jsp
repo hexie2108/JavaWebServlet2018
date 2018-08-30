@@ -5,6 +5,7 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="custom" uri="/WEB-INF/custom.tld" %>
+<%@ include file="/WEB-INF/jspf/i18n.jsp"%>
 
 <jsp:include page="/WEB-INF/jsp/front/header.jsp"/>
 
@@ -19,7 +20,7 @@
                         </a>
                         <span>&gt;</span>
                         <a href="<c:url value="/mylists"/>">
-                                <i class="fas fa-list"></i> le mie liste
+                                <i class="fas fa-list"></i> <fmt:message key="my lists" />
                         </a>
                         <span>&gt;</span>
                         <span>
@@ -38,17 +39,17 @@
                                                 <img class="img-fluid" src="<c:url value="/image/list/${list.img}"/>"
                                                      alt="logo"/>
                                         </div>
-                                        <div class="list-info">
+                                        <div class="list-info mt-2">
 
                                                 <%-- nome di lista--%>
                                                 <span class="list-name">
-                                                        <i class="fas fa-info-circle"></i> <b>nome:</b> 
+                                                        <i class="fas fa-info-circle"></i> <b><fmt:message key="name" />:</b> 
                                                 </span>
                                                 <p>${list.name}</p>
 
                                                 <%-- link di categoria di lista--%>
                                                 <span class="list-category">
-                                                        <i class="fas fa-sitemap"></i> <b>categoria: </b>
+                                                        <i class="fas fa-sitemap"></i> <b><fmt:message key="category" />: </b>
                                                 </span>
 
                                                 <%-- get il nome della categoria--%>
@@ -71,7 +72,7 @@
 
                                         <%-- descrizione della lista--%>
                                         <div class="list-description mt-3">
-                                                <i class="far fa-file-alt"></i> <b>descrizione: </b>
+                                                <i class="far fa-file-alt"></i> <b><fmt:message key="description" />: </b>
                                                 <p>${list.description}</p>
                                         </div>
 
@@ -81,13 +82,13 @@
                                                 <c:if test="${userPermissionsOnList.modifyList}">
                                                         <a class="modify btn btn-info"
                                                            href="<c:url value="/updateList?listId=${list.id}"/>"><i
-                                                                        class="fas fa-edit"></i> modifica</a>
+                                                                        class="fas fa-edit"></i> <fmt:message key="modify" /></a>
                                                         </c:if>
 
                                                 <c:if test="${userPermissionsOnList.deleteList}">
                                                         <a class="delete btn btn-danger"
-                                                           href="<c:url value="/service/updateListService?action=delete&listId=${list.id}"/>" onclick="if(!confirm('sei sicuro?')) return false;">
-                                                                <i  class="fas fa-trash-alt"></i> elimina</a>
+                                                           href="<c:url value="/service/updateListService?action=delete&listId=${list.id}"/>" onclick="if(!confirm('<fmt:message key="are you sure?" />')) return false;">
+                                                                <i  class="fas fa-trash-alt"></i> <fmt:message key="delete" /></a>
                                                         </c:if>
 
                                         </div>
@@ -96,18 +97,18 @@
 
                                 <%-- stampa i permessi su questa lista--%>
                                 <div class="list-permission">
-                                        <p><i class="fas fa-lock"></i> <b>permesso:</b></p>
+                                        <p><i class="fas fa-lock"></i> <b><fmt:message key="permission" />:</b></p>
                                         <div class="single-permission">
-                                                <span class="modify-list" title="modifica la lista">
+                                                <span class="modify-list" title="<fmt:message key="editTheList" />">
                                                         <i class="fas fa-edit"></i> ${userPermissionsOnList.modifyList?"<i class=\"fas fa-check\"></i>":"<i class=\"fas fa-times\"></i>"}
                                                 </span>
-                                                <span class="delete-list" title="elimina la lista">
+                                                <span class="delete-list" title="<fmt:message key="deleteTheList" />">
                                                         <i class="fas fa-trash-alt"></i> ${userPermissionsOnList.deleteList?"<i class=\"fas fa-check\"></i>":"<i class=\"fas fa-times\"></i>"}
                                                 </span>
-                                                <span class="add-item" title="aggiunge il prodotto">
+                                                <span class="add-item" title="<fmt:message key="addTheProduct" />">
                                                         <i class="fas fa-cart-plus"></i> ${userPermissionsOnList.addObject?"<i class=\"fas fa-check\"></i>":"<i class=\"fas fa-times\"></i>"}
                                                 </span>
-                                                <span class="delete-item" title="elimina il prodotto">
+                                                <span class="delete-item" title="<fmt:message key="deleteTheProduct" />">
                                                         <i class="fas fa-ban"></i> ${userPermissionsOnList.deleteObject?"<i class=\"fas fa-check\"></i>":"<i class=\"fas fa-times\"></i>"}
                                                 </span>
                                         </div>
@@ -119,7 +120,7 @@
                                         <%-- se sei proprietario della lista--%>
                                         <c:if test="${list.ownerId == sessionScope.user.id}">
                                                 <button class="btn btn-info" data-toggle="modal" data-target="#boxSharing"><i
-                                                                class="fas fa-share-alt"></i> condivisione
+                                                                class="fas fa-share-alt"></i> <fmt:message key="sharing" />
                                                 </button>
                                         </c:if>
                                 </div>
@@ -171,7 +172,7 @@
 
                                                 <div class="item-logo">
                                                         <img class="img-fluid"
-                                                             src="<c:url value="/image/productLogo/${product.logo}"/>" alt="logo"/>
+                                                             src="<c:url value="/image/productLogo/${product.logo}"/>" alt="<fmt:message key="logo" />"/>
                                                 </div>
 
                                                 <div class="item-cat">
@@ -195,8 +196,8 @@
                                                         <%-- link per segnare il prodotto come già comprato--%>
                                                         <a class="btn btn-info"
                                                            href="<c:url value="/service/updateItemInListService?action=bought&productId=${product.id}&listId=${list.id}"/>"
-                                                           title="comprato">
-                                                                <i class="fas fa-check-circle"></i> <b>comprato</b>
+                                                           title="<fmt:message key="bought" />">
+                                                                <i class="fas fa-check-circle"></i> <b><fmt:message key="bought" /></b>
                                                         </a>
 
                                                         <%-- se utente ha il permesso di eliminare il prodotto dalla lista--%>
@@ -205,8 +206,8 @@
                                                                 <%-- link per eliminare il prodotto--%>
                                                                 <a class="btn btn-danger"
                                                                    href="<c:url value="/service/updateItemInListService?action=delete&productId=${product.id}&listId=${list.id}"/>"
-                                                                   title="elimina" onclick="if(!confirm('sei sicuro?')) return false;">
-                                                                        <i class="fas fa-ban"></i> <b>elimina</b>
+                                                                   title="<fmt:message key="delete" />" onclick="if(!confirm('<fmt:message key="are you sure?" />')) return false;">
+                                                                        <i class="fas fa-ban"></i> <b><fmt:message key="delete" /></b>
                                                                 </a>
 
                                                         </c:if>
@@ -234,7 +235,7 @@
 
                                                 <div class="item-logo">
                                                         <img class="img-fluid"
-                                                             src="<c:url value="/image/productLogo/${product.logo}"/>" alt="logo"/>
+                                                             src="<c:url value="/image/productLogo/${product.logo}"/>" alt="<fmt:message key="logo" />"/>
                                                 </div>
 
                                                 <div class="item-cat">
@@ -261,8 +262,8 @@
                                                                 <%-- link per eliminare il prodotto--%>
                                                                 <a class="btn btn-danger"
                                                                    href="<c:url value="/service/updateItemInListService?action=delete&productId=${product.id}&listId=${list.id}"/>"
-                                                                   title="elimina" onclick="if(!confirm('sei sicuro?')) return false;">
-                                                                        <i class="fas fa-ban"></i> <b>elimina</b>
+                                                                   title="<fmt:message key="delete" />" onclick="if(!confirm('<fmt:message key="are you sure?" />')) return false;">
+                                                                        <i class="fas fa-ban"></i> <b><fmt:message key="delete" /></b>
                                                                 </a>
 
                                                         </c:if>
@@ -278,7 +279,7 @@
                                 <c:if test="${empty listProductsNotBuy && empty listProductsBought}">
 
                                         <div class="list-item item-empty">
-                                                <h2>la lista è ancora vuota</h2>
+                                                <h2><fmt:message key="it is empty" /></h2>
                                         </div>
 
                                 </c:if>

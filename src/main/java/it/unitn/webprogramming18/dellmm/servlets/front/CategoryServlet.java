@@ -115,9 +115,11 @@ public class CategoryServlet extends HttpServlet
                 //set la lista di prodotto nella richesta
                 request.setAttribute(ConstantsUtils.PRODUCT_LIST, productList);
                 //set il numero di pagine resti
-                request.setAttribute(ConstantsUtils.NUMBER_OF_PAGE_REST, (totalNumberOfPage - Integer.parseInt(page)));
+                //request.setAttribute(ConstantsUtils.NUMBER_OF_PAGE_REST, (totalNumberOfPage - Integer.parseInt(page)));
                 //set url per la paginazione
-                request.setAttribute(ConstantsUtils.PATH_FOR_PAGINATION, request.getContextPath() + request.getServletPath() + "?catId=" + catId + "&");
+                //request.setAttribute(ConstantsUtils.PATH_FOR_PAGINATION, request.getContextPath() + request.getServletPath() + "?catId=" + catId + "&");
+                //set il numero di pagine resti
+                request.setAttribute(ConstantsUtils.NUMBER_OF_PAGES, totalNumberOfPage);
 
                 //inoltra a jsp
                 request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);

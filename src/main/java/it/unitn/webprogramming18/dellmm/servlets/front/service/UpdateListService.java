@@ -158,6 +158,12 @@ public class UpdateListService extends HttpServlet
                         {
                                 throw new ServletException(ex.getMessage(), ex);
                         }
+                        
+                        //elimina lista id corrente selezionato nella sessione
+                        if(listId == request.getSession().getAttribute("myListId")){
+                                request.getSession().removeAttribute("myListId");
+                        }
+                        
 
                         //set il risultato   dell'operazione
                         result = "ListDeleteOk";

@@ -5,7 +5,7 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="custom" uri="/WEB-INF/custom.tld" %>
-
+<%@include file="/WEB-INF/jspf/i18n.jsp"%>
 
 <!-- finestrina -->
 <div class="modal fade custom-modal" id="boxShowItem">
@@ -74,7 +74,7 @@
 
                             <%--  form per eliminare il prodotto dalla cookie --%>
                             <form action="<c:url value="/service/updateItemInListUnloggedUserOnlyService"/>"
-                                  method="GET" onsubmit="if(!confirm('sei sicuro?')) return false;">
+                                  method="GET" onsubmit="if(!confirm('<fmt:message key="are you sure?" />')) return false;">
 
                                 <input class="productIdFromList" type="hidden" name="productId" value="1"/>
                                 <input type="hidden" name="action" value="delete"/>
@@ -110,7 +110,7 @@
                             <div class="formToDelete">
 
                                 <form action="<c:url value="/service/updateItemInListService"/>"
-                                      method="GET" onsubmit="if(!confirm('sei sicuro?')) return false;">
+                                      method="GET" onsubmit="if(!confirm('<fmt:message key="are you sure?" />')) return false;">
 
                                     <input class="productIdFromList" type="hidden" name="productId" value="1"/>
                                     <input class="listIdFromList" type="hidden" name="listId"/>

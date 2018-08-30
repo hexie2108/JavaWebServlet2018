@@ -6,7 +6,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 
-<c:if test="${empty param.page || param.page ==1}">
+
         <div id="slider" class="carousel slide" data-ride="carousel">
 
                 <%-- indicatore --%>
@@ -52,4 +52,3 @@
                 <div class="slider-bg-bar"></div>
 
         </div>
-</c:if>

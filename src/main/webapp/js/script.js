@@ -512,7 +512,7 @@ function errorHandler(error) {
 
 
 /**
- * validatore del form di sharing, che controlla se esiste davvero tale email in DB
+ * validatore del form di sharing, che controlla se esiste davvero tale email in DB e tale email non deve possiedere il permesso su tale lista
  * @returns {Boolean}
  */
 function validateSharing() {
@@ -528,29 +528,38 @@ function validateSharing() {
 
 
         //check esistenza di email
-
+        var listId = $("#InputHiddenlistId").val();
         var url = location.href;
         var index = url.indexOf("mylist");
         url = url.substring(0, index);
         var repeat;
         $.ajax({
                 url: url + "service/checkUserService",
-                data: {action: "existence", email: email},
+                data: {action: "existencePermission", email: email, listId: listId},
                 type: 'POST',
                 dataType: "text",
                 async: false,
                 cache: false,
                 error: function () {
-                        alert('error to check email repeat, retry submit');
+                        alert('error to check email in DB, retry submit');
                 },
                 success: function (data) {
                         repeat = data;
                 }
         });
 
-        if (repeat === "0")
+        if (repeat === "0" || repeat === "1")
         {
-                var errorType = ".no-exist";
+                var errorType;
+                if (repeat === "0")
+                {
+                        errorType = ".no-exist";
+                }
+               else
+                {
+                        errorType = ".already-shared";
+                }
+
                 $(".sharing-body .error-messages " + errorType).show("slow");
                 $("#inputEmail").addClass("border-danger");
                 $("#inputEmail").focus();
@@ -567,8 +576,8 @@ function validateSharing() {
  * @param {type} language
  * @returns {undefined}
  */
-function changeLanguage(language){
-        setCookie('language',language,30);
+function changeLanguage(language) {
+        setCookie('language', language, 30);
         location.reload();
 }
 

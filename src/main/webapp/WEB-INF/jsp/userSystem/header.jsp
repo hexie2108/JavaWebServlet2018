@@ -17,7 +17,7 @@
 
                 <%--titolo della pagina--%>
                 <title>
-                        <c:out value="${head_title}" default="non hai ancora un titolo"/>
+                        <c:out value="${head_title}" default="no title"/>
                 </title>
 
                 <%--icone del sito--%>
@@ -59,10 +59,10 @@
                                         <%-- logo di sito--%>
                                         <div class="site-logo-section">
 
-                                                <a href="<c:url value="/"/>" title="home">
-                                                        <img class="logo" src="<c:url value="/image/base/logo.png"/>" alt="logo"/>
+                                                <a href="<c:url value="/"/>" title="<fmt:message key="home"/>">
+                                                        <img class="logo" src="<c:url value="/image/base/logo.png"/>" alt="<fmt:message key="logo"/>"/>
                                                         <h2 class="site-title d-inline ">
-                                                                Il nome del sito
+                                                                ${initParam.siteName}
                                                         </h2>
                                                 </a>
 

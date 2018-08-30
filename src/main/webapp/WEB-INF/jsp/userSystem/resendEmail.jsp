@@ -15,7 +15,7 @@
         <form id="form-forgot" method="POST" onsubmit="return validateResendEmail()" action="${pageContext.request.contextPath}/service/resendEmailService">
 
                 <h2 class="form-title">
-                        Rinvia email di attivazione
+                        <fmt:message key="resend email"/>
                 </h2>
 
 
@@ -30,10 +30,10 @@
                                 <i class="fas fa-exclamation-triangle"></i> <fmt:message key="validateUser.errors.EMAIL_NOT_VALID"/>
                         </p>
                         <p class="no-existence">
-                                <i class="fas fa-exclamation-triangle"></i>  non esiste un utente con tale email
+                                <i class="fas fa-exclamation-triangle"></i>  <fmt:message key="validateUser.errors.EMAIL_NOT_EXISTING"/>
                         </p>
                         <p class="already-activated">
-                                <i class="fas fa-exclamation-triangle"></i>  l'account indicato è già stato attivato
+                                <i class="fas fa-exclamation-triangle"></i>  <fmt:message key="the specified account has already been activated"/>
                         </p>
                         
 
@@ -61,7 +61,7 @@
 
 
                 <button class="btn btn-lg btn-primary btn-block" type="submit">
-                        Rinvia
+                        <fmt:message key="send"/>
                 </button>
 
         </form>

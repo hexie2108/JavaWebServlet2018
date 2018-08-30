@@ -82,7 +82,7 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
                 Statement.RETURN_GENERATED_KEYS)) {
 
             stm.setBoolean(1, permission.isAddObject());
-            stm.setBoolean(2, permission.isDeleteList());
+            stm.setBoolean(2, permission.isDeleteObject());
             stm.setBoolean(3, permission.isModifyList());
             stm.setBoolean(4, permission.isDeleteList());
             stm.setInt(5, permission.getListId());

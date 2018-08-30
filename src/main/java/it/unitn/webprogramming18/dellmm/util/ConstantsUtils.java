@@ -23,9 +23,9 @@ public class ConstantsUtils
 
         //numeri di categoria e prodotto da visualizzare in varie pagina
         public static final int NUMBER_CATEGORY_FOR_SLIDER = 4;
-        public static final int NUMBER_PRODUCT_FOR_HOME = 6;
-        public static final int NUMBER_PRODUCT_FOR_CATEGORY = 6;
-        public static final int NUMBER_PRODUCT_FOR_SEARCH = 9;
+        public static final int NUMBER_PRODUCT_FOR_HOME = 15;
+        public static final int NUMBER_PRODUCT_FOR_CATEGORY = 18;
+        public static final int NUMBER_PRODUCT_FOR_SEARCH = 18;
 
         //il percorso base per tutte le immagine
         public static final String IMAGE_BASE_PATH = "image";
