@@ -56,22 +56,20 @@ public class CheckUserService extends HttpServlet
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
-        //Language bundle
-        ResourceBundle rb = i18n.getBundle(request);                
+    {              
 
         //get l'azione che vuoi fare
         String action = request.getParameter("action");
         //se azione è nullo
         if(action == null){
-            ServletUtility.sendError(request, response, 400, rb.getString("users.errors.missingAction")); //manca il parametro action
+            ServletUtility.sendError(request, response, 400, "users.errors.missingAction"); //manca il parametro action
             return;
         }
         //get email
         String email = request.getParameter("email");
         //se email è nullo
         if(email == null){
-            ServletUtility.sendError(request, response, 400, rb.getString("validateUser.errors.EMAIL_MISSING")); //il parametro email è nullo
+            ServletUtility.sendError(request, response, 400, "validateUser.errors.EMAIL_MISSING"); //il parametro email è nullo
             return;
         }
 
@@ -95,7 +93,7 @@ public class CheckUserService extends HttpServlet
             String password = request.getParameter("password");
             //se password è null
             if(password == null){
-                ServletUtility.sendError(request, response, 400, rb.getString("validateUser.errors.PASSWORD_MISSING")); //manca il parametro password
+                ServletUtility.sendError(request, response, 400, "validateUser.errors.PASSWORD_MISSING"); //manca il parametro password
                 return;
             }
 

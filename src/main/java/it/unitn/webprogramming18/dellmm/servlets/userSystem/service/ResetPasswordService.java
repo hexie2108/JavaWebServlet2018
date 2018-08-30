@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
-import java.util.ResourceBundle;
 
 public class ResetPasswordService extends HttpServlet
 {
@@ -49,18 +48,16 @@ public class ResetPasswordService extends HttpServlet
         String resetPwdLink = request.getParameter("resetPwdLink");
         String password = request.getParameter(FormValidator.FIRST_PWD_KEY);
 
-        ResourceBundle rb = i18n.getBundle(request);
-
         if(email == null){
-            ServletUtility.sendError(request, response, 400, rb.getString("validateUser.errors.EMAIL_MISSING")); //il parametro email è nullo
+            ServletUtility.sendError(request, response, 400, "validateUser.errors.EMAIL_MISSING"); //il parametro email è nullo
             return;
         }
         if(resetPwdLink == null){
-            ServletUtility.sendError(request, response, 400, rb.getString("validateUser.errors.RESETPWD_PARAMETER_MISSING")); //il parametro resetPwdLink è nullo
+            ServletUtility.sendError(request, response, 400, "validateUser.errors.RESETPWD_PARAMETER_MISSING"); //il parametro resetPwdLink è nullo
             return;
         }
         if(!FormValidator.validatePassword(password)) {
-            ServletUtility.sendError(request, response, 400, rb.getString("validateUser.errors.PASSWORD_NOT_VALID")); //invalid password
+            ServletUtility.sendError(request, response, 400, "validateUser.errors.PASSWORD_NOT_VALID"); //invalid password
             return;
         }
 

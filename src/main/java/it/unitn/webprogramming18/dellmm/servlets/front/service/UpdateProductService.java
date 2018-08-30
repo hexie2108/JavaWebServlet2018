@@ -60,9 +60,6 @@ public class UpdateProductService extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        //Language bundle
-        ResourceBundle rb = i18n.getBundle(request);
         
         // usa un metodo statico per controllare se la richiesta è codificato in formato multipart/form-data
         CheckErrorUtils.isFalse(ServletFileUpload.isMultipartContent(request), "la richiesta non è stata codificata in formato multipart/form-data");
@@ -122,19 +119,19 @@ public class UpdateProductService extends HttpServlet {
 
         //se variabili sono nulle
         if(productName == null){
-            ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.nameMissing")); //manca il parametro listName
+            ServletUtility.sendError(request, response, 400, "servlet.errors.nameMissing"); //manca il parametro listName
             return;
 	}
         if (!FormValidator.validateGeneralInput(productName)){
-            ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.textLengthExceeded")); //"il parametro productName ha superato la lunghezza massima consentita");
+            ServletUtility.sendError(request, response, 400, "servlet.errors.textLengthExceeded"); //"il parametro productName ha superato la lunghezza massima consentita";
             return;
         }
         if(productCategory == null){
-            ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.categoryMissing")); //manca il parametro productCategory
+            ServletUtility.sendError(request, response, 400, "servlet.errors.categoryMissing"); //manca il parametro productCategory
             return;
 	}
         if(productDescription == null){
-            ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.descriptionMissing")); //manca il parametro productDescription
+            ServletUtility.sendError(request, response, 400, "servlet.errors.descriptionMissing"); //manca il parametro productDescription
             return;
         }
         
@@ -142,19 +139,19 @@ public class UpdateProductService extends HttpServlet {
         CheckErrorUtils.isNull(listId, "manca il parametro listId");
         
         if(productImgFileItem == null){
-            ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.imageMissing")); //manca il prametro file productImg
+            ServletUtility.sendError(request, response, 400, "servlet.errors.imageMissing"); //manca il prametro file productImg
             return;
         }
         if(productLogoFileItem == null){
-            ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.logoMissing")); //manca il prametro file logoImg
+            ServletUtility.sendError(request, response, 400, "servlet.errors.logoMissing"); //manca il prametro file logoImg
             return;
         }
         if (!FormValidator.isValidFileExtension(productImgFileItem.getContentType())) {
-            ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.invalidFileFormat")); // "il file caricato non è un tipo valido");
+            ServletUtility.sendError(request, response, 400, "servlet.errors.invalidFileFormat"); // "il file caricato non è un tipo valido";
             return;
         }
         if (!FormValidator.isValidFileExtension(productLogoFileItem.getContentType())) {
-            ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.invalidFileFormat")); // "il file caricato non è un tipo valido");
+            ServletUtility.sendError(request, response, 400, "servlet.errors.invalidFileFormat"); // "il file caricato non è un tipo valido";
             return;
         }
 
@@ -165,12 +162,12 @@ public class UpdateProductService extends HttpServlet {
             Permission permission = permissionDAO.getUserPermissionOnListByIds(user.getId(), Integer.parseInt(listId));
             //se il permesso è  nullo
             if(permission == null){
-                ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.noPermissionOnList"));
+                ServletUtility.sendError(request, response, 400, "servlet.errors.noPermissionOnList");
                 return;
             }
             //se utente non ha il permesso per inserire il prodotto permission.insertItemNotAllowed
             if(!permission.isAddObject()) {
-                ServletUtility.sendError(request, response, 400, rb.getString("permission.insertItemNotAllowed"));
+                ServletUtility.sendError(request, response, 400, "permission.insertItemNotAllowed");
                 return;
             }
         } catch (DAOException ex) {

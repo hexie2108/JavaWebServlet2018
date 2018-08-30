@@ -44,19 +44,17 @@ public class ActivateUserService extends HttpServlet
         @Override
         protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
         {
-            //Language bundle
-            ResourceBundle rb = i18n.getBundle(request);
-
+            
             //get i parametri necessari
             String email = request.getParameter(FormValidator.EMAIL_KEY);
             String verifyEmailLink = request.getParameter("verifyEmailLink");
 
             if(email == null){
-                ServletUtility.sendError(request, response, 400, rb.getString("validateUser.errors.EMAIL_MISSING")); //il parametro email è nullo
+                ServletUtility.sendError(request, response, 400, "validateUser.errors.EMAIL_MISSING"); //il parametro email è nullo
                 return;
             }
             if(verifyEmailLink == null){
-                ServletUtility.sendError(request, response, 400, rb.getString("validateUser.errors.VERIFY_EMAIL_MISSING")); //il parametro verifyEmailLink è nullo
+                ServletUtility.sendError(request, response, 400, "validateUser.errors.VERIFY_EMAIL_MISSING"); //il parametro verifyEmailLink è nullo
                 return;
             }
 

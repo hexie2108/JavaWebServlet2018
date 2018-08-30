@@ -55,15 +55,13 @@ public class SearchServlet extends HttpServlet {
         //get parola ricercata
         String searchWords = request.getParameter("searchWords");
         
-        ResourceBundle rb = i18n.getBundle(request);
-        
         //se parola non esiste
         if (searchWords == null) {
-            ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.nullSearchWord"));
+            ServletUtility.sendError(request, response, 400, "servlet.errors.nullSearchWord");
             return;
         }
         if (searchWords.equals("")) {
-            ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.emptySearchWord"));
+            ServletUtility.sendError(request, response, 400, "servlet.errors.emptySearchWord");
             return;
         }
 
@@ -73,7 +71,7 @@ public class SearchServlet extends HttpServlet {
         if (order != null) {
             //ma con valore diverso da quelli prefissati
             if (!order.equals("categoryName") && !order.equals("productName") && !order.equals("relevance")) {
-                ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.invalidSortParameter"));
+                ServletUtility.sendError(request, response, 400, "servlet.errors.invalidSortParameter");
                 return;
             }
         }
@@ -88,7 +86,7 @@ public class SearchServlet extends HttpServlet {
         // Se vuoto assegna default, se non valido crea exception
         if (direction != null) {
             if(!direction.equals("asc") && !direction.equals("desc")) {
-                ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.invalidDirectionParameter"));
+                ServletUtility.sendError(request, response, 400, "servlet.errors.invalidDirectionParameter");
                 return;
             }
         }

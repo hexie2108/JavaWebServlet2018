@@ -58,16 +58,13 @@ public class ForgotPasswordService extends HttpServlet
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         
-        //Language bundle
-        ResourceBundle rb = i18n.getBundle(request);   
-        
         String email = request.getParameter(FormValidator.EMAIL_KEY);
         if(!FormValidator.validateEmail(email)) {
-            ServletUtility.sendError(request, response, 400, rb.getString("validateUser.errors.EMAIL_NOT_VALID"));
+            ServletUtility.sendError(request, response, 400, "validateUser.errors.EMAIL_NOT_VALID");
             return;
         } //"email non è valido");
         if(!(!FormValidator.checkEmailRepeat(email, userDAO))) {
-            ServletUtility.sendError(request, response, 400, rb.getString("validateUser.errors.EMAIL_NOT_EXISTING"));
+            ServletUtility.sendError(request, response, 400, "validateUser.errors.EMAIL_NOT_EXISTING");
             return;            
         }//, "email non esiste");
 

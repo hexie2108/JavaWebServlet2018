@@ -71,9 +71,6 @@ public class UpdateItemInListService extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        //Language bundle
-        ResourceBundle rb = i18n.getBundle(request);
-
         //string che memorizza il risultato dell'operazione
         String result = null;
         //get azione che vuoi fare
@@ -100,7 +97,7 @@ public class UpdateItemInListService extends HttpServlet {
 
         //se il permesso è  vuoto
         if (permission == null) {
-            ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.noPermissionOnList"));
+            ServletUtility.sendError(request, response, 400, "servlet.errors.noPermissionOnList");
             return;
         }
 
@@ -126,7 +123,7 @@ public class UpdateItemInListService extends HttpServlet {
                     throw new ServletException(ex.getMessage(), ex);
                 }
             } else {
-                ServletUtility.sendError(request, response, 400, rb.getString("permission.insertItemNotAllowed")); //Not allowed insert item in list
+                ServletUtility.sendError(request, response, 400, "permission.insertItemNotAllowed"); //Not allowed insert item in list
                 return;
             }
 
@@ -161,7 +158,7 @@ public class UpdateItemInListService extends HttpServlet {
                 }
                 result = "DeleteOk";
             } else {
-                ServletUtility.sendError(request, response, 400, rb.getString("permission.deleteItemNotAllowed")); //Not allowed delete item in list
+                ServletUtility.sendError(request, response, 400, "permission.deleteItemNotAllowed"); //Not allowed delete item in list
                 return;
             }
         }

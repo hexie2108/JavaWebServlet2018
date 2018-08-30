@@ -86,7 +86,7 @@ public class UpdateListService extends HttpServlet {
         action = request.getParameter("action");
         //se azione è nullo
         if(action == null){
-            ServletUtility.sendError(request, response, 400, rb.getString("users.errors.missingAction")); //manca il parametro action
+            ServletUtility.sendError(request, response, 400, "users.errors.missingAction"); //manca il parametro action
             return;
 	}
 
@@ -111,13 +111,13 @@ public class UpdateListService extends HttpServlet {
 
                 //se il permesso è  nullo
                 if (permission == null) {
-                    ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.noPermissionOnList"));
+                    ServletUtility.sendError(request, response, 400, "servlet.errors.noPermissionOnList");
                     return;
                 }
 
                 //se utente non ha il permesso di eliminare la lista
                 if(!permission.isDeleteList()) {
-                    ServletUtility.sendError(request, response, 400, rb.getString("permission.deleteListNotAllowed"));
+                    ServletUtility.sendError(request, response, 400, "permission.deleteListNotAllowed");
                     return;
                 }
 
@@ -166,9 +166,6 @@ public class UpdateListService extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
-        //Language bundle
-        ResourceBundle rb = i18n.getBundle(request);
         
         // usa un metodo statico per controllare se la richiesta è codificato in formato multipart/form-data
         CheckErrorUtils.isFalse(ServletFileUpload.isMultipartContent(request), "la richiesta non è stata codificata in formato multipart/form-data");
@@ -219,28 +216,28 @@ public class UpdateListService extends HttpServlet {
         
         //se variabile sono nullo
         if(action == null){
-            ServletUtility.sendError(request, response, 400, rb.getString("users.errors.missingAction")); //manca il parametro action
+            ServletUtility.sendError(request, response, 400, "users.errors.missingAction"); //manca il parametro action
             return;
 	}
         if(listName == null){
-            ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.nameMissing")); //manca il parametro listName
+            ServletUtility.sendError(request, response, 400, "servlet.errors.nameMissing"); //manca il parametro listName
             return;
 	}
         if (!FormValidator.validateGeneralInput(listName)){
-            ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.textLengthExceeded")); //"il parametro listaName ha superato la lunghezza massima consentita");
+            ServletUtility.sendError(request, response, 400, "servlet.errors.textLengthExceeded"); //"il parametro listaName ha superato la lunghezza massima consentita";
             return;
         }
         if(listCategory == null){
-            ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.categoryMissing")); //manca il parametro listCategory
+            ServletUtility.sendError(request, response, 400, "servlet.errors.categoryMissing"); //manca il parametro listCategory
             return;
 	}
         if(listDescription == null){
-            ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.descriptionMissing")); //manca il parametro listDescription
+            ServletUtility.sendError(request, response, 400, "servlet.errors.descriptionMissing"); //manca il parametro listDescription
             return;
 	}
         if (listImgFileItem != null){
             if (!FormValidator.isValidFileExtension(listImgFileItem.getContentType())) {
-                ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.invalidFileFormat")); // "il file caricato non è un tipo valido");
+                ServletUtility.sendError(request, response, 400, "servlet.errors.invalidFileFormat"); // "il file caricato non è un tipo valido";
                 return;
             }
         }
@@ -253,7 +250,7 @@ public class UpdateListService extends HttpServlet {
         //in caso di inserimento
         if (action.equals("insert")) {
             if(listImgFileItem == null){
-		ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.imageMissing")); //manca il prametro file listImg
+		ServletUtility.sendError(request, response, 400, "servlet.errors.imageMissing"); //manca il prametro file listImg
 		return;
             }
 
@@ -305,12 +302,12 @@ public class UpdateListService extends HttpServlet {
                 permission = permissionDAO.getUserPermissionOnListByIds(user.getId(), Integer.parseInt(listId));
                 //se il permesso è  nullo
                 if(permission == null){
-                    ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.noPermissionOnList"));
+                    ServletUtility.sendError(request, response, 400, "servlet.errors.noPermissionOnList");
                     return;
                 }
                 //se utente non ha il permesso per modificare la lista
                 if(!permission.isModifyList()) {
-                    ServletUtility.sendError(request, response, 400, rb.getString("permission.modifyListNotAllowed"));
+                    ServletUtility.sendError(request, response, 400, "permission.modifyListNotAllowed");
                     return;
                 }
 

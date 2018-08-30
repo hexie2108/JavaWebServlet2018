@@ -31,9 +31,6 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
-        //Language bundle
-        ResourceBundle rb = i18n.getBundle(request);
 
         //memorizza il risultato dell'operazione
         String result = null;
@@ -41,7 +38,7 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet {
         String action = request.getParameter("action");
         //se azione è nullo
         if(action == null){
-            ServletUtility.sendError(request, response, 400, rb.getString("users.errors.missingAction")); //manca il parametro action
+            ServletUtility.sendError(request, response, 400, "users.errors.missingAction"); //manca il parametro action
             return;
 	}
 

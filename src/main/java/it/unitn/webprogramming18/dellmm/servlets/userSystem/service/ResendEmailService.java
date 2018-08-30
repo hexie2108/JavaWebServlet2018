@@ -59,14 +59,11 @@ public class ResendEmailService extends HttpServlet
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
-
-        //Language bundle
-        ResourceBundle rb = i18n.getBundle(request); 
+    {  
         
         String email = request.getParameter(FormValidator.EMAIL_KEY);
         if(!FormValidator.validateEmail(email)){
-            ServletUtility.sendError(request, response, 400, rb.getString("validateUser.errors.EMAIL_NOT_VALID")); //email non è valido
+            ServletUtility.sendError(request, response, 400, "validateUser.errors.EMAIL_NOT_VALID"); //email non è valido
             return;
         }
 
@@ -78,13 +75,13 @@ public class ResendEmailService extends HttpServlet
             //se utente non esiste
             if (user == null)
             {
-                ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.noUserWithSuchEmail")); //No user con tale email
+                ServletUtility.sendError(request, response, 400, "servlet.errors.noUserWithSuchEmail"); //No user con tale email
                 return;
             }
             //se utente è già attivato
             else if (user.getVerifyEmailLink() == null)
             {
-                ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.accountAlreadyActivated")); //Account già attivato
+                ServletUtility.sendError(request, response, 400, "servlet.errors.accountAlreadyActivated"); //Account già attivato
                 return;
             }
 

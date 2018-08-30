@@ -124,32 +124,29 @@ public class RegisterService extends HttpServlet {
             }
         }
 
-        //Language bundle
-        ResourceBundle rb = i18n.getBundle(request);
-
         //check tutti parametri necessari
         if(!FormValidator.validateEmail(email)){
-            ServletUtility.sendError(request, response, 400, rb.getString("validateUser.errors.EMAIL_NOT_VALID")); //email non è valido
+            ServletUtility.sendError(request, response, 400, "validateUser.errors.EMAIL_NOT_VALID"); //email non è valido
             return;
         }
         if(!FormValidator.checkEmailRepeat(email, userDAO)) {
-            ServletUtility.sendError(request, response, 400, rb.getString("validateUser.errors.EMAIL_ALREADY_USED")); //email già presente
+            ServletUtility.sendError(request, response, 400, "validateUser.errors.EMAIL_ALREADY_USED"); //email già presente
             return;
         }
         if(!FormValidator.validateFirstName(firstName)){
-            ServletUtility.sendError(request, response, 400, rb.getString("validateUser.errors.FIRST_NAME_NOT_VALID")); //il first name non è valido
+            ServletUtility.sendError(request, response, 400, "validateUser.errors.FIRST_NAME_NOT_VALID"); //il first name non è valido
             return;
         }
         if(!FormValidator.validateLastName(lastName)){
-            ServletUtility.sendError(request, response, 400, rb.getString("validateUser.errors.LAST_NAME_NOT_VALID")); //Last name non è valido
+            ServletUtility.sendError(request, response, 400, "validateUser.errors.LAST_NAME_NOT_VALID"); //Last name non è valido
             return;
         }
         if(!FormValidator.validatePassword(password)){
-            ServletUtility.sendError(request, response, 400, rb.getString("validateUser.errors.PASSWORD_NOT_VALID")); //la password non è valido
+            ServletUtility.sendError(request, response, 400, "validateUser.errors.PASSWORD_NOT_VALID"); //la password non è valido
             return;
         }
         if(!FormValidator.validateAvatar(avatar)){
-            ServletUtility.sendError(request, response, 400, rb.getString("validateUser.errors.AVATAR_NOT_VALID")); //l'avatar selezionato non è valido
+            ServletUtility.sendError(request, response, 400, "validateUser.errors.AVATAR_NOT_VALID"); //l'avatar selezionato non è valido
             return;
         }
 
@@ -166,11 +163,11 @@ public class RegisterService extends HttpServlet {
         {
             //check file caricato
             if(customAvatarImgFile == null){
-		ServletUtility.sendError(request, response, 400, rb.getString("validateCategoryList.errors.IMG_NULL")); //file di img caricato è nullo
+		ServletUtility.sendError(request, response, 400, "validateCategoryList.errors.IMG_NULL"); //file di img caricato è nullo
 		return;
             }
             if(!FormValidator.validateCustomAvatarImg(customAvatarImgFile)){
-                ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.invalidFileFormat")); //file di img caricato non è valido
+                ServletUtility.sendError(request, response, 400, "servlet.errors.invalidFileFormat"); //file di img caricato non è valido
                 return;
             }
             //set il percorso complete per salvare immagine di user

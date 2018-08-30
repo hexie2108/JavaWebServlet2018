@@ -50,9 +50,6 @@ public class LoginService extends HttpServlet
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
 
-        //Language bundle
-        ResourceBundle rb = i18n.getBundle(request);
-
         //get i parametri necessari
         String email = request.getParameter(FormValidator.EMAIL_KEY);
         String password = request.getParameter(FormValidator.FIRST_PWD_KEY);
@@ -60,11 +57,11 @@ public class LoginService extends HttpServlet
         String remember = request.getParameter(FormValidator.REMEMBER_KEY);
 
         if(!FormValidator.validateEmail(email)) {
-            ServletUtility.sendError(request, response, 400, rb.getString("validateUser.errors.EMAIL_NOT_VALID"));
+            ServletUtility.sendError(request, response, 400, "validateUser.errors.EMAIL_NOT_VALID");
             return;
         }
         if(password == null){
-            ServletUtility.sendError(request, response, 400, rb.getString("validateUser.errors.PASSWORD_MISSING")); //il parametro password è nullo
+            ServletUtility.sendError(request, response, 400, "validateUser.errors.PASSWORD_MISSING"); //il parametro password è nullo
             return;
         }
 
@@ -90,13 +87,13 @@ public class LoginService extends HttpServlet
 
         if (user == null)
         {
-            ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.noUserWithSuchEmailAndPwd")); //No user con email o pwd
+            ServletUtility.sendError(request, response, 400, "servlet.errors.noUserWithSuchEmailAndPwd"); //No user con email o pwd
             return;
         }
 
         if (user.getVerifyEmailLink() != null) //servlet.errors.accountWaitingForActivation
         {
-            ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.accountWaitingForActivation")); //Attesa di attivazione
+            ServletUtility.sendError(request, response, 400, "servlet.errors.accountWaitingForActivation"); //Attesa di attivazione
             return;
         }
 
