@@ -65,12 +65,12 @@ public class LoginService extends HttpServlet
 
                 if (!FormValidator.validateEmail(email))
                 {
-                        ServletUtility.sendError(request, response, 400, rb.getString("validateUser.errors.EMAIL_NOT_VALID"));
+                        ServletUtility.sendError(request, response, 400, "validateUser.errors.EMAIL_NOT_VALID");
                         return;
                 }
                 if (password == null)
                 {
-                        ServletUtility.sendError(request, response, 400, rb.getString("validateUser.errors.PASSWORD_MISSING")); //il parametro password è nullo
+                        ServletUtility.sendError(request, response, 400, "validateUser.errors.PASSWORD_MISSING"); //il parametro password è nullo
                         return;
                 }
 
@@ -95,13 +95,13 @@ public class LoginService extends HttpServlet
                 }
                 if (user == null)
                 {
-                        ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.noUserWithSuchEmailAndPwd")); //No user con email o pwd
+                        ServletUtility.sendError(request, response, 400, "servlet.errors.noUserWithSuchEmailAndPwd"); //No user con email o pwd
                         return;
                 }
 
                 if (user.getVerifyEmailLink() != null) //servlet.errors.accountWaitingForActivation
                 {
-                        ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.accountWaitingForActivation")); //Attesa di attivazione
+                        ServletUtility.sendError(request, response, 400, "servlet.errors.accountWaitingForActivation"); //Attesa di attivazione
                         return;
                 }
 

@@ -85,7 +85,7 @@ public class ChangeListService extends HttpServlet
                         //se il permesso è  vuoto
                         if (permission == null)
                         {
-                                ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.noPermissionOnList"));
+                                ServletUtility.sendError(request, response, 400, "servlet.errors.noPermissionOnList");
                                 return;
                         }
                 }

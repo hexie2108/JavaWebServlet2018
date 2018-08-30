@@ -71,7 +71,7 @@ public class CheckUserService extends HttpServlet
                 //se azione è nullo
                 if (action == null)
                 {
-                        ServletUtility.sendError(request, response, 400, rb.getString("users.errors.missingAction")); //manca il parametro action
+                        ServletUtility.sendError(request, response, 400, "users.errors.missingAction"); //manca il parametro action
                         return;
                 }
                 //get email
@@ -79,7 +79,7 @@ public class CheckUserService extends HttpServlet
                 //se email è nullo
                 if (email == null)
                 {
-                        ServletUtility.sendError(request, response, 400, rb.getString("validateUser.errors.EMAIL_MISSING")); //il parametro email è nullo
+                        ServletUtility.sendError(request, response, 400, "validateUser.errors.EMAIL_MISSING"); //il parametro email è nullo
                         return;
                 }
 
@@ -104,7 +104,7 @@ public class CheckUserService extends HttpServlet
                         //se password è null
                         if (password == null)
                         {
-                                ServletUtility.sendError(request, response, 400, rb.getString("validateUser.errors.PASSWORD_MISSING")); //manca il parametro password
+                                ServletUtility.sendError(request, response, 400, "validateUser.errors.PASSWORD_MISSING"); //manca il parametro password
                                 return;
                         }
 
@@ -196,7 +196,7 @@ public class CheckUserService extends HttpServlet
                                         String listId = request.getParameter("listId");
                                         if (listId == null)
                                         {
-                                                ServletUtility.sendError(request, response, 400, rb.getString("error.missingListId")); //manca il parametro password
+                                                ServletUtility.sendError(request, response, 400, "error.missingListId"); //manca il parametro password
                                                 return;
                                         }
                                         //se non ha ancora permesso su tale lista

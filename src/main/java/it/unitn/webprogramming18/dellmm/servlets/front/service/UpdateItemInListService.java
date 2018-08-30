@@ -94,7 +94,7 @@ public class UpdateItemInListService extends HttpServlet
                 //se azione è nullo
                 if (action == null)
                 {
-                        ServletUtility.sendError(request, response, 400, rb.getString("users.errors.missingAction")); //manca il parametro action
+                        ServletUtility.sendError(request, response, 400, "users.errors.missingAction"); //manca il parametro action
                         return;
                 }
                 CheckErrorUtils.isNull(listId, rb.getString("error.missingListId"));
@@ -116,7 +116,7 @@ public class UpdateItemInListService extends HttpServlet
                 //se il permesso è  vuoto
                 if (permission == null)
                 {
-                        ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.noPermissionOnList"));
+                        ServletUtility.sendError(request, response, 400, "servlet.errors.noPermissionOnList");
                         return;
                 }
 
@@ -151,7 +151,7 @@ public class UpdateItemInListService extends HttpServlet
                         }
                         else
                         {
-                                ServletUtility.sendError(request, response, 400, rb.getString("permission.insertItemNotAllowed")); //Not allowed insert item in list
+                                ServletUtility.sendError(request, response, 400, "permission.insertItemNotAllowed"); //Not allowed insert item in list
                                 return;
                         }
 
@@ -194,7 +194,7 @@ public class UpdateItemInListService extends HttpServlet
                         }
                         else
                         {
-                                ServletUtility.sendError(request, response, 400, rb.getString("permission.deleteItemNotAllowed")); //Not allowed delete item in list
+                                ServletUtility.sendError(request, response, 400, "permission.deleteItemNotAllowed"); //Not allowed delete item in list
                                 return;
                         }
                 }

@@ -93,13 +93,13 @@ public class UpdateListServlet extends HttpServlet
                                 //se il permesso è  nullo
                                 if (permission == null)
                                 {
-                                        ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.noPermissionOnList")); //non hai nessun permesso su tale lista
+                                        ServletUtility.sendError(request, response, 400, "servlet.errors.noPermissionOnList"); //non hai nessun permesso su tale lista
                                         return;
                                 }
                                 //se utente non ha il permesso di modificare la lista
                                 if (!permission.isModifyList())
                                 {
-                                        ServletUtility.sendError(request, response, 400, rb.getString("permission.modifyListNotAllowed")); //non hai il permesso di modificare tale lista
+                                        ServletUtility.sendError(request, response, 400, "permission.modifyListNotAllowed"); //non hai il permesso di modificare tale lista
                                         return;
                                 }
                         }

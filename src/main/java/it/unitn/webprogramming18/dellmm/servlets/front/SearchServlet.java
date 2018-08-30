@@ -69,12 +69,12 @@ public class SearchServlet extends HttpServlet
                 //se parola non esiste
                 if (searchWords == null)
                 {
-                        ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.nullSearchWord"));
+                        ServletUtility.sendError(request, response, 400, "servlet.errors.nullSearchWord");
                         return;
                 }
                 if (searchWords.equals(""))
                 {
-                        ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.emptySearchWord"));
+                        ServletUtility.sendError(request, response, 400, "servlet.errors.emptySearchWord");
                         return;
                 }
 
@@ -86,7 +86,7 @@ public class SearchServlet extends HttpServlet
                         //ma con valore diverso da quelli prefissati
                         if (!order.equals("categoryName") && !order.equals("productName") && !order.equals("relevance"))
                         {
-                                ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.invalidSortParameter"));
+                                ServletUtility.sendError(request, response, 400, "servlet.errors.invalidSortParameter");
                                 return;
                         }
                 }
@@ -104,7 +104,7 @@ public class SearchServlet extends HttpServlet
                 {
                         if (!direction.equals("asc") && !direction.equals("desc"))
                         {
-                                ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.invalidDirectionParameter"));
+                                ServletUtility.sendError(request, response, 400, "servlet.errors.invalidDirectionParameter");
                                 return;
                         }
                 }

@@ -49,15 +49,15 @@ public class ResetPasswordService extends HttpServlet
         ResourceBundle rb = i18n.getBundle(request);
 
         if(email == null){
-            ServletUtility.sendError(request, response, 400, rb.getString("validateUser.errors.EMAIL_MISSING")); //il parametro email è nullo
+            ServletUtility.sendError(request, response, 400, "validateUser.errors.EMAIL_MISSING"); //il parametro email è nullo
             return;
         }
         if(resetPwdLink == null){
-            ServletUtility.sendError(request, response, 400, rb.getString("validateUser.errors.RESETPWD_PARAMETER_MISSING")); //il parametro resetPwdLink è nullo
+            ServletUtility.sendError(request, response, 400, "validateUser.errors.RESETPWD_PARAMETER_MISSING"); //il parametro resetPwdLink è nullo
             return;
         }
         if(!FormValidator.validatePassword(password)) {
-            ServletUtility.sendError(request, response, 400, rb.getString("validateUser.errors.PASSWORD_NOT_VALID")); //invalid password
+            ServletUtility.sendError(request, response, 400, "validateUser.errors.PASSWORD_NOT_VALID"); //invalid password
             return;
         }
 

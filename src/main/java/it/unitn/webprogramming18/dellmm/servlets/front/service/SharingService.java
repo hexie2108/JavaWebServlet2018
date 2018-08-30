@@ -60,7 +60,7 @@ public class SharingService extends HttpServlet {
         String action = request.getParameter("action");
         //se azione è nullo
         if(action == null){
-            ServletUtility.sendError(request, response, 400, rb.getString("users.errors.missingAction")); //manca il parametro action
+            ServletUtility.sendError(request, response, 400, "users.errors.missingAction"); //manca il parametro action
             return;
 	}
         //get id lista
@@ -84,7 +84,7 @@ public class SharingService extends HttpServlet {
 
         // controllare  se utente corrente è il proprietario della lista
         if (user.getId() != shoppingList.getOwnerId()) {
-            ServletUtility.sendError(request, response, 400, rb.getString("permission.shareListNotAllowed")); //"non sei il proprietario, non hai diritto di manipolare la sharing");
+            ServletUtility.sendError(request, response, 400, "permission.shareListNotAllowed"); //"non sei il proprietario, non hai diritto di manipolare la sharing");
             return;
         }
 
@@ -99,7 +99,7 @@ public class SharingService extends HttpServlet {
             String userEmail = request.getParameter("userEmail");
 
             if (userEmail == null || userEmail.equals("")) {
-                ServletUtility.sendError(request, response, 400, rb.getString("upgradeUserToAdmin.errors.emailMissing")); //"non esiste utente con tale email o email vuota
+                ServletUtility.sendError(request, response, 400, "upgradeUserToAdmin.errors.emailMissing"); //"non esiste utente con tale email o email vuota
                 return;
             }
 
@@ -109,13 +109,13 @@ public class SharingService extends HttpServlet {
                 userToShare = userDAO.getByEmail(userEmail);
                 //se  user beans  è  nullo
                 if(userToShare == null){
-                    ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.noUserWithSuchEmail")); //non esiste l'utente con tale email
+                    ServletUtility.sendError(request, response, 400, "servlet.errors.noUserWithSuchEmail"); //non esiste l'utente con tale email
                     return;
                 }
 
                 //se utente da condividere ha già un permesso su questa lista (ripetizione)
                 if (permissionDAO.getUserPermissionOnListByIds(userToShare.getId(), Integer.parseInt(listId)) != null) {
-                    ServletUtility.sendError(request, response, 400, rb.getString("servlet.errors.listAlreadySharedWithUser")); //Lista già condivisa con l'utente
+                    ServletUtility.sendError(request, response, 400, "servlet.errors.listAlreadySharedWithUser"); //Lista già condivisa con l'utente
                     return;
                 }
             } catch (DAOException ex) {

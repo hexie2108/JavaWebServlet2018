@@ -45,7 +45,7 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet
                 //se azione è nullo
                 if (action == null)
                 {
-                        ServletUtility.sendError(request, response, 400, rb.getString("users.errors.missingAction")); //manca il parametro action
+                        ServletUtility.sendError(request, response, 400, "users.errors.missingAction"); //manca il parametro action
                         return;
                 }
 
