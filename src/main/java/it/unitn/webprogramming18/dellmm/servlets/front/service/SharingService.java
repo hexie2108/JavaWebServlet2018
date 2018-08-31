@@ -49,6 +49,7 @@ public class SharingService extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ResourceBundle rb = i18n.getBundle(request);
 
         //string che memorizza il risultato dell'operazione
         String result = null;

@@ -59,8 +59,9 @@ public class ResendEmailService extends HttpServlet
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {  
-        
+    {
+        ResourceBundle rb = i18n.getBundle(request);
+
         String email = request.getParameter(FormValidator.EMAIL_KEY);
         if(!FormValidator.validateEmail(email)){
             ServletUtility.sendError(request, response, 400, "validateUser.errors.EMAIL_NOT_VALID"); //email non è valido

@@ -31,6 +31,7 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ResourceBundle rb = i18n.getBundle(request);
 
         //memorizza il risultato dell'operazione
         String result = null;

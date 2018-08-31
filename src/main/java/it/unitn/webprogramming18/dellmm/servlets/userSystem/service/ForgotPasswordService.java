@@ -57,7 +57,8 @@ public class ForgotPasswordService extends HttpServlet
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        
+        ResourceBundle rb = i18n.getBundle(request);
+
         String email = request.getParameter(FormValidator.EMAIL_KEY);
         if(!FormValidator.validateEmail(email)) {
             ServletUtility.sendError(request, response, 400, "validateUser.errors.EMAIL_NOT_VALID");

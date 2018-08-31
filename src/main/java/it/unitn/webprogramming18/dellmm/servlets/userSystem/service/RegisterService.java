@@ -60,6 +60,8 @@ public class RegisterService extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        ResourceBundle rb = i18n.getBundle(request);
+
                 // usa un metodo statico per controllare se la richiesta è codificato in formato multipart/form-data
                 CheckErrorUtils.isFalse(ServletFileUpload.isMultipartContent(request), rb.getString("error.notMultipart"));
 
