@@ -104,8 +104,8 @@ public interface ServletUtility {
         }
 
         String realContextPath = ctx.getRealPath(File.separator);
-        if (!realContextPath.endsWith("/")) {
-            realContextPath += "/";
+        if (!realContextPath.endsWith(File.separator)) {
+            realContextPath += File.separator;
         }
 
         Path path = Paths.get(realContextPath + categoryListImgFolder);
