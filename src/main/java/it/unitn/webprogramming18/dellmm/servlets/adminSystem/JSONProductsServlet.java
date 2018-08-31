@@ -397,13 +397,8 @@ public class JSONProductsServlet extends HttpServlet {
         {
             String sPrivateListId = req.getParameter(ProductValidator.PRIVATE_LIST_ID);
 
-            if(sPrivateListId == null) {
-                ServletUtility.sendError(req, res, 400, "products.errors.privateListIdNotInt");
-                return;
-            }
-
             try {
-                privateListId = Integer.parseInt(sPrivateListId);
+                privateListId = sPrivateListId == null || sPrivateListId.trim().isEmpty()? null: Integer.parseInt(sPrivateListId);
             } catch (NumberFormatException e) {
                 ServletUtility.sendError(req, res, 400, "products.errors.privateListIdNotInt");
                 return;

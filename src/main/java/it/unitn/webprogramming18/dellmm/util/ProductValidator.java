@@ -61,7 +61,7 @@ public class ProductValidator {
     }
 
     public static ValidatorUtils.ErrorType validatePrivateList(Integer id, ListDAO listDAO) {
-        if (listDAO == null) {
+        if (listDAO == null || id == null) {
             return null;
         }
 
