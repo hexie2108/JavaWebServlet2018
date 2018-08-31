@@ -144,6 +144,11 @@
         });
 
         const table = tableDiv.DataTable({
+            <c:if test="${language == 'it'}">
+            language: {
+                url: '<c:url value="/libs/DataTables/Languages/it.json"/>'
+            },
+            </c:if>
             ajax: {
                 url: '<c:url value="/admin/categoryLists.json"/>',
                 dataType: "json",
