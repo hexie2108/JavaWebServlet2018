@@ -16,7 +16,7 @@ public class AdminUserOnlyFilter implements Filter {
         // Non fare caching di errori
         response.setHeader("Cache-Control", "no-cache");
         response.setHeader("Pragma", "no-cache");
-        response.setCharacterEncoding("UTF-8");
+ 
 
         ServletUtility.sendError(request, response, 401, "generic.errors.userNotAdmin");
     }

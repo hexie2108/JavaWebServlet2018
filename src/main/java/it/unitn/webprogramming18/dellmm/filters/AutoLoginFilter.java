@@ -27,13 +27,18 @@ import javax.servlet.http.HttpSession;
  *
  * @author mikuc
  */
-public class AutoLoginFilter implements Filter {
+public class AutoLoginFilter implements Filter
+{
+
         private UserDAO userDAO;
 
         @Override
-        public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
-                HttpServletRequest request = (HttpServletRequest) req;;
+        public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException
+        {
+                HttpServletRequest request = (HttpServletRequest) req;
                 HttpServletResponse response = (HttpServletResponse) res;
+
+                response.setCharacterEncoding("UTF-8");
 
                 String fastLoginkey = null;
                 Cookie[] cookies = null;
@@ -106,17 +111,22 @@ public class AutoLoginFilter implements Filter {
         }
 
         @Override
-        public void init(FilterConfig filterConfig) throws ServletException {
-            DAOFactory daoFactory = (DAOFactory) filterConfig.getServletContext().getAttribute("daoFactory");
-            if (daoFactory == null) {
-                    throw new ServletException("Impossible to get db factory for user storage system");
-            }
+        public void init(FilterConfig filterConfig) throws ServletException
+        {
+                DAOFactory daoFactory = (DAOFactory) filterConfig.getServletContext().getAttribute("daoFactory");
+                if (daoFactory == null)
+                {
+                        throw new ServletException("Impossible to get db factory for user storage system");
+                }
 
-            try {
-                    userDAO = daoFactory.getDAO(UserDAO.class);
-            } catch (DAOFactoryException ex) {
-                    throw new ServletException("Impossible to get UserDAO for user storage system", ex);
-            }
+                try
+                {
+                        userDAO = daoFactory.getDAO(UserDAO.class);
+                }
+                catch (DAOFactoryException ex)
+                {
+                        throw new ServletException("Impossible to get UserDAO for user storage system", ex);
+                }
         }
 
 }
