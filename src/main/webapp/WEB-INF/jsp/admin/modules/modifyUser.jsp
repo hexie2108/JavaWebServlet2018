@@ -1,4 +1,8 @@
+
+
+<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@ page import="it.unitn.webprogramming18.dellmm.util.FormValidator"%>
+<%@include file="/WEB-INF/jspf/i18n.jsp"%>
 
 <div class="modal fade" id="modifyUserModal">
     <div class="modal-dialog modal-lg" role="document">
@@ -110,7 +114,7 @@
                         </div>
                         <%--parte di suggerimenti --%>
                         <div class="form-group">
-                            <label>accetta solo file *.jpg, *.png, *.gif, *.bmp</label> <%-- TODO: To i18n --%>
+                            <label><fmt:message key="only accept files"/> *.jpg, *.png, *.gif, *.bmp</label>
                         </div>
                         <div class="error-messages">
                             <p data-errorName="${FormValidator.AVATAR_IMG_KEY}" id="span${FormValidator.AVATAR_IMG_KEY}"></p>
@@ -195,12 +199,12 @@
             ["","user.svg", "user-astronaut.svg", "user-ninja.svg", "user-secret.svg"],
             ${FormValidator.MAX_LEN_FILE},
             () => false, {
-                fileEmptyOrNull: '<fmt:message key="validateUser.errors.AVATAR_IMG_MISSING"/>',
-                fileTooBig: '<fmt:message key="validateUser.errors.AVATAR_IMG_TOO_BIG"/>',
+                fileEmptyOrNull: "<fmt:message key="validateUser.errors.AVATAR_IMG_MISSING"/>",
+                fileTooBig: "<fmt:message key="validateUser.errors.AVATAR_IMG_TOO_BIG"/>",
                 fileContentTypeMissingOrType: "<fmt:message key="validateUser.errors.AVATAR_FILE_CONTENT_MISSING_OR_EMTPY"/>",
-                fileOfWrongType: '<fmt:message key="validateUser.errors.AVATAR_IMG_NOT_IMG"/>',
-                selectValMissing: '<fmt:message key="validateUser.errors.AVATAR_MISSING"/>',
-                selectValInvalid: '<fmt:message key="validateUser.errors.AVATAR_NOT_VALID"/>',
+                fileOfWrongType: "<fmt:message key="validateUser.errors.AVATAR_IMG_NOT_IMG"/>",
+                selectValMissing: "<fmt:message key="validateUser.errors.AVATAR_MISSING"/>",
+                selectValInvalid: "<fmt:message key="validateUser.errors.AVATAR_NOT_VALID"/>",
             }
         );
 

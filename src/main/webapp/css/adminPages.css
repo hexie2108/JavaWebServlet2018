@@ -34,6 +34,7 @@
         padding: 1rem;
         background-color: #17a2b8;
         transition: .5s;
+        text-transform: uppercase;
 }
 .admin-page  .nav-link b{
         font-weight: normal;
@@ -58,6 +59,11 @@
 
         float: right;
         margin-bottom: 1rem;
+}
+
+
+.admin-page .table.dataTable tr td:last-child{
+        white-space: nowrap;
 }
 
 
@@ -189,6 +195,55 @@
         visibility: hidden;
 }
 
+@media (max-width: 1300px){
+        .admin-page .table.dataTable.user-list thead tr th:nth-child(2){
+                display: none;
+        }
+
+        .admin-page .table.dataTable.user-list tr td:nth-child(2){
+                display: none;
+        }
+        .admin-page .table.dataTable.user-list thead tr th:nth-child(4){
+                display: none;
+        }
+
+        .admin-page .table.dataTable.user-list tr td:nth-child(4){
+                display: none;
+        }
+        .admin-page .table.dataTable.user-list thead tr th:nth-child(5){
+                display: none;
+        }
+
+        .admin-page .table.dataTable.user-list tr td:nth-child(5){
+                display: none;
+        }
+        .admin-page .table.dataTable.user-list tr td:nth-child(6){
+                word-break:break-all; 
+        }
+}
+
+
+@media (max-width: 1100px){
+
+
+        .admin-page .table.dataTable.list-category thead tr th:first-child{
+                display: none;
+        }
+
+        .admin-page .table.dataTable.list-category tr td:first-child{
+                display: none;
+        }
+
+
+        .admin-page .table.dataTable.prodoct-page thead tr th:nth-child(2){
+                display: none;
+        }
+        .admin-page .table.dataTable.prodoct-page tr td:nth-child(2){
+                display: none;
+        }
+
+}
+
 
 @media (max-width: 900px){
 
@@ -210,6 +265,78 @@
         }
 
 }
+@media (max-width: 800px){
+
+
+        .admin-page .table.dataTable.list-category thead tr th:nth-child(3){
+                display: none;
+        }
+        .admin-page .table.dataTable.list-category tr td:nth-child(3){
+                display: none;
+        }
+
+        .admin-page .table.dataTable.prodoct-page thead tr th:nth-child(4){
+                display: none;
+        }
+        .admin-page .table.dataTable.prodoct-page tr td:nth-child(4){
+                display: none;
+        }
+}
+
+@media (max-width: 700px){
+
+        .admin-page .table.dataTable.list-category thead tr th:nth-child(5){
+                display: none;
+        }
+        .admin-page .table.dataTable.list-category tr td:nth-child(5){
+                display: none;
+        }
+        .admin-page .table.dataTable.list-category thead tr th:nth-child(6){
+                display: none;
+        }
+        .admin-page .table.dataTable.list-category tr td:nth-child(6){
+                display: none;
+        }
+
+
+
+        .admin-page .table.dataTable.list-product thead tr th:first-child{
+                display: none;
+        }
+        .admin-page .table.dataTable.list-product  tr td:first-child{
+                display: none;
+        }
+}
+
+@media (max-width: 650px){
+        .admin-page .table.dataTable.user-list thead tr th:nth-child(7){
+                display: none;
+        }
+
+        .admin-page .table.dataTable.user-list tr td:nth-child(7){
+                display: none;
+        }
+
+        .admin-page .table.dataTable.prodoct-page thead tr th:nth-child(5){
+                display: none;
+        }
+        .admin-page .table.dataTable.prodoct-page tr td:nth-child(5){
+                display: none;
+        }
+}
+
+@media (max-width: 600px){
+
+        .admin-page .table.dataTable.list-product thead tr th:nth-child(4){
+                display: none;
+        }
+        .admin-page .table.dataTable.list-product  tr td:nth-child(4){
+                display: none;
+        }
+
+
+}
+
 
 
 @media (max-width: 500px){
@@ -248,9 +375,43 @@
         }
 
 
+        .admin-page .admin-main-container{
+                padding: 0;
+        }
+
+   
 
 
+}
 
 
+@media (max-width: 450px){
+
+        .admin-page .table.dataTable.user-list thead tr th:nth-child(1){
+                display: none;
+        }
+
+        .admin-page .table.dataTable.user-list tr td:nth-child(1){
+                display: none;
+        }
+        .admin-page .table.dataTable.prodoct-page thead tr th:nth-child(6){
+                display: none;
+        }
+        .admin-page .table.dataTable.prodoct-page tr td:nth-child(6){
+                display: none;
+        }
+
+}
+
+
+@media (max-width: 400px){
+
+        .admin-page .table.dataTable.user-list thead tr th:nth-child(3){
+                display: none;
+        }
+
+        .admin-page .table.dataTable.user-list tr td:nth-child(3){
+                display: none;
+        }
 
 }

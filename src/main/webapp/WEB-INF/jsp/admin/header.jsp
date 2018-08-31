@@ -5,7 +5,7 @@
 
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@include file="/WEB-INF/jspf/i18n.jsp"%>
 
 
 <!DOCTYPE html>
@@ -19,7 +19,7 @@
 
                 <%--titolo della pagina--%>
                 <title>
-                        <c:out value="${head_title}" default="non hai ancora un titolo"/>
+                        <c:out value="ADMIN"/>
                 </title>
 
                 <%--icone del sito--%>
@@ -59,7 +59,7 @@
                                 <%-- barra top per mobile--%>
                                 <div class="mobile-menu-bar fixed-top  bg-info">
                                         <a id="mobile-menu-active-link" class="" href="javascript:;" title="mobile-menu">
-                                                <i class="fas fa-caret-square-down"></i> MENU
+                                                <i class="fas fa-caret-square-down"></i> <fmt:message key="MENU"/>
                                         </a>
                                 </div>
 
@@ -81,40 +81,40 @@
 
                                                                 <li class="nav-item">
                                                                         <a class="nav-link" href="<c:url value="/admin/home"/>">
-                                                                                <i class="fas fa-tachometer-alt"></i>  <b>dashboard</b>
+                                                                                <i class="fas fa-tachometer-alt"></i>  <b><fmt:message key="dashboard"/></b>
                                                                         </a>
                                                                 </li>
 
 
                                                                 <li class="nav-item">
                                                                         <a class="nav-link" href="<c:url value="/admin/categoryLists"/>">
-                                                                                <i class="fas fa-sitemap"></i> <b>gestisce le categorie di lista</b>
+                                                                                <i class="fas fa-sitemap"></i> <b><fmt:message key="manages the list categories"/></b>
                                                                         </a>
                                                                 </li>
 
 
                                                                 <li class="nav-item">
                                                                         <a class="nav-link" href="<c:url value="/admin/categoryProducts"/>">
-                                                                                <i class="fas fa-store"></i> <b>gestisce le categorie di prodotto</b>
+                                                                                <i class="fas fa-store"></i> <b><fmt:message key="manages the product categories"/></b>
                                                                         </a>
                                                                 </li>
 
 
                                                                 <li class="nav-item">
                                                                         <a class="nav-link" href="<c:url value="/admin/products"/>">
-                                                                                <i class="fas fa-shopping-basket"></i> <b>gestisce i prodotti</b>
+                                                                                <i class="fas fa-shopping-basket"></i> <b><fmt:message key="manages the products"/></b>
                                                                         </a>
                                                                 </li>
 
                                                                 <li class="nav-item">
                                                                         <a class="nav-link" href="<c:url value="/admin/users"/>">
-                                                                                <i class="fas fa-users"></i> <b>gestisce gli utente</b>
+                                                                                <i class="fas fa-users"></i> <b><fmt:message key="manages the users"/></b>
                                                                         </a>
                                                                 </li>
 
                                                                 <li class="nav-item">
                                                                         <a class="nav-link" href="<c:url value="/"/>">
-                                                                                <i class="fas fa-sign-out-alt"></i> <b>ritorna a home</b>
+                                                                                <i class="fas fa-sign-out-alt"></i> <b><fmt:message key="come back to home"/></b>
                                                                         </a>
                                                                 </li>
 

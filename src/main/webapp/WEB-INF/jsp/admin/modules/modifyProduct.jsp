@@ -1,5 +1,8 @@
+
+<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@ page import="it.unitn.webprogramming18.dellmm.util.CategoryProductValidator" %>
 <%@ page import="it.unitn.webprogramming18.dellmm.util.ProductValidator" %>
+<%@include file="/WEB-INF/jspf/i18n.jsp"%>
 
 <%@taglib prefix="custom" uri="/WEB-INF/custom.tld" %>
 

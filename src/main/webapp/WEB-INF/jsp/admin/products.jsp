@@ -1,12 +1,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@include file="/WEB-INF/jspf/i18n.jsp"%>
 
 <%@ include file="header.jsp" %>
 
 <div class="content">
     <form method="GET" id="filterForm"></form>
     <div class="table-responsive">
-        <table class="table dt-responsive nowrap w-100" id="categoryTable">
+        <table class="table dt-responsive w-100 prodoct-page" id="categoryTable">
             <thead>
             <tr>
                 <th><fmt:message key="product.label.id"/></th>
@@ -121,7 +122,7 @@
                     }),
                     $('<li/>', {
                         html: [
-                            $('<b/>', {text: '<fmt:message key="user.label.resetPasswordLink"/>:  '}),
+                            $('<b/>', {text: '<fmt:message key="logo"/>:  '}),
                             $('<img/>', {src: prefix + '/' + d.logo, class: 'img-fluid limited-image'})
                         ]
                     })

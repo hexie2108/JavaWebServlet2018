@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@include file="/WEB-INF/jspf/i18n.jsp"%>
 
 <%@ include file="header.jsp"%>
 
@@ -8,7 +9,7 @@
 <div class="content">
     <form method="GET" id="filterForm"></form>
     <div class="table-responsive">
-        <table class="table dt-responsive nowrap w-100" id="userTable">
+        <table class="table dt-responsive w-100 user-list" id="userTable">
             <thead>
             <tr>
                 <th><fmt:message key="user.label.id"/></th>
@@ -81,7 +82,7 @@
                 }, {
                     title: "<fmt:message key="generic.label.errorTitle"/>",
                     message: "<fmt:message key="generic.errors.unknownError"/>",
-                    closeLabel: "<fmt:message key="generic.label.close"/>",
+                    closeLabel: "<fmt:message key="generic.label.close"/>"
                 }
             );
         }
@@ -99,7 +100,7 @@
                 }, {
                     title: "<fmt:message key="generic.label.errorTitle"/>",
                     message: "<fmt:message key="generic.errors.unknownError"/>",
-                    closeLabel: "<fmt:message key="generic.label.close"/>",
+                    closeLabel: "<fmt:message key="generic.label.close"/>"
                 }
             );
         }
@@ -110,19 +111,19 @@
                 class: "img-responsive img-table"
             });
 
-            const admin = data.isAdmin ? '<fmt:message key="users.label.true"/>' : '<fmt:message key="users.label.false"/>';
+            const admin = data.isAdmin ? "<fmt:message key="users.label.true"/>" : "<fmt:message key="users.label.false"/>";
 
             const modifyUserButton = $('<button/>', {
                 class: 'btn btn-md btn-primary',
                 title: '<fmt:message key="users.label.modifyUser"/>',
                 html: '<i class="far fa-edit"></i>',
                 'data-toggle': 'modal',
-                'data-target': '#modifyUserModal',
+                'data-target': '#modifyUserModal'
             });
 
             const upgradeUserButton = $('<button/>', {
                 class: 'btn btn-md btn-danger',
-                title: data.isAdmin ? '<fmt:message key="users.label.downgradeUser"/>' : '<fmt:message key="users.label.upgradeUser"/>',
+                title: data.isAdmin ? "<fmt:message key="users.label.downgradeUser"/>" : "<fmt:message key="users.label.upgradeUser"/>",
                 html: data.isAdmin ? '<i class="fas fa-level-down-alt"></i>' : '<i class="fas fa-level-up-alt"></i>',
                 click: modifyUserClass
             });
@@ -171,7 +172,7 @@
                     $('<li/>', {
                         html: [$('<b/>', {text: '<fmt:message key="user.label.resetPasswordLink"/>:  '}), document.createTextNode(d.resetPwdEmailLink)]
                     })
-                )
+                );
             }
 
             return ul;
@@ -215,7 +216,7 @@
                                     return accumulator;
                                 }, {})
                     );
-                },
+                }
             },
             serverSide: true,
             columns: [
@@ -228,23 +229,23 @@
                 }, {
                     target: 1,
                     data: 'id',
-                    name: 'id',
+                    name: 'id'
                 }, {
                     target: 2,
                     data: 'img',
-                    orderable: false,
+                    orderable: false
                 }, {
                     target: 3,
                     data: 'name',
-                    name: 'name',
+                    name: 'name'
                 }, {
                     target: 4,
                     data: 'surname',
-                    name: 'surname',
+                    name: 'surname'
                 }, {
                     target: 5,
                     data: 'email',
-                    name: 'email',
+                    name: 'email'
                 }, {
                     target: 6,
                     data: 'password',
@@ -267,7 +268,7 @@
                     target: 10,
                     data: null,
                     defaultContent: '',
-                    orderable: false,
+                    orderable: false
                 }
             ],
             order: [[1, 'asc']],
