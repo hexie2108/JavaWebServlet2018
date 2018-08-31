@@ -128,7 +128,7 @@
         <listener-class>it.unitn.webprogramming18.dellmm.listeners.WebAppContextListener</listener-class>
     </listener>
 
-    <!-- FILTERS -->
+    <!-- FILTERS --> 
     <filter>
         <filter-name>AutoLoginFilter</filter-name>
         <filter-class>it.unitn.webprogramming18.dellmm.filters.AutoLoginFilter</filter-class>
