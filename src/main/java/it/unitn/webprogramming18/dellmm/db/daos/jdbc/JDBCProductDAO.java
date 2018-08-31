@@ -32,8 +32,8 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
         product.setImg(rs.getString("img"));
         product.setLogo(rs.getString("logo"));
         product.setCategoryProductId(rs.getInt("categoryProductId"));
-        Integer privateListId = rs.getInt("privateListId");
 
+        Integer privateListId = rs.getInt("privateListId");
         if(rs.wasNull()) {
             privateListId = null;
         }
