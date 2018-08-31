@@ -34,6 +34,10 @@ public class JDBCPermissionDAO extends JDBCDAO<Permission, Integer> implements P
 
     @Override
     public List<Permission> getPermissionsOnListByListId(Integer listId) throws DAOException {
+        if (listId == null) {
+            throw new DAOException("parameter not valid", new IllegalArgumentException("The passed listId is null"));
+        }
+
         Connection CON = CP.getConnection();
 
         List<Permission> permissionList = new ArrayList<>();

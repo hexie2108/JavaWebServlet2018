@@ -295,6 +295,10 @@ public class JDBCCategoryProductDAO extends JDBCDAO<CategoryProduct, Integer> im
 
     @Override
     public void delete(Integer id) throws DAOException {
+        if (id == null) {
+            throw new DAOException("parameter not valid", new IllegalArgumentException("parameter id is null"));
+        }
+
         Connection CON = CP.getConnection();
 
         try (PreparedStatement stm = CON.prepareStatement(

@@ -108,7 +108,12 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
             stm.setString(3, product.getImg());
             stm.setString(4, product.getLogo());
             stm.setInt(5, product.getCategoryProductId());
-            stm.setInt(6, product.getPrivateListId());
+
+            if (product.getPrivateListId() == null) {
+                stm.setInt(6, Types.INTEGER);
+            } else {
+                stm.setInt(6, product.getPrivateListId());
+            }
 
             stm.executeUpdate();
 
