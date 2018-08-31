@@ -98,6 +98,9 @@
 
         text-transform: uppercase;
 }
+.front-page header .menu-nav .navbar-nav .nav-item  .dropdown-menu{
+      width: 100%;
+}
 
 .front-page header .menu-nav .navbar-nav .nav-item.mobile-menu{
         display: none;

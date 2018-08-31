@@ -6,8 +6,6 @@
 package it.unitn.webprogramming18.dellmm.javaBeans;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
-import java.util.Date;
 
 /**
  * @author luca_morgese
@@ -20,7 +18,7 @@ public class Product implements Serializable {
     private String img;
     private String logo;
     private int categoryProductId;
-    private int privateListId;
+    private Integer privateListId;
 
     /**
      * @return the id
@@ -109,14 +107,14 @@ public class Product implements Serializable {
     /**
      * @return the privateListId
      */
-    public int getPrivateListId() {
+    public Integer getPrivateListId() {
         return privateListId;
     }
 
     /**
      * @param privateListId the privateListId to set
      */
-    public void setPrivateListId(int privateListId) {
+    public void setPrivateListId(Integer privateListId) {
         this.privateListId = privateListId;
     }
 

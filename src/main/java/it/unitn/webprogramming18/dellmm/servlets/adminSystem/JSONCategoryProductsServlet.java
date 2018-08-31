@@ -15,7 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
 import java.util.List;
@@ -174,10 +176,15 @@ public class JSONCategoryProductsServlet extends HttpServlet {
         Path path = ServletUtility.getFolder(getServletContext(), "categoryProductImgsFolder");
 
         Integer id;
-
         try {
             String sId = request.getParameter("id");
-            id = sId == null ? null : Integer.parseInt(sId);
+
+            if (sId == null) {
+                ServletUtility.sendError(request, response, 400, "categoryProducts.errors.idNotInt");
+                return;
+            }
+
+            id = Integer.parseInt(sId);
         } catch (NumberFormatException e) {
             ServletUtility.sendError(request, response, 400, "categoryProducts.errors.idNotInt");
             return;
@@ -256,9 +263,10 @@ public class JSONCategoryProductsServlet extends HttpServlet {
         ServletUtility.sendJSON(request, response, 200, new HashMap<>());
     }
 
-    private void deleteCategoryProduct(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Integer id;
+    private void deleteCategoryProduct(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        Path path = ServletUtility.getFolder(getServletContext(), "categoryProductImgsFolder");
 
+        Integer id;
         try {
             String sId = request.getParameter("id");
             id = sId == null ? null : Integer.parseInt(sId);
@@ -268,7 +276,14 @@ public class JSONCategoryProductsServlet extends HttpServlet {
         }
 
         try {
+            // Get category product to delete its images
+            CategoryProduct categoryProduct = categoryProductDAO.getByPrimaryKey(id);
+
+            // Delete the category product
             categoryProductDAO.delete(id);
+
+            // Delete the images
+            Files.delete(Paths.get(path.toString(), categoryProduct.getImg()));
         } catch (DAOException e) {
             if (e.getCause() instanceof SQLIntegrityConstraintViolationException) {
                 ServletUtility.sendError(request, response, 500, "categoryProducts.errors.otherProductDepend");

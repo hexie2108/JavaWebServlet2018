@@ -21,14 +21,14 @@ public class JDBCLogDAO extends JDBCDAO<Log, Integer> implements LogDAO {
     private Log getLogFromResultSet(ResultSet rs) throws SQLException {
         Log log = new Log();
 
-                log.setId(rs.getInt("id"));
-                log.setProductId(rs.getInt("productId"));
-                log.setUserId(rs.getInt("userId"));
-                log.setLast1(rs.getTimestamp("last1"));
-                log.setLast2(rs.getTimestamp("last2"));
-                log.setLast3(rs.getTimestamp("last3"));
-                log.setLast4(rs.getTimestamp("last4"));
-                log.setEmailStatus(rs.getBoolean("emailStatus"));
+        log.setId(rs.getInt("id"));
+        log.setProductId(rs.getInt("productId"));
+        log.setUserId(rs.getInt("userId"));
+        log.setLast1(rs.getTimestamp("last1"));
+        log.setLast2(rs.getTimestamp("last2"));
+        log.setLast3(rs.getTimestamp("last3"));
+        log.setLast4(rs.getTimestamp("last4"));
+        log.setEmailStatus(rs.getBoolean("emailStatus"));
 
         return log;
     }

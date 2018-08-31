@@ -101,7 +101,7 @@
 
 
                                                                 <li class="nav-item">
-                                                                        <a class="nav-link" href="<c:url value="/"/>">
+                                                                        <a class="nav-link" href="<c:url value="/admin/products"/>">
                                                                                 <i class="fas fa-shopping-basket"></i> <b>gestisce i prodotti</b>
                                                                         </a>
                                                                 </li>

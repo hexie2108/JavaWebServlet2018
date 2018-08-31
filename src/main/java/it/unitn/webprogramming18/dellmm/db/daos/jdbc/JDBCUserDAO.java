@@ -22,18 +22,25 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
     private User getUserFromResultSet(ResultSet rs) throws SQLException {
         User user = new User();
 
-                user.setId(rs.getInt("id"));
-                user.setName(rs.getString("name"));
-                user.setSurname(rs.getString("surname"));
-                user.setEmail(rs.getString("email"));
-                user.setPassword(rs.getString("password"));
-                user.setImg(rs.getString("img"));
-                user.setIsAdmin(rs.getBoolean("isAdmin"));
-                user.setVerifyEmailLink(rs.getString("verifyEmailLink"));
-                user.setResetPwdEmailLink(rs.getString("resetPwdEmailLink"));
-                user.setAcceptedPrivacy(rs.getBoolean("acceptedPrivacy"));
-                user.setLastLoginTimeMillis(rs.getLong("lastLoginTimeMillis"));
-                user.setKeyForFastLogin(rs.getString("keyForFastLogin"));
+        user.setId(rs.getInt("id"));
+        user.setName(rs.getString("name"));
+        user.setSurname(rs.getString("surname"));
+        user.setEmail(rs.getString("email"));
+        user.setPassword(rs.getString("password"));
+        user.setImg(rs.getString("img"));
+        user.setIsAdmin(rs.getBoolean("isAdmin"));
+        user.setVerifyEmailLink(rs.getString("verifyEmailLink"));
+        user.setResetPwdEmailLink(rs.getString("resetPwdEmailLink"));
+        user.setAcceptedPrivacy(rs.getBoolean("acceptedPrivacy"));
+
+        Long lastLoginTimeMillis = rs.getLong("lastLoginTimeMillis");
+        if (rs.wasNull()) {
+            lastLoginTimeMillis = null;
+
+        }
+
+        user.setLastLoginTimeMillis(lastLoginTimeMillis);
+        user.setKeyForFastLogin(rs.getString("keyForFastLogin"));
 
         return user;
     }
@@ -131,7 +138,11 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
                         stm.setString(7, user.getVerifyEmailLink());
                         stm.setString(8, user.getResetPwdEmailLink());
                         stm.setBoolean(9, user.isAcceptedPrivacy());
-                        stm.setLong(10, user.getLastLoginTimeMillis());
+                        if(user.getLastLoginTimeMillis() == null) {
+                            stm.setNull(10, Types.BIGINT);
+                        } else {
+                            stm.setLong(10, user.getLastLoginTimeMillis());
+                        }
                         stm.setString(11, user.getKeyForFastLogin());
                         stm.setInt(12, user.getId());
                         if (stm.executeUpdate() != 1)
@@ -429,7 +440,7 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
         Connection CON = CP.getConnection();
 
         if (orderBy == null) {
-            throw new DAOException("parameter not valid", new IllegalArgumentException("parameter orderBy must be not be null"));
+            throw new DAOException("parameter not valid", new IllegalArgumentException("parameter orderBy must not be null"));
         }
 
         if (dir == null) {
@@ -512,6 +523,9 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
 
     @Override
     public void delete(Integer id) throws DAOException {
+        if (id == null) {
+            throw new DAOException("parameter not valid", new IllegalArgumentException("parameter id must not be null"));
+        }
 
         Connection CON = CP.getConnection();
         try (PreparedStatement stm = CON.prepareStatement(
@@ -537,9 +551,16 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
         @Override
         public void updateLastLoginTimeAndFastLoginKey(Integer id, Long timeMillis, String fastLoginKey) throws DAOException
         {
-                if (id == null || timeMillis == null || fastLoginKey == null)
-                {
-                        throw new DAOException("id, timestamp o fastLoginKey is null");
+                if (id == null) {
+                    throw new DAOException("parameter not valid", new IllegalArgumentException("parameter id must not be null"));
+                }
+
+                if (timeMillis == null) {
+                    throw new DAOException("parameter not valid", new IllegalArgumentException("parameter timeMillis must not be null"));
+                }
+
+                if (fastLoginKey == null) {
+                    throw new DAOException("parameter not valid", new IllegalArgumentException("parameter fastLoginKey must not be null"));
                 }
 
                 Connection CON = CP.getConnection();
@@ -574,9 +595,12 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
 
                 User user = null;
 
-                if (fastLoginKey == null || currentTimeMillis == null)
-                {
-                        throw new DAOException("fastLoginKey o currentTimeMillis is null");
+                if (fastLoginKey == null) {
+                    throw new DAOException("parameter not valid", new IllegalArgumentException("parameter fastLoginKey must not be null"));
+                }
+
+                if (currentTimeMillis == null) {
+                    throw new DAOException("parameter not valid", new IllegalArgumentException("parameter currentTimeMillis must not be null"));
                 }
 
                 Connection CON = CP.getConnection();
@@ -610,9 +634,12 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
         public boolean activateUserByEmailAndVerifyLink(String email, String verifyEmailLink) throws DAOException
         {
                 boolean result = true;
-                if (email == null || verifyEmailLink == null)
-                {
-                        throw new DAOException("email o verifyEmailLink is null");
+                if (email == null) {
+                    throw new DAOException("parameter not valid", new IllegalArgumentException("parameter email must not be null"));
+                }
+
+                if (verifyEmailLink == null) {
+                    throw new DAOException("parameter not valid", new IllegalArgumentException("parameter verifyEmailLink must not be null"));
                 }
 
                 Connection CON = CP.getConnection();
@@ -646,9 +673,12 @@ public class JDBCUserDAO extends JDBCDAO<User, Integer> implements UserDAO {
         public boolean checkUserByEmailAndResetPwdLink(String email, String resetPwdLink) throws DAOException
         {
                 boolean flag = false;
-                if (email == null || resetPwdLink == null)
-                {
-                        throw new DAOException("email o resetPwdLink is null");
+                if (email == null) {
+                    throw new DAOException("parameter not valid", new IllegalArgumentException("parameter email must not be null"));
+                }
+
+                if (resetPwdLink == null) {
+                    throw new DAOException("parameter not valid", new IllegalArgumentException("parameter resetPwdLink must not be null"));
                 }
 
                 Connection CON = CP.getConnection();
