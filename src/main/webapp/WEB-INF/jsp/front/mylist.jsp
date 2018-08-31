@@ -172,7 +172,7 @@
 
                                                 <div class="item-logo">
                                                         <img class="img-fluid"
-                                                             src="<c:url value="/image/productLogo/${product.logo}"/>" alt="<fmt:message key="logo" />"/>
+                                                             src="<c:url value="/image/product/${product.logo}"/>" alt="<fmt:message key="logo" />"/>
                                                 </div>
 
                                                 <div class="item-cat">
@@ -235,7 +235,7 @@
 
                                                 <div class="item-logo">
                                                         <img class="img-fluid"
-                                                             src="<c:url value="/image/productLogo/${product.logo}"/>" alt="<fmt:message key="logo" />"/>
+                                                             src="<c:url value="/image/product/${product.logo}"/>" alt="<fmt:message key="logo" />"/>
                                                 </div>
 
                                                 <div class="item-cat">

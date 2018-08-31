@@ -40,7 +40,7 @@ public class UpdateItemInListService extends HttpServlet
         // la cartella per immagine di prodotto
         private static final String IMAGE_PRODUCT = "product";
         // la cartella per immagine di logo di prodotto
-        private static final String IMAGE_LOGO_PRODUCT = "productLogo";
+        private static final String IMAGE_LOGO_PRODUCT = "product";
 
         private ProductDAO productDAO;
         private ProductInListDAO productInListDAO;

@@ -44,7 +44,7 @@ la lista di prodotto
             <div class="list-item-info">
                 <div class="list-item-logo  d-inline-block w-50">
                     <img class="list-item-logo-img img-fluid"
-                         src="<c:url value="/image/productLogo/${product.logo}"/>" alt="<fmt:message key="logo"/>">
+                         src="<c:url value="/image/product/${product.logo}"/>" alt="<fmt:message key="logo"/>">
                 </div>
             </div>
 

@@ -240,7 +240,7 @@ public class JSONProductsServlet extends HttpServlet {
         Integer privateListId = null;
         {
             String sPrivateListId = req.getParameter(ProductValidator.PRIVATE_LIST_ID);
-            System.out.println(sPrivateListId);
+         
             try {
                 privateListId = sPrivateListId == null || sPrivateListId.trim().isEmpty()? null: Integer.parseInt(sPrivateListId);
             } catch (NumberFormatException e) {
