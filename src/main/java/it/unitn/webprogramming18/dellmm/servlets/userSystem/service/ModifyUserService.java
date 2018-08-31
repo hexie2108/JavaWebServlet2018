@@ -5,12 +5,7 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
-import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
-import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
-import it.unitn.webprogramming18.dellmm.util.FileUtils;
-import it.unitn.webprogramming18.dellmm.util.FormValidator;
-import it.unitn.webprogramming18.dellmm.util.MD5Utils;
-import it.unitn.webprogramming18.dellmm.util.i18n;
+import it.unitn.webprogramming18.dellmm.util.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -19,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -29,6 +26,22 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 @MultipartConfig
 public class ModifyUserService extends HttpServlet
 {
+        private String subImg(HttpServletRequest request, Path path, String prevImg, InputStream inputStream) throws IOException, ServletException {
+            // If prevImg is one of default's set prevImg to null to prevent deletion of the file
+            if (prevImg != null && FormValidator.DEFAULT_AVATARS.stream().anyMatch(prevImg::equals)) {
+                    prevImg = null;
+            }
+
+            return ServletUtility.insertImage(
+                    request,
+                    path,
+                    prevImg,
+                    inputStream,
+                    ConstantsUtils.IMAGE_OF_USER_WIDTH,
+                    ConstantsUtils.IMAGE_OF_USER_HEIGHT
+            );
+        }
+
 
         private UserDAO userDAO;
 
@@ -54,6 +67,8 @@ public class ModifyUserService extends HttpServlet
         @Override
         protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
         {
+                Path path = ServletUtility.getFolder(getServletContext(), "avatarsFolder");
+
                 //Language bundle
                 ResourceBundle rb = i18n.getBundle(request);
 
@@ -134,7 +149,6 @@ public class ModifyUserService extends HttpServlet
                                 //set il percorso complete per salvare immagine di user
                                 String uploadPath = request.getServletContext().getRealPath("/") + ConstantsUtils.IMAGE_BASE_PATH + File.separator + ConstantsUtils.IMAGE_OF_USER;
                                 //elimina avatar vecchio
-                                FileUtils.deleteFile(uploadPath + File.separator + user.getImg());
 
                                 //se vuole caricare una nuova avatar personale
                                 if (avatar.equals(FormValidator.CUSTOM_AVATAR))
@@ -143,10 +157,9 @@ public class ModifyUserService extends HttpServlet
                                         CheckErrorUtils.isNull(customAvatarImgFile, rb.getString("validateUser.errors.AVATAR_IMG_MISSING"));
                                         CheckErrorUtils.isFalse(FormValidator.validateCustomAvatarImg(customAvatarImgFile), rb.getString("validateUser.errors.AVATAR_IMG_NOT_VALID"));
 
-                                        //salva nuovo l'immagine di user e get il nome salvato
-                                        avatar = FileUtils.upload(customAvatarImgFile, uploadPath, ConstantsUtils.IMAGE_OF_USER_WIDTH, ConstantsUtils.IMAGE_OF_USER_HEIGHT);
-
+                                        avatar = subImg(request, path, user.getImg(), customAvatarImgFile.getInputStream());
                                 }
+
                                 user.setImg(avatar);
                         }
 

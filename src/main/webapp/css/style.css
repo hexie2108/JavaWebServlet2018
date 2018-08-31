@@ -905,9 +905,6 @@ form .custom-file-input-old-image {
         display: none;
 }
 
-.user-modify #form-register .avatar-box .img-input {
-        width: 100%;
-}
 .user-modify #form-register .avatar-box .custom-img{
         width: 100%;
 }
@@ -931,9 +928,10 @@ form .custom-file-input-old-image {
         transition: none;
 }
 
-
-
-
+.avatar-box .img-input {
+        height: 3.5rem;
+        width: 3.5rem;
+}
 
 .user-modify #form-register .img-radio:checked + .custom-control-label  .img-check{
         visibility: visible;
