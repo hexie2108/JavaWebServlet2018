@@ -103,9 +103,11 @@
                     <div class="form-group row">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <div class="input-group-prepend"><label class="input-group-text"
-                                                                        for="input${ProductValidator.CATEGORY_KEY}"><fmt:message
-                                        key="product.label.logo"/></label></div>
+                                <div class="input-group-prepend">
+                                        <label class="input-group-text" for="input${ProductValidator.CATEGORY_KEY}">
+                                                <fmt:message  key="category"/>
+                                        </label>
+                                </div>
                                 <custom:getAllCategoryOfProduct/>
 
                                 <select class="form-control" id="input${ProductValidator.CATEGORY_KEY}" name="${ProductValidator.CATEGORY_KEY}">
