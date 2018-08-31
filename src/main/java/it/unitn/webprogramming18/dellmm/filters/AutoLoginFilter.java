@@ -38,7 +38,8 @@ public class AutoLoginFilter implements Filter
                 HttpServletRequest request = (HttpServletRequest) req;
                 HttpServletResponse response = (HttpServletResponse) res;
 
-                response.setCharacterEncoding("UTF-8");
+                
+                
 
                 String fastLoginkey = null;
                 Cookie[] cookies = null;

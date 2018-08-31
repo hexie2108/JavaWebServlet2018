@@ -32,7 +32,8 @@ public class LoggedUserOnlyFilter implements Filter
                 response.setHeader("Cache-Control", "no-cache");
                 response.setHeader("Pragma", "no-cache");
                 response.setDateHeader("Expires", -1);
-
+                response.setCharacterEncoding("UTF-8");
+                
 
                 //get la sessione
                 HttpSession session = request.getSession(false);
