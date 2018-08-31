@@ -277,8 +277,9 @@ public class JSONCategoryProductsServlet extends HttpServlet {
             // Delete the category product
             categoryProductDAO.delete(id);
 
+
             // Delete the images
-            Files.delete(Paths.get(path.toString(), categoryProduct.getImg()));
+            ServletUtility.deleteFile(path, categoryProduct.getImg(), getServletContext());
         } catch (DAOException e) {
             if (e.getCause() instanceof SQLIntegrityConstraintViolationException) {
                 ServletUtility.sendError(request, response, 500, "categoryProducts.errors.otherProductDepend");

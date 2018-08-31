@@ -71,20 +71,6 @@ public class FileUtils {
         return newName;
     }
 
-
-    /**
-     * eliminare il file
-     *
-     * @param filePath percorso di file
-     * @throws IOException
-     */
-    public static void deleteFile(String filePath) throws IOException {
-        File file = new File(filePath);
-        file.delete();
-    }
-
-
-
     /**
      * inizializzare e istanziare uploader
      *

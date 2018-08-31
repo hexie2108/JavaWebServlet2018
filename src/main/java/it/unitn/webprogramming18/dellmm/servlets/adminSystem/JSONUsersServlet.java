@@ -273,7 +273,7 @@ public class JSONUsersServlet extends HttpServlet {
                 if(avatar.equals(FormValidator.CUSTOM_AVATAR)) {
                     avatarName = subImg(request, response, path, user.getImg(), avatarImg.getInputStream());
                 } else if (FormValidator.DEFAULT_AVATARS.stream().noneMatch(user.getImg()::equals)) {
-                    Files.delete(Paths.get(path.toString(), user.getImg()));
+                    ServletUtility.deleteFile(path, user.getImg(), getServletContext());
                 }
 
                 user.setImg(avatarName);
@@ -298,7 +298,8 @@ public class JSONUsersServlet extends HttpServlet {
 
                 // Delete user images(if not a default one)
                 if (FormValidator.DEFAULT_AVATARS.stream().noneMatch(user.getImg()::equals)) {
-                    Files.delete(Paths.get(path.toString(), user.getImg()));
+
+                    ServletUtility.deleteFile(path, user.getImg(), getServletContext());
                 }
             } catch (DAOException e) {
                 e.printStackTrace();

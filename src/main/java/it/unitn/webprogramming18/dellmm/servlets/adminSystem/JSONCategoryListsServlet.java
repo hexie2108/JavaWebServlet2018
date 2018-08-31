@@ -180,9 +180,9 @@ public class JSONCategoryListsServlet extends HttpServlet {
             // Delete category list
             categoryListDAO.delete(id);
 
-            Files.delete(Paths.get(path.toString(), categoryList.getImg1()));
-            Files.delete(Paths.get(path.toString(), categoryList.getImg2()));
-            Files.delete(Paths.get(path.toString(), categoryList.getImg3()));
+            ServletUtility.deleteFile(path, categoryList.getImg1(), getServletContext());
+            ServletUtility.deleteFile(path, categoryList.getImg2(), getServletContext());
+            ServletUtility.deleteFile(path, categoryList.getImg3(), getServletContext());
         } catch (DAOException e) {
             if (e.getCause() instanceof SQLIntegrityConstraintViolationException) {
                 ServletUtility.sendError(request, response, 500, "categoryList.errors.otherListDepend");

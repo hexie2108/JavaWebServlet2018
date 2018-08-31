@@ -495,12 +495,7 @@ public class JSONProductsServlet extends HttpServlet {
             productDAO.deleteProductById(id);
 
             // Delete now unused images
-            try{
-                Files.delete(Paths.get(path.toString(), pr.getImg()));
-                Files.delete(Paths.get(path.toString(), pr.getLogo()));
-            } catch (Exception e) {
-                // Do not show error if deletion failed
-            }
+            ServletUtility.deleteFile(path, pr.getImg(), getServletContext());
         } catch (DAOException e) {
             if (e.getCause() instanceof SQLIntegrityConstraintViolationException) {
                 e.printStackTrace();
