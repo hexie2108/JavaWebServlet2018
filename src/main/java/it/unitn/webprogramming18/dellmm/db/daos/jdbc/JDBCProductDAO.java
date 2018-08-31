@@ -110,7 +110,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
             stm.setInt(5, product.getCategoryProductId());
 
             if (product.getPrivateListId() == null) {
-                stm.setInt(6, Types.INTEGER);
+                stm.setNull(6, Types.INTEGER);
             } else {
                 stm.setInt(6, product.getPrivateListId());
             }
