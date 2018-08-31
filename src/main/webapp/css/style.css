@@ -1,13 +1,32 @@
 /*body*/
 
+
 .front-page .content {
         min-height: 650px;
 }
+
+
 
 /*label che visualizza il nome file*/
 .custom-file-label {
         overflow: hidden;
 }
+
+/*scrollbar*/
+::-webkit-scrollbar {
+        width: 12px;
+        background-color: #eee;
+}
+
+::-webkit-scrollbar-track {
+        background-color: #eee;
+}
+
+::-webkit-scrollbar-thumb {
+        background: #17a2b8;
+}
+
+
 
 /*header.jsp----------------------------------------------------------------------------*/
 
@@ -40,16 +59,17 @@
 
 .front-page header .site-logo-section .logo {
         width: 55px;
-
+        display: inline;
 }
 
 .front-page header .site-logo-section .site-title {
         vertical-align: middle;
+        display: inline;
+        line-height: 55px;
+        margin-left: .5rem;
 }
 
-.front-page header .site-top-menu {
-        margin-right: 1%;
-}
+
 
 
 .front-page header .site-top-menu .navbar-nav .profile {
@@ -62,7 +82,53 @@
         vertical-align: bottom;
 }
 
+.front-page header .site-top-menu .navbar-nav  #link-notifica{
+        display: none;
+}
+.front-page header .site-top-menu .navbar-nav  #link-notifica a{
+        color: red;
+}
 
+
+.front-page header .menu-nav .navbar-nav .nav-item  .nav-link{
+        color: #fff;
+        text-transform: uppercase;
+}
+.front-page header .site-top-menu .navbar-nav  span{
+
+        text-transform: uppercase;
+}
+.front-page header .menu-nav .navbar-nav .nav-item  .dropdown-menu{
+      width: 100%;
+}
+
+.front-page header .menu-nav .navbar-nav .nav-item.mobile-menu{
+        display: none;
+}
+.front-page header .menu-nav .navbar-nav .nav-item.mobile-menu .actived{
+        background-color: #117a8b;
+}
+.front-page header .search-button{
+        text-transform: uppercase;
+}
+
+
+/*footer.jsp ---------------------------------------------------*/
+.footer{
+        background-color: #d4d4d4;
+}
+
+.popup-privacy{
+        padding: .5rem;
+        background-color: rgba(0, 0, 0, 0.66);
+        color: white;
+}
+
+.popup-privacy div{
+        width: 90%;
+        margin: auto;
+        margin-top: .5rem;
+}
 
 /*breadcrumb----------------------------------------------------------------------------*/
 .breadcrumbs {
@@ -82,11 +148,12 @@
 /*slider.jps----------------------------------------------------------------------------*/
 .front-page #slider {
 
-        height: 400px;
+        max-height: 400px;
+        overflow: hidden;
 }
 
 .front-page #slider .carousel-inner {
-        height: 400px;
+
 
 }
 
@@ -96,11 +163,11 @@
 }
 
 .front-page #slider .carousel-inner .carousel-item img {
-        height: 400px;
+
 }
 
 .front-page #slider .carousel-inner .carousel-item .carousel-caption {
-        bottom: 0px;
+        bottom: 13%;
         padding-top: 10px;
         padding-bottom: 25px;
         background-color: rgba(0, 0, 0, 0.43);
@@ -128,11 +195,16 @@
 
 }
 
-.front-page .category-main-section .category-logo {
 
-        width: 100px;
-
+.front-page .category-main-section .category-image-section{
+        display: inline;
 }
+.front-page .category-main-section .category-logo {
+        width: 100px;
+}
+
+
+
 
 /*search.jsp-----------------------------------------------------------*/
 .front-page .order-manage {
@@ -163,13 +235,13 @@
         background-color: #138496;
 }
 
-.front-page .main-section .product-list .list-item {
+.front-page  .product-list .list-item {
         width: 31%;
+        margin: 1%;
+
 }
 
-.front-page .category-main-section .product-list .list-item, .front-page .search-main-section .product-list .list-item {
-        width: 31%;
-}
+
 
 .front-page .product-list .list-item .list-item-title {
         text-align: center;
@@ -219,15 +291,15 @@
 }
 
 .pagination-box .pagination .page-item {
-        width: 10%;
+        flex-grow: 1;
 }
 
 .pagination-box .pagination .page-item.page-previous {
-        width: 25%;
+        flex-grow: 2;
 }
 
 .pagination-box .pagination .page-item.page-next {
-        width: 25%;
+        flex-grow: 2;
 }
 
 .pagination-box .pagination .page-item .page-link {
@@ -242,12 +314,24 @@
         color: white;
 }
 
+.product-list .list-body{
+        display: flex;
+        flex-flow: wrap;
+}
+
+
+
+
+
+
+
+
+
 /*floatBoxForShoppingList.jsp------------------------------------------------------------*/
 .front-page .list-button-float-box {
         position: fixed;
         right: 5%;
-        top: 0;
-        margin-top: 250px;
+        top: 50%;
         z-index: 1020;
 }
 
@@ -331,6 +415,16 @@
 }
 
 /*floatBoxForAddProductInShoppingList.jsp AND floatBoxForViewProductFromShoppingList.jsp-------------------------------------- */
+
+
+#boxAddItem, #boxShowItem, #boxShowMessage, #boxSharing{
+        padding-right: 0 !important;
+}
+#boxShowMessage .error{
+        color: red;
+}
+
+
 @media (min-width: 800px) {
         .custom-modal .modal-dialog {
                 max-width: 600px;
@@ -338,10 +432,10 @@
 }
 
 .custom-modal .left-body {
-        width: 50%;
+        width: 49%;
         display: inline-block;
         vertical-align: top;
-        padding: 5px;
+        padding: 1%;
 }
 
 .custom-modal .left-body .item-logo {
@@ -351,19 +445,21 @@
 }
 
 .custom-modal .left-body .item-logo-img-box {
-        height: 50px;
+        height: 40px;
+        width: 50%;
+        margin: auto;
+        overflow: hidden;
 
 }
 
 .custom-modal .left-body .item-logo-img {
-        height: 100%;
-        width: auto;
+        max-height: 100%;
 }
 
 .custom-modal .right-body {
         width: 49%;
         display: inline-block;
-        padding: 5px;
+        padding: 1%;
 }
 
 .custom-modal .right-body .item-description p.item-description-text {
@@ -391,6 +487,7 @@
 
         margin-top: 2rem;
 }
+
 
 .mylists-main-section .my-lists {
 
@@ -435,6 +532,9 @@
         padding: .375rem .75rem;
         border-radius: .25rem;
 }
+.mylists-main-section .list-item .list-head .list-right-head .button b{
+        font-weight: normal;
+}
 
 .mylists-main-section .list-item .list-head .list-right-head .permission {
         margin: 10px 0;
@@ -448,7 +548,13 @@
 
 .mylists-main-section .list-item .list-head .list-info {
 
-        display: inline-block;
+        display: flex;
+        flex-wrap: wrap;
+}
+.mylists-main-section .list-item .list-head .list-info div {
+        padding: 1%;
+        width: 25%;
+        flex-grow: 1;
 }
 
 .mylists-main-section .list-item .list-head .list-info span {
@@ -456,17 +562,12 @@
         margin: 5px 0;
 }
 
-.mylists-main-section .list-item .list-head .list-logo {
-        width: 150px;
-        height: 100px;
-        display: inline-block;
-        vertical-align: top;
+.mylists-main-section .list-item .list-head .list-info  .list-logo {
+        width: 15%;
+        flex-grow: 0;
 }
 
-.mylists-main-section .list-item .list-head .list-logo img {
-        height: 100%;
 
-}
 
 .mylists-main-section .list-item .list-body {
         padding: 5px;
@@ -478,7 +579,7 @@
 .mylists-main-section .list-item .list-body .list-product {
         width: 10%;
         display: inline-block;
-        margin: 0 1%;
+        margin: 1%;
 
 }
 
@@ -517,7 +618,12 @@
         vertical-align: top;
         border: 1px solid #d0d0d0;
         border-radius: .25rem;
-        padding: 10px;
+        padding: .75rem;
+}
+
+
+.mylist .list-left-body .list-category-img img {
+        margin: .5rem 0;
 }
 
 .mylist .list-left-body .list-head .list-modify {
@@ -534,11 +640,19 @@
 }
 
 .mylist .list-left-body .list-permission {
-        margin-top: 20px;
+        margin-top: 1rem;
+}
+.mylist .list-left-body .list-permission .single-permission{
+        display: flex;
+        text-align: center;
+}
+
+.mylist .list-left-body .list-permission .single-permission span{
+        flex-grow: 1;
 }
 
 .mylist .list-left-body .list-sharing {
-        margin-top: 20px;
+        margin-top: 1rem;
         text-align: center;
 }
 
@@ -602,7 +716,9 @@
         width: 100%;
         margin: 2px 0;
 }
-
+.mylist .list-right-body .list-item .item-manage a b{
+        font-weight: normal;
+}
 /*comment.jsp*/
 
 .comments {
@@ -674,7 +790,7 @@
 }
 
 #boxSharing .sharing-list .user-info {
-        width: 50%;
+        width: 100%;
         display: inline-block;
 
 }
@@ -699,26 +815,34 @@
 }
 
 #boxSharing .sharing-list .sharing-option {
-        width: 49%;
+        width: 100%;
         display: inline-block;
+        margin-top: .5rem;
 }
 
-#boxSharing .sharing-list .sharing-option .form-submit {
-
-        margin: 10px auto 0;
+#boxSharing .sharing-list .sharing-option div {
+        flex-grow: 1;
 }
+
+
 
 #boxSharing .sharing-list .sharing-option .custom-checkbox {
-        width: 25%;
-        margin: 0;
+
+        margin: 0 1%;
 }
 
 #boxSharing .sharing-list .sharing-option label i {
         margin-right: .50rem;
 }
 
+#boxSharing .sharing-body .form-inline {
+        align-items: flex-start;
+}
+
 #boxSharing .sharing-body .form-inline .custom-checkbox {
-        width: 45%;
+        width: 48%;
+        margin: 1%;
+        justify-content: flex-start;
 }
 
 #boxSharing .sharing-body .form-inline .custom-checkbox .custom-control-label i {
@@ -736,6 +860,11 @@
         width: 100%;
         margin-top: 1rem;
 }
+#boxSharing .sharing-body .form-inline  .error-messages p{
+        margin-top: 1rem;
+        color: red;
+        display: none;
+}
 
 /*updateList.jsp---------------------------------------------------------------------------------*/
 
@@ -743,9 +872,18 @@ form .custom-file-input-old-image {
         width: 15%;
 }
 
+.submit-button-front-page{
+        width: 50%;
+}
 
 
 
+/*map.jsp----------------------------------------------------------------------------*/
+
+#mapHolder{
+        height:100%;
+        height: 600px;
+}
 
 
 
@@ -786,6 +924,11 @@ form .custom-file-input-old-image {
         border-radius: 50%;
         opacity: .8;
         line-height: 1.5rem;
+        transition: none;
+
+}
+.user-modify #form-register .img-check i{
+        transition: none;
 }
 
 
@@ -859,3 +1002,345 @@ form .custom-file-input-old-image {
 .user-modify .current-avatar img{
         border-radius: 50%;
 }
+
+
+
+
+/*auto responsive-----------------------------------------------------------------------*/
+
+
+@media (max-width: 1199px){
+        .front-page #slider .carousel-inner .carousel-item .carousel-caption{
+                bottom: 0;
+        }
+        .mylists-main-section .list-item .list-head .list-right-head .permission span i{
+                display: block;
+                margin-bottom: .5rem;
+        }
+        .mylist .list-right-body .list-item .item-manage a{
+                font-size:  .75rem;
+        }
+}
+
+
+
+
+@media (max-width: 991px){
+        .front-page header .top-windows{
+                background-position: center;
+        }
+        .front-page .sidebar{
+                display: none;
+        }
+        .front-page .main-section{
+                flex: 0 0 100%;
+                max-width: 100%;
+        }
+        .front-page .product-list .list-item .list-item-info .list-item-logo .list-item-logo-img{
+                display: none;
+        }
+
+        .mylists-main-section .list-item .list-head .list-info div{
+
+        }
+        .mylists-main-section .list-item .list-head .list-info .list-logo {
+                width: 40%;
+                    margin: auto;
+        }
+
+        .mylists-main-section .list-item .list-head .list-info div.list-description{
+                width: 100%;
+                max-width: 100%;
+        }
+
+        .mylists-main-section .list-item .list-body .list-product{
+                width: 22%;
+        }
+
+
+
+
+        .mylist .list-left-body{
+                width: 100%;
+        }
+        .mylist .list-left-body .list-logo{
+                width: 50%;
+                margin: auto;
+        }
+        .mylist .list-left-body  .list-category-img{
+                display: flex;
+                justify-content: center;
+        }
+        .mylist .list-left-body .list-category-img img {
+
+                width: 33%;
+                height: 100%;
+                max-width: 50%;
+                flex-grow: 1;
+                margin: 0 .25rem;
+
+        }
+
+
+        .mylist .list-right-body{
+                width: 100%;
+                margin: .75rem 0;
+        }
+
+        .front-page header .site-logo-section .site-title{
+                font-size: 1.25rem;
+        }
+        .front-page header .site-top-menu .navbar-nav span{
+                font-size: .75rem;
+        }
+
+}
+
+@media (max-width: 900px){
+
+        .front-page header .site-logo-section .site-title{
+                font-size: 1rem;
+        }
+
+
+
+}
+
+
+@media (max-width: 800px){
+        .front-page header .site-top-menu .navbar-nav .nav-item{
+                margin: 0 .5rem;
+
+        }
+        .front-page header .site-top-menu .navbar-nav  span{
+                display:none;
+        }
+        .front-page header .site-top-menu .navbar-nav .language-switch span{
+                display:none;
+        }
+        .language-switch .dropdown-menu{
+                left: -50px;
+        }
+
+}
+
+
+@media (max-width: 767px){
+        .front-page  .product-list .list-item{
+                width: 48%;
+                margin: 2% 1%;
+
+        }
+        .front-page .product-list .list-item .list-item-description {
+                height: 42px;
+        }
+        .front-page .product-list .list-item .list-item-add{
+                width: 100%;
+        }
+        .front-page .product-list .list-item .list-item-add-button{
+                width: 100%;
+        }
+        .mylists-main-section .list-item .list-head .list-right-head .button b{
+                display: none;
+        }
+
+
+
+        .mylist .list-right-body .list-item{
+                display: flex;
+                flex-wrap: wrap;
+        }
+
+        .mylist .list-right-body .list-item div{
+                margin: 1%;
+                flex-grow: 1;
+                border: 1px dashed #d0d0d0;
+                padding: 1%;
+        }
+
+        .mylist .list-right-body .list-item .item-img{
+                width: 47%;
+        }
+        .mylist .list-right-body .list-item .item-name{
+                width: 47%;
+        }
+
+        .mylist .list-right-body .list-item .item-cat{
+                width: 47%;
+        }
+        .mylist .list-right-body .list-item .item-logo{
+                width: 47%;
+        }
+
+        .mylist .list-right-body .list-item .item-logo img {
+                width: 30%;
+        }
+
+        .mylist .list-right-body .list-item .item-description{
+                width: 100%;
+        }
+        .mylist .list-right-body .list-item .item-description p{
+                margin: 0;
+        }
+
+
+        .mylist .list-right-body .list-item .item-manage{
+                width: 100%;
+                border: none;
+        }
+
+        .mylist .list-right-body .list-item.list-head-info .item-manage{
+                border: 1px dashed #d0d0d0;
+        }
+        .mylist .list-right-body .list-item .item-manage a{
+                width: 48%;
+
+        }
+
+
+}
+
+
+
+
+@media (max-width: 600px){
+
+        .front-page header .site-logo-section .site-title{
+                font-size: 1rem;
+        }
+
+        .submit-button-front-page{
+                width: 100%;
+        }
+        .front-page header .site-logo-section .logo {
+                display: none;
+        }
+}
+
+@media (max-width: 575px){
+
+        .front-page header .top-windows{
+                background-position: center 10px;
+                height: 150px;
+        }
+
+        .front-page header .menu-nav .navbar-nav .nav-item{
+                display: none;
+        }
+        .front-page header .menu-nav .navbar-nav .nav-item.mobile-menu{
+                display: list-item;
+        }
+        .front-page header .menu-nav .navbar-nav .nav-item.show-item{
+                display: list-item;
+        }
+        #mapHolder{
+                height: 500px;
+        }
+}
+
+
+
+@media (max-width: 500px){
+
+        .front-page .list-button-float-box {
+                top: auto;
+                bottom: 0;
+                margin-bottom: 10%;
+        }
+
+
+        .mylists-main-section .list-item .list-head .list-left-head{
+                width: 100%;
+        }
+        .mylists-main-section .list-item .list-head .list-right-head{
+                width: 100%;
+        }
+        .mylists-main-section .list-item .list-head .list-right-head .button{
+                width: 48%;
+        }
+        .mylists-main-section .list-item .list-head .list-info div .name b{
+
+        }
+
+        .mylists-main-section .list-item .list-body .list-product{
+                width: 30%;
+        }
+
+        .mylists-main-section .add-list-box a{
+                width: 100%;
+        }
+        .mylists-main-section .list-item .list-detail-link{
+                width: 100%;
+        }
+
+        .mylists-main-section .list-item .list-detail-link a {
+                width: 100%;
+                border-radius: 0 0 .25rem .25rem;
+        }
+
+
+        #boxSharing .sharing-list .sharing-option  .form-submit {
+                width: 100%;
+                margin-top: 1rem;
+        }
+        #boxSharing .sharing-list .sharing-option  .form-submit a {
+                width: 48%;
+        }
+        #boxSharing .sharing-list .sharing-option  .form-submit input{
+                width: 48%;
+        }
+        #boxSharing .sharing-list .user-info span{
+                font-size: .8rem;
+        }
+
+        .front-page header .site-logo-section .site-title{
+                display:none;
+        }
+
+}
+
+
+@media (max-width: 450px){
+
+
+        .custom-modal .left-body{
+                width:100%;
+        }
+        .custom-modal .right-body{
+                width:100%;
+        }
+
+        .front-page .category-main-section .category-image-section{
+                display: none;
+        }
+        #mapHolder{
+                height: 450px;
+        }
+
+}
+
+
+@media (max-width: 400px){
+        .front-page  .product-list .list-item{
+                width: 100%;
+                margin: 2% 1%;
+
+        }
+
+        .mylists-main-section .list-item .list-head .list-info div{
+                width: 100%;
+                max-width: 100%;
+        }
+
+        #boxSharing .sharing-list .sharing-option .custom-checkbox{
+                width: 48%;
+                margin: 1%;
+        }
+        
+        .front-page header .site-top-menu .navbar-nav .nav-item{
+                    margin: 0 .25rem;
+        }
+
+}
+
+

@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -93,18 +94,19 @@ public class UpdateListService extends HttpServlet {
         //in caso di delete
         if (action.equals("delete")) {
 
-            //get id lista
-            listId = request.getParameter("listId");
-            CheckErrorUtils.isNull(listId, "manca il parametro id lista");
+                        //get id lista
+                        listId = request.getParameter("listId");
+                        CheckErrorUtils.isNull(listId, rb.getString("error.missingListId"));
 
             //get user corrente
             user = (User) request.getSession().getAttribute("user");
 
-            try {
-                //get beans di lista da DB
-                shoppingList = listDAO.getByPrimaryKey(Integer.parseInt(listId));
-                //se lista è nullo
-                CheckErrorUtils.isNull(shoppingList, "non eiste la lista con tale id lista");
+                        try
+                        {
+                                //get beans di lista da DB
+                                shoppingList = listDAO.getByPrimaryKey(Integer.parseInt(listId));
+                                //se lista è nullo
+                                CheckErrorUtils.isNull(shoppingList, rb.getString("error.ListNotExist"));
 
                 //get permesso dell'utente su tale lista
                 permission = permissionDAO.getUserPermissionOnListByIds(user.getId(), Integer.parseInt(listId));
@@ -154,29 +156,37 @@ public class UpdateListService extends HttpServlet {
             response.sendRedirect(response.encodeRedirectURL(prevUrl));
         }
 
-        //se valore di action è sconosciuto
-        else {
-            throw new ServletException("valore di action non riconosciuto");
-        }
+                //se valore di action è sconosciuto
+                else
+                {
+                        throw new ServletException(rb.getString("errors.unrecognizedAction"));
+                }
 
     }
 
-    /**
-     * post occupa insert e update della lista
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
-        // usa un metodo statico per controllare se la richiesta è codificato in formato multipart/form-data
-        CheckErrorUtils.isFalse(ServletFileUpload.isMultipartContent(request), "la richiesta non è stata codificata in formato multipart/form-data");
+        /**
+         * post occupa insert e update della lista
+         */
+        @Override
+        protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+        {
 
-        List<FileItem> items = null;
-        try {
-            //in caso di richiesta codificato in formato multipart, deve usare questo metodo per ottenre i parametri in formato di lista
-            items = FileUtils.initial().parseRequest(request);
-        } catch (FileUploadException ex) {
-            throw new ServletException("Errore durante analisi della richiesta");
-        }
+                //Language bundle
+                ResourceBundle rb = i18n.getBundle(request);
+
+                // usa un metodo statico per controllare se la richiesta è codificato in formato multipart/form-data
+                CheckErrorUtils.isFalse(ServletFileUpload.isMultipartContent(request), rb.getString("error.notMultipart"));
+
+                List<FileItem> items = null;
+                try
+                {
+                        //in caso di richiesta codificato in formato multipart, deve usare questo metodo per ottenre i parametri in formato di lista
+                        items = FileUtils.initial().parseRequest(request);
+                }
+                catch (FileUploadException ex)
+                {
+                        throw new ServletException(rb.getString("error.parseRequest"));
+                }
 
         String listName = null;
         String listCategory = null;
@@ -290,12 +300,20 @@ public class UpdateListService extends HttpServlet {
 
             prevUrl = getServletContext().getContextPath() + "/mylist?listId=" + newlistId;
 
-        }
+                        //eliminare cookie di  check di negozio in vicinanza per riattivare check
+                        Cookie NearShopChecked = new Cookie("NearShopChecked", "");
+                        NearShopChecked.setPath(getServletContext().getContextPath());
+                        //set la vita di cookie per 0 secondi
+                        NearShopChecked.setMaxAge(0);
+                        response.addCookie(NearShopChecked);
 
-        //in caso di update
-        else if (action.equals("update")) {
-            //se manca id lista da aggiornare
-            CheckErrorUtils.isNull(listId, "manca il parametro id lista");
+                }
+
+                //in caso di update
+                else if (action.equals("update"))
+                {
+                        //se manca id lista da aggiornare
+                        CheckErrorUtils.isNull(listId, rb.getString("error.parseRequest"));
 
             //get permesso dell'utente su tale lista
             try {
@@ -311,10 +329,10 @@ public class UpdateListService extends HttpServlet {
                     return;
                 }
 
-                //get beans di lista da DB
-                shoppingList = listDAO.getByPrimaryKey(Integer.parseInt(listId));
-                //se la lista è nulla
-                CheckErrorUtils.isNull(shoppingList, "non eiste la lista con tale id lista");
+                                //get beans di lista da DB
+                                shoppingList = listDAO.getByPrimaryKey(Integer.parseInt(listId));
+                                //se la lista è nulla
+                                CheckErrorUtils.isNull(shoppingList, rb.getString("error.ListNotExist"));
 
                 shoppingList.setName(listName);
                 shoppingList.setCategoryList(Integer.parseInt(listCategory));
@@ -345,10 +363,11 @@ public class UpdateListService extends HttpServlet {
             prevUrl = getServletContext().getContextPath() + "/mylist?listId=" + shoppingList.getId();
         }
 
-        //se valore di action è sconosciuto
-        else {
-            throw new ServletException("valore di action non riconosciuto");
-        }
+                //se valore di action è sconosciuto
+                else
+                {
+                        throw new ServletException(rb.getString("errors.unrecognizedAction"));
+                }
 
         //passare lo risultato  di operazione
         request.getSession().setAttribute("result", result);

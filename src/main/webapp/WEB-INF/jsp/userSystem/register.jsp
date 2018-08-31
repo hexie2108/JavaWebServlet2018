@@ -28,9 +28,7 @@
                                                 </span>
                                         </div>
                                         <input id="inputEmail" class="form-control input-box" placeholder="<fmt:message key="user.label.email"/>" required="" 
-                                               type="email" name="${FormValidator.EMAIL_KEY}"  autocomplete="off" maxlength="${FormValidator.EMAIL_MAX_LEN}"
-                                               data-toggle="popover" data-html="true" data-placement="top"  data-trigger="focus"
-                                               title="suggerimenti" data-content=" la lunghezza deve essere limitata a 44" >
+                                               type="email" name="${FormValidator.EMAIL_KEY}"  autocomplete="off" maxlength="${FormValidator.EMAIL_MAX_LEN}">
 
 
                                 </div>
@@ -66,10 +64,7 @@
                                                 </span>
                                         </div>
                                         <input id="inputFirstName" class="form-control input-box" placeholder="<fmt:message key="user.label.name"/>" required="" 
-                                               type="text" name="${FormValidator.FIRST_NAME_KEY}"  maxlength="${FormValidator.FIRST_NAME_MAX_LEN}"
-                                               data-toggle="popover" data-html="true" data-placement="top"  data-trigger="focus"
-                                               title="suggerimenti" data-content="la lunghezza deve essere limitata a 44"
-                                               >
+                                               type="text" name="${FormValidator.FIRST_NAME_KEY}"  maxlength="${FormValidator.FIRST_NAME_MAX_LEN}">
 
                                 </div>
                                 <div class="error-messages error-first-name">
@@ -96,10 +91,7 @@
                                         </div>
 
                                         <input id="inputLastName" class="form-control input-box" placeholder="<fmt:message key="user.label.surname"/>" required="" 
-                                               type="text" name="${FormValidator.LAST_NAME_KEY}" maxlength="${FormValidator.LAST_NAME_MAX_LEN}"
-                                               data-toggle="popover" data-html="true" data-placement="top"  data-trigger="focus"
-                                               title="suggerimenti" data-content="la lunghezza deve essere limitata a 44"
-                                               >
+                                               type="text" name="${FormValidator.LAST_NAME_KEY}" maxlength="${FormValidator.LAST_NAME_MAX_LEN}">
 
                                 </div>
 
@@ -132,13 +124,7 @@
                                         <input id="inputPassword" class="form-control input-box" placeholder="<fmt:message key="user.label.password"/>" required=""
                                                type="password" name="${FormValidator.FIRST_PWD_KEY}" maxlength="${FormValidator.PWD_MAX_LEN}"
                                                data-toggle="popover" data-html="true" data-placement="top"  data-trigger="focus"
-                                               title="suggerimenti" data-content="deve essere:<br/>
-                                               1. Lunga almeno 8 caratteri e al massimo 44 caratteri<br/>
-                                               2. Avere almeno 1 lettera minuscola<br/>
-                                               3. Avere almeno 1 lettera maiuscola<br/>
-                                               4. Avere almeno 1 numero<br/>
-                                               5. Avere almeno 1 simbolo<br/>"
-
+                                               title="<fmt:message key="suggestions"/>" data-content="<fmt:message key="suggestions.password"/>"
                                                value="">
 
                                 </div>
@@ -178,8 +164,6 @@
                                         </div>
                                         <input id="inputPassword2" class="input-box form-control" placeholder="<fmt:message key="user.label.repeatPassword"/>" required=""
                                                type="password" name="${FormValidator.SECOND_PWD_KEY}" maxlength="${FormValidator.PWD_MAX_LEN}"
-                                               data-toggle="popover" data-html="true" data-placement="top"  data-trigger="focus"
-                                               title="suggerimenti" data-content="deve essere uguale a password appena inserito"
                                                value="">
 
                                 </div>
@@ -240,14 +224,14 @@
                         <div class=" custom-file input-group mb-3">
 
                                 <input type="file" class="custom-file-input"  id="customAvatarImg" name="${FormValidator.AVATAR_IMG_KEY}" accept="image/jpeg, image/png, image/gif, image/bmp">
-                                <label class="custom-file-label input-box" for="customAvatarImg">seleziona file</label>
+                                <label class="custom-file-label input-box" for="customAvatarImg"><fmt:message key="select file"/></label>
                                 <%-- serve per ripristinare il segnaposto --%>
-                                <label class="custom-file-label-origin d-none">seleziona file</label>
+                                <label class="custom-file-label-origin d-none"><fmt:message key="select file"/></label>
                         </div>
 
                         <%--parte di suggerimenti --%>
                         <div class="form-group">
-                                <label>accetta solo file *.jpg, *.png, *.gif, *.bmp</label>
+                                <label><fmt:message key="only accept files" /> *.jpg, *.png, *.gif, *.bmp</label>
                         </div>
 
                         <div class="error-messages error-custom-avatar-img">
@@ -302,7 +286,7 @@
 
 <div class="link-utils">     
         <div class="content-top">
-                <a class=" " href="<c:url value="/resendEmail"/>">Richiede il rinvio di email</a>
+                <a class=" " href="<c:url value="/resendEmail"/>"> <fmt:message key="resend email"/></a>
                 <a id="" class="float-right" href="${prevUrl}">
                         <i class="fas fa-arrow-left"></i> <fmt:message key="login.label.cancel"/>
                 </a>
@@ -338,13 +322,13 @@
                         <%-- box-body --%>
                         <div class="modal-body">
                                 <div id="privacyPolicy">
-                                        <fmt:message key="register.text.privacyStatement"/>
+                                        <fmt:message key="processingOfPersonalDataContent" />
                                 </div>
                         </div>
 
                         <%-- box-footer  --%>
                         <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">chiude</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><fmt:message key="close"/></button>
                         </div>
 
                 </div>

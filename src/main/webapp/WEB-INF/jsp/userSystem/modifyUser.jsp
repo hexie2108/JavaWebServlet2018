@@ -37,13 +37,13 @@
                                 <c:if test="${not empty param.update}">
                                         <div class="form-group">
                                                 <div class="alert alert-success">
-                                                        <i class="fas fa-info"></i> i dati sono stati aggiornati corretamente
+                                                        <i class="fas fa-info"></i> <fmt:message key="the data has been updated correctly"/>
                                                 </div>
                                         </div>
                                 </c:if>
 
                                 <div class="form-group">
-                                        <label>l'indirizzo email non è modificabile</label>
+                                        <label><fmt:message key="the email address can not be changed"/></label>
                                 </div>
                                 <div class="form-group row ">
 
@@ -106,8 +106,7 @@
                                                                 </span>
                                                         </div>
 
-                                                        <input id="inputLastName" class="form-control input-box" placeholder="<fmt:message key="user.label.surname"/>" required=""  type="text" name="${FormValidator.LAST_NAME_KEY}" maxlength="${FormValidator.LAST_NAME_MAX_LEN}" value="${sessionScope.user.surname}"  data-toggle="popover" data-html="true" data-placement="top"  data-trigger="focus"    title="suggerimenti" data-content="la lunghezza deve essere limitata a 44"
-                                                               >
+                                                        <input id="inputLastName" class="form-control input-box" placeholder="<fmt:message key="user.label.surname"/>" required=""  type="text" name="${FormValidator.LAST_NAME_KEY}" maxlength="${FormValidator.LAST_NAME_MAX_LEN}" value="${sessionScope.user.surname}"   >
 
                                                 </div>
 
@@ -126,7 +125,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                        <label>se non vuole cambiare la password, lascirlo in vuoto</label>
+                                        <label><fmt:message key="if you do not want to change your password, leave it blank"/></label>
                                 </div>
 
                                 <div class="form-group row ">
@@ -142,13 +141,7 @@
                                                         <input id="inputPassword" class="form-control input-box" placeholder="<fmt:message key="user.label.password"/>" 
                                                                type="password" name="${FormValidator.FIRST_PWD_KEY}" maxlength="${FormValidator.PWD_MAX_LEN}"
                                                                data-toggle="popover" data-html="true" data-placement="top"  data-trigger="focus"
-                                                               title="suggerimenti" data-content="deve essere:<br/>
-                                                               1. Lunga almeno 8 caratteri e al massimo 44 caratteri<br/>
-                                                               2. Avere almeno 1 lettera minuscola<br/>
-                                                               3. Avere almeno 1 lettera maiuscola<br/>
-                                                               4. Avere almeno 1 numero<br/>
-                                                               5. Avere almeno 1 simbolo<br/>"
-
+                                                               title="<fmt:message key="suggestions"/>" data-content="<fmt:message key="suggestions.password"/>"
                                                                value="">
 
                                                 </div>
@@ -186,8 +179,6 @@
                                                         </div>
                                                         <input id="inputPassword2" class="input-box form-control" placeholder="<fmt:message key="user.label.repeatPassword"/>" 
                                                                type="password" name="${FormValidator.SECOND_PWD_KEY}" maxlength="${FormValidator.PWD_MAX_LEN}"
-                                                               data-toggle="popover" data-html="true" data-placement="top"  data-trigger="focus"
-                                                               title="suggerimenti" data-content="deve essere uguale a password appena inserito"
                                                                value="">
 
                                                 </div>
@@ -204,16 +195,16 @@
                                 </div>
 
                                 <div class="form-group current-avatar">
-                                        <label><i class="far fa-image"></i> l'avatar corrente</label>
+                                        <label><i class="far fa-image"></i> <fmt:message key="the current avatar"/></label>
                                         <div class="w-25">
-                                                <img class="img-fluid " src="<c:url value="/image/user/${sessionScope.user.img}"/>" alt="current_avatar"/>
+                                                <img class="img-fluid " src="<c:url value="/image/user/${sessionScope.user.img}"/>" alt="<fmt:message key="avatar"/>"/>
                                         </div>
 
                                 </div>
 
 
                                 <div class="avatar-group form-group">
-                                        <div class="">seleziona avatar:</div>
+                                        <div class=""><fmt:message key="select avatar"/>:</div>
                                         <div class="avatars">
                                                 <c:forEach items="${FormValidator.DEFAULT_AVATARS}" var="av" varStatus="status">
 
@@ -258,14 +249,14 @@
                                         <div class=" custom-file input-group mb-3">
 
                                                 <input type="file" class="custom-file-input"  id="customAvatarImg" name="${FormValidator.AVATAR_IMG_KEY}" accept="image/jpeg, image/png, image/gif, image/bmp">
-                                                <label class="custom-file-label input-box" for="customAvatarImg">seleziona file</label>
+                                                <label class="custom-file-label input-box" for="customAvatarImg"><fmt:message key="select file"/></label>
                                                 <%-- serve per ripristinare il segnaposto --%>
-                                                <label class="custom-file-label-origin d-none">seleziona file</label>
+                                                <label class="custom-file-label-origin d-none"><fmt:message key="select file"/></label>
                                         </div>
 
                                         <%--parte di suggerimenti --%>
                                         <div class="form-group">
-                                                <label>accetta solo file *.jpg, *.png, *.gif, *.bmp</label>
+                                                <label><fmt:message key="only accept files" /> *.jpg, *.png, *.gif, *.bmp</label>
                                         </div>
 
                                         <div class="error-messages error-custom-avatar-img">
@@ -293,7 +284,7 @@
 
                                 <div class="form-group">
 
-                                        <button type="submit" class="btn btn-info w-50">aggiorna</button>
+                                        <button type="submit" class="btn btn-info w-50"><fmt:message key="update" /></button>
 
                                 </div>
 

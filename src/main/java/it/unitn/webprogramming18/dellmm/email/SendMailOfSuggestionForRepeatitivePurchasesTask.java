@@ -8,9 +8,6 @@ package it.unitn.webprogramming18.dellmm.email;
 import it.unitn.webprogramming18.dellmm.db.daos.LogDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.UserDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCLogDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCProductDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCUserDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
@@ -24,7 +21,6 @@ import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.MessagingException;
-import javax.servlet.ServletException;
 
 /**
  *
@@ -45,21 +41,26 @@ public class SendMailOfSuggestionForRepeatitivePurchasesTask extends TimerTask
         private Timestamp currentTime;
         private String basepath;
 
-        public SendMailOfSuggestionForRepeatitivePurchasesTask(EmailFactory emailFactoryMain, String basepath, DAOFactory daoFactory) throws Exception {
-            if (daoFactory == null) {
-                    throw new Exception("Impossible to get db factory for user storage system");
-            }
+        public SendMailOfSuggestionForRepeatitivePurchasesTask(EmailFactory emailFactoryMain, String basepath, DAOFactory daoFactory) throws Exception
+        {
+                if (daoFactory == null)
+                {
+                        throw new Exception("Impossible to get db factory for user storage system");
+                }
 
-            try {
-                userDAO = daoFactory.getDAO(UserDAO.class);
-                logDAO = daoFactory.getDAO(LogDAO.class);
-                productDAO = daoFactory.getDAO(ProductDAO.class);
-            } catch (DAOFactoryException ex) {
-                throw new Exception("Impossible to get UserDAO, LogDAO or ProductDAO for user storage system", ex);
-            }
+                try
+                {
+                        userDAO = daoFactory.getDAO(UserDAO.class);
+                        logDAO = daoFactory.getDAO(LogDAO.class);
+                        productDAO = daoFactory.getDAO(ProductDAO.class);
+                }
+                catch (DAOFactoryException ex)
+                {
+                        throw new Exception("Impossible to get UserDAO, LogDAO or ProductDAO for user storage system", ex);
+                }
 
-            this.emailFactory = emailFactoryMain;
-            this.basepath = basepath;
+                this.emailFactory = emailFactoryMain;
+                this.basepath = basepath;
         }
 
         @Override
@@ -70,19 +71,19 @@ public class SendMailOfSuggestionForRepeatitivePurchasesTask extends TimerTask
                 try
                 {
                         log = logDAO.getLogNotEmailYet(currentTime, 1);
-                       
+
                         //se ci sono log che può mandare email per riaquisto
                         if (log != null)
                         {
                                 //get user
-                                 user = userDAO.getByPrimaryKey(log.getUserId());
+                                user = userDAO.getByPrimaryKey(log.getUserId());
                                 //get la lista di prodotto che soddisfa la condizione di notifica
                                 listProduct = productDAO.getListProductFromLogNotEmailYetByUserId(log.getUserId(), currentTime, predictionDay);
                                 //set stato email di log in true per evitare rinvio
                                 logDAO.setEmailStatusTrueByUserId(log.getUserId());
                                 //invia email
                                 emailFactory.sendEmailOfSuggestionForRepeatitivePurchases(user, basepath, listProduct);
-                                
+
                         }
                 }
                 catch (DAOException | MessagingException | UnsupportedEncodingException ex)

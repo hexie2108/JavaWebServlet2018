@@ -56,28 +56,35 @@ public class ChangeListService extends HttpServlet {
         doGet(request, response);
     }
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
-        //get id lista
-        String listId = request.getParameter("listId");
-        //se listId è nullo
-        CheckErrorUtils.isNull(listId, "manca il parametro id lista");
+        @Override
+        protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+        {
 
-        //get user corrente
-        User user = (User) request.getSession().getAttribute("user");
-        //get permesso dell'utente su tale lista
-        Permission permission;
-        try {
-            permission = permissionDAO.getUserPermissionOnListByIds(user.getId(), Integer.parseInt(listId));
-            //se il permesso è  vuoto
-            if (permission == null) {
-                ServletUtility.sendError(request, response, 400, "servlet.errors.noPermissionOnList");
-                return;
-            }
-        } catch (DAOException ex) {
-            throw new ServletException(ex.getMessage(), ex);
-        }
+                ResourceBundle rb = i18n.getBundle(request);
+
+                //get id lista
+                String listId = request.getParameter("listId");
+                //se listId è nullo
+               CheckErrorUtils.isNull(listId, rb.getString("error.missingListId"));
+
+                //get user corrente
+                User user = (User) request.getSession().getAttribute("user");
+                //get permesso dell'utente su tale lista
+                Permission permission;
+                try
+                {
+                        permission = permissionDAO.getUserPermissionOnListByIds(user.getId(), Integer.parseInt(listId));
+                        //se il permesso è  vuoto
+                        if (permission == null)
+                        {
+                                ServletUtility.sendError(request, response, 400, "servlet.errors.noPermissionOnList");
+                                return;
+                        }
+                }
+                catch (DAOException ex)
+                {
+                        throw new ServletException(ex.getMessage(), ex);
+                }
 
         //memorizza  id della nuova lista
         request.getSession().setAttribute("myListId", Integer.parseInt(listId));

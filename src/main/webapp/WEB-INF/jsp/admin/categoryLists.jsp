@@ -1,15 +1,19 @@
+
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@include file="/WEB-INF/jspf/i18n.jsp"%>
+
 
 <%@ include file="header.jsp" %>
 
 <div class="content">
     <form method="GET" id="filterForm"></form>
-    <div class="table-responsive">
-        <table class="table dt-responsive nowrap w-100" id="categoryTable">
+    <div class="table-responsive ">
+        <table class="table dt-responsive  w-100 list-category" id="categoryTable">
             <thead>
             <tr>
-                <th><fmt:message key="categoryList.label.id"/></th>
+                <th class="first-col"><fmt:message key="categoryList.label.id"/></th>
                 <th><fmt:message key="categoryList.label.name"/></th>
                 <th><fmt:message key="categoryList.label.description"/></th>
                 <th><fmt:message key="categoryList.label.img1"/></th>
@@ -22,7 +26,7 @@
             </tbody>
             <tfoot>
             <tr>
-                <td><input class="form-control" type="number" name="id" form="filterForm" value="${param['id']}"/></td>
+                <td class="first-col"><input class="form-control" type="number" name="id" form="filterForm" value="${param['id']}"/></td>
                 <td><input class="form-control" type="text" name="name" form="filterForm" value="${param['name']}"/></td>
                 <td><input class="form-control" type="text" name="description" form="filterForm"
                            value="${param['description']}"/></td>

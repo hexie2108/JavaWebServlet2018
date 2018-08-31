@@ -10,7 +10,6 @@ import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -80,14 +79,14 @@ public class HomeServlet extends HttpServlet {
             throw new ServletException(ex.getMessage(), ex);
         }
 
-        //set titolo della pagina
-        request.setAttribute(ConstantsUtils.HEAD_TITLE, "Home");
-        //set la lista di categoria di prodotto nella richesta
-        request.setAttribute("categoryListForSlider", categoryListForSlider);
-        //set la lista di prodotto nella richesta
-        request.setAttribute(ConstantsUtils.PRODUCT_LIST, productList);
-        //set il numero di pagine resti
-        request.setAttribute(ConstantsUtils.NUMBER_OF_PAGES, totalNumberOfPage);
+                //set titolo della pagina
+                request.setAttribute(ConstantsUtils.HEAD_TITLE, getServletContext().getInitParameter("siteName"));
+                //set la lista di categoria di prodotto nella richesta
+                request.setAttribute("categoryListForSlider", categoryListForSlider);
+                //set la lista di prodotto nella richesta
+                request.setAttribute(ConstantsUtils.PRODUCT_LIST, productList);
+                //set il numero di pagine resti
+                request.setAttribute(ConstantsUtils.NUMBER_OF_PAGES, totalNumberOfPage);
 
         //inoltra a jsp
         request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);

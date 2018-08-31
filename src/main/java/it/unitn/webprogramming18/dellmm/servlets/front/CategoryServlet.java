@@ -9,9 +9,11 @@ import it.unitn.webprogramming18.dellmm.javaBeans.CategoryProduct;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
 import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
+import it.unitn.webprogramming18.dellmm.util.i18n;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.ResourceBundle;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -44,22 +46,28 @@ public class CategoryServlet extends HttpServlet {
         }
     }
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        //get id categoria
-        String catId = request.getParameter("catId");
-        //se id categoria non esiste
-        CheckErrorUtils.isNull(catId, "manca il parametro catId");
+        @Override
+        protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
+        {
+                //Language bundle
+                ResourceBundle rb = i18n.getBundle(request);
+                //get id categoria
+                String catId = request.getParameter("catId");
+                //se id categoria non esiste
+                CheckErrorUtils.isNull(catId, rb.getString("error.missingCategoryProductId"));
 
-        //get beans di categoria
-        CategoryProduct categoriaCorrente = null;
-        try {
-            categoriaCorrente = categoryProductDAO.getByPrimaryKey(Integer.parseInt(catId));
-        } catch (DAOException ex) {
-            throw new ServletException(ex.getMessage(), ex);
-        }
-        //se beans di categoria non esiste
-        CheckErrorUtils.isNull(categoriaCorrente, "non esiste la categoria con tale id");
+                //get beans di categoria
+                CategoryProduct categoriaCorrente = null;
+                try
+                {
+                        categoriaCorrente = categoryProductDAO.getByPrimaryKey(Integer.parseInt(catId));
+                }
+                catch (DAOException ex)
+                {
+                        throw new ServletException(ex.getMessage(), ex);
+                }
+                //se beans di categoria non esiste
+                CheckErrorUtils.isNull(categoriaCorrente, rb.getString("error.CategoryProductNotExist"));
 
         //get numero di prodotto per singola pagina
         int numebrProductForList = ConstantsUtils.NUMBER_PRODUCT_FOR_CATEGORY;

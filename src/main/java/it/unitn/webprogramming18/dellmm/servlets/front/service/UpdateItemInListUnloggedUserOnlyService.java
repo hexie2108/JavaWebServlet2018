@@ -47,10 +47,10 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet {
             //variabile per controllare la ripetizione
             boolean repeatItem = false;
 
-            //get id prodotto da aggiungere
-            String productId = request.getParameter("productId");
-            //se id prodotto è nullo
-            CheckErrorUtils.isNull(productId, "manca il parametro productId");
+                        //get id prodotto da aggiungere
+                        String productId = request.getParameter("productId");
+                        //se id prodotto è nullo
+                        CheckErrorUtils.isNull(productId, rb.getString("error.missingProductId"));
 
             //get la cookie della lista locale
             Cookie cookOfList = null;
@@ -113,10 +113,10 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet {
             //flag per sapere l'avvenuta della eliminazione
             boolean successDelete = false;
 
-            //get id prodotto da eliminare
-            String productId = request.getParameter("productId");
-            //se id prodotto è nullo
-            CheckErrorUtils.isNull(productId, "manca il parametro productId");
+                        //get id prodotto da eliminare
+                        String productId = request.getParameter("productId");
+                        //se id prodotto è nullo
+                        CheckErrorUtils.isNull(productId, rb.getString("error.missingProductId"));
 
             //get la cookie della lista locale
             Cookie cookOfList = null;
@@ -177,36 +177,44 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet {
 
         }
 
-        //in caso cambia la categoria della lista locale
-        else if (action.equals("changeListCategory"))
-        {
-            //get id categoria
-            String categoryList = request.getParameter("categoryList");
-            //se id è vuota
-            if (categoryList == null || categoryList.equals("-1"))
-            {
-                throw new ServletException("manca il parametro id categoria della lista");
-            }
-            //crea o aggiorna cookie della categoria per la lista locale
-            Cookie cookOfListCategory = new Cookie("localShoppingListCategory", categoryList);
-            cookOfListCategory.setPath(getServletContext().getContextPath());
-            //aggiorna la vita di cookie
-            cookOfListCategory.setMaxAge(60 * 60 * 24 * 30);
-            response.addCookie(cookOfListCategory);
-            //set il risultato
-            result = "ChangeListCategoryOk";
+                //in caso cambia la categoria della lista locale
+                else if (action.equals("changeListCategory"))
+                {
+                        //get id categoria
+                        String categoryList = request.getParameter("categoryList");
+                        //se id è vuota
+                        if (categoryList == null || categoryList.equals("-1"))
+                        {
+                                throw new ServletException(rb.getString("error.missingCategoryListId"));
+                        }
+                        //crea o aggiorna cookie della categoria per la lista locale
+                        Cookie cookOfListCategory = new Cookie("localShoppingListCategory", categoryList);
+                        cookOfListCategory.setPath(getServletContext().getContextPath());
+                        //aggiorna la vita di cookie
+                        cookOfListCategory.setMaxAge(60 * 60 * 24 * 30);
+                        response.addCookie(cookOfListCategory);
+                        //set il risultato
+                        result = "ChangeListCategoryOk";
+
+                        //eliminare cookie di  check di negozio in vicinanza per riattivare check
+                        Cookie NearShopChecked = new Cookie("NearShopChecked", "");
+                         NearShopChecked.setPath(getServletContext().getContextPath());
+                        //set la vita di cookie per 0 secondi
+                        NearShopChecked.setMaxAge(0);
+                        response.addCookie(NearShopChecked);
+
+                }
+
+                //ritorna alla pagina di provenienza
+                String prevUrl = request.getHeader("Referer");
+                if (prevUrl == null)
+                {
+                        prevUrl = getServletContext().getContextPath();
+                }
+                //passare lo risultato  di inserimento
+                request.getSession().setAttribute("result", result);
+                response.sendRedirect(response.encodeRedirectURL(prevUrl));
 
         }
-
-        //ritorna alla pagina di provenienza
-        String prevUrl = request.getHeader("Referer");
-        if (prevUrl == null) {
-            prevUrl = getServletContext().getContextPath();
-        }
-        //passare lo risultato  di inserimento
-        request.getSession().setAttribute("result", result);
-        response.sendRedirect(response.encodeRedirectURL(prevUrl));
-
-    }
 
 }

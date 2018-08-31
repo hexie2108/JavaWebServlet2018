@@ -12,9 +12,9 @@
 
 <jsp:include page="/WEB-INF/jsp/front/module/floatBoxForViewProductFromShoppingList.jsp"/>
 <jsp:include page="/WEB-INF/jsp/front/module/floatBoxForMessage.jsp"/>
+<jsp:include page="/WEB-INF/jsp/front/module/checkNearShop.jsp"/>
 
-
-<footer class="footer bg-secondary mt-5">
+<footer class="footer mt-5 p-2">
 
         <div class="author-info">
                 @progettoWeb2018
@@ -22,17 +22,10 @@
 
 </footer>
 
-<script>
-        $(document).ready(function () {
-                $('.selectpicker').selectpicker({
-                        style: 'btn-info',
-                        countSelectedText: '{0}/{1} selected',
-                        noneResultsText: 'No result matched {0}'
-                });
-        });
-</script>
 </div>
 </body>
+
+
 </html>
 
 

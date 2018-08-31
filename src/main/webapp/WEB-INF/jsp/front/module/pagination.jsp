@@ -4,7 +4,7 @@
 
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@include file="/WEB-INF/jspf/i18n.jsp"%>
 
 <div class="pagination-box">
     <%-- se il numero di pagina resti è >= 0 --%>
@@ -24,7 +24,7 @@
                         </c:forEach>
                         <c:param name="page" value="${pageScope.currPage-1}"/>
                     </c:url>
-                    <a class="page-link " href="${linkUrl}">precedente</a>
+                    <a class="page-link " href="${linkUrl}"><fmt:message key="previous"/></a>
                 </li>
             </c:if>
 
@@ -60,10 +60,9 @@
                         </c:forEach>
                         <c:param name="page" value="${pageScope.currPage+1}"/>
                     </c:url>
-                    <a class="page-link " href="${linkUrl}">successivo</a>
+                    <a class="page-link " href="${linkUrl}"><fmt:message key="next"/></a>
                 </li>
             </c:if>
         </ul>
     </c:if>
 </div>
-

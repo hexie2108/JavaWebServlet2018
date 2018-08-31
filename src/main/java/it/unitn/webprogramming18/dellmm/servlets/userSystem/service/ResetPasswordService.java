@@ -5,8 +5,6 @@ import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
-import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
-import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
 import it.unitn.webprogramming18.dellmm.util.FormValidator;
 import it.unitn.webprogramming18.dellmm.util.MD5Utils;
 import it.unitn.webprogramming18.dellmm.util.ServletUtility;
@@ -18,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ResourceBundle;
 import java.util.HashMap;
 
 public class ResetPasswordService extends HttpServlet
@@ -47,6 +46,8 @@ public class ResetPasswordService extends HttpServlet
         String email = request.getParameter(FormValidator.EMAIL_KEY);
         String resetPwdLink = request.getParameter("resetPwdLink");
         String password = request.getParameter(FormValidator.FIRST_PWD_KEY);
+
+        ResourceBundle rb = i18n.getBundle(request);
 
         if(email == null){
             ServletUtility.sendError(request, response, 400, "validateUser.errors.EMAIL_MISSING"); //il parametro email è nullo
@@ -89,7 +90,7 @@ public class ResetPasswordService extends HttpServlet
         }
         catch (NoSuchAlgorithmException ex)
         {
-            throw new ServletException("errore per la mancanza dell'algoritmo MD5 in ambiente di esecuzione", ex);
+             throw new ServletException(rb.getString("errros.noSuchAlgorithmMD5"), ex);
         }
 
         String prevUrl = getServletContext().getContextPath() + "/login?notice=" + result;

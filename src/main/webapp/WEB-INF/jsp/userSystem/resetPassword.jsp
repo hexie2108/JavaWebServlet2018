@@ -3,14 +3,10 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="it.unitn.webprogramming18.dellmm.util.FormValidator" %>
-
 <%@include file="/WEB-INF/jspf/i18n.jsp"%>
 
 <jsp:include page="/WEB-INF/jsp/userSystem/header.jsp"/>
 
-
-
-<%@ include file="../../jspf/i18n.jsp" %>
 <div class="form-box">
         <form id="form-register" method="post" onsubmit="return validateResetPassword()" action="${pageContext.request.contextPath}/service/resetPasswordService">
 
@@ -31,6 +27,8 @@
                                         </div>
                                         <input id="inputPassword" class="form-control input-box" placeholder="<fmt:message key="user.label.password"/>" required=""
                                                type="password" name="${FormValidator.FIRST_PWD_KEY}" maxlength="${FormValidator.PWD_MAX_LEN}"
+                                               data-toggle="popover" data-html="true" data-placement="top"  data-trigger="focus"
+                                               title="<fmt:message key="suggestions"/>" data-content="<fmt:message key="suggestions.password"/>"
                                                value="">
 
                                 </div>

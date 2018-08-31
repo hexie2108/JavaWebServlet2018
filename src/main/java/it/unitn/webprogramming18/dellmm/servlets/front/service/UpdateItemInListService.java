@@ -80,10 +80,14 @@ public class UpdateItemInListService extends HttpServlet {
         //get id lista
         String listId = request.getParameter("listId");
 
-        //se manca il parametro
-        if (action == null || productId == null || listId == null) {
-            throw new ServletException("manca il parametro action o id del prodotto o id della lista da aggiungere");
-        }
+                //se azione è nullo
+                if (action == null)
+                {
+                        ServletUtility.sendError(request, response, 400, "users.errors.missingAction"); //manca il parametro action
+                        return;
+                }
+                CheckErrorUtils.isNull(listId, rb.getString("error.missingListId"));
+                CheckErrorUtils.isNull(productId, rb.getString("error.missingProductId"));
 
         //get user corrente
         User user = (User) request.getSession().getAttribute("user");
@@ -139,29 +143,34 @@ public class UpdateItemInListService extends HttpServlet {
                     //elimina la relazione tra prodotto e la lista
                     productInListDAO.deleteByProductIdAndListId(Integer.parseInt(productId), Integer.parseInt(listId));
 
-                    //get beans di prodotto
-                    product = productDAO.getByPrimaryKey(Integer.parseInt(productId));
-                    //se product è nullo
-                    CheckErrorUtils.isNull(product, "non eiste il prodotto con tale id");
-                    //se il prodotto è privato
-                    if (product.getPrivateListId() != 0) {
-                        //bisogna prima eliminare immagine
-                        String uploadPath = request.getServletContext().getRealPath("/") + IMAGE_BASE_PATH;
-                        //elimina file img e file logo del prodotto
-                        FileUtils.deleteFile(uploadPath + File.separator + IMAGE_PRODUCT + File.separator + product.getImg());
-                        FileUtils.deleteFile(uploadPath + File.separator + IMAGE_LOGO_PRODUCT + File.separator + product.getLogo());
-                        //poi elimina tale prodotto
-                        productDAO.deleteProductById(Integer.parseInt(productId));
-                    }
-                } catch (DAOException ex) {
-                    throw new ServletException(ex.getMessage(), ex);
+                                        //get beans di prodotto
+                                        product = productDAO.getByPrimaryKey(Integer.parseInt(productId));
+                                        //se product è nullo
+                                        CheckErrorUtils.isNull(product, rb.getString("error.ProductNotExist"));
+                                        //se il prodotto è privato
+                                        if (product.getPrivateListId() != 0)
+                                        {
+                                                //bisogna prima eliminare immagine
+                                                String uploadPath = request.getServletContext().getRealPath("/") + IMAGE_BASE_PATH;
+                                                //elimina file img e file logo del prodotto
+                                                FileUtils.deleteFile(uploadPath + File.separator + IMAGE_PRODUCT + File.separator + product.getImg());
+                                                FileUtils.deleteFile(uploadPath + File.separator + IMAGE_LOGO_PRODUCT + File.separator + product.getLogo());
+                                                //poi elimina tale prodotto
+                                                productDAO.deleteProductById(Integer.parseInt(productId));
+                                        }
+                                }
+                                catch (DAOException ex)
+                                {
+                                        throw new ServletException(ex.getMessage(), ex);
+                                }
+                                result = "DeleteOk";
+                        }
+                        else
+                        {
+                                ServletUtility.sendError(request, response, 400, "permission.deleteItemNotAllowed"); //Not allowed delete item in list
+                                return;
+                        }
                 }
-                result = "DeleteOk";
-            } else {
-                ServletUtility.sendError(request, response, 400, "permission.deleteItemNotAllowed"); //Not allowed delete item in list
-                return;
-            }
-        }
 
         //in caso comprato
         else if (action.equals("bought")) {

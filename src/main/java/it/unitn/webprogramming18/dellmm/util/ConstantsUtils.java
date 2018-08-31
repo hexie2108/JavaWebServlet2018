@@ -19,11 +19,11 @@ public class ConstantsUtils {
     public static final String NUMBER_OF_PAGE_REST = "numberOfPageRest";
     public static final String NUMBER_OF_PAGES = "nPages";
 
-    //numeri di categoria e prodotto da visualizzare in varie pagina
-    public static final int NUMBER_CATEGORY_FOR_SLIDER = 4;
-    public static final int NUMBER_PRODUCT_FOR_HOME = 12;
-    public static final int NUMBER_PRODUCT_FOR_CATEGORY = 9;
-    public static final int NUMBER_PRODUCT_FOR_SEARCH = 9;
+        //numeri di categoria e prodotto da visualizzare in varie pagina
+        public static final int NUMBER_CATEGORY_FOR_SLIDER = 4;
+        public static final int NUMBER_PRODUCT_FOR_HOME = 15;
+        public static final int NUMBER_PRODUCT_FOR_CATEGORY = 18;
+        public static final int NUMBER_PRODUCT_FOR_SEARCH = 18;
 
     //il percorso base per tutte le immagine
     public static final String IMAGE_BASE_PATH = "image";
@@ -46,8 +46,8 @@ public class ConstantsUtils {
     public static final int IMAGE_OF_LIST_WIDTH = 1000;
     public static final int IMAGE_OF_LIST_HEIGHT = 1000;
 
-    public static final int IMAGE_OF_CATEGORY_LIST_WIDTH = 1000;
-    public static final int IMAGE_OF_CATEGORY_LIST_HEIGHT = 1000;
+        public static final int IMAGE_OF_CATEGORY_LIST_WIDTH = 1280;
+        public static final int IMAGE_OF_CATEGORY_LIST_HEIGHT = 720;
 
     public static final int IMAGE_OF_PRODUCT_WIDTH = 1000;
     public static final int IMAGE_OF_PRODUCT_HEIGHT = 1000;
@@ -55,8 +55,8 @@ public class ConstantsUtils {
     public static final int IMAGE_LOGO_OF_PRODUCT_WIDTH = 500;
     public static final int IMAGE_LOGO_OF_PRODUCT_HEIGHT = 250;
 
-    public static final int IMAGE_OF_CATEGORY_PRODUCT_WIDTH = 1000;
-    public static final int IMAGE_OF_CATEGORY_PRODUCT_HEIGHT = 1000;
+        public static final int IMAGE_OF_CATEGORY_PRODUCT_WIDTH = 1280;
+        public static final int IMAGE_OF_CATEGORY_PRODUCT_HEIGHT = 720;
 
     public static final int IMAGE_OF_USER_WIDTH = 1000;
     public static final int IMAGE_OF_USER_HEIGHT = 1000;

@@ -58,19 +58,26 @@ public class UpdateProductService extends HttpServlet {
         }
     }
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
-        // usa un metodo statico per controllare se la richiesta è codificato in formato multipart/form-data
-        CheckErrorUtils.isFalse(ServletFileUpload.isMultipartContent(request), "la richiesta non è stata codificata in formato multipart/form-data");
+        @Override
+        protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+        {
 
-        List<FileItem> items = null;
-        try {
-            //in caso di richiesta codificato in formato multipart, deve usare questo metodo per ottenre i parametri in formato di lista
-            items = FileUtils.initial().parseRequest(request);
-        } catch (FileUploadException ex) {
-            throw new ServletException("Errore durante analisi della richiesta");
-        }
+                //Language bundle
+                ResourceBundle rb = i18n.getBundle(request);
+
+                // usa un metodo statico per controllare se la richiesta è codificato in formato multipart/form-data
+                CheckErrorUtils.isFalse(ServletFileUpload.isMultipartContent(request), rb.getString("error.notMultipart"));
+
+                List<FileItem> items = null;
+                try
+                {
+                        //in caso di richiesta codificato in formato multipart, deve usare questo metodo per ottenre i parametri in formato di lista
+                        items = FileUtils.initial().parseRequest(request);
+                }
+                catch (FileUploadException ex)
+                {
+                        throw new ServletException(rb.getString("error.parseRequest"));
+                }
 
         String productName = null;
         String productCategory = null;
@@ -134,10 +141,10 @@ public class UpdateProductService extends HttpServlet {
             ServletUtility.sendError(request, response, 400, "servlet.errors.descriptionMissing"); //manca il parametro productDescription
             return;
         }
-        
+
         //ListId is of logic competence, no need to i18n for user
         CheckErrorUtils.isNull(listId, "manca il parametro listId");
-        
+
         if(productImgFileItem == null){
             ServletUtility.sendError(request, response, 400, "servlet.errors.imageMissing"); //manca il prametro file productImg
             return;

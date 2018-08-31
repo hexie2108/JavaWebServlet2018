@@ -7,6 +7,7 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="custom" uri="/WEB-INF/custom.tld" %>
+<%@include file="/WEB-INF/jspf/i18n.jsp"%>
 
 <%-- il float bottone per visualizzare la finestra laterale di lista spessa--%>
 <div class="list-button-float-box">
@@ -14,9 +15,7 @@
     <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#list-float-box">
         <i class="fas fa-shopping-cart"></i>
         <br>
-        <span>Mia</span>
-        <br>
-        <span>Lista</span>
+        <span><fmt:message key="my list" /></span>
     </button>
 
 </div>
@@ -42,10 +41,10 @@
 
                 <form action="#">
                     <label for="select-list" class="d-block">
-                        <i class="fas fa-list"></i> Seleziona la lista:
+                        <i class="fas fa-list"></i> <fmt:message key="selectTheList" />:
                     </label>
                     <select id="select-list" class="form-control custom-select w-50" name="listId">
-                        <option value="default">Default list</option>
+                        <option value="default"><fmt:message key="defaultList" /></option>
                     </select>
                 </form>
 
@@ -59,7 +58,7 @@
 
                     <form action="<c:url value="/service/changeListService"/>" method="GET">
                         <label for="select-list" class="d-block">
-                            <i class="fas fa-list"></i> Seleziona la lista:
+                            <i class="fas fa-list"></i> <fmt:message key="selectTheList" />:
                         </label>
                         <select id="select-list" class="form-control custom-select w-50" name="listId">
 
@@ -70,7 +69,7 @@
 
                         </select>
                         <div class="d-inline-block w-25">
-                            <input class="btn btn-info" type="submit" value="cambia"/>
+                            <input class="btn btn-info" type="submit" value="<fmt:message key="change" />"/>
                         </div>
                     </form>
 
@@ -80,12 +79,12 @@
                 <c:if test="${empty sessionScope.myListId}">
 
                     <h2>
-                        Opps! non hai neanche una lista
+                        <fmt:message key="oops! you do not even have a list" />
                     </h2>
                     <%-- link per creare una nuova lista--%>
                     <div class="add-list-box">
                         <a class="btn btn-info" href="<c:url value="/updateList"/>"><i
-                                class="fas fa-plus"></i> crea una nuova lista</a>
+                                class="fas fa-plus"></i> <fmt:message key="createTheNewList" /></a>
                     </div>
 
                 </c:if>
@@ -104,7 +103,7 @@
                 <form action="<c:url value="/service/updateItemInListUnloggedUserOnlyService"/>"
                       method="GET">
                     <label for="type-list" class="d-block">
-                        <i class="fas fa-sitemap"></i> Tipo della lista:
+                        <i class="fas fa-sitemap"></i> <fmt:message key="list type" />:
                     </label>
                     <select id="type-list" class="form-control custom-select w-50" name="categoryList"
                             onchange="checkValueOfCategoryList(this)">
@@ -125,7 +124,7 @@
 
                     <div class="d-inline-block w-25">
                         <input type="hidden" name="action" value="changeListCategory"/>
-                        <input id="submitToChangeCategoryList" class="btn btn-info" type="submit" value="cambia"
+                        <input id="submitToChangeCategoryList" class="btn btn-info" type="submit" value="<fmt:message key="change" />"
                                disabled="disabled"/>
                     </div>
 
@@ -145,8 +144,8 @@
 
                     <thead>
                     <tr>
-                        <th>img</th>
-                        <th>nome</th>
+                        <th><fmt:message key="img" /></th>
+                        <th><fmt:message key="name" /></th>
                         <th><i class="fas fa-edit"></i></th>
                     </tr>
                     </thead>
@@ -215,7 +214,7 @@
 
                                         <%-- link per eliminare il prodotto dalla cookie--%>
                                         <a href="<c:url value="/service/updateItemInListUnloggedUserOnlyService?action=delete&productId=${product.id}"/>"
-                                           title="elimina">
+                                           title="<fmt:message key="delete" />" onclick="if(!confirm('<fmt:message key="are you sure?" />')) return false;">
                                             <i class="fas fa-ban"></i>
                                         </a>
 
@@ -226,7 +225,7 @@
 
                                         <%-- link per segna il prodotto come comprato--%>
                                         <a href="<c:url value="/service/updateItemInListService?action=bought&productId=${product.id}&listId=${sessionScope.myListId}"/>"
-                                           title="comprato">
+                                           title="<fmt:message key="bought" />">
                                             <i class="fas fa-check-circle"></i>
                                         </a>
 
@@ -235,7 +234,7 @@
 
                                             <%-- link per eliminare il prodotto--%>
                                             <a href="<c:url value="/service/updateItemInListService?action=delete&productId=${product.id}&listId=${sessionScope.myListId}"/>"
-                                               title="elimina">
+                                               title="<fmt:message key="delete" />" onclick="if(!confirm('<fmt:message key="are you sure?" />')) return false;">
                                                 <i class="fas fa-ban"></i>
                                             </a>
 
@@ -312,7 +311,7 @@
 
                                             <%-- link per eliminare il prodotto--%>
                                             <a href="<c:url value="/service/updateItemInListService?action=delete&productId=${product.id}&listId=${sessionScope.myListId}"/>"
-                                               title="elimina">
+                                               title="<fmt:message key="delete" />">
                                                 <i class="fas fa-ban"></i>
                                             </a>
 
@@ -334,7 +333,7 @@
                         <%-- stampa l'avviso--%>
                         <tr>
                             <td colspan="3">
-                                è ancora vuoto
+                                <fmt:message key="it is empty" />
                             </td>
                         </tr>
 

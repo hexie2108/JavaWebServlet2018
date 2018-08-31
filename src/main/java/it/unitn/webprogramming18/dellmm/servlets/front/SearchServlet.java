@@ -130,12 +130,13 @@ public class SearchServlet extends HttpServlet {
             throw new ServletException(ex.getMessage(), ex);
         }
 
-        //set titolo della pagina nella richesta
-        request.setAttribute(ConstantsUtils.HEAD_TITLE, "Search: " + searchWords);
-        //set la lista di prodotto nella richesta
-        request.setAttribute(ConstantsUtils.PRODUCT_LIST, productList);
-        //set il numero di pagine resti
-        request.setAttribute(ConstantsUtils.NUMBER_OF_PAGES, totalNumberOfPage);
+                //set titolo della pagina nella richesta
+                 ResourceBundle bundle = i18n.getBundle(request);
+                request.setAttribute(ConstantsUtils.HEAD_TITLE, bundle.getString("frontPage.title.search") + ": " + searchWords);
+                //set la lista di prodotto nella richesta
+                request.setAttribute(ConstantsUtils.PRODUCT_LIST, productList);
+                //set il numero di pagine resti
+                request.setAttribute(ConstantsUtils.NUMBER_OF_PAGES, totalNumberOfPage);
 
         //inoltra jsp
         request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);

@@ -53,49 +53,62 @@ public class UpdateListServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String listId = request.getParameter("listId");
-        //se listId = nullo, allora siamo in caso di creazione di una nuova lista
-        if (listId == null) {
-            //set titolo della pagina
-            request.setAttribute(ConstantsUtils.HEAD_TITLE, "crea la nuova lista");
-        }
-        //in caso di update della lista esistente
-        else {
-            //get user corrente
-            User user = (User) request.getSession().getAttribute("user");
-            
-            ShoppingList shoppingList = null;
-            Permission permission = null;
-            try {
-                //get list bean
-                shoppingList = listDAO.getByPrimaryKey(Integer.parseInt(listId));
-                //se lista è nullo
-                CheckErrorUtils.isNull(shoppingList, "non eiste la lista con tale id lista");
+                String listId = request.getParameter("listId");
+                //se listId = nullo, allora siamo in caso di creazione di una nuova lista
 
-                //get permesso dell'utente su tale lista
-                permission = permissionDAO.getUserPermissionOnListByIds(user.getId(), Integer.parseInt(listId));
-                //se il permesso è  nullo
-                if(permission == null){
-                    ServletUtility.sendError(request, response, 400 , "servlet.errors.noPermissionOnList"); //non hai nessun permesso su tale lista
-                    return;
+                //Language bundle
+                ResourceBundle rb = i18n.getBundle(request);
+
+                if (listId == null)
+                {
+                        //set titolo della pagina
+                        request.setAttribute(ConstantsUtils.HEAD_TITLE, rb.getString("frontPage.title.newList"));
                 }
-                //se utente non ha il permesso di modificare la lista
-                if(!permission.isModifyList()) {
-                    ServletUtility.sendError(request, response, 400 , "permission.modifyListNotAllowed"); //non hai il permesso di modificare tale lista
-                    return; 
+                //in caso di update della lista esistente
+                else
+                {
+                        //get user corrente
+                        User user = (User) request.getSession().getAttribute("user");
+
+
+
+                        ShoppingList shoppingList = null;
+                        Permission permission = null;
+                        try
+                        {
+                                //get list bean
+                                shoppingList = listDAO.getByPrimaryKey(Integer.parseInt(listId));
+                                //se lista è nullo
+                                CheckErrorUtils.isNull(shoppingList, rb.getString("error.ListNotExist"));
+
+                                //get permesso dell'utente su tale lista
+                                permission = permissionDAO.getUserPermissionOnListByIds(user.getId(), Integer.parseInt(listId));
+                                //se il permesso è  nullo
+                                if (permission == null)
+                                {
+                                        ServletUtility.sendError(request, response, 400, "servlet.errors.noPermissionOnList"); //non hai nessun permesso su tale lista
+                                        return;
+                                }
+                                //se utente non ha il permesso di modificare la lista
+                                if (!permission.isModifyList())
+                                {
+                                        ServletUtility.sendError(request, response, 400, "permission.modifyListNotAllowed"); //non hai il permesso di modificare tale lista
+                                        return;
+                                }
+                        }
+                        catch (DAOException ex)
+                        {
+                                throw new ServletException(ex.getMessage(), ex);
+                        }
+
+                        //set titolo della pagina
+                        request.setAttribute(ConstantsUtils.HEAD_TITLE, rb.getString("frontPage.title.updateList"));
+                        //set beans di shoppingList nella richiesta
+                        request.setAttribute("list", shoppingList);
+
                 }
-            } catch (DAOException ex) {
-                throw new ServletException(ex.getMessage(), ex);
-            }
 
-            //set titolo della pagina
-            request.setAttribute(ConstantsUtils.HEAD_TITLE, "aggriona la lista");
-            //set beans di shoppingList nella richiesta
-            request.setAttribute("list", shoppingList);
-
+                request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
         }
-
-        request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
-    }
 
 }

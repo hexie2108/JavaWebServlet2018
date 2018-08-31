@@ -60,19 +60,19 @@ public class RegisterService extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        // usa un metodo statico per controllare se la richiesta è codificato in formato multipart/form-data
-        CheckErrorUtils.isFalse(ServletFileUpload.isMultipartContent(request), "la richiesta non è stata codificata in formato multipart/form-data");
+                // usa un metodo statico per controllare se la richiesta è codificato in formato multipart/form-data
+                CheckErrorUtils.isFalse(ServletFileUpload.isMultipartContent(request), rb.getString("error.notMultipart"));
 
-        List<FileItem> items = null;
-        try
-        {
-            //in caso di richiesta codificato in formato multipart, deve usare questo metodo per ottenre i parametri in formato di lista
-            items = FileUtils.initial().parseRequest(request);
-        }
-        catch (FileUploadException ex)
-        {
-            throw new ServletException("Errore durante analisi della richiesta");
-        }
+                List<FileItem> items = null;
+                try
+                {
+                        //in caso di richiesta codificato in formato multipart, deve usare questo metodo per ottenre i parametri in formato di lista
+                        items = FileUtils.initial().parseRequest(request);
+                }
+                catch (FileUploadException ex)
+                {
+                        throw new ServletException(rb.getString("error.parseRequest"));
+                }
 
         String email = null;
         String firstName = null;
@@ -196,19 +196,19 @@ public class RegisterService extends HttpServlet {
         {
             throw new ServletException(ex.getMessage(), ex);
 
-        }
-        catch (MessagingException ex)
-        {
-            throw new ServletException("errore durente la creazione e l'invio del email per la registrazione", ex);
-        }
-        catch (UnsupportedEncodingException ex)
-        {
-            throw new ServletException("errore durente la codifica dei caratteri", ex);
-        }
-        catch (NoSuchAlgorithmException ex)
-        {
-            throw new ServletException("errore per la mancanza dell'algoritmo MD5 in ambiente di esecuzione", ex);
-        }
+                }
+                catch (MessagingException ex)
+                {
+                        throw new ServletException(rb.getString("errors.createAndSendEmail"), ex);
+                }
+                catch (UnsupportedEncodingException ex)
+                {
+                        throw new ServletException(rb.getString("errors.unsupportedEncoding"), ex);
+                }
+                catch (NoSuchAlgorithmException ex)
+                {
+                      throw new ServletException(rb.getString("errros.noSuchAlgorithmMD5"), ex);
+                }
 
         //ritorna alla pagina di login
         String prevUrl = getServletContext().getContextPath() + "/login?notice=awaitingActivation";

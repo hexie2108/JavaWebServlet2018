@@ -5,7 +5,7 @@
 
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@include file="/WEB-INF/jspf/i18n.jsp"%>
 
 
 <!DOCTYPE html>
@@ -19,12 +19,12 @@
 
                 <%--titolo della pagina--%>
                 <title>
-                        <c:out value="${head_title}" default="non hai ancora un titolo"/>
+                        <c:out value="ADMIN"/>
                 </title>
 
                 <%--icone del sito--%>
-                <link rel="icon" href="<c:url value="/favicon.ico"/>" type="image/vnd.microsoft.icon">
-                <link rel="shortcut icon" href="<c:url value="/favicon.ico"/>" type="image/vnd.microsoft.icon">
+                <link rel="icon" href="<c:url value="/image/base/favicon.ico"/>" type="image/vnd.microsoft.icon">
+                <link rel="shortcut icon" href="<c:url value="/image/base/favicon.ico"/>" type="image/vnd.microsoft.icon">
 
                 <%--jquery--%>
                 <script type="text/javascript" src="<c:url value="/libs/jquery/jquery-3.3.1.min.js"/>"></script>
@@ -56,6 +56,13 @@
                         <%-- la sezione di header--%>
                         <header class="header">
 
+                                <%-- barra top per mobile--%>
+                                <div class="mobile-menu-bar fixed-top  bg-info">
+                                        <a id="mobile-menu-active-link" class="" href="javascript:;" title="mobile-menu">
+                                                <i class="fas fa-caret-square-down"></i> <fmt:message key="MENU"/>
+                                        </a>
+                                </div>
+
 
                                 <%-- barra laterale--%>
                                 <div class="asider-left">
@@ -72,40 +79,40 @@
 
                                                                 <li class="nav-item">
                                                                         <a class="nav-link" href="<c:url value="/admin/home"/>">
-                                                                                <i class="fas fa-tachometer-alt"></i>  dashboard
+                                                                                <i class="fas fa-tachometer-alt"></i>  <b><fmt:message key="dashboard"/></b>
                                                                         </a>
                                                                 </li>
 
 
                                                                 <li class="nav-item">
                                                                         <a class="nav-link" href="<c:url value="/admin/categoryLists"/>">
-                                                                                <i class="fas fa-sitemap"></i> gestisce le categorie di lista
+                                                                                <i class="fas fa-sitemap"></i> <b><fmt:message key="manages the list categories"/></b>
                                                                         </a>
                                                                 </li>
 
 
                                                                 <li class="nav-item">
                                                                         <a class="nav-link" href="<c:url value="/admin/categoryProducts"/>">
-                                                                                <i class="fas fa-store"></i> gestisce le categorie di prodotto
+                                                                                <i class="fas fa-store"></i> <b><fmt:message key="manages the product categories"/></b>
                                                                         </a>
                                                                 </li>
 
 
                                                                 <li class="nav-item">
                                                                         <a class="nav-link" href="<c:url value="/admin/products"/>">
-                                                                                <i class="fas fa-shopping-basket"></i> gestisce i prodotti
+                                                                                <i class="fas fa-shopping-basket"></i> <b><fmt:message key="manages the products"/></b>
                                                                         </a>
                                                                 </li>
 
                                                                 <li class="nav-item">
                                                                         <a class="nav-link" href="<c:url value="/admin/users"/>">
-                                                                                <i class="fas fa-users"></i> gestisce gli utente
+                                                                                <i class="fas fa-users"></i> <b><fmt:message key="manages the users"/></b>
                                                                         </a>
                                                                 </li>
 
                                                                 <li class="nav-item">
                                                                         <a class="nav-link" href="<c:url value="/"/>">
-                                                                                <i class="fas fa-sign-out-alt"></i> ritorna a home
+                                                                                <i class="fas fa-sign-out-alt"></i> <b><fmt:message key="come back to home"/></b>
                                                                         </a>
                                                                 </li>
 

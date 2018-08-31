@@ -7,6 +7,7 @@
 
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@include file="/WEB-INF/jspf/i18n.jsp"%>
 
 <%-- se ci sono message nel attributo "result"--%>
 <c:if test="${not empty sessionScope.result}">
@@ -23,49 +24,56 @@
                                                 <c:choose>
 
                                                         <c:when test="${sessionScope.result == 'InsertOk'}">
-                                                                complimenti
+                                                                <i class="fas fa-check-circle"></i>  <fmt:message key="congratulations" />
                                                         </c:when>
                                                         <c:when test="${sessionScope.result == 'InsertFail'}">
-                                                                errore
+                                                                <span class="error"><i class="fas fa-exclamation-triangle"></i> <fmt:message key="error" /></span>
                                                         </c:when>
                                                         <c:when test="${sessionScope.result == 'DeleteOk'}">
-                                                                complimenti
+                                                                <i class="fas fa-check-circle"></i>  <fmt:message key="congratulations" />
                                                         </c:when>
                                                         <c:when test="${sessionScope.result == 'DeleteFail'}">
-                                                                errore
+                                                                <span class="error"><i class="fas fa-exclamation-triangle"></i> <fmt:message key="error" /></span>
                                                         </c:when>
                                                         <c:when test="${sessionScope.result == 'ChangeListCategoryOk'}">
-                                                                complimenti
+                                                                <i class="fas fa-check-circle"></i> <fmt:message key="congratulations" />
                                                         </c:when>
                                                         <c:when test="${sessionScope.result == 'BoughtOk'}">
-                                                                complimenti
+                                                                <i class="fas fa-check-circle"></i> <fmt:message key="congratulations" />
                                                         </c:when>
                                                         <c:when test="${sessionScope.result == 'commentInsertOk'}">
-                                                                complimenti
+                                                                <i class="fas fa-check-circle"></i> <fmt:message key="congratulations" />
                                                         </c:when>
                                                         <c:when test="${sessionScope.result == 'commentDeleteOk'}">
-                                                                complimenti
+                                                                <i class="fas fa-check-circle"></i>  <fmt:message key="congratulations" />
                                                         </c:when>
                                                         <c:when test="${sessionScope.result == 'sharingInsertOk'}">
-                                                                complimenti
+                                                                <i class="fas fa-check-circle"></i>  <fmt:message key="congratulations" />
                                                         </c:when>
                                                         <c:when test="${sessionScope.result == 'sharingUpdateOk'}">
-                                                                complimenti
+                                                                <i class="fas fa-check-circle"></i>  <fmt:message key="congratulations" />
                                                         </c:when>
                                                         <c:when test="${sessionScope.result == 'sharingDeleteOk'}">
-                                                                complimenti
+                                                                <i class="fas fa-check-circle"></i> <fmt:message key="congratulations" />
                                                         </c:when>
+
+
                                                         <c:when test="${sessionScope.result == 'ListInsertOk'}">
-                                                                complimenti
+                                                                <i class="fas fa-check-circle"></i>  <fmt:message key="congratulations" />
                                                         </c:when>
                                                         <c:when test="${sessionScope.result == 'ListUpdateOk'}">
-                                                                complimenti
+                                                                <i class="fas fa-check-circle"></i>  <fmt:message key="congratulations" />
                                                         </c:when>
                                                         <c:when test="${sessionScope.result == 'ListDeleteOk'}">
-                                                                complimenti
+                                                                <i class="fas fa-check-circle"></i> <fmt:message key="congratulations" />
                                                         </c:when>
+
+                                                        <c:when test="${sessionScope.result == 'ProductInsertOk'}">
+                                                                <i class="fas fa-check-circle"></i>  <fmt:message key="congratulations" />
+                                                        </c:when>
+
                                                         <c:when test="${sessionScope.result == 'privacy'}">
-                                                                Privacy statement
+                                                                <i class="fas fa-info-circle"></i>   <fmt:message key="processingOfPersonalData" />
                                                         </c:when>
 
 
@@ -83,49 +91,56 @@
 
                                                 <c:choose>
                                                         <c:when test="${sessionScope.result  == 'InsertOk'}">
-                                                                il prodotto è stato aggiunto correttamente
+                                                                <fmt:message key="InsertProductOk" />
                                                         </c:when>
                                                         <c:when test="${sessionScope.result  == 'InsertFail'}">
-                                                                il prodotto è già presente nella lista selezionata
+                                                                <span class="error">
+                                                                        <fmt:message key="InsertProductFail" />
+                                                                </span>
                                                         </c:when>
                                                         <c:when test="${sessionScope.result == 'DeleteOk'}">
-                                                                il prodotto è stato cancellato correttamente
+                                                                <fmt:message key="deleteProductOk" />
                                                         </c:when>
                                                         <c:when test="${sessionScope.result == 'DeleteFail'}">
-                                                                non è possibile eliminare il prodotto specificato
+                                                                <span class="error">
+                                                                        <fmt:message key="deleteProductFail" />
+                                                                </span>
                                                         </c:when>
                                                         <c:when test="${sessionScope.result  == 'ChangeListCategoryOk'}">
-                                                                la categoria della lista è stata cambiata correttamente
+                                                                <fmt:message key="changeListCategoryOk" />
                                                         </c:when>
                                                         <c:when test="${sessionScope.result  == 'BoughtOk'}">
-                                                                il prodotto specificato è stato assegnato come già comprato
+                                                                <fmt:message key="boughtOk" />
                                                         </c:when>
                                                         <c:when test="${sessionScope.result == 'commentInsertOk'}">
-                                                                il commento è stato inviato correttamente
+                                                                <fmt:message key="commentInsertOk" />
                                                         </c:when>
                                                         <c:when test="${sessionScope.result == 'commentDeleteOk'}">
-                                                                il commento è stato cancellato correttamente
+                                                                <fmt:message key="commentDeleteOk" />
                                                         </c:when>
                                                         <c:when test="${sessionScope.result == 'sharingInsertOk'}">
-                                                                la condivisione è stato inserito correttamente
+                                                                <fmt:message key="sharingInsertOk" />
                                                         </c:when>
                                                         <c:when test="${sessionScope.result == 'sharingUpdateOk'}">
-                                                                la condivisione è stato aggiornato correttamente
+                                                                <fmt:message key="sharingUpdateOk" />
                                                         </c:when>
                                                         <c:when test="${sessionScope.result == 'sharingDeleteOk'}">
-                                                                la condivisione è stato cancellato correttamente
+                                                                <fmt:message key="sharingDeleteOk" />
                                                         </c:when>
                                                         <c:when test="${sessionScope.result == 'ListInsertOk'}">
-                                                                la lista è stata creata correttamente
+                                                                <fmt:message key="listInsertOk" />
                                                         </c:when>
                                                         <c:when test="${sessionScope.result == 'ListUpdateOk'}">
-                                                                la lista è stata aggiornata correttamente
+                                                                <fmt:message key="listUpdateOk" />
                                                         </c:when>
                                                         <c:when test="${sessionScope.result == 'ListDeleteOk'}">
-                                                                la lista è stata cancellata correttamente
+                                                                <fmt:message key="listDeleteOk" />
                                                         </c:when>
                                                         <c:when test="${sessionScope.result == 'privacy'}">
-                                                                But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure? On the other hand, we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they cannot foresee
+                                                                <fmt:message key="processingOfPersonalDataContent" />
+                                                        </c:when>
+                                                        <c:when test="${sessionScope.result == 'ProductInsertOk'}">
+                                                                <fmt:message key="productInsertOk" />
                                                         </c:when>
                                                 </c:choose>
 
@@ -137,9 +152,13 @@
                                 <%-- box-footer  --%>
                                 <div class="modal-footer">
                                         <c:if test="${sessionScope.result == 'privacy'}">
-                                                <a class="btn btn-info" href="<c:url value="/service/acceptPrivacyService"/>">accetta</a>
+                                                <a class="btn btn-info" href="<c:url value="/service/acceptPrivacyService"/>">
+                                                        <fmt:message key="accept" />
+                                                </a>
                                         </c:if>
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">chiude</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                <fmt:message key="close" />
+                                        </button>
                                 </div>
 
                         </div>
@@ -148,5 +167,24 @@
 
         <%-- cancella l'attributo "result" --%>
         <c:remove var="result" scope="session"/>
+
+</c:if>
+
+
+<%-- popup di privacy--%>
+<c:if test="${empty cookie.acceptedPrivacy}">
+
+        <div class="popup-privacy fixed-bottom">
+
+                <div class="text">
+                        <fmt:message key="cookiePrivacy" />
+                </div>
+                <div class="text-right mb-1">
+                        <button class="btn btn-info" onclick="acceptedPrivacy();">
+                                <fmt:message key="accept" />
+                        </button>
+                </div>
+
+        </div>
 
 </c:if>

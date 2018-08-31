@@ -10,6 +10,7 @@ import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
 import it.unitn.webprogramming18.dellmm.util.FileUtils;
 import it.unitn.webprogramming18.dellmm.util.FormValidator;
 import it.unitn.webprogramming18.dellmm.util.MD5Utils;
+import it.unitn.webprogramming18.dellmm.util.i18n;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -20,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.ResourceBundle;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -31,15 +33,20 @@ public class ModifyUserService extends HttpServlet
         private UserDAO userDAO;
 
         @Override
-        public void init() throws ServletException {
+        public void init() throws ServletException
+        {
                 DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
-                if (daoFactory == null) {
+                if (daoFactory == null)
+                {
                         throw new ServletException("Impossible to get db factory for user storage system");
                 }
 
-                try {
+                try
+                {
                         userDAO = daoFactory.getDAO(UserDAO.class);
-                } catch (DAOFactoryException ex) {
+                }
+                catch (DAOFactoryException ex)
+                {
                         throw new ServletException("Impossible to get UserDAO for user storage system", ex);
                 }
         }
@@ -47,8 +54,11 @@ public class ModifyUserService extends HttpServlet
         @Override
         protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
         {
+                //Language bundle
+                ResourceBundle rb = i18n.getBundle(request);
+
                 // usa un metodo statico per controllare se la richiesta è codificato in formato multipart/form-data
-                CheckErrorUtils.isFalse(ServletFileUpload.isMultipartContent(request), "la richiesta non è stata codificata in formato multipart/form-data");
+                CheckErrorUtils.isFalse(ServletFileUpload.isMultipartContent(request), rb.getString("error.notMultipart"));
 
                 List<FileItem> items = null;
                 try
@@ -58,7 +68,7 @@ public class ModifyUserService extends HttpServlet
                 }
                 catch (FileUploadException ex)
                 {
-                        throw new ServletException("l'errore durante analisi della richiesta");
+                        throw new ServletException(rb.getString("error.parseRequest"));
                 }
 
                 String firstName = null;
@@ -109,8 +119,8 @@ public class ModifyUserService extends HttpServlet
                 }
 
                 //check tutti parametri necessari
-                CheckErrorUtils.isFalse(FormValidator.validateFirstName(firstName), "il name non è valido");
-                CheckErrorUtils.isFalse(FormValidator.validateLastName(lastName), "il surname non è valido");
+                CheckErrorUtils.isFalse(FormValidator.validateFirstName(firstName), rb.getString("validateUser.errors.FIRST_NAME_NOT_VALID"));
+                CheckErrorUtils.isFalse(FormValidator.validateLastName(lastName), rb.getString("validateUser.errors.LAST_NAME_NOT_VALID"));
 
                 User user = (User) request.getSession().getAttribute("user");
                 //aggiorna i dati di user in db
@@ -119,7 +129,7 @@ public class ModifyUserService extends HttpServlet
                         //se vuole modificare avatar
                         if (avatar != null)
                         {
-                                CheckErrorUtils.isFalse(FormValidator.validateAvatar(avatar), "l'avatar selezionato non è valido");
+                                CheckErrorUtils.isFalse(FormValidator.validateAvatar(avatar), rb.getString("validateUser.errors.AVATAR_NOT_VALID"));
 
                                 //set il percorso complete per salvare immagine di user
                                 String uploadPath = request.getServletContext().getRealPath("/") + ConstantsUtils.IMAGE_BASE_PATH + File.separator + ConstantsUtils.IMAGE_OF_USER;
@@ -130,8 +140,8 @@ public class ModifyUserService extends HttpServlet
                                 if (avatar.equals(FormValidator.CUSTOM_AVATAR))
                                 {
                                         //check file caricato
-                                        CheckErrorUtils.isNull(customAvatarImgFile, "file di img caricato è nullo");
-                                        CheckErrorUtils.isFalse(FormValidator.validateCustomAvatarImg(customAvatarImgFile), "file di img caricato non è valido");
+                                        CheckErrorUtils.isNull(customAvatarImgFile, rb.getString("validateUser.errors.AVATAR_IMG_MISSING"));
+                                        CheckErrorUtils.isFalse(FormValidator.validateCustomAvatarImg(customAvatarImgFile), rb.getString("validateUser.errors.AVATAR_IMG_NOT_VALID"));
 
                                         //salva nuovo l'immagine di user e get il nome salvato
                                         avatar = FileUtils.upload(customAvatarImgFile, uploadPath, ConstantsUtils.IMAGE_OF_USER_WIDTH, ConstantsUtils.IMAGE_OF_USER_HEIGHT);
@@ -143,7 +153,7 @@ public class ModifyUserService extends HttpServlet
                         //se vuole cambiare anche la password
                         if (password != null && !password.isEmpty())
                         {
-                                CheckErrorUtils.isFalse(FormValidator.validatePassword(password), "la password non è valido");
+                                CheckErrorUtils.isFalse(FormValidator.validatePassword(password), rb.getString("validateUser.errors.PASSWORD_NOT_VALID"));
                                 user.setPassword(MD5Utils.getMD5(password));
                         }
 
@@ -151,6 +161,8 @@ public class ModifyUserService extends HttpServlet
                         user.setSurname(lastName);
 
                         userDAO.update(user);
+                        //set user aggiornato
+                        request.getSession().setAttribute("user", user);
                 }
                 catch (DAOException ex)
                 {
@@ -159,7 +171,7 @@ public class ModifyUserService extends HttpServlet
                 }
                 catch (NoSuchAlgorithmException ex)
                 {
-                        throw new ServletException("errore per la mancanza dell'algoritmo MD5 in ambiente di esecuzione", ex);
+                        throw new ServletException(rb.getString("errros.noSuchAlgorithmMD5"), ex);
                 }
 
                 //ritorna alla pagina di login

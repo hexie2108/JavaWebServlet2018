@@ -6,7 +6,7 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="custom" uri="/WEB-INF/custom.tld" %>
-
+<%@include file="/WEB-INF/jspf/i18n.jsp"%>
 
 <div class="comments">
 
@@ -17,7 +17,7 @@
 
             <%-- stampa il numero di commento --%>
             <h4>
-                <i class="fas fa-comments"></i> ${numberOfComment} commenti
+                <i class="fas fa-comments"></i> ${numberOfComment}  <fmt:message key="comments"/>
             </h4>
 
             <%-- stampa la lista di commento --%>
@@ -54,7 +54,7 @@
                         <c:if test="${comment.userId == sessionScope.user.id}">
                             <a class="btn btn-danger"
                                href="<c:url value="/service/commentService?action=delete&commentId=${comment.id}"/>"><i
-                                    class="fas fa-trash-alt"></i> elimina</a>
+                                            class="fas fa-trash-alt"></i> <fmt:message key="delete"/></a>
                         </c:if>
                     </div>
 
@@ -68,7 +68,7 @@
         <c:if test="${empty numberOfComment}">
 
             <%-- stampa l'avviso --%>
-            <h4> al momento, non c'è ancora il commento </h4>
+            <h4> <i class="fas fa-comments"></i> <fmt:message key="notComments"/> </h4>
 
         </c:if>
 
@@ -82,7 +82,7 @@
             <input type="hidden" name="action" value="insert"/>
             <input type="hidden" name="listId" value="${list.id}"/>
             <button class="btn btn-info w-100 mt-3" type="submit">
-                <i class="fas fa-reply"></i> invia
+                    <i class="fas fa-reply"></i> <fmt:message key="submit" />
             </button>
         </form>
     </div>

@@ -5,7 +5,9 @@
 
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@taglib prefix="custom" uri="/WEB-INF/custom.tld" %>
+<%@ include file="/WEB-INF/jspf/i18n.jsp"%>
 
 <%@ page import="java.util.Arrays" %>
 
@@ -20,12 +22,19 @@
 
                 <%--titolo della pagina--%>
                 <title>
-                        <c:out value="${head_title}" default="non hai ancora un titolo"/>
+                        <c:out value="${head_title}${param.head_title}" default="no title"/>
                 </title>
 
                 <%--icone del sito--%>
-                <link rel="icon" href="<c:url value="/favicon.ico"/>" type="image/vnd.microsoft.icon">
-                <link rel="shortcut icon" href="<c:url value="/favicon.ico"/>" type="image/vnd.microsoft.icon">
+                <link rel="icon" href="<c:url value="/image/base/favicon.ico"/>" type="image/vnd.microsoft.icon">
+                <link rel="shortcut icon" href="<c:url value="/image/base/favicon.ico"/>" type="image/vnd.microsoft.icon">
+
+                <%--se utente non ha attivato JS , verrà rindirizzata alla pagina di avviso--%>
+                <c:if test="${empty param.noscript}">
+                        <noscript>
+                        <meta http-equiv="refresh" content="0;url=<c:url value="/noscript"><c:param name="noscript" value="1"></c:param><c:param name="head_title" value="no script"></c:param></c:url>">
+                         </noscript>
+                </c:if>
 
                 <%--jquery--%>
                 <script type="text/javascript" src="<c:url value="/libs/jquery/jquery-3.3.1.min.js"/>"></script>
@@ -96,10 +105,10 @@
                                         <%-- logo di sito--%>
                                         <div class="site-logo-section">
 
-                                                <a href="<c:url value="/"/>" title="home">
-                                                        <img class="logo d-inline" src="<c:url value="/image/base/logo.png"/>" alt="logo"/>
-                                                        <h2 class="site-title d-inline">
-                                                                Il nome del sito
+                                                <a href="<c:url value="/"/>" title="<fmt:message key="home" />">
+                                                        <img class="logo" src="<c:url value="/image/base/logo.png"/>" alt="<fmt:message key="logo" />"/>
+                                                        <h2 class="site-title">
+                                                                ${initParam.siteName}
                                                         </h2>
                                                 </a>
 
@@ -107,21 +116,27 @@
 
                                         <%-- menu top--%>
                                         <div class="site-top-menu float-right">
-                                                <nav class="navbar navbar-expand-sm navbar-dark">
+                                                <nav class="navbar navbar-expand navbar-dark">
                                                         <ul class="navbar-nav ">
+
+                                                                <li id="link-notifica" class="nav-item ${not empty cookie.notifica.value? "d-block":""}">
+                                                                        <a class="nav-link" href="<c:url value="/map"/>">
+                                                                                <i class="fa fa-envelope"></i> <span><fmt:message key="NOTIFICATION" /></span>
+                                                                        </a>
+                                                                </li>
 
                                                                 <%-- se è utente anonimo--%>
                                                                 <c:if test="${empty sessionScope.user}">
 
                                                                         <li class="nav-item">
                                                                                 <a class="nav-link" href="<c:url value="/register"/>">
-                                                                                        <i class="fas fa-user-plus"></i> ISCRIVERSI
+                                                                                        <i class="fas fa-user-plus"></i> <span><fmt:message key="REGISTER" /></span>
                                                                                 </a>
                                                                         </li>
 
                                                                         <li class="nav-item">
                                                                                 <a class="nav-link" href="<c:url value="/login"/>">
-                                                                                        <i class="fas fa-sign-in-alt"></i> LOGIN
+                                                                                        <i class="fas fa-sign-in-alt"></i> <span><fmt:message key="LOGIN" /></span>
                                                                                 </a>
                                                                         </li>
 
@@ -132,37 +147,33 @@
 
                                                                         <li class="nav-item">
                                                                                 <a class="nav-link" href="<c:url value="/mylists"/>">
-                                                                                        <i class="fas fa-list"></i> MIE LISTE
-                                                                                </a>
-                                                                        </li>
-
-                                                                        <li class="nav-item">
-                                                                                <a class="nav-link" href="#">
-                                                                                        <i class="fa fa-envelope"></i> NOTIFICA
+                                                                                        <i class="fas fa-list"></i> <span><fmt:message key="my lists" /></span>
                                                                                 </a>
                                                                         </li>
 
                                                                         <li class="nav-item">
                                                                                 <a class="nav-link profile" href="<c:url value="/modifyUser"/>">
-                                                                                        <img class="avatar img-fluid" src="<c:url value="/image/user/${sessionScope.user.img}"/>" alt="avatar"/> PROFILO
+                                                                                        <img class="avatar img-fluid" src="<c:url value="/image/user/${sessionScope.user.img}"/>" alt="avatar"/> <span><fmt:message key="PROFILE" /></span>
                                                                                 </a>
                                                                         </li>
 
                                                                         <c:if test="${sessionScope.user.isAdmin}">
                                                                                 <li class="nav-item">
                                                                                         <a class="nav-link" href="<c:url value="/admin/home"/>">
-                                                                                                <i class="fas fa-tachometer-alt"></i> ADMIN
+                                                                                                <i class="fas fa-tachometer-alt"></i> <span><fmt:message key="ADMIN" /></span>
                                                                                         </a>
                                                                                 </li>
                                                                         </c:if>
 
                                                                         <li class="nav-item">
                                                                                 <a class="nav-link" href="<c:url value="/logout"/>">
-                                                                                        <i class="fas fa-sign-out-alt"></i> LOGOUT
+                                                                                        <i class="fas fa-sign-out-alt"></i> <span><fmt:message key="LOGOUT" /></span>
                                                                                 </a>
                                                                         </li>
 
                                                                 </c:if>
+
+                                                                <jsp:include page="/WEB-INF/jspf/i18n_switcher.jsp"/>
 
                                                         </ul>
                                                 </nav>
@@ -185,11 +196,11 @@
                                                                         </c:forEach>
                                                                 </select>
                                                                 <div class="col-7 p-0">
-                                                                        <input type="search" class="form-control typeahead" name="searchWords" placeholder="cerchi qualcosa?"
+                                                                        <input type="search" class="form-control typeahead" name="searchWords" placeholder="<fmt:message key="looking for something" />?"
                                                                                required="required" value="${not empty param.searchWords?param.searchWords:''}">
                                                                 </div>
                                                                 <div class="input-group-append col-2 p-0">
-                                                                        <button type="submit" class="btn btn-info w-100"><i class="fas fa-search"></i> CERCA</button>
+                                                                        <button type="submit" class="btn btn-info search-button w-100"><i class="fas fa-search"></i> <fmt:message key="search" /></button>
                                                                 </div>
                                                         </div>
                                                 </form>
@@ -202,15 +213,20 @@
                                         <nav class="navbar navbar-expand-sm bg-info navbar-dark">
                                                 <ul class="navbar-nav nav-justified justify-content-center w-100">
 
-                                                        <li class="nav-item active">
-                                                                <a class="nav-link " href="<c:url value="/"/>" title="home">
-                                                                        HOME
+                                                        <li class="nav-item mobile-menu">
+                                                                <a id="mobile-menu-active-link" class="nav-link" href="javascript:;" title="mobile-menu">
+                                                                        <i class="fas fa-caret-square-down"></i> <fmt:message key="MENU" />
+                                                                </a>
+                                                        </li>
+                                                        <li class="nav-item desktop-item">
+                                                                <a class="nav-link " href="<c:url value="/"/>" title="<fmt:message key="home" />">
+                                                                        <fmt:message key="home" />
                                                                 </a>
                                                         </li>
 
-                                                        <li class="nav-item dropdown">
+                                                        <li class="nav-item dropdown desktop-item">
                                                                 <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
-                                                                        CATEGORIA
+                                                                        <fmt:message key="category" />
                                                                 </a>
                                                                 <div class="dropdown-menu">
                                                                         <%--get tutte le categorie di prodotto--%>
@@ -221,20 +237,9 @@
                                                                 </div>
                                                         </li>
 
-                                                        <li class="nav-item">
+                                                        <li class="nav-item desktop-item">
                                                                 <a class="nav-link" href="<c:url value="/updateProduct"/>">
-                                                                        AGGIUNGE PRODOTTO
-                                                                </a>
-                                                        </li>
-
-                                                        <li class="nav-item">
-                                                                <a class="nav-link" href="#">
-                                                                        link3
-                                                                </a>
-                                                        </li>
-                                                        <li class="nav-item">
-                                                                <a class="nav-link" href="#">
-                                                                        link4
+                                                                        <fmt:message key="addTheProduct" />
                                                                 </a>
                                                         </li>
 

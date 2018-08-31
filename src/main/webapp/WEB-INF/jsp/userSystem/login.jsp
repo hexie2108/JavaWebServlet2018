@@ -22,39 +22,35 @@
                                 <c:choose>
                                         <c:when test="${param.notice == 'awaitingActivation'}">
                                                 <div class="alert alert-info">
-                                                        <i class="fas fa-info"></i>  riceverà a breve un email con link di attivazione 
+                                                        <i class="fas fa-info"></i>  <fmt:message key="notice.awaitingActivation"/>
                                                 </div>
                                         </c:when>
                                         <c:when test="${param.notice == 'awaitingResetPassword'}">
                                                 <div class="alert alert-info">
-                                                        <i class="fas fa-info"></i>  riceverà a breve un email con link per reset password
+                                                        <i class="fas fa-info"></i>  <fmt:message key="notice.awaitingResetPassword"/>
                                                 </div>
                                         </c:when>
                                         <c:when test="${param.notice == 'activatedOK'}">
                                                 <div class="alert alert-success">
-                                                        <i class="fas fa-info"></i>  il tuo account è stato attivato correttamente
+                                                        <i class="fas fa-info"></i>  <fmt:message key="notice.activatedOK"/>
                                                 </div>
                                         </c:when>
                                         <c:when test="${param.notice == 'activatedFAIL'}">
                                                 <div class="alert alert-danger">
-                                                        <i class="fas fa-info"></i>  non esiste account con tale coppia di email e link
+                                                        <i class="fas fa-info"></i>  <fmt:message key="notice.activatedFAIL"/>
                                                 </div>
                                         </c:when>
                                         <c:when test="${param.notice == 'resetLinkInvalid'}">
                                                 <div class="alert alert-danger">
-                                                        <i class="fas fa-info"></i>  il link di reset password non è valido
+                                                        <i class="fas fa-info"></i>  <fmt:message key="notice.resetLinkInvalid"/>
                                                 </div>
                                         </c:when>
                                         <c:when test="${param.notice == 'resetPasswordOK'}">
                                                 <div class="alert alert-success">
-                                                        <i class="fas fa-info"></i>  il password è stato resettato correttamente
+                                                        <i class="fas fa-info"></i>  <fmt:message key="notice.resetPasswordOK"/>
                                                 </div>
                                         </c:when>
                                 </c:choose>
-
-
-
-
 
 
                         </div>
@@ -145,7 +141,7 @@
                 
 
                 <button class="btn btn-lg btn-primary btn-block" type="submit">
-                        <fmt:message key="login.label.login"/> ${a}
+                        <fmt:message key="login.label.login"/>
                 </button>
 
 

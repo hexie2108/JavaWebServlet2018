@@ -50,11 +50,14 @@ public class LoginService extends HttpServlet
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
 
-        //get i parametri necessari
-        String email = request.getParameter(FormValidator.EMAIL_KEY);
-        String password = request.getParameter(FormValidator.FIRST_PWD_KEY);
-        String prevUrl = request.getParameter(FormValidator.PREV_URL_KEY);
-        String remember = request.getParameter(FormValidator.REMEMBER_KEY);
+                //Language bundle
+                ResourceBundle rb = i18n.getBundle(request);
+
+                //get i parametri necessari
+                String email = request.getParameter(FormValidator.EMAIL_KEY);
+                String password = request.getParameter(FormValidator.FIRST_PWD_KEY);
+                String prevUrl = request.getParameter(FormValidator.PREV_URL_KEY);
+                String remember = request.getParameter(FormValidator.REMEMBER_KEY);
 
         if(!FormValidator.validateEmail(email)) {
             ServletUtility.sendError(request, response, 400, "validateUser.errors.EMAIL_NOT_VALID");
@@ -126,11 +129,11 @@ public class LoginService extends HttpServlet
                         }
                         catch (UnsupportedEncodingException ex)
                         {
-                                throw new ServletException("errore durente la codifica dei caratteri", ex);
+                                throw new ServletException(rb.getString("errors.unsupportedEncoding"), ex);
                         }
                         catch (NoSuchAlgorithmException ex)
                         {
-                                throw new ServletException("errore per la mancanza dell'algoritmo MD5 in ambiente di esecuzione", ex);
+                                throw new ServletException(rb.getString("errros.noSuchAlgorithmMD5"), ex);
                         }
                 }
 
@@ -140,6 +143,18 @@ public class LoginService extends HttpServlet
                         request.getSession().setAttribute("result", "privacy");
                 }
 
+                //eliminare cookie di  check di negozio in vicinanza per riattivare check
+                Cookie NearShopChecked = new Cookie("NearShopChecked", "");
+                NearShopChecked.setPath(getServletContext().getContextPath());
+                //set la vita di cookie per 0 secondi
+                NearShopChecked.setMaxAge(0);
+                response.addCookie(NearShopChecked);
+                //eliminare cookie di  notifica
+                Cookie notifica = new Cookie("notifica", "");
+                notifica.setPath(getServletContext().getContextPath());
+                //set la vita di cookie per 0 secondi
+                notifica.setMaxAge(0);
+                response.addCookie(notifica);
 
         // Se nextUrl è vuoto o nullo, usa pagina di default(index)
         if (prevUrl == null || prevUrl.isEmpty())

@@ -37,6 +37,7 @@ public class FrontPagePrintListFilter implements Filter {
      * Inizializza le classi DAO
      *
      * @param filterConfig
+     * @throws javax.servlet.ServletException
      */
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
