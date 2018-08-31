@@ -1,7 +1,7 @@
 <%@ page import="it.unitn.webprogramming18.dellmm.util.CategoryProductValidator" %>
 <%@ page import="it.unitn.webprogramming18.dellmm.util.ProductValidator" %>
-<%@include file="/WEB-INF/jspf/i18n.jsp"%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="custom" uri="/WEB-INF/custom.tld" %>
 
 <div class="modal fade" id="productModal">
@@ -103,9 +103,11 @@
                     <div class="form-group row">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <div class="input-group-prepend"><label class="input-group-text"
-                                                                        for="input${ProductValidator.CATEGORY_KEY}"><fmt:message
-                                        key="product.label.logo"/></label></div>
+                                <div class="input-group-prepend">
+                                        <label class="input-group-text" for="input${ProductValidator.CATEGORY_KEY}">
+                                                <fmt:message  key="category"/>
+                                        </label>
+                                </div>
                                 <custom:getAllCategoryOfProduct/>
 
                                 <select class="form-control" id="input${ProductValidator.CATEGORY_KEY}" name="${ProductValidator.CATEGORY_KEY}">
@@ -126,7 +128,7 @@
                                 <div class="input-group-prepend"><label class="input-group-text"
                                                                         for="input${ProductValidator.PRIVATE_LIST_ID}"><fmt:message
                                         key="product.label.privateListId"/></label></div>
-                                <input id="input${ProductValidator.PRIVATE_LIST_ID}" type="number" class="form-control" name="${ProductValidator.PRIVATE_LIST_ID}"/>
+                                <input id="input${ProductValidator.PRIVATE_LIST_ID}" type="number" class="form-control" name="${ProductValidator.PRIVATE_LIST_ID}" />
                             </div>
                             <div class="error-messages">
                                 <p id="span${ProductValidator.PRIVATE_LIST_ID}"></p>

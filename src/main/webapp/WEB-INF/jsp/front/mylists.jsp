@@ -132,7 +132,7 @@
                                                                         <%-- campi necessari per visuallizare il prodotto nella finestrina--%>
                                                                         <input class="name" type="hidden" value="${product.name}"/>
                                                                         <input class="logo-img" type="hidden"
-                                                                               value="<c:url value="/${product.logo}"/>"/>
+                                                                               value="<c:url value="/image/product/${product.logo}"/>"/>
                                                                         <input class="cat-link" type="hidden"
                                                                                value="<c:url value="/category?catId=${product.categoryProductId}"/>"/>
                                                                         <%-- get il nome della categoria--%>
@@ -162,7 +162,7 @@
                                                                         <%-- campi necessari per visuallizare il prodotto nella finestrina--%>
                                                                         <input class="name" type="hidden" value="${product.name}"/>
                                                                         <input class="logo-img" type="hidden"
-                                                                               value="<c:url value="/${product.logo}"/>"/>
+                                                                               value="<c:url value="/image/product/${product.logo}"/>"/>
                                                                         <input class="cat-link" type="hidden"
                                                                                value="<c:url value="/category?catId=${product.categoryProductId}"/>"/>
                                                                         <%-- get il nome della categoria--%>
@@ -316,7 +316,7 @@
                                                                         <%-- campi necessari per visuallizare il prodotto nella finestrina--%>
                                                                         <input class="name" type="hidden" value="${product.name}"/>
                                                                         <input class="logo-img" type="hidden"
-                                                                               value="<c:url value="/${product.logo}"/>"/>
+                                                                               value="<c:url value="/image/product/${product.logo}"/>"/>
                                                                         <input class="cat-link" type="hidden"
                                                                                value="<c:url value="/category?catId=${product.categoryProductId}"/>"/>
 
@@ -347,7 +347,7 @@
                                                                         <%-- campi necessari per visuallizare il prodotto nella finestrina--%>
                                                                         <input class="name" type="hidden" value="${product.name}"/>
                                                                         <input class="logo-img" type="hidden"
-                                                                               value="<c:url value="/${product.logo}"/>"/>
+                                                                               value="<c:url value="/image/product/${product.logo}"/>"/>
                                                                         <input class="cat-link" type="hidden"
                                                                                value="<c:url value="/category?catId=${product.categoryProductId}"/>"/>
 

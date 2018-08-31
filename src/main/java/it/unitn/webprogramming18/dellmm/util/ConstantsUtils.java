@@ -32,12 +32,12 @@ public class ConstantsUtils {
     // la cartella per immagine di categoria di lista
     public static final String IMAGE_OF_CATEGORY_LIST = "categoryList";
 
-    // la cartella per immagine di prodotto
-    public static final String IMAGE_OF_PRODUCT = "product";
-    // la cartella per immagine di logo di prodotto
-    public static final String IMAGE_LOGO_OF_PRODUCT = "productLogo";
-    // la cartella per immagine di categoria di prodotto
-    public static final String IMAGE_OF_CATEGORY_PRODUCT = "categoryProduct";
+        // la cartella per immagine di prodotto
+        public static final String IMAGE_OF_PRODUCT = "product";
+        // la cartella per immagine di logo di prodotto
+        public static final String IMAGE_LOGO_OF_PRODUCT = "product";
+        // la cartella per immagine di categoria di prodotto
+        public static final String IMAGE_OF_CATEGORY_PRODUCT = "categoryProduct";
 
     // la cartella per immagine di utente
     public static final String IMAGE_OF_USER = "user";

@@ -141,7 +141,7 @@
         });
 
         const table = tableDiv.DataTable({
-            <c:if test="${language == 'it'}">
+            <c:if test="${cookie.language.value == 'it' || pageContext.request.locale.language == 'it'}">
             language: {
                 url: '<c:url value="/libs/DataTables/Languages/it.json"/>'
             },

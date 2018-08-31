@@ -65,14 +65,13 @@ public class ProductValidator {
             return null;
         }
 
-
         try {
             if(listDAO.getByPrimaryKey(id) != null) {
                 return null;
             }
         } catch (DAOException e) {
-            e.printStackTrace();
-            // If error occurs use default error(not present)
+                 // If error occurs use default error(not present)
+
         }
 
         return ValidatorUtils.ErrorType.NOT_PRESENT;
