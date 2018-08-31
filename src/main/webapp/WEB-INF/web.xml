@@ -68,7 +68,7 @@
     <context-param>
         <description>Path of the folder where product logos are stored</description>
         <param-name>productLogoImgsFolder</param-name>
-        <param-value>image/productLogo</param-value>
+        <param-value>image/product</param-value>
     </context-param>
 
 
