@@ -32,10 +32,9 @@ public class JSONProductsServlet extends HttpServlet {
     private ListDAO listDAO = null;
     private CategoryProductDAO categoryProductDAO = null;
 
-    private String subImg(HttpServletRequest request, HttpServletResponse response, Path path, String prevImg, InputStream inputStream) throws IOException {
+    private String subImg(HttpServletRequest request, HttpServletResponse response, Path path, String prevImg, InputStream inputStream) throws IOException, ServletException {
         return ServletUtility.insertImage(
                 request,
-                response,
                 path,
                 prevImg,
                 inputStream,
@@ -310,19 +309,11 @@ public class JSONProductsServlet extends HttpServlet {
 
         if (img != null && img.getSize() > 0) {
             String sImg = subImg(req, res, path, product.getImg(), img.getInputStream());
-            if (sImg == null) {
-                return;
-            }
-
             product.setImg(sImg);
         }
 
         if (logo != null && logo.getSize() > 0) {
             String sLogo = subImg(req, res, path, product.getLogo(), logo.getInputStream());
-            if (sLogo == null) {
-                return;
-            }
-
             product.setLogo(sLogo);
         }
 
@@ -430,14 +421,7 @@ public class JSONProductsServlet extends HttpServlet {
         }
 
         String sImg = subImg(req, res, path, null, img.getInputStream());
-        if (sImg == null) {
-            return;
-        }
-
         String sLogo = subImg(req, res, path, null, logo.getInputStream());
-        if (sLogo == null) {
-            return;
-        }
 
         Product product = new Product();
         product.setName(name);

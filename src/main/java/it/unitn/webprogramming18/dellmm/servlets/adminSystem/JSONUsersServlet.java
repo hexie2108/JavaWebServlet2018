@@ -30,13 +30,13 @@ import java.util.stream.Collectors;
 public class JSONUsersServlet extends HttpServlet {
     private UserDAO userDAO = null;
 
-    private String subImg(HttpServletRequest request, HttpServletResponse response, Path path, String prevImg, InputStream inputStream) throws IOException {
+    private String subImg(HttpServletRequest request, HttpServletResponse response, Path path, String prevImg, InputStream inputStream) throws IOException, ServletException {
         // If prevImg is one of default's set prevImg to null to prevent deletion of the file
         if (prevImg != null && FormValidator.DEFAULT_AVATARS.stream().anyMatch(prevImg::equals)) {
             prevImg = null;
         }
 
-        return ServletUtility.insertImage(request, response, path, prevImg, inputStream, ConstantsUtils.IMAGE_OF_USER_WIDTH, ConstantsUtils.IMAGE_OF_USER_HEIGHT);
+        return ServletUtility.insertImage(request, path, prevImg, inputStream, ConstantsUtils.IMAGE_OF_USER_WIDTH, ConstantsUtils.IMAGE_OF_USER_HEIGHT);
     }
 
     @Override

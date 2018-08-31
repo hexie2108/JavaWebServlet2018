@@ -2,9 +2,11 @@ package it.unitn.webprogramming18.dellmm.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.UUID;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Part;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -34,6 +36,22 @@ public class FileUtils {
      * @throws IOException
      */
     public static String upload(FileItem item, String uploadPath, int width, int height) throws ServletException, IOException {
+        return FileUtils.upload(item.getInputStream(), uploadPath , width, height);
+    }
+
+    /**
+     * passando l'oggetto file della richiesta, lo ridimensiona e salva su
+     * disco, al fine ritorna il nome di file salvato
+     *
+     * @param istream     InputStream che rappresenta il file
+     * @param uploadPath il percorso per memorizzare
+     * @param width      la lunghezza dell'immagine
+     * @param height     l'altezza dell'immagine
+     * @return il nome del file salvato
+     * @throws ServletException
+     * @throws IOException
+     */
+    public static String upload(InputStream istream, String uploadPath, int width, int height) throws ServletException, IOException {
         //crea oggetto file per il percorso
         File uploadDir = new File(uploadPath);
         // se percorso non esiste, crearlo
@@ -48,10 +66,11 @@ public class FileUtils {
 
         File newFile = new File(uploadPath + File.separator + newName);
         //ridimensione e genera il nuovo file
-        ImageUtils.convertImg2(item.getInputStream(), newFile, width, height);
+        ImageUtils.convertImg2(istream, newFile, width, height);
 
         return newName;
     }
+
 
     /**
      * eliminare il file

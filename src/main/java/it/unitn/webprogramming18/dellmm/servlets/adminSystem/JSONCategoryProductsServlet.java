@@ -29,10 +29,9 @@ import java.util.stream.Collectors;
 public class JSONCategoryProductsServlet extends HttpServlet {
     private CategoryProductDAO categoryProductDAO = null;
 
-    private String subImg(HttpServletRequest request, HttpServletResponse response, Path path, String prevImg, InputStream inputStream) throws IOException {
+    private String subImg(HttpServletRequest request, HttpServletResponse response, Path path, String prevImg, InputStream inputStream) throws IOException, ServletException {
         return ServletUtility.insertImage(
                 request,
-                response,
                 path,
                 prevImg,
                 inputStream,
@@ -244,11 +243,7 @@ public class JSONCategoryProductsServlet extends HttpServlet {
 
         if (img != null && img.getSize() != 0) {
             String r = subImg(request, response, path, categoryProduct.getImg(), img.getInputStream());
-            if (r == null) {
-                return;
-            } else {
-                categoryProduct.setImg(r);
-            }
+            categoryProduct.setImg(r);
         }
 
 
@@ -323,9 +318,6 @@ public class JSONCategoryProductsServlet extends HttpServlet {
         }
 
         String r = subImg(request, response, path, null, img.getInputStream());
-        if (r == null) {
-            return;
-        }
 
         CategoryProduct categoryProduct = new CategoryProduct();
 

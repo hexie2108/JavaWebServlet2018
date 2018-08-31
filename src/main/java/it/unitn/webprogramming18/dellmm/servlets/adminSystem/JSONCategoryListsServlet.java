@@ -33,10 +33,9 @@ import java.util.stream.Collectors;
 public class JSONCategoryListsServlet extends HttpServlet {
     private CategoryListDAO categoryListDAO = null;
 
-    private String subImg(HttpServletRequest request, HttpServletResponse response, Path path, String prevImg, InputStream fileContent) throws IOException {
+    private String subImg(HttpServletRequest request, HttpServletResponse response, Path path, String prevImg, InputStream fileContent) throws IOException, ServletException {
         return ServletUtility.insertImage(
                 request,
-                response,
                 path,
                 prevImg,
                 fileContent,
@@ -132,11 +131,7 @@ public class JSONCategoryListsServlet extends HttpServlet {
 
         if (img1 != null && img1.getSize() != 0) {
             String r = subImg(request, response, path, categoryList.getImg1(), img1.getInputStream());
-            if (r == null) {
-                return;
-            } else {
-                categoryList.setImg1(r);
-            }
+            categoryList.setImg1(r);
         }
 
         if (deleteImg2.equalsIgnoreCase("delete")) {
@@ -144,11 +139,7 @@ public class JSONCategoryListsServlet extends HttpServlet {
             categoryList.setImg2(null);
         } else if (img2 != null && img2.getSize() != 0) {
             String r = subImg(request, response, path, categoryList.getImg2(), img2.getInputStream());
-            if (r == null) {
-                return;
-            } else {
-                categoryList.setImg2(r);
-            }
+            categoryList.setImg2(r);
         }
 
         if (deleteImg3.equalsIgnoreCase("delete")) {
@@ -156,11 +147,7 @@ public class JSONCategoryListsServlet extends HttpServlet {
             categoryList.setImg3(null);
         } else if (img3 != null && img3.getSize() != 0) {
             String r = subImg(request, response, path, categoryList.getImg3(), img3.getInputStream());
-            if (r == null) {
-                return;
-            } else {
-                categoryList.setImg3(r);
-            }
+            categoryList.setImg3(r);
         }
 
         try {
