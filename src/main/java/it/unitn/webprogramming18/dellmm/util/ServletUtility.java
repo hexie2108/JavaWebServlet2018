@@ -103,9 +103,9 @@ public interface ServletUtility {
             throw new ServletException(parameterName + " folder not configured");
         }
 
-        String realContextPath = ctx.getRealPath(File.separator);
-        if (!realContextPath.endsWith(File.separator)) {
-            realContextPath += File.separator;
+        String realContextPath = ctx.getRealPath("/");
+        if (!realContextPath.endsWith("/")) {
+            realContextPath += "/";
         }
 
         Path path = Paths.get(realContextPath + categoryListImgFolder);
