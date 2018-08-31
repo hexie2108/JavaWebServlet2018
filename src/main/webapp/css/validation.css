@@ -31,6 +31,16 @@
     border-color: var(--success);
 }
 
+.modal.modal-info .modal-header {
+    background: var(--info);
+    color: var(--white);
+}
+
+.modal.modal-info .modal-content {
+    border-color: var(--info);
+}
+
+
 
 .form-error-alert {
     display: none;

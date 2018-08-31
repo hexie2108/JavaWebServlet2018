@@ -79,6 +79,9 @@
                 () => {
                     table.ajax.reload();
                     table.draw();
+                },  {
+                    title: "<fmt:message key="generic.modal.waitOperation.title"/>",
+                    message: "<fmt:message key="generic.modal.waitOperation.message"/>",
                 }, {
                     title: "<fmt:message key="generic.label.errorTitle"/>",
                     message: "<fmt:message key="generic.errors.unknownError"/>",
@@ -97,6 +100,9 @@
                 }, function(){
                     table.ajax.reload();
                     table.draw();
+                },  {
+                    title: "<fmt:message key="generic.modal.waitOperation.title"/>",
+                    message: "<fmt:message key="generic.modal.waitOperation.message"/>",
                 }, {
                     title: "<fmt:message key="generic.label.errorTitle"/>",
                     message: "<fmt:message key="generic.errors.unknownError"/>",

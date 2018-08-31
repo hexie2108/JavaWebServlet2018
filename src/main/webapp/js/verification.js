@@ -51,7 +51,7 @@ const modalAlert = (function(){
     // Function to show a modal with a specific type and content
     function show(type, title, message, closeLabel) {
         const x = $(
-            '<div class="modal fade modal-'+ type + ' modal-danger" id="errorAlertBox" role="dialog">' +
+            '<div class="modal fade modal-'+ type + '" id="errorAlertBox" role="dialog">' +
             '     <div class="modal-dialog">' +
             '        <div class="modal-content">' +
             '            <div class="modal-header">' +
@@ -95,9 +95,37 @@ const modalAlert = (function(){
         show('success', title, message, closeLabel);
     }
 
+    /**
+     * Function to show a wait modal
+     * @param {!string} title title of the modal
+     * @param {!string} message main content of the modal
+     * @return {Function} function to call with no argument to remove the modal
+     */
+    function wait(title, message) {
+        const x = $(
+            '<div class="modal modal-info" id="errorAlertBox" role="dialog">' +
+            '     <div class="modal-dialog">' +
+            '        <div class="modal-content">' +
+            '            <div class="modal-header">' +
+            '                <h4 class="modal-title"><i class="fas fa-exclamation-triangle"></i> ' + title + '</h4>' +
+            '            </div>' +
+            '            <div class="modal-body">' + message +'</div>' +
+            '        </div>' +
+            '    </div>' +
+            '</div>'
+        );
+
+        x.modal({backdrop: 'static', keyboard: false});
+        return function(){
+            x.modal({backdrop: false, keyboard: true}).modal('hide');
+            x.remove();
+        };
+    }
+
     return {
         error: error,
-        success: success
+        success: success,
+        wait: wait
     };
 })();
 
@@ -215,6 +243,7 @@ const validationUtils = (function(){
      * @property {string} redirectUrl redirect to specific url after success(if not defined successAlert must be defined and vice versa)
      * @property {ModalAlertOptions} successAlert settings for the success modal(if not defined redirectUrl must be defined and vice versa)
      * @property {ModalAlertOptions} failAlert settings for the error modal (if error message form the post is standard the main content of the modal is overwritten)
+     * @property {ModalAlertOptions} waitAlert settings for the modal during waiting(close label will not be shown)
      * @property {Function} successCallback callback to call if the post is successful
      */
 
@@ -230,13 +259,14 @@ const validationUtils = (function(){
         const redirectUrl = options['redirectUrl'];
         const successAlert = options['successAlert'];
         const failAlert = options['failAlert'];
+        const waitAlert = options['waitAlert'];
         const successCallback = options['successCallback'];
 
         const req = {
             dataType: "json",
             url: url,
             type: "POST",
-            async: false,
+            async: true,
         };
 
         if (multipart === true) {
@@ -252,6 +282,8 @@ const validationUtils = (function(){
             req.xhrFields = {withCredentials: true};
         }
 
+        // Creates modal and returs a function that when called closes the modal
+        const waitModal = modalAlert.wait(waitAlert['title'],waitAlert['message']);
         const rq = $.ajax(req);
 
         form.find('[type=submit]').attr("disabled", true);
@@ -261,24 +293,37 @@ const validationUtils = (function(){
                 window.location.href = redirectUrl;
             } else if (successAlert['title'] && successAlert['message']) {
                 modalAlert.success(successAlert['title'], successAlert['message'], successAlert['closeLabel']);
+                waitModal();
             }
 
             if (successCallback !== undefined) {
                 successCallback();
             }
         }).fail(function (jqXHR) {
+
             if (typeof jqXHR.responseJSON === 'object' &&
                 jqXHR.responseJSON !== null &&
                 jqXHR.responseJSON['message'] !== undefined
             ) {
+
                 if (jqXHR.responseJSON['message'] === "ValidationFail") {
                     jqXHR.responseJSON['message'] = undefined;
+                    waitModal();
                     validationUtils.updateVerifyMessages(form, jqXHR.responseJSON);
                 } else {
-                    modalAlert.error(failAlert['title'], jqXHR.responseJSON['message'], failAlert['closeLabel']);
+                    modalAlert.error(
+                        failAlert['title'],
+                        jqXHR.responseJSON['message'],
+                        failAlert['closeLabel']
+                    );
+                    waitModal();
                 }
             } else {
-                modalAlert.error(failAlert['title'], failAlert['message'], failAlert['closeLabel']);
+                modalAlert.error(failAlert['title'],
+                    failAlert['message'],
+                    failAlert['closeLabel']
+                );
+                waitModal();
             }
         }).always(function () {
             form.find('[type=submit]').attr("disabled", false);
@@ -720,23 +765,25 @@ const formUtils = (function(){
      * @param {string} url questa è una porva per vedere se il problema si è risolto ma non credo visto che sta usando una marea di cpu
      * @param {Object} data data to send using post
      * @param {Function} successCallback callback to call if the funciton is succesful
+     * @param {ModalAlertOptions} waitAlert message to show during wait
      * @param {ModalAlertOptions} failAlert message to show if error occours(message is overwritten if valid error message is sent by the page)
      */
-    function ajaxButton(url, data, successCallback, failAlert) {
+    function ajaxButton(url, data, successCallback, waitAlert, failAlert) {
         const rq = $.ajax({
             url: url,
             type: 'POST',
             data: data,
-            async: false
+            async: true
         });
 
-        if (successCallback !== undefined) {
-            rq.done(function () {
-                successCallback();
-            });
-        }
+        const waitModal = modalAlert.wait(waitAlert['title'],waitAlert['message']);
 
-        rq.fail(function (jqXHR) {
+        rq.done(function () {
+            waitModal();
+            if (successCallback !== undefined) {
+                successCallback();
+            }
+        }).fail(function (jqXHR) {
             if (typeof jqXHR.responseJSON === 'object' &&
                 jqXHR.responseJSON !== null &&
                 jqXHR.responseJSON['message'] !== undefined
@@ -746,12 +793,14 @@ const formUtils = (function(){
                     jqXHR.responseJSON['message'],
                     failAlert['closeLabel']
                 );
+                waitModal();
             } else {
                 modalAlert.error(
                     failAlert['title'],
                     failAlert['message'],
                     failAlert['closeLabel']
                 );
+                waitModal();
             }
         });
     }

@@ -314,6 +314,10 @@
                             message: "<fmt:message key="generic.errors.unknownError"/>",
                             closeLabel: "<fmt:message key="generic.label.close"/>"
                         },
+                        waitAlert: {
+                            title: "<fmt:message key="generic.modal.waitOperation.title"/>",
+                            message: "<fmt:message key="generic.modal.waitOperation.message"/>",
+                        },
                         successCallback: function () {
                             table.ajax.reload();
                             table.draw();
