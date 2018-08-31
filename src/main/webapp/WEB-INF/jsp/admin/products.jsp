@@ -1,6 +1,7 @@
+
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@include file="/WEB-INF/jspf/i18n.jsp"%>
 
 <%@ include file="header.jsp" %>
 
@@ -153,6 +154,11 @@
         $('> thead > tr, tfoot > tr', tableDiv).prepend('<th></th>');
 
         const table = tableDiv.DataTable({
+             <c:if test="${cookie.language.value == 'it' || pageContext.request.locale.language == 'it'}">
+            language: {
+                url: '<c:url value="/libs/DataTables/Languages/it.json"/>'
+            },
+            </c:if>
             ajax: {
                 url: '<c:url value="/admin/products.json"/>',
                 dataType: "json",

@@ -2,6 +2,7 @@
 
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@ page import="it.unitn.webprogramming18.dellmm.util.FormValidator"%>
+<%@taglib prefix="custom" uri="/WEB-INF/custom.tld" %>
 <%@include file="/WEB-INF/jspf/i18n.jsp"%>
 
 <div class="modal fade" id="modifyUserModal">
@@ -114,7 +115,7 @@
                         </div>
                         <%--parte di suggerimenti --%>
                         <div class="form-group">
-                            <label><fmt:message key="only accept files"/> *.jpg, *.png, *.gif, *.bmp</label>
+                            <label><fmt:message key="only accept files" /> *.jpg, *.png, *.gif, *.bmp</label>
                         </div>
                         <div class="error-messages">
                             <p data-errorName="${FormValidator.AVATAR_IMG_KEY}" id="span${FormValidator.AVATAR_IMG_KEY}"></p>
@@ -155,29 +156,29 @@
         const progressBar = modifyUserForm.find(".progress-bar");
 
         const checkEmailLazy = validationUtils.user.validateEmail(true, false, () => false,  '<c:url value="/service/checkUserService"/>', {
-            emptyOrNull: '<fmt:message key="validateUser.errors.EMAIL_MISSING"/>',
-            tooLong: '<fmt:message key="validateUser.errors.EMAIL_TOO_LONG"/>',
-            emailInvalid: '<fmt:message key="validateUser.errors.EMAIL_NOT_VALID"/>',
-            emailNoExists: 'noExist', // TODO: To i18n
-            emailAlreadyActivated: 'alreadyActivated' // TODO: To i18n
+            emptyOrNull: "<fmt:message key="validateUser.errors.EMAIL_MISSING"/>",
+            tooLong: "<fmt:message key="validateUser.errors.EMAIL_TOO_LONG"/>",
+            emailInvalid: "<fmt:message key="validateUser.errors.EMAIL_NOT_VALID"/>",
+            emailNoExists: "<fmt:message key="validateUser.errors.EMAIL_NOT_EXISTING"/>",
+            emailAlreadyActivated: "<fmt:message key="validateUser.errors.EMAIL_ALREADY_USED"/>"
         });
 
         const checkEmailStrict = validationUtils.user.validateEmail(false, false, () => false,  '<c:url value="/service/checkUserService"/>', {
-            emptyOrNull: '<fmt:message key="validateUser.errors.EMAIL_MISSING"/>',
-            tooLong: '<fmt:message key="validateUser.errors.EMAIL_TOO_LONG"/>',
-            emailInvalid: '<fmt:message key="validateUser.errors.EMAIL_NOT_VALID"/>',
-            emailNoExists: 'noExist', // TODO: To i18n
-            emailAlreadyActivated: 'alreadyActivated' // TODO: To i18n
+            emptyOrNull: "<fmt:message key="validateUser.errors.EMAIL_MISSING"/>",
+            tooLong: "<fmt:message key="validateUser.errors.EMAIL_TOO_LONG"/>",
+            emailInvalid: "<fmt:message key="validateUser.errors.EMAIL_NOT_VALID"/>",
+            emailNoExists: "<fmt:message key="validateUser.errors.EMAIL_NOT_EXISTING"/>",
+            emailAlreadyActivated: "<fmt:message key="validateUser.errors.EMAIL_ALREADY_USED"/>"
         });
 
         const checkName = validationUtils.validateString(${FormValidator.FIRST_NAME_MAX_LEN},() => false, {
-            emptyOrNull: '<fmt:message key="validateUser.errors.FIRST_NAME_MISSING"/>',
-            tooLong: '<fmt:message key="validateUser.errors.FIRST_NAME_TOO_LONG"/>',
+            emptyOrNull: "<fmt:message key="validateUser.errors.FIRST_NAME_MISSING"/>",
+            tooLong: "<fmt:message key="validateUser.errors.FIRST_NAME_TOO_LONG"/>",
         });
 
         const checkDescription = validationUtils.validateString(${FormValidator.LAST_NAME_MAX_LEN}, () => false, {
-            emptyOrNull: '<fmt:message key="validateUser.errors.LAST_NAME_MISSING"/>',
-            tooLong: '<fmt:message key="validateUser.errors.LAST_NAME_TOO_LONG"/>',
+            emptyOrNull: "<fmt:message key="validateUser.errors.LAST_NAME_MISSING"/>",
+            tooLong: "<fmt:message key="validateUser.errors.LAST_NAME_TOO_LONG"/>",
         });
 
         const checkPassword = validationUtils.user.validatePassword(() => false, {
@@ -188,10 +189,10 @@
             minDigits: 1,
             minSymbol: 1,
         },{
-            passwordMissingOrEmpty:'<fmt:message key="validateUser.errors.PASSWORD_MISSING"/>',
-            passwordTooLong:'<fmt:message key="validateUser.errors.PASSWORD_TOO_LONG"/>',
-            passwordTooShort:'<fmt:message key="validateUser.errors.PASSWORD_TOO_SHORT"/>',
-            passwordInvalid:'<fmt:message key="validateUser.errors.PASSWORD_NOT_VALID"/>',
+            passwordMissingOrEmpty:"<fmt:message key="validateUser.errors.PASSWORD_MISSING"/>",
+            passwordTooLong:"<fmt:message key="validateUser.errors.PASSWORD_TOO_LONG"/>",
+            passwordTooShort:"<fmt:message key="validateUser.errors.PASSWORD_TOO_SHORT"/>",
+            passwordInvalid:"<fmt:message key="validateUser.errors.PASSWORD_NOT_VALID"/>",
         });
 
         const checkAvatar = validationUtils.user.validateAvatar(

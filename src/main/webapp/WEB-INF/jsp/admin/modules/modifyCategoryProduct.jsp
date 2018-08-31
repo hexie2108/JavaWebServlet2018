@@ -147,9 +147,11 @@
             $('input[name="${CategoryProductValidator.NAME_KEY}"]', categoryProductForm).attr('placeholder', realData.name);
             $('textarea[name="${CategoryProductValidator.DESCRIPTION_KEY}"]', categoryProductForm).attr('placeholder', realData.description);
 
+            const prefix = "<c:url value="/${pageContext.servletContext.getInitParameter('categoryProductImgsFolder')}/"/>";
+
             // Set image source
             const divImg1 = $('#divImg', categoryProductForm);
-            divImg1.find('> img').attr("src", realData.img1 || "");
+            divImg1.find('img').attr("src", realData.img !== undefined? prefix + realData.img: "");
 
             // Trigger validation using event change
             $('input[name="${CategoryProductValidator.NAME_KEY}"]', categoryProductForm).trigger('change');

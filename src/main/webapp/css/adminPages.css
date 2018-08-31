@@ -66,6 +66,11 @@
         white-space: nowrap;
 }
 
+.admin-page .table.dataTable .list-unstyled li{
+        display: inline;
+        margin: 0 1%;
+}
+
 
 /*admin home --------------------------------------------------*/
 
@@ -106,8 +111,8 @@
 }
 
 .limited-image {
-        width: 250px;
-        height: 250px;
+        width: 20%;
+        height: auto;
 }
 
 

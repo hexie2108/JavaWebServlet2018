@@ -1,9 +1,7 @@
-
-<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@ page import="it.unitn.webprogramming18.dellmm.util.CategoryProductValidator" %>
 <%@ page import="it.unitn.webprogramming18.dellmm.util.ProductValidator" %>
-<%@include file="/WEB-INF/jspf/i18n.jsp"%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="custom" uri="/WEB-INF/custom.tld" %>
 
 <div class="modal fade" id="productModal">
@@ -128,7 +126,7 @@
                                 <div class="input-group-prepend"><label class="input-group-text"
                                                                         for="input${ProductValidator.PRIVATE_LIST_ID}"><fmt:message
                                         key="product.label.privateListId"/></label></div>
-                                <input id="input${ProductValidator.PRIVATE_LIST_ID}" type="number" class="form-control" name="${ProductValidator.PRIVATE_LIST_ID}"/>
+                                <input id="input${ProductValidator.PRIVATE_LIST_ID}" type="number" class="form-control" name="${ProductValidator.PRIVATE_LIST_ID}" />
                             </div>
                             <div class="error-messages">
                                 <p id="span${ProductValidator.PRIVATE_LIST_ID}"></p>
@@ -212,12 +210,14 @@
             $('input[name="${ProductValidator.NAME_KEY}"]', productForm).attr('placeholder', realData.name);
             $('textarea[name="${ProductValidator.DESCRIPTION_KEY}"]', productForm).attr('placeholder', realData.description);
 
+            const prefix = "<c:url value="/${pageContext.servletContext.getInitParameter('productImgsFolder')}/"/>";
+
             // Set image source
             const divImg1 = $('#divImg', productForm);
-            divImg1.find('img').attr("src", realData.img || "");
-
             const divLogo = $('#divLogo', productForm);
-            divLogo.find('img').attr("src", realData.logo || "");
+
+            divImg1.find('img').attr("src", realData.img !== undefined? prefix + realData.img : "");
+            divLogo.find('img').attr("src", realData.logo!== undefined? prefix + realData.logo: "");
 
             $('select[name="${ProductValidator.CATEGORY_KEY}"] option:selected').prop("selected", false);
             $('select[name="${ProductValidator.CATEGORY_KEY}"] option[value="'+ realData.categoryId +'"]').prop("selected", true);

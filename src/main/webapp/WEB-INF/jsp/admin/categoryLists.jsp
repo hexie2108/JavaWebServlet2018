@@ -13,7 +13,7 @@
         <table class="table dt-responsive  w-100 list-category" id="categoryTable">
             <thead>
             <tr>
-                <th class="first-col"><fmt:message key="categoryList.label.id"/></th>
+                <th><fmt:message key="categoryList.label.id"/></th>
                 <th><fmt:message key="categoryList.label.name"/></th>
                 <th><fmt:message key="categoryList.label.description"/></th>
                 <th><fmt:message key="categoryList.label.img1"/></th>
@@ -26,7 +26,7 @@
             </tbody>
             <tfoot>
             <tr>
-                <td class="first-col"><input class="form-control" type="number" name="id" form="filterForm" value="${param['id']}"/></td>
+                <td><input class="form-control" type="number" name="id" form="filterForm" value="${param['id']}"/></td>
                 <td><input class="form-control" type="text" name="name" form="filterForm" value="${param['name']}"/></td>
                 <td><input class="form-control" type="text" name="description" form="filterForm"
                            value="${param['description']}"/></td>
@@ -148,6 +148,11 @@
         });
 
         const table = tableDiv.DataTable({
+             <c:if test="${cookie.language.value == 'it' || pageContext.request.locale.language == 'it'}">
+            language: {
+                url: '<c:url value="/libs/DataTables/Languages/it.json"/>'
+            },
+            </c:if>
             ajax: {
                 url: '<c:url value="/admin/categoryLists.json"/>',
                 dataType: "json",

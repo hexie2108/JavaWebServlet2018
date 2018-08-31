@@ -209,15 +209,18 @@
             $('input[name="${CategoryListValidator.NAME_KEY}"]', categoryListForm).attr('placeholder', realData.name);
             $('textarea[name="${CategoryListValidator.DESCRIPTION_KEY}"]', categoryListForm).attr('placeholder', realData.description);
 
+
+            const prefix = "<c:url value="/${pageContext.servletContext.getInitParameter('categoryListImgsFolder')}/"/>";
+
             // Get images
             const divImg1 = $('#divImg1', categoryListForm);
             const divImg2 = $('#divImg2', categoryListForm);
             const divImg3 = $('#divImg3', categoryListForm);
 
             // Set source of the image(or empty image if img is undefined)
-            $('> img', divImg1).attr("src", realData.img1 || "");
-            $('> img', divImg2).attr("src", realData.img2 || "");
-            $('> img', divImg3).attr("src", realData.img3 || "");
+            $('img', divImg1).attr("src", realData.img1 !== undefined? prefix + realData.img1: "");
+            $('img', divImg2).attr("src", realData.img2 !== undefined? prefix + realData.img2: "");
+            $('img', divImg3).attr("src", realData.img3 !== undefined? prefix + realData.img3: "");
 
             const m = {
                 'img2': $('> div > .input-group', divImg2),
