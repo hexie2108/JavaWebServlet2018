@@ -362,7 +362,8 @@ public class JSONProductsServlet extends HttpServlet {
     }
 
     private void createProduct(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
-        Path path = ServletUtility.getFolder(getServletContext(), "productImgsFolder");
+        Path pathImg = ServletUtility.getFolder(getServletContext(), "productImgsFolder");
+        Path pathLogo = ServletUtility.getFolder(getServletContext(), "productLogoImgsFolder");
 
         String name = req.getParameter(ProductValidator.NAME_KEY);
         String description = req.getParameter(ProductValidator.DESCRIPTION_KEY);
@@ -420,8 +421,8 @@ public class JSONProductsServlet extends HttpServlet {
             return;
         }
 
-        String sImg = subImg(req, res, path, null, img.getInputStream());
-        String sLogo = subImg(req, res, path, null, logo.getInputStream());
+        String sImg = subImg(req, res, pathImg, null, img.getInputStream());
+        String sLogo = subImg(req, res, pathLogo, null, logo.getInputStream());
 
         Product product = new Product();
         product.setName(name);

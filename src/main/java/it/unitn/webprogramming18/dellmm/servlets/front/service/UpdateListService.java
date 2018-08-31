@@ -24,6 +24,7 @@ import it.unitn.webprogramming18.dellmm.util.i18n;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.servlet.ServletException;
@@ -35,6 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import sun.security.tools.PathList;
 
 /**
  * servizio per creare e modificare la lista
@@ -89,7 +91,11 @@ public class UpdateListService extends HttpServlet {
         if(action == null){
             ServletUtility.sendError(request, response, 400, "users.errors.missingAction"); //manca il parametro action
             return;
-	}
+        }
+
+        Path pathImg = ServletUtility.getFolder(getServletContext(),"listImgsFolder");
+        Path pathLogo = ServletUtility.getFolder(getServletContext(),"productLogoImgsFolder");
+        Path pathList = ServletUtility.getFolder(getServletContext(),"listImgsFolder");
 
         //in caso di delete
         if (action.equals("delete")) {
@@ -131,13 +137,13 @@ public class UpdateListService extends HttpServlet {
                 List<Product> productList = productDAO.getPrivateProductByListId(Integer.parseInt(listId));
                 for (Product product : productList) {
                     //elimina file img del prodtto
-                    FileUtils.deleteFile(uploadPath + File.separator + ConstantsUtils.IMAGE_OF_PRODUCT + File.separator + product.getImg());
+                    ServletUtility.deleteFile(pathImg, product.getImg(), getServletContext());
                     //elimina file img del logo del prodtto
-                    FileUtils.deleteFile(uploadPath + File.separator + ConstantsUtils.IMAGE_LOGO_OF_PRODUCT + File.separator + product.getLogo());
+                    ServletUtility.deleteFile(pathLogo, product.getLogo(), getServletContext());
                 }
 
                 //elimina file img della lista
-                FileUtils.deleteFile(uploadPath + File.separator + ConstantsUtils.IMAGE_OF_LIST + File.separator + shoppingList.getImg());
+                ServletUtility.deleteFile(pathList, shoppingList.getImg(), getServletContext());
 
                 //elimina la lista
                 listDAO.deleteListByListId(Integer.parseInt(listId));
@@ -170,6 +176,8 @@ public class UpdateListService extends HttpServlet {
         @Override
         protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
         {
+
+            Path pathList = ServletUtility.getFolder(getServletContext(),"listImgsFolder");
 
                 //Language bundle
                 ResourceBundle rb = i18n.getBundle(request);
@@ -312,6 +320,8 @@ public class UpdateListService extends HttpServlet {
                 //in caso di update
                 else if (action.equals("update"))
                 {
+                    Path path = ServletUtility.getFolder(getServletContext(),"listImgsFolder");
+
                         //se manca id lista da aggiornare
                         CheckErrorUtils.isNull(listId, rb.getString("error.parseRequest"));
 
@@ -344,7 +354,7 @@ public class UpdateListService extends HttpServlet {
                     //set il percorso complete per salvare immagine
                     uploadPath = request.getServletContext().getRealPath("/") + ConstantsUtils.IMAGE_BASE_PATH + File.separator + ConstantsUtils.IMAGE_OF_LIST;
                     //elimina file img vecchio
-                    FileUtils.deleteFile(uploadPath + File.separator + shoppingList.getImg());
+                    ServletUtility.deleteFile(pathList, shoppingList.getImg(), getServletContext());
                     //salva l'immagine e get il nome salvato
                     listImg = FileUtils.upload(listImgFileItem, uploadPath, ConstantsUtils.IMAGE_OF_LIST_WIDTH, ConstantsUtils.IMAGE_OF_LIST_HEIGHT);
                     //set nuovo file

@@ -65,6 +65,13 @@
         <param-value>image/user</param-value>
     </context-param>
 
+    <context-param>
+        <description>Path of the folder where product logos are stored</description>
+        <param-name>productLogoImgsFolder</param-name>
+        <param-value>image/productLogo</param-value>
+    </context-param>
+
+
     <!-- SMTP SETTINGS -->
     <context-param>
         <description>Hostname of the SMTP server</description>

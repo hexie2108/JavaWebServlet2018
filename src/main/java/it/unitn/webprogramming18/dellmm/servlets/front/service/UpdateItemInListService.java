@@ -19,6 +19,7 @@ import it.unitn.webprogramming18.dellmm.util.i18n;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.sql.Timestamp;
 import java.util.ResourceBundle;
 import javax.servlet.ServletException;
@@ -71,6 +72,9 @@ public class UpdateItemInListService extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ResourceBundle rb = i18n.getBundle(request);
+
+        Path pathProd = ServletUtility.getFolder(getServletContext(), "productImgsFolder");
+        Path pathLogo = ServletUtility.getFolder(getServletContext(), "productLogoImgsFolder");
 
         //string che memorizza il risultato dell'operazione
         String result = null;
@@ -149,13 +153,14 @@ public class UpdateItemInListService extends HttpServlet {
                                         //se product è nullo
                                         CheckErrorUtils.isNull(product, rb.getString("error.ProductNotExist"));
                                         //se il prodotto è privato
-                                        if (product.getPrivateListId() != 0)
+                                        if (product.getPrivateListId() != null)
                                         {
                                                 //bisogna prima eliminare immagine
                                                 String uploadPath = request.getServletContext().getRealPath("/") + IMAGE_BASE_PATH;
                                                 //elimina file img e file logo del prodotto
-                                                FileUtils.deleteFile(uploadPath + File.separator + IMAGE_PRODUCT + File.separator + product.getImg());
-                                                FileUtils.deleteFile(uploadPath + File.separator + IMAGE_LOGO_PRODUCT + File.separator + product.getLogo());
+
+                                            ServletUtility.deleteFile(pathProd, product.getImg(), getServletContext());
+                                            ServletUtility.deleteFile(pathLogo, product.getLogo(), getServletContext());
                                                 //poi elimina tale prodotto
                                                 productDAO.deleteProductById(Integer.parseInt(productId));
                                         }
