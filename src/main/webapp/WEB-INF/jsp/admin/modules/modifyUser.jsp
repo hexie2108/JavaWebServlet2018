@@ -155,7 +155,7 @@
             tooLong: "<fmt:message key="validateUser.errors.EMAIL_TOO_LONG"/>",
             emailInvalid: "<fmt:message key="validateUser.errors.EMAIL_NOT_VALID"/>",
             emailNoExists: "<fmt:message key="validateUser.errors.EMAIL_NOT_EXISTING"/>",
-            emailAlreadyActivated: "<fmt:message key="validateUser.errors.EMAIL_ALREADY_ACTIVATED"/>"
+            emailAlreadyActivated: "<fmt:message key="validateUser.errors.EMAIL_ALREADY_USED"/>"
         });
 
         const checkEmailStrict = validationUtils.user.validateEmail(false, false, () => false,  '<c:url value="/service/checkUserService"/>', {
@@ -163,7 +163,7 @@
             tooLong: "<fmt:message key="validateUser.errors.EMAIL_TOO_LONG"/>",
             emailInvalid: "<fmt:message key="validateUser.errors.EMAIL_NOT_VALID"/>",
             emailNoExists: "<fmt:message key="validateUser.errors.EMAIL_NOT_EXISTING"/>",
-            emailAlreadyActivated: "<fmt:message key="validateUser.errors.EMAIL_ALREADY_ACTIVATED"/>"
+            emailAlreadyActivated: "<fmt:message key="validateUser.errors.EMAIL_ALREADY_USED"/>"
         });
 
         const checkName = validationUtils.validateString(${FormValidator.FIRST_NAME_MAX_LEN},() => false, {
