@@ -56,9 +56,9 @@
 }
 
 .admin-page .admin-main-container .language-switch{
-
-        float: right;
-        margin-bottom: 1rem;
+        position: absolute;
+        right: 0;
+        margin-right: 2rem
 }
 
 
@@ -74,6 +74,7 @@
         border: 1px solid #d0d0d0;
         padding: 1rem;
         border-radius: .25rem;
+        padding-top: 3rem;
 }
 
 .admin-page .admin-main-container .content .statistics .statistics-head{
@@ -379,7 +380,9 @@
                 padding: 0;
         }
 
-   
+        .admin-page .admin-main-container .content{
+                margin-top: 3rem;
+        }
 
 
 }
