@@ -209,12 +209,14 @@
             $('input[name="${ProductValidator.NAME_KEY}"]', productForm).attr('placeholder', realData.name);
             $('textarea[name="${ProductValidator.DESCRIPTION_KEY}"]', productForm).attr('placeholder', realData.description);
 
+            const prefix = "<c:url value="/${pageContext.servletContext.getInitParameter('productImgsFolder')}/"/>";
+
             // Set image source
             const divImg1 = $('#divImg', productForm);
-            divImg1.find('img').attr("src", realData.img || "");
-
             const divLogo = $('#divLogo', productForm);
-            divLogo.find('img').attr("src", realData.logo || "");
+
+            divImg1.find('img').attr("src", realData.img !== undefined? prefix + realData.img : "");
+            divLogo.find('img').attr("src", realData.logo!== undefined? prefix + realData.logo: "");
 
             $('select[name="${ProductValidator.CATEGORY_KEY}"] option:selected').prop("selected", false);
             $('select[name="${ProductValidator.CATEGORY_KEY}"] option[value="'+ realData.categoryId +'"]').prop("selected", true);
