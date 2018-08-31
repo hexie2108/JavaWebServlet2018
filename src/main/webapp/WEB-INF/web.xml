@@ -163,7 +163,6 @@
 
                 <url-pattern>/notifications</url-pattern>
                 <url-pattern>/notifications.json</url-pattern>
-                <url-pattern>/markNotification.json</url-pattern>
                 <url-pattern>/mylists</url-pattern>
                 <url-pattern>/mylist</url-pattern>
                 <url-pattern>/updateList</url-pattern>
@@ -340,34 +339,6 @@
         <url-pattern>/service/updateProductService</url-pattern>
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>CheckExistenceOfEmailService</servlet-name>
-        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.service.CheckExistenceOfEmailService
-        </servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>CheckExistenceOfEmailService</servlet-name>
-        <url-pattern>/service/checkExistenceOfEmailService</url-pattern>
-    </servlet-mapping>
-
-        <servlet>
-                <servlet-name>AddUpdateCategoryListServlet</servlet-name>
-                <servlet-class>it.unitn.webprogramming18.dellmm.servlets.another.AddUpdateCategoryListServlet</servlet-class>
-        </servlet>
-        <servlet-mapping>
-                <servlet-name>AddUpdateCategoryListServlet</servlet-name>
-                <url-pattern>/AddUpdateCategoryListServlet</url-pattern>
-        </servlet-mapping>
-
-    <servlet>
-        <servlet-name>AddUpdateCategoryProductServlet</servlet-name>
-        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.another.AddUpdateCategoryProductServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>AddUpdateCategoryProductServlet</servlet-name>
-        <url-pattern>/AddUpdateCategoryProductServlet</url-pattern>
-    </servlet-mapping>
-
         <servlet>
                 <servlet-name>UpgradeUserToAdminServlet</servlet-name>
                 <servlet-class>it.unitn.webprogramming18.dellmm.servlets.adminSystem.UpgradeUserToAdminServlet</servlet-class>
@@ -379,15 +350,6 @@
 
     <!-- user system servlet -->
     <servlet>
-        <servlet-name>ValidateUserServlet</servlet-name>
-        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.ValidateUserServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>ValidateUserServlet</servlet-name>
-        <url-pattern>/validateUser</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>RegisterServlet</servlet-name>
         <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.RegisterServlet</servlet-class>
     </servlet>
@@ -395,24 +357,6 @@
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/register</url-pattern>
     </servlet-mapping>
-
-    <servlet>
-        <servlet-name>AlreadyLoggedInServlet</servlet-name>
-        <servlet-class>it.unitn.webprogramming18.dellmm.servlets.userSystem.AlreadyLoggedInServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>AlreadyLoggedInServlet</servlet-name>
-        <url-pattern>/alreadyLoggedIn</url-pattern>
-    </servlet-mapping>
-
-        <servlet>
-                <servlet-name>JSONMarkNotificationServlet</servlet-name>
-                <servlet-class>it.unitn.webprogramming18.dellmm.servlets.another.JSONMarkNotificationServlet</servlet-class>
-        </servlet>
-        <servlet-mapping>
-                <servlet-name>JSONMarkNotificationServlet</servlet-name>
-                <url-pattern>/markNotification.json</url-pattern>
-        </servlet-mapping>
         <servlet>
                 <servlet-name>UserValidateJS</servlet-name>
                 <jsp-file>/WEB-INF/js/userValidateJS.jsp</jsp-file>
