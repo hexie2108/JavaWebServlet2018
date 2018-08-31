@@ -151,29 +151,29 @@
         const progressBar = modifyUserForm.find(".progress-bar");
 
         const checkEmailLazy = validationUtils.user.validateEmail(true, false, () => false,  '<c:url value="/service/checkUserService"/>', {
-            emptyOrNull: '<fmt:message key="validateUser.errors.EMAIL_MISSING"/>',
-            tooLong: '<fmt:message key="validateUser.errors.EMAIL_TOO_LONG"/>',
-            emailInvalid: '<fmt:message key="validateUser.errors.EMAIL_NOT_VALID"/>',
-            emailNoExists: 'noExist', // TODO: To i18n
-            emailAlreadyActivated: 'alreadyActivated' // TODO: To i18n
+            emptyOrNull: "<fmt:message key="validateUser.errors.EMAIL_MISSING"/>",
+            tooLong: "<fmt:message key="validateUser.errors.EMAIL_TOO_LONG"/>",
+            emailInvalid: "<fmt:message key="validateUser.errors.EMAIL_NOT_VALID"/>",
+            emailNoExists: "<fmt:message key="validateUser.errors.EMAIL_NOT_EXISTING"/>",
+            emailAlreadyActivated: "<fmt:message key="validateUser.errors.EMAIL_ALREADY_ACTIVATED"/>"
         });
 
         const checkEmailStrict = validationUtils.user.validateEmail(false, false, () => false,  '<c:url value="/service/checkUserService"/>', {
-            emptyOrNull: '<fmt:message key="validateUser.errors.EMAIL_MISSING"/>',
-            tooLong: '<fmt:message key="validateUser.errors.EMAIL_TOO_LONG"/>',
-            emailInvalid: '<fmt:message key="validateUser.errors.EMAIL_NOT_VALID"/>',
-            emailNoExists: 'noExist', // TODO: To i18n
-            emailAlreadyActivated: 'alreadyActivated' // TODO: To i18n
+            emptyOrNull: "<fmt:message key="validateUser.errors.EMAIL_MISSING"/>",
+            tooLong: "<fmt:message key="validateUser.errors.EMAIL_TOO_LONG"/>",
+            emailInvalid: "<fmt:message key="validateUser.errors.EMAIL_NOT_VALID"/>",
+            emailNoExists: "<fmt:message key="validateUser.errors.EMAIL_NOT_EXISTING"/>",
+            emailAlreadyActivated: "<fmt:message key="validateUser.errors.EMAIL_ALREADY_ACTIVATED"/>"
         });
 
         const checkName = validationUtils.validateString(${FormValidator.FIRST_NAME_MAX_LEN},() => false, {
-            emptyOrNull: '<fmt:message key="validateUser.errors.FIRST_NAME_MISSING"/>',
-            tooLong: '<fmt:message key="validateUser.errors.FIRST_NAME_TOO_LONG"/>',
+            emptyOrNull: "<fmt:message key="validateUser.errors.FIRST_NAME_MISSING"/>",
+            tooLong: "<fmt:message key="validateUser.errors.FIRST_NAME_TOO_LONG"/>",
         });
 
         const checkDescription = validationUtils.validateString(${FormValidator.LAST_NAME_MAX_LEN}, () => false, {
-            emptyOrNull: '<fmt:message key="validateUser.errors.LAST_NAME_MISSING"/>',
-            tooLong: '<fmt:message key="validateUser.errors.LAST_NAME_TOO_LONG"/>',
+            emptyOrNull: "<fmt:message key="validateUser.errors.LAST_NAME_MISSING"/>",
+            tooLong: "<fmt:message key="validateUser.errors.LAST_NAME_TOO_LONG"/>",
         });
 
         const checkPassword = validationUtils.user.validatePassword(() => false, {
@@ -184,10 +184,10 @@
             minDigits: 1,
             minSymbol: 1,
         },{
-            passwordMissingOrEmpty:'<fmt:message key="validateUser.errors.PASSWORD_MISSING"/>',
-            passwordTooLong:'<fmt:message key="validateUser.errors.PASSWORD_TOO_LONG"/>',
-            passwordTooShort:'<fmt:message key="validateUser.errors.PASSWORD_TOO_SHORT"/>',
-            passwordInvalid:'<fmt:message key="validateUser.errors.PASSWORD_NOT_VALID"/>',
+            passwordMissingOrEmpty:"<fmt:message key="validateUser.errors.PASSWORD_MISSING"/>",
+            passwordTooLong:"<fmt:message key="validateUser.errors.PASSWORD_TOO_LONG"/>",
+            passwordTooShort:"<fmt:message key="validateUser.errors.PASSWORD_TOO_SHORT"/>",
+            passwordInvalid:"<fmt:message key="validateUser.errors.PASSWORD_NOT_VALID"/>",
         });
 
         const checkAvatar = validationUtils.user.validateAvatar(
@@ -195,12 +195,12 @@
             ["","user.svg", "user-astronaut.svg", "user-ninja.svg", "user-secret.svg"],
             ${FormValidator.MAX_LEN_FILE},
             () => false, {
-                fileEmptyOrNull: '<fmt:message key="validateUser.errors.AVATAR_IMG_MISSING"/>',
-                fileTooBig: '<fmt:message key="validateUser.errors.AVATAR_IMG_TOO_BIG"/>',
+                fileEmptyOrNull: "<fmt:message key="validateUser.errors.AVATAR_IMG_MISSING"/>",
+                fileTooBig: "<fmt:message key="validateUser.errors.AVATAR_IMG_TOO_BIG"/>",
                 fileContentTypeMissingOrType: "<fmt:message key="validateUser.errors.AVATAR_FILE_CONTENT_MISSING_OR_EMTPY"/>",
-                fileOfWrongType: '<fmt:message key="validateUser.errors.AVATAR_IMG_NOT_IMG"/>',
-                selectValMissing: '<fmt:message key="validateUser.errors.AVATAR_MISSING"/>',
-                selectValInvalid: '<fmt:message key="validateUser.errors.AVATAR_NOT_VALID"/>',
+                fileOfWrongType: "<fmt:message key="validateUser.errors.AVATAR_IMG_NOT_IMG"/>",
+                selectValMissing: "<fmt:message key="validateUser.errors.AVATAR_MISSING"/>",
+                selectValInvalid: "<fmt:message key="validateUser.errors.AVATAR_NOT_VALID"/>",
             }
         );
 

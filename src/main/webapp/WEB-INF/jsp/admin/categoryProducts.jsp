@@ -94,6 +94,7 @@
 
             $('td', row).eq(4).html(
                 $('<div/>', {
+                    class: 'btn-group',
                     html: [
                         $('<button/>', {
                             class: 'btn btn-md btn-primary',
