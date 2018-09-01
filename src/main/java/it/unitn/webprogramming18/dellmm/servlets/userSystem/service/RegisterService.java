@@ -51,7 +51,6 @@ public class RegisterService extends HttpServlet {
 
         emailFactory = (EmailFactory) super.getServletContext().getAttribute("emailFactory");
         CheckErrorUtils.isNull(emailFactory, "Impossible to get email factory for email system");
-
     }
 
     /**

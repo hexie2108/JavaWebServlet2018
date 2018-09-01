@@ -9,6 +9,7 @@ import it.unitn.webprogramming18.dellmm.javaBeans.CategoryProduct;
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
 import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
+import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 import it.unitn.webprogramming18.dellmm.util.i18n;
 
 import java.io.IOException;
@@ -54,7 +55,10 @@ public class CategoryServlet extends HttpServlet {
                 //get id categoria
                 String catId = request.getParameter("catId");
                 //se id categoria non esiste
-                CheckErrorUtils.isNull(catId, rb.getString("error.missingCategoryProductId"));
+                if(catId == null) {
+                    ServletUtility.sendError(request, response, 400, "error.missingCategoryProductId");
+                    return;
+                }
 
                 //get beans di categoria
                 CategoryProduct categoriaCorrente = null;
@@ -67,7 +71,10 @@ public class CategoryServlet extends HttpServlet {
                         throw new ServletException(ex.getMessage(), ex);
                 }
                 //se beans di categoria non esiste
-                CheckErrorUtils.isNull(categoriaCorrente, rb.getString("error.CategoryProductNotExist"));
+                if(categoriaCorrente == null) {
+                    ServletUtility.sendError(request, response, 400, "error.CategoryProductNotExist");
+                    return;
+                }
 
         //get numero di prodotto per singola pagina
         int numebrProductForList = ConstantsUtils.NUMBER_PRODUCT_FOR_CATEGORY;

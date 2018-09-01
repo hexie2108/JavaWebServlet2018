@@ -79,7 +79,10 @@ public class UpdateListServlet extends HttpServlet {
                                 //get list bean
                                 shoppingList = listDAO.getByPrimaryKey(Integer.parseInt(listId));
                                 //se lista è nullo
-                                CheckErrorUtils.isNull(shoppingList, rb.getString("error.ListNotExist"));
+                                if(shoppingList == null) {
+                                    ServletUtility.sendError(request, response, 400, "error.ListNotExist");
+                                    return;
+                                }
 
                                 //get permesso dell'utente su tale lista
                                 permission = permissionDAO.getUserPermissionOnListByIds(user.getId(), Integer.parseInt(listId));

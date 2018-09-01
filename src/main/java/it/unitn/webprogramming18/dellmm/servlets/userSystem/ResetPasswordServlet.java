@@ -70,8 +70,14 @@ public class ResetPasswordServlet extends HttpServlet
                 String email = request.getParameter(FormValidator.EMAIL_KEY);
                 String resetPwdLink = request.getParameter("resetPwdLink");
 
-                CheckErrorUtils.isNull(email, "il parametro email è nullo");
-                CheckErrorUtils.isNull(resetPwdLink, "il parametro resetPwdLink è nullo");
+                if (email == null) {
+                    ServletUtility.sendError(request, response, 400,  "validateUser.errors.EMAIL_MISSING");
+                    return;
+                }
+                if (resetPwdLink == null) {
+                    ServletUtility.sendError(request, response, 400,  "validateUser.errors.RESETPWD_PARAMETER_MISSING");
+                    return;
+                }
 
                 try
                 {

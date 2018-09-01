@@ -81,7 +81,10 @@ public class DisplaySpecificListServlet extends HttpServlet {
                 //ottiene listid
                 String listIdInString = request.getParameter("listId");
                 //se listid è nullo
-                CheckErrorUtils.isNull(listIdInString, rb.getString("error.missingListId"));
+                if(listIdInString == null) {
+                    ServletUtility.sendError(request, response, 400, "error.missingListId");
+                    return;
+                }
 
         //trasforma listid in intero
         int listId = Integer.parseInt(listIdInString);

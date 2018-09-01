@@ -102,7 +102,10 @@ public class UpdateListService extends HttpServlet {
 
                         //get id lista
                         listId = request.getParameter("listId");
-                        CheckErrorUtils.isNull(listId, rb.getString("error.missingListId"));
+                        if (listId == null) {
+                            ServletUtility.sendError(request, response, 400, "error.missingListId");
+                            return;
+                        }
 
             //get user corrente
             user = (User) request.getSession().getAttribute("user");
@@ -112,7 +115,10 @@ public class UpdateListService extends HttpServlet {
                                 //get beans di lista da DB
                                 shoppingList = listDAO.getByPrimaryKey(Integer.parseInt(listId));
                                 //se lista è nullo
-                                CheckErrorUtils.isNull(shoppingList, rb.getString("error.ListNotExist"));
+                                if (shoppingList == null) {
+                                    ServletUtility.sendError(request, response, 400, "error.ListNotExist");
+                                    return;
+                                }
 
                 //get permesso dell'utente su tale lista
                 permission = permissionDAO.getUserPermissionOnListByIds(user.getId(), Integer.parseInt(listId));
@@ -323,7 +329,10 @@ public class UpdateListService extends HttpServlet {
                     Path path = ServletUtility.getFolder(getServletContext(),"listImgsFolder");
 
                         //se manca id lista da aggiornare
-                        CheckErrorUtils.isNull(listId, rb.getString("error.parseRequest"));
+                        if (listId == null) {
+                            ServletUtility.sendError(request, response, 400, "error.missingListId");
+                            return;
+                        }
 
             //get permesso dell'utente su tale lista
             try {
@@ -342,7 +351,10 @@ public class UpdateListService extends HttpServlet {
                                 //get beans di lista da DB
                                 shoppingList = listDAO.getByPrimaryKey(Integer.parseInt(listId));
                                 //se la lista è nulla
-                                CheckErrorUtils.isNull(shoppingList, rb.getString("error.ListNotExist"));
+                                if (shoppingList == null) {
+                                    ServletUtility.sendError(request, response, 400, "error.ListNotExist");
+                                    return;
+                                }
 
                 shoppingList.setName(listName);
                 shoppingList.setCategoryList(Integer.parseInt(listCategory));

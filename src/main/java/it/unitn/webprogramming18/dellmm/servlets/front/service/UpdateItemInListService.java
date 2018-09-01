@@ -98,8 +98,14 @@ public class UpdateItemInListService extends HttpServlet
                         ServletUtility.sendError(request, response, 400, "users.errors.missingAction"); //manca il parametro action
                         return;
                 }
-                CheckErrorUtils.isNull(listId, rb.getString("error.missingListId"));
-                CheckErrorUtils.isNull(productId, rb.getString("error.missingProductId"));
+                if (listId == null) {
+                    ServletUtility.sendError(request, response, 400, "error.missingListId");
+                    return;
+                }
+                if (productId == null) {
+                    ServletUtility.sendError(request, response, 400, "error.missingProductId");
+                    return;
+                }
 
                 //get user corrente
                 User user = (User) request.getSession().getAttribute("user");
@@ -174,7 +180,10 @@ public class UpdateItemInListService extends HttpServlet
                                         //get beans di prodotto
                                         product = productDAO.getByPrimaryKey(Integer.parseInt(productId));
                                         //se product è nullo
-                                        CheckErrorUtils.isNull(product, rb.getString("error.ProductNotExist"));
+                                        if (product == null) {
+                                            ServletUtility.sendError(request, response, 400, "error.ProductNotExist");
+                                            return;
+                                        }
                                         //se il prodotto è privato
                                         if (product.getPrivateListId() != null)
                                         {

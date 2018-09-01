@@ -68,7 +68,10 @@ public class CommentService extends HttpServlet {
             //get testo di commento
             String commentText = request.getParameter("commentText");
             //se manca parametro id lista servlet.errors.nullTextParameter
-            CheckErrorUtils.isNull(listId, rb.getString("error.ListNotExist"));
+            if (listId == null) {
+                ServletUtility.sendError(request, response, 400, "error.ListNotExist");
+                return;
+            }
             //se manca testo di commento
             if(commentText == null){
 		ServletUtility.sendError(request, response, 400, "servlet.errors.nullTextParameter"); //manca il parametro commentText
@@ -116,7 +119,10 @@ public class CommentService extends HttpServlet {
             //get id commento
             String commentId = request.getParameter("commentId");
             //se id commento è nullo
-            CheckErrorUtils.isNull(commentId, rb.getString("error.missingCommentId"));
+            if (commentId == null) {
+                ServletUtility.sendError(request, response, 400, "error.missingCommentId");
+                return;
+            }
 
             int commentUserId = 0;
             //get user corrente

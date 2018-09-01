@@ -51,7 +51,10 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet {
                         //get id prodotto da aggiungere
                         String productId = request.getParameter("productId");
                         //se id prodotto è nullo
-                        CheckErrorUtils.isNull(productId, rb.getString("error.missingProductId"));
+                        if (productId == null) {
+                            ServletUtility.sendError(request, response, 400, "error.missingProductId");
+                            return;
+                        }
 
             //get la cookie della lista locale
             Cookie cookOfList = null;
@@ -117,7 +120,10 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet {
                         //get id prodotto da eliminare
                         String productId = request.getParameter("productId");
                         //se id prodotto è nullo
-                        CheckErrorUtils.isNull(productId, rb.getString("error.missingProductId"));
+                        if (productId == null) {
+                            ServletUtility.sendError(request, response, 400, "error.missingProductId");
+                            return;
+                        }
 
             //get la cookie della lista locale
             Cookie cookOfList = null;

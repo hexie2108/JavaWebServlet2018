@@ -64,7 +64,10 @@ public class SharingService extends HttpServlet {
         //get id lista
         String listId = request.getParameter("listId");
         //se id lista è nullo
-        CheckErrorUtils.isNull(listId, rb.getString("error.missingListId"));
+        if (listId == null) {
+            ServletUtility.sendError(request, response, 400, "error.missingListId");
+            return;
+        }
 
         //solo il proprietario della lista può manipolare sulla condivisione
         //quindi ogni volta deve controllare prima se utente corrente è il proprietario della lista
@@ -75,7 +78,10 @@ public class SharingService extends HttpServlet {
             //get shoppingList bean
             shoppingList = listDAO.getByPrimaryKey(Integer.parseInt(listId));
             //se lista è nullo
-            CheckErrorUtils.isNull(shoppingList, rb.getString("error.ListNotExist"));
+            if (shoppingList == null) {
+                ServletUtility.sendError(request, response, 400, "error.ListNotExist");
+                return;
+            }
         } catch (DAOException ex) {
             throw new ServletException(ex.getMessage(), ex);
         }
@@ -159,14 +165,20 @@ public class SharingService extends HttpServlet {
             //get id permesso
             String permissionId = request.getParameter("permissionId");
             //se il permissionId è  nullo
-            CheckErrorUtils.isNull(permissionId, rb.getString("error.missingPermissionId"));
+            if (permissionId == null) {
+                ServletUtility.sendError(request, response, 400, "error.missingPermissionId");
+                return;
+            }
 
             //get beans di permesso
             Permission permission = null;
             try {
                 permission = permissionDAO.getByPrimaryKey(Integer.parseInt(permissionId));
                 //se il permesso è  nullo
-                CheckErrorUtils.isNull(permissionId, rb.getString("error.PermissionNotExist"));
+                if (permission == null) {
+                    ServletUtility.sendError(request, response, 400, "error.PermissionNotExist");
+                    return;
+                }
             } catch (DAOException ex) {
                 throw new ServletException(ex.getMessage(), ex);
             }
@@ -215,7 +227,10 @@ public class SharingService extends HttpServlet {
             //get id permesso
             String permissionId = request.getParameter("permissionId");
             //se il permissionId è  nullo
-            CheckErrorUtils.isNull(permissionId, rb.getString("error.missingPermissionId"));
+            if (permissionId == null) {
+                ServletUtility.sendError(request, response, 400, "error.missingPermissionId");
+                return;
+            }
 
             //elimina il permesso
             try {

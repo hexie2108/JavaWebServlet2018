@@ -66,7 +66,10 @@ public class ChangeListService extends HttpServlet {
                 //get id lista
                 String listId = request.getParameter("listId");
                 //se listId è nullo
-               CheckErrorUtils.isNull(listId, rb.getString("error.missingListId"));
+               if (listId == null) {
+                   ServletUtility.sendError(request, response, 400, "error.missingListId");
+                   return;
+               }
 
                 //get user corrente
                 User user = (User) request.getSession().getAttribute("user");

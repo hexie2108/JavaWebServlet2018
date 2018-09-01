@@ -154,7 +154,10 @@ public class ModifyUserService extends HttpServlet
                                 if (avatar.equals(FormValidator.CUSTOM_AVATAR))
                                 {
                                         //check file caricato
-                                        CheckErrorUtils.isNull(customAvatarImgFile, rb.getString("validateUser.errors.AVATAR_IMG_MISSING"));
+                                        if (customAvatarImgFile == null || customAvatarImgFile.getSize() == 0) {
+                                            ServletUtility.sendError(request, response, 400, "validateUser.errors.AVATAR_IMG_MISSING");
+                                            return;
+                                        }
                                         CheckErrorUtils.isFalse(FormValidator.validateCustomAvatarImg(customAvatarImgFile), rb.getString("validateUser.errors.AVATAR_IMG_NOT_VALID"));
 
                                         avatar = subImg(request, path, user.getImg(), customAvatarImgFile.getInputStream());
