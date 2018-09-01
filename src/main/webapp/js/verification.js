@@ -6,7 +6,7 @@
         donetyping: function(callback,timeout){
             timeout = timeout || 4e2; // 1 second default timeout
             let timeoutReference;
-            const doneTyping = function(el){
+            const tmpF= function(el){
                 if (!timeoutReference) {
                     return;
                 }
@@ -17,26 +17,35 @@
 
             return this.each(function(i,el){
                 const $el = $(el);
-                $el.is(':input') && $el.on('keyup keydown keypress paste',function(e){
-                    // This catches the backspace button in chrome, but also prevents
-                    // the event from triggering too preemptively. Without this line,
-                    // using tab/shift+tab will make the focused element fire the callback.
-                    if (e.type=='keyup' && e.keyCode!=8) return;
+                if($el.is(':input')){
+                     $el.on('keyup keydown keypress paste',function(e){
+                        // This catches the backspace button in chrome, but also prevents
+                        // the event from triggering too preemptively. Without this line,
+                        // using tab/shift+tab will make the focused element fire the callback.
+                        if (e.type=='keyup' && e.keyCode!=8) return;
 
-                    // Check if timeout has been set. If it has, "reset" the clock and
-                    // start over again.
-                    if (timeoutReference) {
-                        clearTimeout(timeoutReference);
-                    }
+                        // Check if timeout has been set. If it has, "reset" the clock and
+                        // start over again.
+                        if (timeoutReference) {
+                            clearTimeout(timeoutReference);
+                        }
 
-                    timeoutReference = setTimeout(function(){
-                        // if we made it here, our timeout has elapsed. Fire the callback
-                        doneTyping(el);
-                    }, timeout);
-                }).on('change blur',function(){
-                    // If we can, fire the event since we're leaving the field
-                    doneTyping(el);
-                });
+                        timeoutReference = setTimeout(function(){
+                            // if we made it here, our timeout has elapsed. Fire the callback
+                            tmpF(el);
+                        }, timeout);
+                    }).on('change blur',function(){
+                        // If we can, fire the event since we're leaving the field
+                         if (timeoutReference) {
+                             clearTimeout(timeoutReference);
+                         }
+
+                        timeoutReference = setTimeout(function(){
+                            // if we made it here, our timeout has elapsed. Fire the callback
+                            tmpF(el);
+                        }, timeout);
+                    });
+                }
             });
         }
     });
@@ -755,7 +764,7 @@ const formUtils = (function(){
      * @param {Number=} timeout timeout after which the callback is called(used to prevent to call too often the callback), if not specified a default is used
      */
     function timedChange(form, callback, timeout) {
-        const radioAndFile = $('input[type="radio"], input[type="file"], select', form);
+        const radioAndFile = $('input[type="radio"], input[type="file"], select, input[type="checkbox"]', form);
         radioAndFile.on('blur change',callback);
         $('input, textarea', form).not(radioAndFile).donetyping(callback, timeout);
     }

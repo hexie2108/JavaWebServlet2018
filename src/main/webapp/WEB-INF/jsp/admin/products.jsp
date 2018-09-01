@@ -29,9 +29,28 @@
                            value="${param['description']}"/></td>
                 <td></td>
                 <td></td>
-                <td></td>
-                <td><input class="form-control" type="text" name="privateListId" form="filterForm"
-                           value="${param['privateListId']}"/></td>
+                <td>
+                    <custom:getAllCategoryOfProduct/>
+                    <select class="selectpicker form-control" multiple title="All" name="catId"
+                            data-selected-text-format="count" data-live-search="true"
+                            data-header="Select none to not filter, select some to filter"
+                            form="filterForm"
+                    >
+                        <c:forEach var="category" items="${categoryProductList}">
+                            <option value="${category.id}" ${paramValues.catId.stream().anyMatch((e) -> e.equals(category.id.toString())).get()?'selected':''}>${category.name}</option>
+                        </c:forEach>
+                    </select>
+                </td>
+                <td>
+                    <input class="form-control" type="number" name="privateListId" form="filterForm"
+                           value="${empty param['publicOnly']?param['privateListId']:''}"
+                           ${not empty param['publicOnly']?'disabled':''}
+                    />
+                    <div class="input-group custom-control custom-checkbox mb-2">
+                        <input id="inputPublicOnly" class="custom-control-input" type="checkbox" name="publicOnly" form="filterForm" ${not empty param['publicOnly']?'checked':''}>
+                        <label class="form-check-label custom-control-label ml-1" for="inputPublicOnly"><fmt:message key="products.label.publicOnly"/></label>
+                    </div>
+                </td>
                 <td>
                     <button class="btn btn-primary" id="btnNewCategoryList" data-toggle="modal"
                             data-target="#productModal" data-action="create"><i class="fas fa-plus"></i></button>
@@ -43,6 +62,7 @@
 
     <%@include file="modules/modifyProduct.jsp"%>
 </div>
+
 
 <!-- Custom verification utilities -->
 <link rel="stylesheet" type="text/css" href="<c:url value="/css/validation.css"/>"/>
@@ -111,7 +131,6 @@
 
         function formatChild(d) {
             const prefix = "<c:url value="/${pageContext.servletContext.getInitParameter('productImgsFolder')}"/>";
-            console.log(prefix);
 
             return $('<ul/>', {
                 class: 'list-unstyled',
@@ -154,6 +173,17 @@
 
         $('> thead > tr, tfoot > tr', tableDiv).prepend('<th></th>');
 
+        $('[name="publicOnly"]').change(function(){
+            const prLId= $('[name="privateListId"]');
+
+            if ($(this).is(':checked')) {
+                prLId.val("");
+                prLId.prop("disabled", true);
+            } else {
+                prLId.prop("disabled", false);
+            }
+        });
+
         const table = tableDiv.DataTable({
              <c:if test="${cookie.language.value == 'it' || pageContext.request.locale.language == 'it'}">
             language: {
@@ -171,7 +201,14 @@
                             .serializeArray()
                             .reduce(
                                 function(accumulator,pair){
-                                    accumulator[pair.name] = pair.value;
+                                    if (accumulator[pair.name] === undefined) {
+                                        accumulator[pair.name] = pair.value;
+                                    } else if (Array.isArray(accumulator[pair.name])) {
+                                        accumulator[pair.name].push(pair.value);
+                                    } else {
+                                        accumulator[pair.name] = [accumulator[pair.name],pair.value];
+                                    }
+
                                     return accumulator;
                                 }, {})
                     );

@@ -409,7 +409,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
                     "(? IS NULL OR Product.name LIKE CONCAT('%',TRIM(BOTH \"'\" FROM QUOTE(?)),'%')) AND " +
                     "(? IS NULL OR Product.description LIKE CONCAT('%',TRIM(BOTH \"'\" FROM QUOTE(?)),'%')) AND " +
                     (publicOnly?" (Product.privateListId IS NULL) ":"(? IS NULL OR Product.privateListId LIKE CONCAT('%',TRIM(BOTH \"'\" FROM QUOTE(?)),'%')) ") +
-                (!categories.isEmpty()?" AND Product.categoryProductId IN " + sbSql.toString():" ") +
+                (!categories.isEmpty()?" AND (Product.categoryProductId IN " + sbSql.toString() + ") ":" ") +
                 " ORDER BY " + orderBy + " " + sqlDirection + " " +
                 " LIMIT ?,? ";
 

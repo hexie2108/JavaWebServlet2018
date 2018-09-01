@@ -145,7 +145,7 @@ public class JSONProductsServlet extends HttpServlet {
             }
         }
 
-        Boolean publicOnly = Boolean.parseBoolean(request.getParameter("publicOnly"));
+        Boolean publicOnly = request.getParameter("publicOnly") != null;
 
         Integer privateListId;
         {

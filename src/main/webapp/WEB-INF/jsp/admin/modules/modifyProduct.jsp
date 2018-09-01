@@ -108,7 +108,6 @@
                                                 <fmt:message  key="category"/>
                                         </label>
                                 </div>
-                                <custom:getAllCategoryOfProduct/>
 
                                 <select class="form-control" id="input${ProductValidator.CATEGORY_KEY}" name="${ProductValidator.CATEGORY_KEY}">
                                     <c:forEach var="category" items="${categoryProductList}">
