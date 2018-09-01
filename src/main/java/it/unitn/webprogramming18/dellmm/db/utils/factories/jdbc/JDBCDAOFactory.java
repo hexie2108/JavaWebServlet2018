@@ -113,10 +113,4 @@ public class JDBCDAOFactory implements DAOFactory {
             throw new DAOFactoryException("Impossible to return the DAO", ex);
         }
     }
-
-
-    // TODO: Da togliere
-    public ConnectionPool getCP() {
-        return cp;
-    }
 }

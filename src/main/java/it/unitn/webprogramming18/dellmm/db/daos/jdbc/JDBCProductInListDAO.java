@@ -49,7 +49,6 @@ public class JDBCProductInListDAO extends JDBCDAO<ProductInList, Integer> implem
 
     @Override
     public Integer insert(ProductInList productInList) throws DAOException {
-        // TODO: Check missing finally?
         if (productInList == null) {
             throw new DAOException("productInList bean is null");
         }

@@ -64,7 +64,7 @@ public class PrepareAutocompleteDataServlet extends HttpServlet {
                 categories = Arrays.stream(catId).map(Integer::parseInt).collect(Collectors.toList());
             }
         } catch (NumberFormatException e) {
-            ServletUtility.sendError(request, response, 400, ""); // TODO: to i18n
+            ServletUtility.sendError(request, response, 400, "products.errors.catIdNotInt");
             return;
         }
 
