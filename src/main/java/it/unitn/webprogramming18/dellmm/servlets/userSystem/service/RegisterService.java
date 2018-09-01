@@ -30,7 +30,7 @@ import java.util.*;
 
 public class RegisterService extends HttpServlet {
 
-    private static final String JSP_PAGE_PATH = "/WEB-INF/jsp/userSystem/register.jsp";
+   
 
     private UserDAO userDAO;
     private EmailFactory emailFactory;
@@ -95,27 +95,27 @@ public class RegisterService extends HttpServlet {
                     {
                         //get il valore di vari parametri
                         case FormValidator.EMAIL_KEY:
-                            email = item.getString();
+                            email = item.getString("UTF-8");
                             break;
                         case FormValidator.FIRST_NAME_KEY:
-                            firstName = item.getString();
+                            firstName = item.getString("UTF-8");
                             break;
                         case FormValidator.LAST_NAME_KEY:
-                            lastName = item.getString();
+                            lastName = item.getString("UTF-8");
                             break;
                         case FormValidator.FIRST_PWD_KEY:
-                            password = item.getString();
+                            password = item.getString("UTF-8");
                             break;
                         case FormValidator.AVATAR_KEY:
-                            avatar = item.getString();
+                            avatar = item.getString("UTF-8");
                             break;
                         case FormValidator.INF_PRIVACY_KEY:
-                            privacy = item.getString();
+                            privacy = item.getString("UTF-8");
                             break;
                     }
                 }
                 //se item non è un campo normale di form e non è vuoto
-                else if (!item.getString().equals(""))
+                else if (!item.getString("UTF-8").equals(""))
                 {
                     // se name uguale "productImg",
                     if (item.getFieldName().equals(FormValidator.AVATAR_IMG_KEY))

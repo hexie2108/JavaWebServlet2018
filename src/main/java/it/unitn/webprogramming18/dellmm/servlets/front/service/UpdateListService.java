@@ -209,24 +209,24 @@ public class UpdateListService extends HttpServlet {
                     switch (item.getFieldName()) {
                         //get il valore di vari parametri
                         case "action":
-                            action = item.getString();
+                            action = item.getString("UTF-8");
                             break;
                         case "listName":
-                            listName = item.getString();
+                            listName = item.getString("UTF-8");
                             break;
                         case "listCategory":
-                            listCategory = item.getString();
+                            listCategory = item.getString("UTF-8");
                             break;
                         case "listDescription":
-                            listDescription = item.getString();
+                            listDescription = item.getString("UTF-8");
                             break;
                         case "listId":
-                            listId = item.getString();
+                            listId = item.getString("UTF-8");
                             break;
                     }
                 }
                 //se item name uguale "listImg", allora è file img
-                else if (item.getFieldName().equals("listImg") && !item.getString().equals("")) {
+                else if (item.getFieldName().equals("listImg") && !item.getString("UTF-8").equals("")) {
                     listImgFileItem = item;
                 }
             }

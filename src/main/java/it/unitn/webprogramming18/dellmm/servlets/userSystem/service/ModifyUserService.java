@@ -104,22 +104,22 @@ public class ModifyUserService extends HttpServlet
                                         {
 
                                                 case FormValidator.FIRST_NAME_KEY:
-                                                        firstName = item.getString();
+                                                        firstName = item.getString("UTF-8");
                                                         break;
                                                 case FormValidator.LAST_NAME_KEY:
-                                                        lastName = item.getString();
+                                                        lastName = item.getString("UTF-8");
                                                         break;
                                                 case FormValidator.FIRST_PWD_KEY:
-                                                        password = item.getString();
+                                                        password = item.getString("UTF-8");
                                                         break;
                                                 case FormValidator.AVATAR_KEY:
-                                                        avatar = item.getString();
+                                                        avatar = item.getString("UTF-8");
                                                         break;
 
                                         }
                                 }
                                 //se item non è un campo normale di form e non è vuoto
-                                else if (!item.getString().equals(""))
+                                else if (!item.getString("UTF-8").equals(""))
                                 {
 
                                         // se name uguale "productImg",

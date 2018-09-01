@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebFilter(filterName = "AdminUserOnlyFilter")
+
 public class AdminUserOnlyFilter implements Filter {
     private void refuse(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // Non fare caching di errori

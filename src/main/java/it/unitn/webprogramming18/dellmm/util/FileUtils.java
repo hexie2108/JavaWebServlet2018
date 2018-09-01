@@ -91,6 +91,7 @@ public class FileUtils {
         upload.setSizeMax(MAX_REQUEST_SIZE);
         // set la codifica in UTF8
         upload.setHeaderEncoding("UTF-8");
+        
         return upload;
 
     }

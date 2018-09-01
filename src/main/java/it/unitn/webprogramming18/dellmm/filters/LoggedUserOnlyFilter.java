@@ -33,7 +33,6 @@ public class LoggedUserOnlyFilter implements Filter
                 response.setHeader("Pragma", "no-cache");
                 response.setDateHeader("Expires", -1);
                 response.setCharacterEncoding("UTF-8");
-                
 
                 //get la sessione
                 HttpSession session = request.getSession(false);
@@ -46,6 +45,9 @@ public class LoggedUserOnlyFilter implements Filter
                 }
 
                 // Se l'utente è autenticato facciamo continuare
+                //     req.setCharacterEncoding("UTF-8");
+                //     resp.setContentType("text/html; charset=UTF-8");
+                //    resp.setCharacterEncoding("UTF-8");
                 chain.doFilter(req, resp);
         }
 

@@ -42,7 +42,7 @@ public class AlreadyLoggedUserOnlyFilter implements Filter
                 else
                 {
 
-                        // Se l'utente non è  autenticato facciamo continuare
+
                         chain.doFilter(req, resp);
                 }
 

@@ -85,6 +85,7 @@ public class FrontPagePrintListFilter implements Filter {
 
         }
 
+        
         chain.doFilter(request, response);
 
     }

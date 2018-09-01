@@ -53,7 +53,7 @@
                     <div class="comment-delete">
                         <c:if test="${comment.userId == sessionScope.user.id}">
                             <a class="btn btn-danger"
-                               href="<c:url value="/service/commentService?action=delete&commentId=${comment.id}"/>"><i
+                               href="<c:url value="/service/commentService?action=delete&commentId=${comment.id}"/>" onclick="if(!confirm('<fmt:message key="are you sure?" />')) return false;"><i
                                             class="fas fa-trash-alt"></i> <fmt:message key="delete"/></a>
                         </c:if>
                     </div>

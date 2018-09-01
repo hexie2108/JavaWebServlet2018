@@ -95,22 +95,22 @@ public class UpdateProductService extends HttpServlet {
                     switch (item.getFieldName()) {
                         //get il valore di vari parametri
                         case "productName":
-                            productName = item.getString();
+                            productName = item.getString("UTF-8");
                             break;
                         case "productCategory":
-                            productCategory = item.getString();
+                            productCategory = item.getString("UTF-8");
                             break;
                         case "productDescription":
-                            productDescription = item.getString();
+                            productDescription = item.getString("UTF-8");
                             break;
                         case "listId":
-                            listId = item.getString();
+                            listId = item.getString("UTF-8");
                             break;
 
                     }
                 }
                 //se item non è un campo normale di form e non è vuoto
-                else if (!item.getString().equals("")) {
+                else if (!item.getString("UTF-8").equals("")) {
 
                     // se name uguale "productImg",
                     if (item.getFieldName().equals("productImg")) {

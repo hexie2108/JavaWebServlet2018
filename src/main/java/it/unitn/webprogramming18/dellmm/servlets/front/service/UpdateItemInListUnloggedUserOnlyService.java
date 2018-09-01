@@ -81,7 +81,7 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet {
             else {
                 //controlla se esiste la ripetizione
                 //trasforma string di cookie in arrayList
-                List<String> productIdList = new ArrayList(Arrays.asList(cookOfList.getValue().split(",")));
+                List<String> productIdList = new ArrayList(Arrays.asList(cookOfList.getValue().split("-")));
                 for (String string : productIdList) {
                     if (productId.equals(string)) {
                         //in caso esiste set flag true
@@ -93,7 +93,7 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet {
                 //se non cè la ripetizione
                 if (!repeatItem) {
                     //aggiunge id nella cookie
-                    cookOfList.setValue(cookOfList.getValue() + "," + productId);
+                    cookOfList.setValue(cookOfList.getValue() + "-" + productId);
                     cookOfList.setPath(getServletContext().getContextPath());
                     //aggiorna la vita di cookie
                     cookOfList.setMaxAge(60 * 60 * 24 * 30);
@@ -144,7 +144,7 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet {
             else {
                 //controlla se esiste tale prodotto in lista
                 //trasforma string di cookie in arrayList
-                List<String> productIdList = new ArrayList(Arrays.asList(cookOfList.getValue().split(",")));
+                List<String> productIdList = new ArrayList(Arrays.asList(cookOfList.getValue().split("-")));
                 for (int i = 0; i < productIdList.size(); i++) {
                     if (productId.equals(productIdList.get(i))) {
                         //quando trova, elimina tale elemento dalla arrayList
@@ -165,7 +165,7 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet {
                 else {
 
                     //aggiorna cookie
-                    cookOfList.setValue(String.join(",", productIdList));
+                    cookOfList.setValue(String.join("-", productIdList));
                     cookOfList.setPath(getServletContext().getContextPath());
                     //aggiorna la vita di cookie
                     cookOfList.setMaxAge(60 * 60 * 24 * 30);
