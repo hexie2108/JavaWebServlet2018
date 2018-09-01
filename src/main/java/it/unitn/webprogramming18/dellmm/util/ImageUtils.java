@@ -67,19 +67,6 @@ public class ImageUtils {
      * Function to convert an inputStream that represents an image into a jpg image with specified width and height
      * using the center of the image(uses a piece as big as possible)
      * @param istream input stream from which read the image
-     * @param os the stream to output to
-     * @param newWidth the width of the new image
-     * @param newHeight the height of the new image
-     * @throws IOException
-     */
-    public static void convertImg2(InputStream istream, OutputStream os, int newWidth, int newHeight) throws IOException {
-        convertImg2Build(istream, newWidth, newHeight).toOutputStream(os);
-    }
-
-    /**
-     * Function to convert an inputStream that represents an image into a jpg image with specified width and height
-     * using the center of the image(uses a piece as big as possible)
-     * @param istream input stream from which read the image
      * @param output the file to output to
      * @param newWidth the width of the new image
      * @param newHeight the height of the new image

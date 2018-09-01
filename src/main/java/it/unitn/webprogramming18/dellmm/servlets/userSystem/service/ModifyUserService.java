@@ -159,8 +159,6 @@ public class ModifyUserService extends HttpServlet
                                      return;
                                 }
 
-                                //set il percorso complete per salvare immagine di user
-                                String uploadPath = request.getServletContext().getRealPath("/") + ConstantsUtils.IMAGE_BASE_PATH + File.separator + ConstantsUtils.IMAGE_OF_USER;
                                 //elimina avatar vecchio
 
                                 //se vuole caricare una nuova avatar personale

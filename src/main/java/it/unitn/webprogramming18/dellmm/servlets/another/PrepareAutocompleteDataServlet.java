@@ -23,8 +23,6 @@ public class PrepareAutocompleteDataServlet extends HttpServlet {
 
     private ProductDAO productDAO;
 
-    private static final double CONSIDER_TYPO = 0.8;
-
     @Override
     public void init() throws ServletException {
         DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
