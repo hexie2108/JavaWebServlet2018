@@ -23,8 +23,6 @@ public class PrepareAutocompleteDataServlet extends HttpServlet {
 
     private ProductDAO productDAO;
 
-    private static final double CONSIDER_TYPO = 0.8;
-
     @Override
     public void init() throws ServletException {
         DAOFactory daoFactory = (DAOFactory) super.getServletContext().getAttribute("daoFactory");
@@ -61,12 +59,12 @@ public class PrepareAutocompleteDataServlet extends HttpServlet {
         try{
             String[] catId = request.getParameterValues("catId");
             if(catId == null) {
-                categories = new ArrayList<Integer>();
+                categories = new ArrayList<>();
             } else {
                 categories = Arrays.stream(catId).map(Integer::parseInt).collect(Collectors.toList());
             }
         } catch (NumberFormatException e) {
-            ServletUtility.sendError(request, response, 400, ""); // TODO: to i18n
+            ServletUtility.sendError(request, response, 400, "products.errors.catIdNotInt");
             return;
         }
 

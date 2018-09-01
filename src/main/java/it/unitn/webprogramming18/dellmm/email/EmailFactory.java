@@ -32,8 +32,6 @@ public class EmailFactory
                     String password
         )
         {
-                // TODO: Aggiungere controllo null?
-
                 this.smtpHost = smtpHost;
                 this.smtpPort = smtpPort;
                 this.username = username;
@@ -104,7 +102,6 @@ public class EmailFactory
                 props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
                 props.setProperty("mail.smtp.auth", "true");
                 props.setProperty("mail.smtp.starttls.enable", "true");
-                //props.setProperty("mail.debug", "true"); //TODO: Da togliere
 
                 Session session = Session.getInstance(props, new Authenticator()
                 {

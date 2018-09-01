@@ -51,9 +51,6 @@ public class AutoLoginFilter implements Filter
                 // Se  l'utente non è autenticato
                 if (session.getAttribute("user") == null)
                 {
-
-                        //inizializza variabile a null;
-                        fastLoginkey = null;
                         //get la cookie dell'utente
                         cookies = request.getCookies();
                         //se utente ha la cookie di auto login key

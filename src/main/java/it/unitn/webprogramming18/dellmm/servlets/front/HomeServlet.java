@@ -59,8 +59,6 @@ public class HomeServlet extends HttpServlet {
         if (page != null && Integer.parseInt(page) > 1) {
             //aggiorna la posizione di start di query
             startPosition = (Integer.parseInt(page) - 1) * numebrProductForList;
-        } else {
-            page = "1";
         }
 
         List<CategoryProduct> categoryListForSlider = null;

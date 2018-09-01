@@ -51,7 +51,6 @@ public class JDBCListDAO extends JDBCDAO<ShoppingList, Integer> implements ListD
 
     @Override
     public Integer insert(ShoppingList list) throws DAOException {
-        // TODO: Check new return type
         if (list == null) {
             throw new DAOException("list bean is null");
         }

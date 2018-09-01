@@ -14,12 +14,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -231,7 +228,7 @@ public class JSONUsersServlet extends HttpServlet {
                     UserValidator.partialValidate(userDAO, kv)
                             .entrySet()
                             .stream()
-                            .collect(Collectors.toMap((Map.Entry<String, UserValidator.ErrorMessage> e) -> e.getKey(),
+                            .collect(Collectors.toMap(Map.Entry::getKey,
                                     (Map.Entry<String, UserValidator.ErrorMessage> e) -> UserValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString()
                                     )
                             );

@@ -19,9 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
 import java.util.List;
@@ -103,7 +101,7 @@ public class JSONCategoryListsServlet extends HttpServlet {
                         .entrySet()
                         .stream()
                         .collect(Collectors.toMap(
-                                (Map.Entry<String, CategoryListValidator.ErrorMessage> e) -> e.getKey(),
+                                Map.Entry::getKey,
                                 (Map.Entry<String, CategoryListValidator.ErrorMessage> e) -> CategoryListValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString()
                                 )
                         );
@@ -213,7 +211,7 @@ public class JSONCategoryListsServlet extends HttpServlet {
                         .entrySet()
                         .stream()
                         .collect(Collectors.toMap(
-                                (Map.Entry<String, CategoryListValidator.ErrorMessage> e) -> e.getKey(),
+                                Map.Entry::getKey,
                                 (Map.Entry<String, CategoryListValidator.ErrorMessage> e) -> CategoryListValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString()
                                 )
                         );

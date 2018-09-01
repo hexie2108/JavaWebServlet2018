@@ -9,8 +9,6 @@ package it.unitn.webprogramming18.dellmm.db.utils.factories;
 import it.unitn.webprogramming18.dellmm.db.utils.DAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 
-import java.sql.Connection;
-
 /**
  * L'interfaccia più base da implementare per ogni fabbrica di DAO
  * {@code DAOFactor(y)}

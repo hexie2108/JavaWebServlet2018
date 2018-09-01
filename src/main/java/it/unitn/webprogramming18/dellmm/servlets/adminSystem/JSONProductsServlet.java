@@ -18,9 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -280,7 +278,7 @@ public class JSONProductsServlet extends HttpServlet {
                         .entrySet()
                         .stream()
                         .collect(Collectors.toMap(
-                                (Map.Entry<String, ValidatorUtils.ErrorType> e) -> e.getKey(),
+                                Map.Entry::getKey,
                                 (Map.Entry<String, ValidatorUtils.ErrorType> e) -> ProductValidator.I18N_ERROR_STRING_PREFIX + '.' + e.getKey() + '.' + e.getValue().toString()
                                 )
                         );
@@ -389,11 +387,6 @@ public class JSONProductsServlet extends HttpServlet {
         {
             String sPrivateListId = req.getParameter(ProductValidator.PRIVATE_LIST_ID);
 
-            if(sPrivateListId == null) {
-                ServletUtility.sendError(req, res, 400, "products.errors.privateListIdNotInt");
-                return;
-            }
-
             try {
                 privateListId = sPrivateListId == null || sPrivateListId.trim().isEmpty()? null: Integer.parseInt(sPrivateListId);
             } catch (NumberFormatException e) {
@@ -416,7 +409,7 @@ public class JSONProductsServlet extends HttpServlet {
                 ).entrySet()
                 .stream()
                 .collect(Collectors.toMap(
-                        (Map.Entry<String, ValidatorUtils.ErrorType> e) -> e.getKey(),
+                        Map.Entry::getKey,
                         (Map.Entry<String, ValidatorUtils.ErrorType> e) -> ProductValidator.I18N_ERROR_STRING_PREFIX + '.' + e.getKey() + '.' + e.getValue().toString()
                         )
                 );

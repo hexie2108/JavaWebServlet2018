@@ -15,9 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.*;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
 import java.util.List;
@@ -215,7 +213,7 @@ public class JSONCategoryProductsServlet extends HttpServlet {
                         .entrySet()
                         .stream()
                         .collect(Collectors.toMap(
-                                (Map.Entry<String, ValidatorUtils.ErrorType> e) -> e.getKey(),
+                                Map.Entry::getKey,
                                 (Map.Entry<String, ValidatorUtils.ErrorType> e) -> CategoryProductValidator.I18N_ERROR_STRING_PREFIX + '.' + e.getKey() + '.' + e.getValue().toString()
                                 )
                         );
@@ -308,7 +306,7 @@ public class JSONCategoryProductsServlet extends HttpServlet {
                         .entrySet()
                         .stream()
                         .collect(Collectors.toMap(
-                                (Map.Entry<String, ValidatorUtils.ErrorType> e) -> e.getKey(),
+                                Map.Entry::getKey,
                                 (Map.Entry<String, ValidatorUtils.ErrorType> e) -> CategoryProductValidator.I18N_ERROR_STRING_PREFIX + '.' + e.getKey() + '.' + e.getValue().toString()
                                 )
                         );

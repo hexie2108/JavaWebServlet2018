@@ -454,7 +454,6 @@ public final class UserValidator {
         PASSWORD_MISSING,
         PASSWORD_TOO_LONG,
         PASSWORD_NOT_VALID,
-        PASSWORDS_MISSING,
         PASSWORD2_MISSING,
         PASSWORD2_NOT_SAME,
         EMAIL_MISSING,

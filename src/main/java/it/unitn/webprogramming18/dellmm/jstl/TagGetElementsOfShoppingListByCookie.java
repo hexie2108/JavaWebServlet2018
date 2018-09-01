@@ -1,7 +1,5 @@
 package it.unitn.webprogramming18.dellmm.jstl;
 
-import com.mchange.v2.lang.StringUtils;
-import it.unitn.webprogramming18.dellmm.db.daos.CategoryProductDAO;
 import it.unitn.webprogramming18.dellmm.db.daos.ProductDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
@@ -11,7 +9,6 @@ import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;

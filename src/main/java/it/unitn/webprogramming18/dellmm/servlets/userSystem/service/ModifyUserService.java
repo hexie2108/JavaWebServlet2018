@@ -12,7 +12,6 @@ import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -159,8 +158,6 @@ public class ModifyUserService extends HttpServlet
                                      return;
                                 }
 
-                                //set il percorso complete per salvare immagine di user
-                                String uploadPath = request.getServletContext().getRealPath("/") + ConstantsUtils.IMAGE_BASE_PATH + File.separator + ConstantsUtils.IMAGE_OF_USER;
                                 //elimina avatar vecchio
 
                                 //se vuole caricare una nuova avatar personale

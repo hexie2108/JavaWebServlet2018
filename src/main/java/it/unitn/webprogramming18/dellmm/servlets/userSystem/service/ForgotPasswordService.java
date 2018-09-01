@@ -1,13 +1,11 @@
 package it.unitn.webprogramming18.dellmm.servlets.userSystem.service;
 
 import it.unitn.webprogramming18.dellmm.db.daos.UserDAO;
-import it.unitn.webprogramming18.dellmm.db.daos.jdbc.JDBCUserDAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 import it.unitn.webprogramming18.dellmm.db.utils.factories.DAOFactory;
 import it.unitn.webprogramming18.dellmm.email.EmailFactory;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
-import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
 import it.unitn.webprogramming18.dellmm.util.FormValidator;
 import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 import it.unitn.webprogramming18.dellmm.util.i18n;
@@ -64,7 +62,7 @@ public class ForgotPasswordService extends HttpServlet
             ServletUtility.sendError(request, response, 400, "validateUser.errors.EMAIL_NOT_VALID");
             return;
         } //"email non è valido");
-        if(!(!FormValidator.checkEmailRepeat(email, userDAO))) {
+        if(FormValidator.checkEmailRepeat(email, userDAO)) {
             ServletUtility.sendError(request, response, 400, "validateUser.errors.EMAIL_NOT_EXISTING");
             return;            
         }//, "email non esiste");

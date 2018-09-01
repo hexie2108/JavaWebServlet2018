@@ -26,10 +26,18 @@
             </tbody>
             <tfoot>
             <tr>
-                <td><input class="form-control" type="number" name="id" form="filterForm" value="${param['id']}"/></td>
-                <td><input class="form-control" type="text" name="name" form="filterForm" value="${param['name']}"/></td>
-                <td><input class="form-control" type="text" name="description" form="filterForm"
-                           value="${param['description']}"/></td>
+                <td>
+                    <input class="form-control" type="number" name="id" form="filterForm" value="${param['id']}" id="filterFormId"/>
+                    <label class="sr-only" for="filterFormId"><fmt:message key="categoryList.label.id"/></label>
+                </td>
+                <td>
+                    <input class="form-control" type="text" name="name" form="filterForm" value="${param['name']}" id="filterFormName"/>
+                    <label class="sr-only" for="filterFormName"><fmt:message key="categoryList.label.name"/></label>
+                </td>
+                <td>
+                    <input class="form-control" type="text" name="description" form="filterForm" id="filterFormDescription" value="${param['description']}"/>
+                    <label class="sr-only" for="filterFormDescription"><fmt:message key="categoryList.label.description"/></label>
+                </td>
                 <td></td>
                 <td></td>
                 <td></td>

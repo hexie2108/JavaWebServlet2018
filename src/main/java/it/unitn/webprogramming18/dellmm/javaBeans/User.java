@@ -6,7 +6,6 @@
 package it.unitn.webprogramming18.dellmm.javaBeans;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 
 /**
  * @author luca_morgese
