@@ -61,8 +61,6 @@ public class ChangeListService extends HttpServlet {
         protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
         {
 
-                ResourceBundle rb = i18n.getBundle(request);
-
                 //get id lista
                 String listId = request.getParameter("listId");
                 //se listId è nullo

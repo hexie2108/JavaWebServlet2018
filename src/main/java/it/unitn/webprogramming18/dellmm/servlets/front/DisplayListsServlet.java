@@ -84,15 +84,15 @@ public class DisplayListsServlet extends HttpServlet
                 //associando ogni lista una hashmap
                 //se è una lista owner, verrà associato: la lista di prodotto ancora da comprare, la lista di prodotto già comprato, la lista di permesso sharing , il numero di sharing, il numero di commento
                 //se è una lista condivisa , verrà associato: la lista di prodotto ancora da comprare, la lista di prodotto già comprato, il permesso su tale lista, il numero di commento
-                HashMap<ShoppingList, HashMap<String, Object>> completeOwnedLists = new HashMap();
-                HashMap<ShoppingList, HashMap<String, Object>> completeSharedLists = new HashMap();
+                HashMap<ShoppingList, HashMap<String, Object>> completeOwnedLists = new HashMap<>();
+                HashMap<ShoppingList, HashMap<String, Object>> completeSharedLists = new HashMap<>();
                 HashMap<String, Object> singleCompleteList = null;
                 List<Product> productsList = null;
 
                 //per ogni lista owner
                 for (ShoppingList shoppingList : ownedLists)
                 {
-                        singleCompleteList = new HashMap();
+                        singleCompleteList = new HashMap<>();
 
                         try
                         {
@@ -121,7 +121,7 @@ public class DisplayListsServlet extends HttpServlet
                 //per ogni lista condivisa
                 for (ShoppingList shoppingList : sharedLists)
                 {
-                        singleCompleteList = new HashMap();
+                        singleCompleteList = new HashMap<>();
 
                         try
                         {

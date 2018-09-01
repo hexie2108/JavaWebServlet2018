@@ -79,7 +79,7 @@ public interface CategoryProductDAO extends DAO<CategoryProduct, Integer> {
         ID,
         NAME,
         DESCRIPTION
-    };
+    }
 
     public Long getCountFilter(Integer id, String name, String description) throws DAOException;
 

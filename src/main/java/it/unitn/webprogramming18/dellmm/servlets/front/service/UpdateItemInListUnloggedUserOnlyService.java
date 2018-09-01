@@ -84,7 +84,7 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet {
             else {
                 //controlla se esiste la ripetizione
                 //trasforma string di cookie in arrayList
-                List<String> productIdList = new ArrayList(Arrays.asList(cookOfList.getValue().split("-")));
+                List<String> productIdList = new ArrayList<>(Arrays.asList(cookOfList.getValue().split("-")));
                 for (String string : productIdList) {
                     if (productId.equals(string)) {
                         //in caso esiste set flag true
@@ -150,7 +150,7 @@ public class UpdateItemInListUnloggedUserOnlyService extends HttpServlet {
             else {
                 //controlla se esiste tale prodotto in lista
                 //trasforma string di cookie in arrayList
-                List<String> productIdList = new ArrayList(Arrays.asList(cookOfList.getValue().split("-")));
+                List<String> productIdList = new ArrayList<>(Arrays.asList(cookOfList.getValue().split("-")));
                 for (int i = 0; i < productIdList.size(); i++) {
                     if (productId.equals(productIdList.get(i))) {
                         //quando trova, elimina tale elemento dalla arrayList

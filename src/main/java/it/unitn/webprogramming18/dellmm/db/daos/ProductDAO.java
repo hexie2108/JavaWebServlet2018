@@ -114,7 +114,7 @@ public interface ProductDAO extends DAO<Product, Integer> {
         DESCRIPTION,
         CATEGORY_NAME,
         PRIVATE_LIST_ID
-    };
+    }
 
     /**
      * Filter all products(public and private) given a set of constraints

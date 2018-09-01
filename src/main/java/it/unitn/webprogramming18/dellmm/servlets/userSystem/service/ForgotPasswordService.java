@@ -64,7 +64,7 @@ public class ForgotPasswordService extends HttpServlet
             ServletUtility.sendError(request, response, 400, "validateUser.errors.EMAIL_NOT_VALID");
             return;
         } //"email non è valido");
-        if(!(!FormValidator.checkEmailRepeat(email, userDAO))) {
+        if(FormValidator.checkEmailRepeat(email, userDAO)) {
             ServletUtility.sendError(request, response, 400, "validateUser.errors.EMAIL_NOT_EXISTING");
             return;            
         }//, "email non esiste");

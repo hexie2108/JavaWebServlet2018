@@ -10,7 +10,7 @@ import javax.servlet.http.Cookie;
 public class i18n
 {
 
-        public static final HashMap<String, String> SUPPORTED_LANGUAGES = new HashMap()
+        public static final HashMap<String, String> SUPPORTED_LANGUAGES = new HashMap<String, String>()
         {
                 {
                         put("en", "English");
@@ -60,7 +60,7 @@ public class i18n
 
         public static ResourceBundle getBundle(Locale locale)
         {
-                return ResourceBundle.getBundle("text", locale);
+                return ResourceBundle.getBundle(BUNDLE_NAME, locale);
         }
 
         public static ResourceBundle getBundle(HttpServletRequest request)
