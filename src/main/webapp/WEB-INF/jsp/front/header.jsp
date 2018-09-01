@@ -200,7 +200,7 @@
                                                                                required="required" value="${not empty param.searchWords?param.searchWords:''}">
                                                                 </div>
                                                                 <div class="input-group-append col-2 p-0">
-                                                                        <button type="submit" class="btn btn-info search-button w-100"><i class="fas fa-search"></i> <fmt:message key="search" /></button>
+                                                                        <button type="submit" class="btn btn-info search-button w-100"><i class="fas fa-search mr-2"></i> <span><fmt:message key="search" /></span></button>
                                                                 </div>
                                                         </div>
                                                 </form>

@@ -1195,7 +1195,9 @@ form .custom-file-input-old-image {
 
         }
 
-
+        .front-page header .search-button span{
+                display: none;
+        }
 }
 
 
