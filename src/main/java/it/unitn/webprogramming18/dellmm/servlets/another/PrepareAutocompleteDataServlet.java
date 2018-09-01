@@ -59,7 +59,7 @@ public class PrepareAutocompleteDataServlet extends HttpServlet {
         try{
             String[] catId = request.getParameterValues("catId");
             if(catId == null) {
-                categories = new ArrayList<Integer>();
+                categories = new ArrayList<>();
             } else {
                 categories = Arrays.stream(catId).map(Integer::parseInt).collect(Collectors.toList());
             }

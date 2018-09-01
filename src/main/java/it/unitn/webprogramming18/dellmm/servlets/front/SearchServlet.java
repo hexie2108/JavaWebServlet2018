@@ -97,7 +97,7 @@ public class SearchServlet extends HttpServlet {
         String[] catId = request.getParameterValues("catId");
         List<Integer> categories;
         if(catId == null) {
-            categories = new ArrayList<Integer>();
+            categories = new ArrayList<>();
         } else {
             categories = Arrays.stream(catId).map(Integer::parseInt).collect(Collectors.toList());
         }

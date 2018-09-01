@@ -31,20 +31,20 @@
             <tr>
                 <td>
                     <input class="form-control" size="6" type="number" name="id" form="filterForm" value="${param['id']}" id="filterFormId"/>
-                    <label class="sr-only" for="filterFormId"><fmt:message key="user.label.id"></label>
+                    <label class="sr-only" for="filterFormId"><fmt:message key="user.label.id"/></label>
                 </td>
                 <td></td>
                 <td>
                     <input class="form-control" type="text" name="name" form="filterForm" value="${param['name']}" id="filterFormName"/>
-                    <label class="sr-only" for="filterFormName"><fmt:message key="user.label.name"></label>
+                    <label class="sr-only" for="filterFormName"><fmt:message key="user.label.name"/></label>
                 </td>
                 <td>
                     <input class="form-control" type="text" name="surname" form="filterForm" value="${param['surname']}" id="filterFormSurname"/>
-                    <label class="sr-only" for="filterFormSurname"><fmt:message key="user.label.surname"></label>
+                    <label class="sr-only" for="filterFormSurname"><fmt:message key="user.label.surname"/></label>
                 </td>
                 <td>
                     <input class="form-control" type="text" name="email" form="filterForm" value="${param['email']}" id="filterFormEmail"/>
-                    <label class="sr-only" for="filterFormEmail"><fmt:message key="user.label.email"></label>
+                    <label class="sr-only" for="filterFormEmail"><fmt:message key="user.label.email"/></label>
                 </td>
                 <td></td>
                 <td>
@@ -55,7 +55,7 @@
                         <option value="false" ${param['admin'].equals("false")?'selected':''}><fmt:message
                                 key="users.label.false"/></option>
                     </select>
-                    <label class="sr-only" for="filterFormAdmin"><fmt:message key="user.label.isAdmin"></label>
+                    <label class="sr-only" for="filterFormAdmin"><fmt:message key="user.label.isAdmin"/></label>
                 </td>
                 <td></td>
                 <td></td>

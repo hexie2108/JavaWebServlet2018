@@ -278,7 +278,7 @@ public class JSONProductsServlet extends HttpServlet {
                         .entrySet()
                         .stream()
                         .collect(Collectors.toMap(
-                                (Map.Entry<String, ValidatorUtils.ErrorType> e) -> e.getKey(),
+                                Map.Entry::getKey,
                                 (Map.Entry<String, ValidatorUtils.ErrorType> e) -> ProductValidator.I18N_ERROR_STRING_PREFIX + '.' + e.getKey() + '.' + e.getValue().toString()
                                 )
                         );
@@ -387,11 +387,6 @@ public class JSONProductsServlet extends HttpServlet {
         {
             String sPrivateListId = req.getParameter(ProductValidator.PRIVATE_LIST_ID);
 
-            if(sPrivateListId == null) {
-                ServletUtility.sendError(req, res, 400, "products.errors.privateListIdNotInt");
-                return;
-            }
-
             try {
                 privateListId = sPrivateListId == null || sPrivateListId.trim().isEmpty()? null: Integer.parseInt(sPrivateListId);
             } catch (NumberFormatException e) {
@@ -414,7 +409,7 @@ public class JSONProductsServlet extends HttpServlet {
                 ).entrySet()
                 .stream()
                 .collect(Collectors.toMap(
-                        (Map.Entry<String, ValidatorUtils.ErrorType> e) -> e.getKey(),
+                        Map.Entry::getKey,
                         (Map.Entry<String, ValidatorUtils.ErrorType> e) -> ProductValidator.I18N_ERROR_STRING_PREFIX + '.' + e.getKey() + '.' + e.getValue().toString()
                         )
                 );

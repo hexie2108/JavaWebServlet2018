@@ -101,7 +101,7 @@ public class JSONCategoryListsServlet extends HttpServlet {
                         .entrySet()
                         .stream()
                         .collect(Collectors.toMap(
-                                (Map.Entry<String, CategoryListValidator.ErrorMessage> e) -> e.getKey(),
+                                Map.Entry::getKey,
                                 (Map.Entry<String, CategoryListValidator.ErrorMessage> e) -> CategoryListValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString()
                                 )
                         );
@@ -211,7 +211,7 @@ public class JSONCategoryListsServlet extends HttpServlet {
                         .entrySet()
                         .stream()
                         .collect(Collectors.toMap(
-                                (Map.Entry<String, CategoryListValidator.ErrorMessage> e) -> e.getKey(),
+                                Map.Entry::getKey,
                                 (Map.Entry<String, CategoryListValidator.ErrorMessage> e) -> CategoryListValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString()
                                 )
                         );

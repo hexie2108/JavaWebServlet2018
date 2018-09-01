@@ -75,7 +75,7 @@ public interface ServletUtility {
             ResourceBundle bundle = it.unitn.webprogramming18.dellmm.util.i18n.getBundle(request);
 
             Map<String, String> obj = errMap.entrySet().stream().collect(Collectors.toMap(
-                    (Map.Entry<String, String> e) -> e.getKey(),
+                    Map.Entry::getKey,
                     (Map.Entry<String, String> e) -> bundle.getString(e.getValue())
             ));
 
@@ -88,7 +88,7 @@ public interface ServletUtility {
                     "[" +
                             errMap.entrySet()
                                     .stream()
-                                    .map((Map.Entry<String, String> e) -> e.getValue())
+                                    .map(Map.Entry::getValue)
                                     .collect(Collectors.joining(",")) +
                             "]");
         }
@@ -116,12 +116,14 @@ public interface ServletUtility {
     }
 
     static void deleteFile(Path path, String toDeleteImg, ServletContext ctx) {
-        Path toDelete = Paths.get(path.toString(), toDeleteImg);
-        try {
-            Files.delete(toDelete);
-        } catch (IOException e) {
-            // If we can't delete the old image we just log and continue
-            ctx.log("File " + toDelete.toString() + " cannot be delete");
+        if(toDeleteImg != null) {
+            Path toDelete = Paths.get(path.toString(), toDeleteImg);
+            try {
+                Files.delete(toDelete);
+            } catch (IOException e) {
+                // If we can't delete the old image we just log and continue
+                ctx.log("File " + toDelete.toString() + " cannot be delete");
+            }
         }
     }
     static String insertImage(

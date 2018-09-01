@@ -25,15 +25,15 @@
             <tr>
                 <td>
                     <input class="form-control" type="number" name="id" form="filterForm" value="${param['id']}" id="filterFormId"/>
-                    <label class="sr-only" for="filterFormId"><fmt:message key="product.label.id"></label>
+                    <label class="sr-only" for="filterFormId"><fmt:message key="product.label.id"/></label>
                 </td>
                 <td>
                     <input class="form-control" type="text" name="name" form="filterForm" value="${param['name']}" id="filterFormName"/>
-                    <label class="sr-only" for="filterFormName"><fmt:message key="product.label.name"></label>
+                    <label class="sr-only" for="filterFormName"><fmt:message key="product.label.name"/></label>
                 </td>
                 <td>
                     <input class="form-control" type="text" name="description" form="filterForm" value="${param['description']}" id="filterFormDescription"/>
-                    <label class="sr-only" for="filterFormDescription"><fmt:message key="product.label.description"></label>
+                    <label class="sr-only" for="filterFormDescription"><fmt:message key="product.label.description"/></label>
                 </td>
                 <td></td>
                 <td></td>
@@ -48,7 +48,7 @@
                             <option value="${category.id}" ${paramValues.catId.stream().anyMatch((e) -> e.equals(category.id.toString())).get()?'selected':''}>${category.name}</option>
                         </c:forEach>
                     </select>
-                    <label class="sr-only" for="filterFormCategory"><fmt:message key="categoryProduct.label.name"></label>
+                    <label class="sr-only" for="filterFormCategory"><fmt:message key="categoryProduct.label.name"/></label>
                 </td>
                 <td>
                     <input class="form-control" type="number" name="privateListId" form="filterForm"
@@ -56,7 +56,7 @@
                            value="${empty param['publicOnly']?param['privateListId']:''}"
                            ${not empty param['publicOnly']?'disabled':''}
                     />
-                    <label class="sr-only" for="filterFormPrivateListId"><fmt:message key="product.label.privateListId"></label>
+                    <label class="sr-only" for="filterFormPrivateListId"><fmt:message key="product.label.privateListId"/></label>
                     <div class="input-group custom-control custom-checkbox mb-2">
                         <input id="inputPublicOnly" class="custom-control-input" type="checkbox" name="publicOnly" form="filterForm" ${not empty param['publicOnly']?'checked':''}>
                         <label class="form-check-label custom-control-label ml-1" for="inputPublicOnly"><fmt:message key="products.label.publicOnly"/></label>

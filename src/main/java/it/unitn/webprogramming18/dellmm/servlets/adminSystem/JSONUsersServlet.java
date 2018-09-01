@@ -228,7 +228,7 @@ public class JSONUsersServlet extends HttpServlet {
                     UserValidator.partialValidate(userDAO, kv)
                             .entrySet()
                             .stream()
-                            .collect(Collectors.toMap((Map.Entry<String, UserValidator.ErrorMessage> e) -> e.getKey(),
+                            .collect(Collectors.toMap(Map.Entry::getKey,
                                     (Map.Entry<String, UserValidator.ErrorMessage> e) -> UserValidator.I18N_ERROR_STRING_PREFIX + e.getValue().toString()
                                     )
                             );

@@ -213,7 +213,7 @@ public class JSONCategoryProductsServlet extends HttpServlet {
                         .entrySet()
                         .stream()
                         .collect(Collectors.toMap(
-                                (Map.Entry<String, ValidatorUtils.ErrorType> e) -> e.getKey(),
+                                Map.Entry::getKey,
                                 (Map.Entry<String, ValidatorUtils.ErrorType> e) -> CategoryProductValidator.I18N_ERROR_STRING_PREFIX + '.' + e.getKey() + '.' + e.getValue().toString()
                                 )
                         );
@@ -306,7 +306,7 @@ public class JSONCategoryProductsServlet extends HttpServlet {
                         .entrySet()
                         .stream()
                         .collect(Collectors.toMap(
-                                (Map.Entry<String, ValidatorUtils.ErrorType> e) -> e.getKey(),
+                                Map.Entry::getKey,
                                 (Map.Entry<String, ValidatorUtils.ErrorType> e) -> CategoryProductValidator.I18N_ERROR_STRING_PREFIX + '.' + e.getKey() + '.' + e.getValue().toString()
                                 )
                         );
