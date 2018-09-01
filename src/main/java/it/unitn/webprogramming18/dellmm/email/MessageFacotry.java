@@ -27,16 +27,17 @@ public class MessageFacotry
          * @param user The registered user
          * @param url The url that the user has to use to validate his email
          * @param bundle bundle from which get the i18n strings to create the
-         * email
+         *               email
+         * @param siteName the name of the site
          * @return The content of the email as Multipart
          * @throws MessagingException
          * @throws UnsupportedEncodingException
          */
-        public static Multipart messageOfRegistration(User user, String url, ResourceBundle bundle) throws MessagingException, UnsupportedEncodingException
+        public static Multipart messageOfRegistration(User user, String url, ResourceBundle bundle, String siteName) throws MessagingException, UnsupportedEncodingException
         {
                 String thanks = MessageFormat.format(
                             bundle.getString("emailFactory.registerEmail.text.thanks"),
-                            user.getName(), user.getSurname(), ConstantsUtils.SITE_NAME
+                            user.getName(), user.getSurname(), siteName
                 );
 
                 String howToValidate = bundle.getString("emailFactory.registerEmail.text.howToValidate");

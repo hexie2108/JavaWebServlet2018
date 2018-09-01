@@ -146,7 +146,8 @@ public class EmailFactory
 
                 String url = getBasePath(request) + "/service/activateUserService?Email="+ URLEncoder.encode(user.getEmail(), "UTF-8")+"&verifyEmailLink=" +  URLEncoder.encode(user.getVerifyEmailLink(), "UTF-8");
 
-                Multipart content = MessageFacotry.messageOfRegistration(user, url, bundle);
+
+                Multipart content = MessageFacotry.messageOfRegistration(user, url, bundle, request.getServletContext().getInitParameter("siteName"));
                 sendMail(serviceName, emailSubject, content, user.getEmail());
 
         }
