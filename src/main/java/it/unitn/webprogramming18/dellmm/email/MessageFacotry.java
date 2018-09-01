@@ -2,7 +2,6 @@ package it.unitn.webprogramming18.dellmm.email;
 
 import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import it.unitn.webprogramming18.dellmm.javaBeans.User;
-import it.unitn.webprogramming18.dellmm.util.ConstantsUtils;
 import it.unitn.webprogramming18.dellmm.util.i18n;
 
 import java.io.UnsupportedEncodingException;

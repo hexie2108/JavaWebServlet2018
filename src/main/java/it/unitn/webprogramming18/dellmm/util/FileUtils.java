@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.util.UUID;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.Part;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;

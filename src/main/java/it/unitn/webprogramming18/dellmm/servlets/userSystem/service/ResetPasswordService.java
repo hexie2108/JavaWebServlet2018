@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ResourceBundle;
-import java.util.HashMap;
 
 public class ResetPasswordService extends HttpServlet
 {

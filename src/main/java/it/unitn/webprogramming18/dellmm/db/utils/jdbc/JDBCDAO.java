@@ -10,7 +10,6 @@ import it.unitn.webprogramming18.dellmm.db.utils.ConnectionPool;
 import it.unitn.webprogramming18.dellmm.db.utils.DAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOFactoryException;
 
-import java.sql.Connection;
 import java.util.HashMap;
 
 /**

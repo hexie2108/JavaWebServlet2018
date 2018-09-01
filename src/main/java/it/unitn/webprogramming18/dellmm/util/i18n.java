@@ -1,7 +1,6 @@
 package it.unitn.webprogramming18.dellmm.util;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.ResourceBundle;

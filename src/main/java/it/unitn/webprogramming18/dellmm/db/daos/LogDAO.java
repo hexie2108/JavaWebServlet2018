@@ -3,7 +3,6 @@ package it.unitn.webprogramming18.dellmm.db.daos;
 import it.unitn.webprogramming18.dellmm.db.utils.DAO;
 import it.unitn.webprogramming18.dellmm.db.utils.exceptions.DAOException;
 import it.unitn.webprogramming18.dellmm.javaBeans.Log;
-import it.unitn.webprogramming18.dellmm.javaBeans.Product;
 import java.sql.Timestamp;
 
 import java.util.List;

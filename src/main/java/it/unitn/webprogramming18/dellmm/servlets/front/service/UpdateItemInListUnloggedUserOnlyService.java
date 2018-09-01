@@ -1,6 +1,5 @@
 package it.unitn.webprogramming18.dellmm.servlets.front.service;
 
-import it.unitn.webprogramming18.dellmm.util.CheckErrorUtils;
 import it.unitn.webprogramming18.dellmm.util.ServletUtility;
 import it.unitn.webprogramming18.dellmm.util.i18n;
 
