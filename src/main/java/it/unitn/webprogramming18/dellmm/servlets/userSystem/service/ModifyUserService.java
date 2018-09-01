@@ -73,7 +73,10 @@ public class ModifyUserService extends HttpServlet
                 ResourceBundle rb = i18n.getBundle(request);
 
                 // usa un metodo statico per controllare se la richiesta è codificato in formato multipart/form-data
-                CheckErrorUtils.isFalse(ServletFileUpload.isMultipartContent(request), rb.getString("error.notMultipart"));
+                if (!ServletFileUpload.isMultipartContent(request)){
+                         ServletUtility.sendError(request, response, 400, "error.notMultipart");
+                         return;
+                }
 
                 List<FileItem> items = null;
                 try
@@ -83,7 +86,8 @@ public class ModifyUserService extends HttpServlet
                 }
                 catch (FileUploadException ex)
                 {
-                        throw new ServletException(rb.getString("error.parseRequest"));
+                        ServletUtility.sendError(request, response, 500, "error.parseRequest");
+                        return;
                 }
 
                 String firstName = null;
@@ -134,8 +138,14 @@ public class ModifyUserService extends HttpServlet
                 }
 
                 //check tutti parametri necessari
-                CheckErrorUtils.isFalse(FormValidator.validateFirstName(firstName), rb.getString("validateUser.errors.FIRST_NAME_NOT_VALID"));
-                CheckErrorUtils.isFalse(FormValidator.validateLastName(lastName), rb.getString("validateUser.errors.LAST_NAME_NOT_VALID"));
+                if (!FormValidator.validateFirstName(firstName)){
+                     ServletUtility.sendError(request, response, 400, "validateUser.errors.FIRST_NAME_NOT_VALID");
+                     return;
+                }
+                if (!FormValidator.validateLastName(lastName)){
+                     ServletUtility.sendError(request, response, 400, "validateUser.errors.LAST_NAME_NOT_VALID");
+                     return;
+                }
 
                 User user = (User) request.getSession().getAttribute("user");
                 //aggiorna i dati di user in db
@@ -144,7 +154,10 @@ public class ModifyUserService extends HttpServlet
                         //se vuole modificare avatar
                         if (avatar != null)
                         {
-                                CheckErrorUtils.isFalse(FormValidator.validateAvatar(avatar), rb.getString("validateUser.errors.AVATAR_NOT_VALID"));
+                                if (!FormValidator.validateAvatar(avatar)){
+                                     ServletUtility.sendError(request, response, 400, "validateUser.errors.AVATAR_NOT_VALID");
+                                     return;
+                                }
 
                                 //set il percorso complete per salvare immagine di user
                                 String uploadPath = request.getServletContext().getRealPath("/") + ConstantsUtils.IMAGE_BASE_PATH + File.separator + ConstantsUtils.IMAGE_OF_USER;
@@ -158,7 +171,11 @@ public class ModifyUserService extends HttpServlet
                                             ServletUtility.sendError(request, response, 400, "validateUser.errors.AVATAR_IMG_MISSING");
                                             return;
                                         }
-                                        CheckErrorUtils.isFalse(FormValidator.validateCustomAvatarImg(customAvatarImgFile), rb.getString("validateUser.errors.AVATAR_IMG_NOT_VALID"));
+
+                                        if (!FormValidator.validateCustomAvatarImg(customAvatarImgFile)){
+                                             ServletUtility.sendError(request, response, 400, "validateUser.errors.AVATAR_IMG_NOT_VALID");
+                                             return;
+                                        }
 
                                         avatar = subImg(request, path, user.getImg(), customAvatarImgFile.getInputStream());
                                 }
@@ -169,7 +186,11 @@ public class ModifyUserService extends HttpServlet
                         //se vuole cambiare anche la password
                         if (password != null && !password.isEmpty())
                         {
-                                CheckErrorUtils.isFalse(FormValidator.validatePassword(password), rb.getString("validateUser.errors.PASSWORD_NOT_VALID"));
+                                if (!FormValidator.validatePassword(password)){
+                                     ServletUtility.sendError(request, response, 400, "validateUser.errors.PASSWORD_NOT_VALID");
+                                     return;
+                                }
+
                                 user.setPassword(MD5Utils.getMD5(password));
                         }
 

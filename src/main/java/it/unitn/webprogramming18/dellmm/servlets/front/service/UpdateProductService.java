@@ -66,7 +66,10 @@ public class UpdateProductService extends HttpServlet {
                 ResourceBundle rb = i18n.getBundle(request);
 
                 // usa un metodo statico per controllare se la richiesta è codificato in formato multipart/form-data
-                CheckErrorUtils.isFalse(ServletFileUpload.isMultipartContent(request), rb.getString("error.notMultipart"));
+                if (!ServletFileUpload.isMultipartContent(request)){
+                     ServletUtility.sendError(request, response, 400, "error.notMultipart");
+                     return;
+                }
 
                 List<FileItem> items = null;
                 try
