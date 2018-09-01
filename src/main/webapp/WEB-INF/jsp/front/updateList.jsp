@@ -59,7 +59,7 @@
 
                                 <%--parte di descrizione --%>
                                 <div class="form-group">
-                                        <label for="listName"><i class="far fa-file-alt"></i> <fmt:message key="description" />:</label>
+                                        <label for="listDescription"><i class="far fa-file-alt"></i> <fmt:message key="description" />:</label>
                                         <textarea class="form-control" id="listDescription" name="listDescription" rows="5"
                                                   required="required">${not empty list?list.description:""}</textarea>
                                 </div>

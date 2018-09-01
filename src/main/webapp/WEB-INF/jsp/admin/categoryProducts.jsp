@@ -21,11 +21,19 @@
             </tbody>
             <tfoot>
             <tr>
-                <td><input class="form-control" type="number" name="id" form="filterForm" value="${param['id']}"/></td>
+                <td>
+                    <input class="form-control" type="number" name="id" form="filterForm" value="${param['id']}" id="filterFormId"/>
+                    <label class="sr-only" for="filterFormId"><fmt:message key="categoryProduct.label.id"></label>
+                </td>
                 <td></td>
-                <td><input class="form-control" type="text" name="name" form="filterForm" value="${param['name']}"/></td>
-                <td><input class="form-control" type="text" name="description" form="filterForm"
-                           value="${param['description']}"/></td>
+                <td>
+                    <input class="form-control" type="text" name="name" form="filterForm" value="${param['name']}" id="filterFormName"/>
+                    <label class="sr-only" for="filterFormName"><fmt:message key="categoryProduct.label.name"></label>
+                </td>
+                <td>
+                    <input class="form-control" type="text" name="description" form="filterForm" value="${param['description']}" id="filterFormDescription"/>
+                    <label class="sr-only" for="filterFormDescription"><fmt:message key="categoryProduct.label.description"></label>
+                </td>
                 <td>
                     <button class="btn btn-primary" id="btnNewCategoryProduct" data-toggle="modal"
                             data-target="#categoryProductModal" data-action="create"><i class="fas fa-plus"></i></button>
