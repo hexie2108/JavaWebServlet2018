@@ -272,7 +272,7 @@ public class JDBCLogDAO extends JDBCDAO<Log, Integer> implements LogDAO {
 
                 Connection CON = CP.getConnection();
                 //get log in cui, stato di email è false, esiste almeno 2 aquisti storici, e il tempo previsto di riaquisto è minore di 24 ore
-                try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Log WHERE emailStatus = 0 AND (last2 IS NOT NULL) AND ( (TIME_TO_SEC( TIMEDIFF( last1, last2 )) - TIME_TO_SEC( TIMEDIFF( ?, last1 ))) BETWEEN 0 AND 60*60*24*? )"))
+                try (PreparedStatement stm = CON.prepareStatement("SELECT * FROM Log WHERE emailStatus = 0 AND (last2 IS NOT NULL) AND ( (TIME_TO_SEC( TIMEDIFF( last1, last2 )) - TIME_TO_SEC( TIMEDIFF( ?, last1 ))) < (60*60*24*?) )"))
                 {
                         stm.setTimestamp(1, currentTime);
                         stm.setInt(2, predictionDay);

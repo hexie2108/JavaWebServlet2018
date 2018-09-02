@@ -27,6 +27,7 @@ import java.util.logging.Logger;
  */
 public class WebAppContextListener implements ServletContextListener
 {
+        private ScheduledThreadPoolExecutor executor = null;
 
         /**
          * The serlvet container call this method when initializes the
@@ -90,10 +91,10 @@ public class WebAppContextListener implements ServletContextListener
                 {
                         task = new SendMailOfSuggestionForRepeatitivePurchasesTask(emailFactory, basepath, jdbcDaoFactory);
                         //crea esecutore con 5 thread
-                        ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(5);
+                        executor = new ScheduledThreadPoolExecutor(5);
 
                         //iniza esegue tast, dopo 5minuti dall'avvio di tomcat, e poi ripete ogni 24ore
-                        executor.scheduleAtFixedRate(task, 60 * 5, 60 * 60 * 24, TimeUnit.SECONDS);
+                        executor.scheduleAtFixedRate(task, 60 * 2, 60 * 5, TimeUnit.SECONDS);
                 }
                 catch (Exception e)
                 {
@@ -119,5 +120,7 @@ public class WebAppContextListener implements ServletContextListener
                         daoFactory.shutdown();
                 }
                 daoFactory = null;
+
+                executor.shutdown();
         }
 }

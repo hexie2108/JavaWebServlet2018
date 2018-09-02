@@ -810,7 +810,7 @@ public class JDBCProductDAO extends JDBCDAO<Product, Integer> implements Product
                 + " WHERE " +
                         "Log.emailStatus = 0 AND " +
                         "Log.userId = ? AND (Log.last2 IS NOT NULL)  AND " +
-                        "( (TIME_TO_SEC( TIMEDIFF( last1, last2 )) - TIME_TO_SEC( TIMEDIFF( ?, last1 ))) BETWEEN 0 AND 60*60*24*? )"))
+                        "( (TIME_TO_SEC( TIMEDIFF( last1, last2 )) - TIME_TO_SEC( TIMEDIFF( ?, last1 ))) < (60*60*24*?) )"))
 
         {
             stm.setInt(1, userId);
