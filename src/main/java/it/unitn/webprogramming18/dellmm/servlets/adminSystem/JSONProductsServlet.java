@@ -268,9 +268,7 @@ public class JSONProductsServlet extends HttpServlet {
             kv.put(ProductValidator.CATEGORY_KEY, categoryId);
         }
 
-        if (privateListId != null) {
-            kv.put(ProductValidator.PRIVATE_LIST_ID, privateListId);
-        }
+        kv.put(ProductValidator.PRIVATE_LIST_ID, privateListId);
 
         // Usa il validator per verifiacare la conformità
         Map<String, String> messages =
@@ -319,9 +317,7 @@ public class JSONProductsServlet extends HttpServlet {
             product.setCategoryProductId(categoryId);
         }
 
-        if (privateListId != null) {
-            product.setPrivateListId(privateListId);
-        }
+        product.setPrivateListId(privateListId);
 
         try {
             productDAO.update(product);
