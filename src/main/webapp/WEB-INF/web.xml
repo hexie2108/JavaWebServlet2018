@@ -31,7 +31,7 @@
         <context-param>
                 <description>il dominio per link contenuto nel email</description>
                 <param-name>domainForEmailLink</param-name>
-                <param-value>http://localhost:8084</param-value>
+                <param-value>http://localhost:8080</param-value>
         </context-param>
 
         <!--IMG FOLDERS SETTINGS-->
