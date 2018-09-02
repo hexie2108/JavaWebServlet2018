@@ -26,7 +26,7 @@ public class MessageFacotry
          * @param user The registered user
          * @param url The url that the user has to use to validate his email
          * @param bundle bundle from which get the i18n strings to create the
-         *               email
+         * email
          * @param siteName the name of the site
          * @return The content of the email as Multipart
          * @throws MessagingException
@@ -152,17 +152,30 @@ public class MessageFacotry
                 ).append(
                             "                </p>\n"
                             + "                 <div class=\"list-product\">"
+                            + "<div class=\"list-item\" style=\" padding: 1%; margin: 1%;  border-radius: .25rem;  border: 1px solid #d0d0d0;  \">"
+                            + "         <div style=\" display: inline-block; width: 80%;     font-weight: bolder;\">"
+                            + "         il nome del prodotto"
+                            + "         </div>\n"
+                            + "        <div style=\" display: inline-block; width: 18%; text-align: center;     font-weight: bolder;\">"
+                            + "         la link"
+                            + "         </div>\n"
+                            + "</div>\n"
                 );
 
                 for (Product product : listProduct)
                 {
                         htmlMessageBuilder.append(""
-                                    + "<div class=\"list-item\" style=\" width: 42%; padding: 1%; margin: 1%;  display: inline-block;  border-radius: .25rem;  border: 1px solid #d0d0d0;  \">"
-                                    + "         <a style=\" color: #17a2b8; text-decoration: none !important; \" href=\"" + path + "/search?searchWords=" + URLEncoder.encode(product.getName(), "UTF-8") + " \">\n"
-                                    + "                  <img  style=\" max-width: 100%;  height: auto; \" src=\"" + path + "/image/product/" + product.getImg() + "\" alt=\"" + product.getName() + "\" />      \n"
-                                    + "                 <p style=\" text-align: center;  font-weight: bold; \">" + product.getName() + "</p>"
+                                    + "<div class=\"list-item\" style=\" padding: 1%; margin: 1%;  border-radius: .25rem;  border: 1px solid #d0d0d0;  \">"
+                                    + " <div style=\" display: inline-block; width: 80%; \">"
+                                    + product.getName()
+                                    + "</div>\n"
+                                    + " <div style=\" display: inline-block; width: 18%; \">"
+                                    + "         <a style=\" display: block; text-align: center; width: 100px; line-height: 30px; color: white; text-decoration: none !important; background: #17a2b8; border-radius: 5px;     margin: auto;\" href=\"" + path + "/search?searchWords=" + URLEncoder.encode(product.getName(), "UTF-8") + " \">\n"
+                                    + "Clicca"
                                     + "          </a>\n"
-                                    + "</div>\n");
+                                    + "</div>\n"
+                                    + "</div>\n"
+                        );
                 }
 
                 htmlMessageBuilder.append("</div>"
