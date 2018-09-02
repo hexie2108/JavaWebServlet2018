@@ -153,7 +153,7 @@ public class MessageFacotry
                             "                </p>\n"
                             + "                 <div class=\"list-product\">"
                             + "<div class=\"list-item\" style=\" padding: 1%; margin: 1%;  border-radius: .25rem;  border: 1px solid #d0d0d0;  \">"
-                            + "         <div style=\" display: inline-block; width: 80%;     font-weight: bolder;\">"
+                            + "         <div style=\" display: inline-block; width: 80%;   text-align: center;  font-weight: bolder;\">"
                             + "         il nome del prodotto"
                             + "         </div>\n"
                             + "        <div style=\" display: inline-block; width: 18%; text-align: center;     font-weight: bolder;\">"
@@ -166,11 +166,11 @@ public class MessageFacotry
                 {
                         htmlMessageBuilder.append(""
                                     + "<div class=\"list-item\" style=\" padding: 1%; margin: 1%;  border-radius: .25rem;  border: 1px solid #d0d0d0;  \">"
-                                    + " <div style=\" display: inline-block; width: 80%; \">"
+                                    + " <div style=\" display: inline-block; width: 80%; text-align: center;\">"
                                     + product.getName()
                                     + "</div>\n"
-                                    + " <div style=\" display: inline-block; width: 18%; \">"
-                                    + "         <a style=\" display: block; text-align: center; width: 100px; line-height: 30px; color: white; text-decoration: none !important; background: #17a2b8; border-radius: 5px;     margin: auto;\" href=\"" + path + "/search?searchWords=" + URLEncoder.encode(product.getName(), "UTF-8") + " \">\n"
+                                    + " <div style=\" display: inline-block; width: 18%; text-align: center;\">"
+                                    + "         <a style=\"  line-height: 30px; color: white; text-decoration: none !important; background: #17a2b8; border-radius: 5px;  padding: 5px 10px;\" href=\"" + path + "/search?searchWords=" + URLEncoder.encode(product.getName(), "UTF-8") + " \">\n"
                                     + "Clicca"
                                     + "          </a>\n"
                                     + "</div>\n"
